@@ -1,0 +1,172 @@
+import { useState } from 'react';
+import { router, useForm, Head } from '@inertiajs/react';
+import { ArrowLeft, Calendar, Users, Globe } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: 'Dashboard',
+    href: '/dashboard',
+  },
+  {
+    title: 'Calendars',
+    href: '/admin/calendars',
+  },
+  {
+    'title': 'Create Calendar',
+    href: '/admin/calendars/create',
+  },
+];
+
+interface CalendarFormData {
+    name: string;
+    members_only: boolean;
+    public: boolean;
+}
+
+export default function CalendarCreate() {
+    const { data, setData, post, processing, errors } = useForm<CalendarFormData>({
+        name: '',
+        members_only: false,
+        public: false,
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post('/admin/calendars');
+    };
+
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Create Calendar" />
+            <div className="max-w-2xl mx-auto space-y-6">
+                {/* Header */}
+                <div className="flex items-center gap-4">
+                    <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => router.get('/admin/calendars')}
+                    >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Back to Calendars
+                    </Button>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">Create Calendar</h1>
+                        <p className="text-gray-600">Add a new event calendar</p>
+                    </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Basic Information */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Calendar className="h-5 w-5" />
+                                Calendar Information
+                            </CardTitle>
+                            <CardDescription>
+                                Basic details about the calendar
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div>
+                                <Label htmlFor="name">Calendar Name *</Label>
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    className={errors.name ? 'border-red-500' : ''}
+                                    placeholder="Enter calendar name..."
+                                />
+                                {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Visibility Settings */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Globe className="h-5 w-5" />
+                                Visibility Settings
+                            </CardTitle>
+                            <CardDescription>
+                                Control who can view events in this calendar
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="public"
+                                    checked={data.public}
+                                    onCheckedChange={(checked) => setData('public', checked as boolean)}
+                                />
+                                <Label htmlFor="public" className="flex items-center gap-2">
+                                    <Globe className="h-4 w-4" />
+                                    Public Calendar
+                                </Label>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Public calendars can be viewed by anyone, including non-members
+                            </p>
+
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="members_only"
+                                    checked={data.members_only}
+                                    onCheckedChange={(checked) => setData('members_only', checked as boolean)}
+                                />
+                                <Label htmlFor="members_only" className="flex items-center gap-2">
+                                    <Users className="h-4 w-4" />
+                                    Members Only
+                                </Label>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Members only calendars require authentication to view
+                            </p>
+
+                            {!data.public && !data.members_only && (
+                                <Alert>
+                                    <AlertDescription>
+                                        This calendar will be private and only accessible to administrators.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+
+                            {data.public && data.members_only && (
+                                <Alert>
+                                    <AlertDescription>
+                                        <strong>Note:</strong> This calendar will be visible to members only (members_only takes precedence over public).
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Actions */}
+                    <div className="flex items-center justify-end space-x-4">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => router.get('/admin/calendars')}
+                        >
+                            Cancel
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                            {processing ? 'Creating...' : 'Create Calendar'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </AppLayout>
+    );
+}
