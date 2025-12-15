@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { type BreadcrumbItem } from '@/types';
+import { useMemo } from 'react';
 
 interface Member {
     id: number;
@@ -87,24 +89,31 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
         });
     };
 
+    const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+        },
+        {
+            title: 'Yahrzeits',
+            href: '/admin/yahrzeits',
+        },
+        {
+            title: yahrzeit.name,
+            href: `/admin/yahrzeits/${yahrzeit.id}`,
+        },
+    ], [yahrzeit.name, yahrzeit.id]);
+
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Yahrzeit - ${yahrzeit.name}`} />
-            <div className="max-w-4xl mx-auto space-y-6">
-                {/* Header */}
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+         {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => router.get('/admin/yahrzeits')}
-                        >
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            Back to Yahrzeits
-                        </Button>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Yahrzeit Record</h1>
-                            <p className="text-gray-600">Memorial observance details</p>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Yahrzeit Record</h1>
+                            <p className="text-gray-600 dark:text-gray-400">Memorial observance details</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -136,19 +145,19 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <label className="text-sm font-medium text-gray-700">Name</label>
-                                <p className="text-lg font-semibold text-gray-900">{yahrzeit.name}</p>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Name</label>
+                                <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{yahrzeit.name}</p>
                             </div>
 
                             {yahrzeit.hebrew_name && (
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Hebrew Name</label>
-                                    <p className="text-lg text-gray-900">{yahrzeit.hebrew_name}</p>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Hebrew Name</label>
+                                    <p className="text-lg text-gray-900 dark:text-gray-100">{yahrzeit.hebrew_name}</p>
                                 </div>
                             )}
 
                             <div>
-                                <label className="text-sm font-medium text-gray-700">Relationship</label>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Relationship</label>
                                 <div className="mt-1">
                                     <Badge variant="secondary" className="text-sm">
                                         {yahrzeit.relationship}
@@ -158,40 +167,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                         </CardContent>
                     </Card>
 
-                    {/* Member Information */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <User className="h-5 w-5" />
-                                Observing Member
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium text-gray-700">Name</label>
-                                <p className="text-lg font-semibold text-gray-900">
-                                    {yahrzeit.member.first_name} {yahrzeit.member.last_name}
-                                </p>
-                            </div>
-
-                            {yahrzeit.member.hebrew_name && (
-                                <div>
-                                    <label className="text-sm font-medium text-gray-700">Hebrew Name</label>
-                                    <p className="text-lg text-gray-900">{yahrzeit.member.hebrew_name}</p>
-                                </div>
-                            )}
-
-                            <div>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => router.get(`/admin/members/${yahrzeit.member.id}`)}
-                                >
-                                    View Member Profile
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    
                 </div>
 
                 {/* Date and Observance Information */}
@@ -206,13 +182,13 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Gregorian Date of Death</label>
-                                    <p className="text-lg text-gray-900 mt-1">{formatDate(yahrzeit.date_of_death)}</p>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Gregorian Date of Death</label>
+                                    <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{formatDate(yahrzeit.date_of_death)}</p>
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Hebrew Date of Death</label>
-                                    <p className="text-lg text-gray-900 mt-1">
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Hebrew Date of Death</label>
+                                    <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">
                                         {formatHebrewDate(yahrzeit.hebrew_day_of_death, yahrzeit.hebrew_month_of_death)}
                                     </p>
                                 </div>
@@ -220,7 +196,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Observance Type</label>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Observance Type</label>
                                     <div className="mt-1">
                                         <Badge className={OBSERVANCE_COLORS[yahrzeit.observance_type]}>
                                             {OBSERVANCE_LABELS[yahrzeit.observance_type]}
@@ -234,8 +210,8 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                             <>
                                 <Separator className="my-6" />
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Notes</label>
-                                    <p className="text-gray-900 mt-2 whitespace-pre-line">{yahrzeit.notes}</p>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Notes</label>
+                                    <p className="text-gray-900 dark:text-gray-100 mt-2 whitespace-pre-line">{yahrzeit.notes}</p>
                                 </div>
                             </>
                         )}
@@ -250,12 +226,12 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                     <CardContent>
                         <div className="grid gap-4 md:grid-cols-2">
                             <div>
-                                <label className="text-sm font-medium text-gray-700">Created</label>
-                                <p className="text-gray-900 mt-1">{formatDateTime(yahrzeit.created_at)}</p>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Created</label>
+                                <p className="text-gray-900 dark:text-gray-100 mt-1">{formatDateTime(yahrzeit.created_at)}</p>
                             </div>
                             <div>
-                                <label className="text-sm font-medium text-gray-700">Last Updated</label>
-                                <p className="text-gray-900 mt-1">{formatDateTime(yahrzeit.updated_at)}</p>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Last Updated</label>
+                                <p className="text-gray-900 dark:text-gray-100 mt-1">{formatDateTime(yahrzeit.updated_at)}</p>
                             </div>
                         </div>
                     </CardContent>

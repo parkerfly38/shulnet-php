@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Edit, Mail, Phone, MapPin, Calendar, User } from 'lucide-react';
-import { type Member } from '@/types';
+import { type Member, type BreadcrumbItem } from '@/types';
 
 interface Props {
   member: Member;
@@ -45,19 +45,28 @@ export default function MembersShow({ member }: Readonly<Props>) {
     return fullAddress;
   };
 
+  const breadcrums: BreadcrumbItem[] = useMemo(() => [
+    {
+      title: 'Dashboard',
+      href: '/dashboard',
+    },
+    {
+      title: 'Members',
+      href: '/admin/members',
+    },
+    { 
+      title: 'Edit ' + getDisplayName(),
+      href: `/admin/members/${member.id}/edit`
+    }
+  ], [member.id]);
+
   return (
-    <AppLayout>
+    <AppLayout breadcrumbs={breadcrums}>
       <Head title={getDisplayName()} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin/members">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Members
-              </Button>
-            </Link>
             <div>
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                 {getDisplayName()}
@@ -85,6 +94,20 @@ export default function MembersShow({ member }: Readonly<Props>) {
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset capitalize
+                      {member.member_type === 'member' ? 'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-500/20' : ''}
+                      {member.member_type === 'contact' ? 'bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-500/20' : ''}
+                      {member.member_type === 'prospect' ? 'bg-yellow-50 text-yellow-700 ring-yellow-600/20 dark:bg-yellow-900/20 dark:text-yellow-400 dark:ring-yellow-500/20' : ''}
+                      {member.member_type === 'former' ? 'bg-gray-50 text-gray-700 ring-gray-600/20 dark:bg-gray-900/20 dark:text-gray-400 dark:ring-gray-500/20' : ''}"
+                    >
+                      {member.member_type === 'former' ? 'Former Member' : member.member_type}
+                    </span>
+                  </dd>
+                </div>
+
                 {member.title && (
                   <div>
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Title</dt>

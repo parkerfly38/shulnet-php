@@ -6,6 +6,7 @@ use App\Http\Controllers\YahrzeitController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -76,6 +77,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'events.destroy',
             ]
         ]);
+
+        Route::resource('admin/notes', NoteController::class, [
+            'names' => [
+                'index' => 'notes.index',
+                'create' => 'notes.create',
+                'store' => 'notes.store',
+                'show' => 'notes.show',
+                'edit' => 'notes.edit',
+                'update' => 'notes.update',
+                'destroy' => 'notes.destroy',
+            ]
+        ]);
+        
+        // Mark all user notifications as seen
+        Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');
     });
 });
 

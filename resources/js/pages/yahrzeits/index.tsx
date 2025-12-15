@@ -5,6 +5,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trash2, Edit, Plus, Search, Eye, Calendar, Star } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import { type BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: 'Dashboard',
+    href: '/dashboard',
+  },
+  {
+    title: 'Yahrzeits',
+    href: '/admin/yahrzeits',
+  },
+];
 
 interface Member {
     id: number;
@@ -108,8 +120,8 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   };
 
   return (
-    <AppLayout>
-      <Head title="Yahrzeit Management" />
+    <AppLayout breadcrumbs={breadcrumbs}>
+      <Head title="Yahrzeits" />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex justify-between items-center">

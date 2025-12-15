@@ -9,6 +9,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { type BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+    },
+    {
+        title: 'Yahrzeits',
+        href: '/admin/yahrzeits',
+    },
+    {
+        title: 'Create',
+        href: '/admin/yahrzeits/create',
+    },
+];
 
 interface Member {
     id: number;
@@ -106,22 +122,14 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Add Yahrzeit Record" />
-            <div className="max-w-2xl mx-auto space-y-6">
-                {/* Header */}
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+          {/* Header */}
                 <div className="flex items-center gap-4">
-                    <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => router.get('/admin/yahrzeits')}
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to Yahrzeits
-                    </Button>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Add Yahrzeit Record</h1>
-                        <p className="text-gray-600">Create a new memorial observance record</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Add Yahrzeit Record</h1>
+                        <p className="text-gray-600 dark:text-gray-400">Create a new memorial observance record</p>
                     </div>
                 </div>
 

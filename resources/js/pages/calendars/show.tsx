@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Users, Globe, Plus, Edit, Trash2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem } from '@/types';
 
 
 
@@ -92,16 +92,8 @@ export default function CalendarShow({ calendar }: CalendarShowProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => router.get('/admin/calendars')}
-                        >
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            Back to Calendars
-                        </Button>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                                 <Calendar className="h-6 w-6" />
                                 {calendar.name}
                             </h1>
@@ -146,7 +138,7 @@ export default function CalendarShow({ calendar }: CalendarShowProps) {
                         <CardContent className="space-y-4">
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Calendar Name</label>
-                                <p className="text-gray-900 font-medium">{calendar.name}</p>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium">{calendar.name}</p>
                             </div>
                             
                             <div>
@@ -158,12 +150,12 @@ export default function CalendarShow({ calendar }: CalendarShowProps) {
 
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Created</label>
-                                <p className="text-gray-900">{formatDate(calendar.created_at)}</p>
+                                <p className="text-gray-900 dark:text-gray-100">{formatDate(calendar.created_at)}</p>
                             </div>
 
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Last Updated</label>
-                                <p className="text-gray-900">{formatDate(calendar.updated_at)}</p>
+                                <p className="text-gray-900 dark:text-gray-100">{formatDate(calendar.updated_at)}</p>
                             </div>
                         </CardContent>
                     </Card>

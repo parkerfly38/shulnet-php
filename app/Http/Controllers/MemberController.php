@@ -15,11 +15,12 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
+        $memberType = $request->get('member_type');
         $perPage = $request->get('per_page', 15);
 
         $query = Member::query()
             ->select([
-                'id', 'first_name', 'last_name', 'email', 'phone1', 
+                'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1', 
                 'city', 'state', 'created_at', 'updated_at'
             ])
             ->orderBy('last_name')
@@ -35,12 +36,17 @@ class MemberController extends Controller
             });
         }
 
+        if ($memberType) {
+            $query->where('member_type', $memberType);
+        }
+
         $members = $query->paginate($perPage);
 
         return Inertia::render('members/index', [
             'members' => $members,
             'filters' => [
                 'search' => $search,
+                'member_type' => $memberType,
             ]
         ]);
     }
@@ -59,6 +65,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:members,email',
@@ -120,6 +127,7 @@ class MemberController extends Controller
     public function update(Request $request, Member $member)
     {
         $validated = $request->validate([
+            'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('members')->ignore($member->id)],

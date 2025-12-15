@@ -37,9 +37,9 @@ const adminNavItems: NavItem[] = [
         icon: UserPlus,
     },
     {
-        title: 'Yahrzeits',
-        href: '/admin/yahrzeits',
-        icon: Star,
+        title: 'Notes',
+        href: '/admin/notes',
+        icon: BookOpen,
     },
     {
         title: 'Calendars',
@@ -50,6 +50,11 @@ const adminNavItems: NavItem[] = [
         title: 'Events',
         href: '/admin/events',
         icon: CalendarDays,
+    },
+    {
+        title: 'Yahrzeits',
+        href: '/admin/yahrzeits',
+        icon: Star,
     },
 ];
 

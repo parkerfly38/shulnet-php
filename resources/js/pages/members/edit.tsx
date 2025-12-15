@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -6,13 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Save } from 'lucide-react';
-import { type Member } from '@/types';
+import { type Member, type BreadcrumbItem } from '@/types';
 
 interface Props {
   member: Member;
 }
 
 interface MemberForm {
+  member_type: 'member' | 'contact' | 'prospect' | 'former';
   first_name: string;
   last_name: string;
   middle_name: string;
@@ -44,6 +45,7 @@ interface MemberForm {
 
 export default function MembersEdit({ member }: Readonly<Props>) {
   const { data, setData, put, processing, errors } = useForm<MemberForm>({
+    member_type: member.member_type || 'member',
     first_name: member.first_name || '',
     last_name: member.last_name || '',
     middle_name: member.middle_name || '',
@@ -73,23 +75,32 @@ export default function MembersEdit({ member }: Readonly<Props>) {
     anniversary_date: (member as any).anniversary_date ? new Date((member as any).anniversary_date) : null,
   });
 
+  const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
+    {
+      title: 'Dashboard',
+      href: '/dashboard',
+    },
+    {
+      title: 'Members',
+      href: '/admin/members',
+    },
+    {
+      title: `Edit ${member.first_name} ${member.last_name}`,
+      href: `/admin/members/${member.id}/edit`,
+    }
+  ],[member.first_name, member.last_name, member.id]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     put(`/admin/members/${member.id}`);
   };
 
   return (
-    <AppLayout>
+    <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={`Edit ${member.first_name} ${member.last_name}`} />
 
-      <div className="space-y-6">
+      <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center gap-4">
-          <Link href="/admin/members">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Members
-            </Button>
-          </Link>
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
               Edit {member.first_name} {member.last_name}
@@ -107,6 +118,24 @@ export default function MembersEdit({ member }: Readonly<Props>) {
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <Label htmlFor="member_type">Type *</Label>
+                <Select value={data.member_type} onValueChange={(value: any) => setData('member_type', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="member">Member</SelectItem>
+                    <SelectItem value="contact">Contact</SelectItem>
+                    <SelectItem value="prospect">Prospect</SelectItem>
+                    <SelectItem value="former">Former Member</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.member_type && (
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.member_type}</p>
+                )}
+              </div>
+
               <div>
                 <Label htmlFor="title">Title</Label>
                 <Input

@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Save } from 'lucide-react';
+import { type BreadcrumbItem } from '@/types'
 
 interface MemberForm {
+  member_type: 'member' | 'contact' | 'prospect' | 'former';
   first_name: string;
   last_name: string;
   middle_name: string;
@@ -39,6 +41,7 @@ interface MemberForm {
 
 export default function MembersCreate() {
   const { data, setData, post, processing, errors } = useForm<MemberForm>({
+    member_type: 'member',
     first_name: '',
     last_name: '',
     middle_name: '',
@@ -68,23 +71,23 @@ export default function MembersCreate() {
     anniversary_date: null,
   });
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'Members', href: '/admin/members' },
+    { title: 'Create Member', href: '/admin/members/create' },
+  ];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     post('/admin/members');
   };
 
   return (
-    <AppLayout>
+    <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Add New Member" />
 
-      <div className="space-y-6">
+      <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center gap-4">
-          <Link href="/admin/members">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Members
-            </Button>
-          </Link>
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
               Add New Member
@@ -102,6 +105,24 @@ export default function MembersCreate() {
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <Label htmlFor="member_type">Type *</Label>
+                <Select value={data.member_type} onValueChange={(value: any) => setData('member_type', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="member">Member</SelectItem>
+                    <SelectItem value="contact">Contact</SelectItem>
+                    <SelectItem value="prospect">Prospect</SelectItem>
+                    <SelectItem value="former">Former Member</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.member_type && (
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.member_type}</p>
+                )}
+              </div>
+
               <div>
                 <Label htmlFor="title">Title</Label>
                 <Input

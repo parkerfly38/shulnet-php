@@ -45,6 +45,7 @@ export interface User {
 
 export interface Member {
     id: number;
+    member_type: 'member' | 'contact' | 'prospect' | 'former';
     first_name: string;
     last_name: string;
     middle_name?: string;
@@ -72,6 +73,26 @@ export interface Member {
     brianbatorah?: boolean;
     maftir?: boolean;
     anniversary_date?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Note {
+    id: number;
+    item_scope: string;
+    name: string;
+    deadline_date?: string;
+    completed_date?: string;
+    seen_date?: string;
+    note_text?: string;
+    label?: string;
+    added_by?: string;
+    visibility: string;
+    priority: string;
+    member_id?: number;
+    user_id?: number;
+    member?: Member;
+    user?: User;
     created_at: string;
     updated_at: string;
 }

@@ -57,20 +57,12 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${calendar.name}`} />
-            <div className="max-w-2xl mx-auto space-y-6">
-                {/* Header */}
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+          {/* Header */}
                 <div className="flex items-center gap-4">
-                    <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => router.get('/admin/calendars')}
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to Calendars
-                    </Button>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Edit Calendar</h1>
-                        <p className="text-gray-600">Update calendar settings</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Calendar</h1>
+                        <p className="text-gray-600 dark:text-gray-400">Update calendar settings</p>
                     </div>
                 </div>
 

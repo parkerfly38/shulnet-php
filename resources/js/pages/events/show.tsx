@@ -136,7 +136,7 @@ export default function EventShow({ event }: EventShowProps) {
                                     {event.calendar.name}
                                 </Badge>
                             </div>
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                                 {event.title}
                             </h1>
                             <div className="flex items-center gap-2 mt-1">
@@ -189,13 +189,13 @@ export default function EventShow({ event }: EventShowProps) {
                         <CardContent className="space-y-4">
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Title</label>
-                                <p className="text-gray-900 font-medium">{event.title}</p>
+                                <p className="text-gray-900 dark:text-gray-100 font-medium">{event.title}</p>
                             </div>
 
                             {event.description && (
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Description</label>
-                                    <p className="text-gray-900 whitespace-pre-wrap">{event.description}</p>
+                                    <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{event.description}</p>
                                 </div>
                             )}
                             
@@ -203,7 +203,7 @@ export default function EventShow({ event }: EventShowProps) {
                                 <label className="text-sm font-medium text-gray-500">Calendar</label>
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-gray-400" />
-                                    <span className="text-gray-900">{event.calendar.name}</span>
+                                    <span className="text-gray-900 dark:text-gray-100">{event.calendar.name}</span>
                                 </div>
                             </div>
 
@@ -212,7 +212,7 @@ export default function EventShow({ event }: EventShowProps) {
                                 <div className="flex items-center gap-2 mt-1">
                                     <Clock className="h-4 w-4 text-gray-400" />
                                     <div>
-                                        <p className="text-gray-900">{formatDateRange()}</p>
+                                        <p className="text-gray-900 dark:text-gray-100">{formatDateRange()}</p>
                                         {event.all_day && (
                                             <p className="text-sm text-gray-500">All day event</p>
                                         )}
@@ -225,7 +225,7 @@ export default function EventShow({ event }: EventShowProps) {
                                     <label className="text-sm font-medium text-gray-500">Location</label>
                                     <div className="flex items-center gap-2 mt-1">
                                         <MapPin className="h-4 w-4 text-gray-400" />
-                                        <span className="text-gray-900">{event.location}</span>
+                                        <span className="text-gray-900 dark:text-gray-100">{event.location}</span>
                                     </div>
                                 </div>
                             )}
@@ -236,12 +236,12 @@ export default function EventShow({ event }: EventShowProps) {
                                     {event.members_only ? (
                                         <>
                                             <Users className="h-4 w-4 text-blue-500" />
-                                            <span className="text-gray-900">Members Only</span>
+                                            <span className="text-gray-900 dark:text-gray-100">Members Only</span>
                                         </>
                                     ) : (
                                         <>
                                             <Globe className="h-4 w-4 text-green-500" />
-                                            <span className="text-gray-900">Public Event</span>
+                                            <span className="text-gray-900 dark:text-gray-100">Public Event</span>
                                         </>
                                     )}
                                 </div>
@@ -260,17 +260,17 @@ export default function EventShow({ event }: EventShowProps) {
                         <CardContent className="space-y-4">
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Created</label>
-                                <p className="text-gray-900">{formatDate(event.created_at)}</p>
+                                <p className="text-gray-900 dark:text-gray-100">{formatDate(event.created_at)}</p>
                             </div>
 
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Last Updated</label>
-                                <p className="text-gray-900">{formatDate(event.updated_at)}</p>
+                                <p className="text-gray-900 dark:text-gray-100">{formatDate(event.updated_at)}</p>
                             </div>
 
                             <div>
                                 <label className="text-sm font-medium text-gray-500">Event ID</label>
-                                <p className="text-gray-900 font-mono text-sm">{event.id}</p>
+                                <p className="text-gray-900 dark:text-gray-100 font-mono text-sm">{event.id}</p>
                             </div>
                         </CardContent>
                     </Card>

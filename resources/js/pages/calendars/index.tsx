@@ -154,23 +154,23 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
-                          {calendar.public && (
+                          {calendar.public ? (
                             <Badge variant="default" className="bg-green-100 text-green-800">
                               <Globe className="h-3 w-3 mr-1" />
                               Public
                             </Badge>
-                          )}
-                          {calendar.members_only && (
+                          ) : null}
+                          {calendar.members_only ? (
                             <Badge variant="secondary">
                               <Users className="h-3 w-3 mr-1" />
                               Members Only
                             </Badge>
-                          )}
-                          {!calendar.public && !calendar.members_only && (
+                          ) : null}
+                          {(!calendar.public && !calendar.members_only) ? (
                             <Badge variant="outline">
                               Private
                             </Badge>
-                          )}
+                          ) : null}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">

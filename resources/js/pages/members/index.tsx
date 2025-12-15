@@ -4,7 +4,19 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trash2, Edit, Plus, Search, Eye } from 'lucide-react';
-import { type Member } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { type Member, type BreadcrumbItem } from '@/types';
+
+const breadcrumbs: BreadcrumbItem[] = [
+  {
+    title: 'Dashboard',
+    href: '/dashboard',
+  },
+  {
+    title: 'Members',
+    href: '/admin/members',
+  }
+];
 
 interface PaginationData {
   current_page: number;
@@ -30,15 +42,25 @@ interface Props {
   members: PaginationData;
   filters: {
     search?: string;
+    member_type?: string;
   };
 }
 
 export default function MembersIndex({ members, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
+  const [memberType, setMemberType] = useState(filters.member_type || '');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.get('/admin/members', { search }, {
+    router.get('/admin/members', { search, member_type: memberType || undefined }, {
+      preserveState: true,
+      replace: true,
+    });
+  };
+
+  const handleMemberTypeChange = (value: string) => {
+    setMemberType(value);
+    router.get('/admin/members', { search, member_type: value || undefined }, {
       preserveState: true,
       replace: true,
     });
@@ -51,7 +73,7 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
   };
 
   return (
-    <AppLayout>
+    <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Member Management" />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
@@ -73,7 +95,7 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
         </div>
 
         {/* Search */}
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-end">
           <form onSubmit={handleSearch} className="flex gap-2 flex-1">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -89,11 +111,26 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
               Search
             </Button>
           </form>
-          {filters.search && (
+          <div className="w-48">
+            <Select value={memberType ?? ' '} onValueChange={handleMemberTypeChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value=" ">All Types</SelectItem>
+                <SelectItem value="member">Members</SelectItem>
+                <SelectItem value="contact">Contacts</SelectItem>
+                <SelectItem value="prospect">Prospects</SelectItem>
+                <SelectItem value="former">Former Members</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {(filters.search || filters.member_type) && (
             <Button
               variant="outline"
               onClick={() => {
                 setSearch('');
+                setMemberType('');
                 router.get('/admin/members');
               }}
             >
@@ -124,6 +161,9 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
                     Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Type
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Contact
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -148,6 +188,16 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                           ID: {member.id}
                         </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset capitalize
+                          ${member.member_type === 'member' ? 'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-500/20' : ''}
+                          ${member.member_type === 'contact' ? 'bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/20 dark:text-blue-400 dark:ring-blue-500/20' : ''}
+                          ${member.member_type === 'prospect' ? 'bg-yellow-50 text-yellow-700 ring-yellow-600/20 dark:bg-yellow-900/20 dark:text-yellow-400 dark:ring-yellow-500/20' : ''}
+                          ${member.member_type === 'former' ? 'bg-gray-50 text-gray-700 ring-gray-600/20 dark:bg-gray-900/20 dark:text-gray-400 dark:ring-gray-500/20' : ''}`}
+                        >
+                          {member.member_type === 'former' ? 'Former' : member.member_type}
+                        </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900 dark:text-gray-100">

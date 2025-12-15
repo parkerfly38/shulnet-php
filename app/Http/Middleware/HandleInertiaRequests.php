@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Note;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,6 +40,14 @@ class HandleInertiaRequests extends Middleware
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
         $user = $request->user();
+        
+        // Get unseen notifications count for current user
+        $unseenNotifications = 0;
+        if ($user) {
+            $unseenNotifications = Note::where('user_id', $user->id)
+                ->whereNull('seen_date')
+                ->count();
+        }
 
         return [
             ...parent::share($request),
@@ -56,6 +65,7 @@ class HandleInertiaRequests extends Middleware
                     'is_student' => $user->isStudent(),
                     'is_member' => $user->isMember(),
                 ] : null,
+                'unseenNotifications' => $unseenNotifications,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
