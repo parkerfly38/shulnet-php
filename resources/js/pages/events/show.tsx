@@ -121,14 +121,6 @@ export default function EventShow({ event }: EventShowProps) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => router.get('/admin/events')}
-                        >
-                            <ArrowLeft className="h-4 w-4 mr-2" />
-                            Back to Events
-                        </Button>
                         <div>
                             <div className="flex items-center gap-2 mb-1">
                                 <Badge variant="outline">

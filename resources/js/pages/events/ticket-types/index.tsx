@@ -75,11 +75,6 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href={`/admin/events/${event.id}`}>
-              <Button variant="outline" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 <Ticket className="inline h-6 w-6 mr-2" />

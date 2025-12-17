@@ -71,11 +71,6 @@ export default function TicketTypeEdit({ event, ticketType }: Readonly<Props>) {
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Link href={`/admin/events/${event.id}/ticket-types`}>
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Ticket Type</h1>
             <p className="text-gray-600 dark:text-gray-400">{event.name}</p>

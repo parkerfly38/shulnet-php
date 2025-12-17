@@ -125,20 +125,12 @@ export default function EventEdit({ event, calendars }: EventEditProps) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Edit ${event.title}`} />
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Header */}
                 <div className="flex items-center gap-4">
-                    <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => router.get('/admin/events')}
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to Events
-                    </Button>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Edit Event</h1>
-                        <p className="text-gray-600">Update event details</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Event</h1>
+                        <p className="text-gray-600 dark:text-gray-400">Update event details</p>
                     </div>
                 </div>
 
