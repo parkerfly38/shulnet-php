@@ -96,3 +96,20 @@ export interface Note {
     created_at: string;
     updated_at: string;
 }
+
+export interface EventTicketType {
+    id: number;
+    event_id: number;
+    name: string;
+    description?: string;
+    category: 'early_bird' | 'adult' | 'child' | 'member' | 'nonmember' | 'general' | 'vip';
+    price: string;
+    quantity_available?: number;
+    quantity_sold: number;
+    sale_starts?: string;
+    sale_ends?: string;
+    active: boolean;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+}

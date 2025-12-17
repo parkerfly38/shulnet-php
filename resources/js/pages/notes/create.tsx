@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useForm, Head } from '@inertiajs/react';
-import { ArrowLeft, FileText, Calendar, AlertTriangle, User, Tag } from 'lucide-react';
+import { ArrowLeft, FileText, Calendar, AlertTriangle, Tag } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

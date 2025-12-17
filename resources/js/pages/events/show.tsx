@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Edit, Trash2, Globe } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Users, Edit, Trash2, Globe, Ticket } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreadcrumbItem } from '@/types';
@@ -160,6 +160,12 @@ export default function EventShow({ event }: EventShowProps) {
                         </div>
                     </div>
                     <div className="flex items-center space-x-2">
+                        <Link href={`/admin/events/${event.id}/ticket-types`}>
+                            <Button variant="outline">
+                                <Ticket className="h-4 w-4 mr-2" />
+                                Manage Tickets
+                            </Button>
+                        </Link>
                         <Link href={`/admin/events/${event.id}/edit`}>
                             <Button variant="outline">
                                 <Edit className="h-4 w-4 mr-2" />

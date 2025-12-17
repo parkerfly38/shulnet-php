@@ -5,6 +5,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\YahrzeitController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventTicketTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Route;
@@ -77,6 +78,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'events.destroy',
             ]
         ]);
+
+        // Event ticket type routes
+        Route::resource('admin/events.ticket-types', EventTicketTypeController::class, [
+            'names' => [
+                'index' => 'events.ticket-types.index',
+                'create' => 'events.ticket-types.create',
+                'store' => 'events.ticket-types.store',
+                'edit' => 'events.ticket-types.edit',
+                'update' => 'events.ticket-types.update',
+                'destroy' => 'events.ticket-types.destroy',
+            ]
+        ])->except(['show']);
 
         Route::resource('admin/notes', NoteController::class, [
             'names' => [

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
@@ -40,5 +41,10 @@ class Event extends Model
     public function calendar(): BelongsTo
     {
         return $this->belongsTo(Calendar::class);
+    }
+
+    public function ticketTypes(): HasMany
+    {
+        return $this->hasMany(EventTicketType::class)->orderBy('sort_order');
     }
 }
