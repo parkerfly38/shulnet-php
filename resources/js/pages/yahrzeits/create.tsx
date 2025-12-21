@@ -71,10 +71,10 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
         date_of_death: '',
         observance_type: 'standard',
         notes: '',
-        members: [{ member_id: '', relationship: '' }]
+        members: []
     });
 
-    const [memberSearches, setMemberSearches] = useState<string[]>(['']);
+    const [memberSearches, setMemberSearches] = useState<string[]>([]);
     const [filteredMembers, setFilteredMembers] = useState<Member[][]>([members]);
 
     useEffect(() => {
@@ -97,11 +97,9 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
     };
 
     const removeMember = (index: number) => {
-        if (data.members.length > 1) {
-            const newMembers = data.members.filter((_, i) => i !== index);
-            setData('members', newMembers);
-            setMemberSearches(memberSearches.filter((_, i) => i !== index));
-        }
+        const newMembers = data.members.filter((_, i) => i !== index);
+        setData('members', newMembers);
+        setMemberSearches(memberSearches.filter((_, i) => i !== index));
     };
 
     const updateMember = (index: number, field: keyof MemberRelationship, value: string) => {
@@ -134,110 +132,6 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Members Selection */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <User className="h-5 w-5" />
-                                Family Members
-                            </CardTitle>
-                            <CardDescription>
-                                Select congregation members who will observe this yahrzeit and their relationship to the deceased
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {data.members.map((memberData, index) => (
-                                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <h4 className="font-medium">Family Member {index + 1}</h4>
-                                        {data.members.length > 1 && (
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                size="sm"
-                                                onClick={() => removeMember(index)}
-                                                className="text-red-600 hover:text-red-800"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </Button>
-                                        )}
-                                    </div>
-                                    
-                                    <div>
-                                        <Label htmlFor={`member_search_${index}`}>Search Member</Label>
-                                        <Input
-                                            id={`member_search_${index}`}
-                                            type="text"
-                                            placeholder="Search by name or Hebrew name..."
-                                            value={memberSearches[index] || ''}
-                                            onChange={(e) => updateMemberSearch(index, e.target.value)}
-                                            className="mb-2"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <Label htmlFor={`member_id_${index}`}>Select Member *</Label>
-                                        <Select 
-                                            value={memberData.member_id} 
-                                            onValueChange={(value) => updateMember(index, 'member_id', value)}
-                                        >
-                                            <SelectTrigger className={errors[`members.${index}.member_id`] ? 'border-red-500' : ''}>
-                                                <SelectValue placeholder="Choose a member..." />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {(filteredMembers[index] || []).map((member) => (
-                                                    <SelectItem key={member.id} value={member.id.toString()}>
-                                                        <div>
-                                                            <div>{member.first_name} {member.last_name}</div>
-                                                            {member.hebrew_name && (
-                                                                <div className="text-sm text-gray-600">{member.hebrew_name}</div>
-                                                            )}
-                                                        </div>
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        {errors[`members.${index}.member_id`] && (
-                                            <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.member_id`]}</p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <Label htmlFor={`relationship_${index}`}>Relationship to Deceased *</Label>
-                                        <Select 
-                                            value={memberData.relationship} 
-                                            onValueChange={(value) => updateMember(index, 'relationship', value)}
-                                        >
-                                            <SelectTrigger className={errors[`members.${index}.relationship`] ? 'border-red-500' : ''}>
-                                                <SelectValue placeholder="Select relationship..." />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {RELATIONSHIP_OPTIONS.map((relationship) => (
-                                                    <SelectItem key={relationship} value={relationship}>
-                                                        {relationship}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        {errors[`members.${index}.relationship`] && (
-                                            <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.relationship`]}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                            
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={addMember}
-                                className="w-full"
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Another Family Member
-                            </Button>
-                        </CardContent>
-                    </Card>
-
                     {/* Deceased Information */}
                     <Card>
                         <CardHeader>
@@ -334,6 +228,116 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                 />
                                 {errors.notes && <p className="text-sm text-red-600 mt-1">{errors.notes}</p>}
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Members Selection (Optional) */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <User className="h-5 w-5" />
+                                Family Members (Optional)
+                            </CardTitle>
+                            <CardDescription>
+                                Add congregation members who will observe this yahrzeit and their relationship to the deceased
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {data.members.length === 0 ? (
+                                <Alert>
+                                    <AlertDescription>
+                                        No family members added yet. Click the button below to add members who will observe this yahrzeit.
+                                    </AlertDescription>
+                                </Alert>
+                            ) : (
+                                data.members.map((memberData, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h4 className="font-medium">Family Member {index + 1}</h4>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => removeMember(index)}
+                                                className="text-red-600 hover:text-red-800"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                        
+                                        <div>
+                                            <Label htmlFor={`member_search_${index}`}>Search Member</Label>
+                                            <Input
+                                                id={`member_search_${index}`}
+                                                type="text"
+                                                placeholder="Search by name or Hebrew name..."
+                                                value={memberSearches[index] || ''}
+                                                onChange={(e) => updateMemberSearch(index, e.target.value)}
+                                                className="mb-2"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor={`member_id_${index}`}>Select Member *</Label>
+                                            <Select 
+                                                value={memberData.member_id} 
+                                                onValueChange={(value) => updateMember(index, 'member_id', value)}
+                                            >
+                                                <SelectTrigger className={errors[`members.${index}.member_id`] ? 'border-red-500' : ''}>
+                                                    <SelectValue placeholder="Choose a member..." />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {(filteredMembers[index] || []).map((member) => (
+                                                        <SelectItem key={member.id} value={member.id.toString()}>
+                                                            <div>
+                                                                <div>{member.first_name} {member.last_name}</div>
+                                                                {member.hebrew_name && (
+                                                                    <div className="text-sm text-gray-600">{member.hebrew_name}</div>
+                                                                )}
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors[`members.${index}.member_id`] && (
+                                                <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.member_id`]}</p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor={`relationship_${index}`}>Relationship to Deceased *</Label>
+                                            <Select 
+                                                value={memberData.relationship} 
+                                                onValueChange={(value) => updateMember(index, 'relationship', value)}
+                                            >
+                                                <SelectTrigger className={errors[`members.${index}.relationship`] ? 'border-red-500' : ''}>
+                                                    <SelectValue placeholder="Select relationship..." />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {RELATIONSHIP_OPTIONS.map((relationship) => (
+                                                        <SelectItem key={relationship} value={relationship}>
+                                                            {relationship}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors[`members.${index}.relationship`] && (
+                                                <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.relationship`]}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                            
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={addMember}
+                                className="w-full"
+                            >
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Family Member
+                            </Button>
                         </CardContent>
                     </Card>
 

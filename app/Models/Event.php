@@ -35,6 +35,7 @@ class Event extends Model
         'online_url',
         'all_day',
         'public',
+        'location',
         'calendar_id'
     ];
 

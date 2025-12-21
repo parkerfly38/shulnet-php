@@ -45,9 +45,9 @@ class HebrewCalendarService
         if (empty($hebrewDate)) {
             // Fallback if conversion fails
             return [
-                'day' => $day,
-                'month' => $this->getHebrewMonthApproximate($month),
-                'year' => $year + 3760, // Approximate Hebrew year
+                'day' => (int)$day,
+                'month' => $this->getHebrewMonthNumberApproximate((int)$month),
+                'year' => (int)$year + 3760, // Approximate Hebrew year
                 'formatted' => null
             ];
         }
@@ -58,9 +58,9 @@ class HebrewCalendarService
         if (count($parts) !== 3) {
             // Fallback parsing
             return [
-                'day' => $day,
-                'month' => $this->getHebrewMonthApproximate($month),
-                'year' => $year + 3760,
+                'day' => (int)$day,
+                'month' => $this->getHebrewMonthNumberApproximate((int)$month),
+                'year' => (int)$year + 3760,
                 'formatted' => null
             ];
         }
@@ -71,7 +71,7 @@ class HebrewCalendarService
 
         return [
             'day' => $hebrewDay,
-            'month' => $this->getHebrewMonthName($hebrewMonth),
+            'month' => $hebrewMonth,
             'year' => $hebrewYear,
             'formatted' => sprintf('%d %s %d', $hebrewDay, $this->getHebrewMonthName($hebrewMonth), $hebrewYear)
         ];
@@ -86,27 +86,27 @@ class HebrewCalendarService
     }
 
     /**
-     * Approximate Hebrew month based on Gregorian month (fallback)
+     * Approximate Hebrew month number based on Gregorian month (fallback)
      */
-    private function getHebrewMonthApproximate(int $gregorianMonth): string
+    private function getHebrewMonthNumberApproximate(int $gregorianMonth): int
     {
         // Very rough approximation - Hebrew year starts in fall
         $approximateMapping = [
-            1 => 'Tevet',     // January
-            2 => 'Shevat',    // February
-            3 => 'Adar',      // March
-            4 => 'Nisan',     // April
-            5 => 'Iyar',      // May
-            6 => 'Sivan',     // June
-            7 => 'Tammuz',    // July
-            8 => 'Av',        // August
-            9 => 'Elul',      // September
-            10 => 'Tishrei',  // October
-            11 => 'Cheshvan', // November
-            12 => 'Kislev'    // December
+            1 => 4,   // January -> Tevet
+            2 => 5,   // February -> Shevat
+            3 => 6,   // March -> Adar
+            4 => 7,   // April -> Nisan
+            5 => 8,   // May -> Iyar
+            6 => 9,   // June -> Sivan
+            7 => 10,  // July -> Tammuz
+            8 => 11,  // August -> Av
+            9 => 12,  // September -> Elul
+            10 => 1,  // October -> Tishrei
+            11 => 2,  // November -> Cheshvan
+            12 => 3   // December -> Kislev
         ];
 
-        return $approximateMapping[$gregorianMonth] ?? 'Unknown';
+        return $approximateMapping[$gregorianMonth] ?? 1;
     }
 
     /**
