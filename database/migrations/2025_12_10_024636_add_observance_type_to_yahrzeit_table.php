@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('yahrzeit', function (Blueprint $table) {
-            $table->string('observance_type')->default('standard')->after('relationship');
+            if (!Schema::hasColumn('yahrzeit', 'observance_type')) {
+                $table->string('observance_type')->default('standard')->after('relationship');
+            }
         });
     }
 

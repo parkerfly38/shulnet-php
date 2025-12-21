@@ -63,7 +63,7 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
     if (ticketType.quantity_available === null) {
       return 'Unlimited';
     }
-    const remaining = ticketType.quantity_available - ticketType.quantity_sold;
+    const remaining = (ticketType.quantity_available ?? 0) - ticketType.quantity_sold;
     return `${remaining} / ${ticketType.quantity_available}`;
   };
 

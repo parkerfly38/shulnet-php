@@ -140,7 +140,7 @@ class YahrzeitController extends Controller
     public function edit(Yahrzeit $yahrzeit)
     {
         $yahrzeit->load(['members' => function ($query) {
-            $query->select(['members.id', 'first_name', 'last_name', 'hebrew_name'])
+            $query->select(['members.id', 'first_name', 'last_name', 'middle_name', 'hebrew_name'])
                   ->withPivot('relationship');
         }]);
         
@@ -150,7 +150,28 @@ class YahrzeitController extends Controller
             ->get();
 
         return Inertia::render('yahrzeits/edit', [
-            'yahrzeit' => $yahrzeit,
+            'yahrzeit' => [
+                'id' => $yahrzeit->id,
+                'members' => $yahrzeit->members->map(function ($member) {
+                    return [
+                        'id' => $member->id,
+                        'first_name' => $member->first_name,
+                        'last_name' => $member->last_name,
+                        'middle_name' => $member->middle_name,
+                        'hebrew_name' => $member->hebrew_name,
+                        'pivot' => [
+                            'relationship' => $member->pivot->relationship,
+                        ],
+                    ];
+                }),
+                'name' => $yahrzeit->name,
+                'hebrew_name' => $yahrzeit->hebrew_name,
+                'date_of_death' => $yahrzeit->date_of_death->format('Y-m-d'),
+                'hebrew_day_of_death' => $yahrzeit->hebrew_day_of_death,
+                'hebrew_month_of_death' => $yahrzeit->hebrew_month_of_death,
+                'observance_type' => $yahrzeit->observance_type,
+                'notes' => $yahrzeit->notes,
+            ],
             'members' => $members
         ]);
     }

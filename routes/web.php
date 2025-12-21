@@ -6,8 +6,10 @@ use App\Http\Controllers\YahrzeitController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTicketTypeController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PdfTemplateController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -102,6 +104,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'notes.destroy',
             ]
         ]);
+
+        // Invoice management routes
+        Route::resource('admin/invoices', InvoiceController::class, [
+            'names' => [
+                'index' => 'invoices.index',
+                'create' => 'invoices.create',
+                'store' => 'invoices.store',
+                'show' => 'invoices.show',
+                'edit' => 'invoices.edit',
+                'update' => 'invoices.update',
+                'destroy' => 'invoices.destroy',
+            ]
+        ]);
+        
+        // Generate next recurring invoice
+        Route::post('admin/invoices/{invoice}/generate-next', [InvoiceController::class, 'generateNext'])->name('invoices.generate-next');
+        
+        // PDF Template management routes
+        Route::resource('admin/pdf-templates', PdfTemplateController::class, [
+            'names' => [
+                'index' => 'pdf-templates.index',
+                'create' => 'pdf-templates.create',
+                'store' => 'pdf-templates.store',
+                'show' => 'pdf-templates.show',
+                'edit' => 'pdf-templates.edit',
+                'update' => 'pdf-templates.update',
+                'destroy' => 'pdf-templates.destroy',
+            ]
+        ]);
+        
+        // PDF Template preview and generation
+        Route::post('admin/pdf-templates/{pdfTemplate}/preview', [PdfTemplateController::class, 'preview'])->name('pdf-templates.preview');
+        Route::post('admin/pdf-templates/{pdfTemplate}/generate', [PdfTemplateController::class, 'generate'])->name('pdf-templates.generate');
         
         // Mark all user notifications as seen
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');

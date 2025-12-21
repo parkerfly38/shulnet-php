@@ -1,0 +1,285 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Invoice;
+use App\Models\Member;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class InvoiceController extends Controller
+{
+    /**
+     * Display a listing of invoices.
+     */
+    public function index(Request $request)
+    {
+        $search = $request->get('search');
+        $status = $request->get('status');
+        $memberId = $request->get('member');
+        $perPage = $request->get('per_page', 15);
+
+        $query = Invoice::query()
+            ->with(['member'])
+            ->orderBy('invoice_date', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'like', "%{$search}%")
+                  ->orWhere('notes', 'like', "%{$search}%")
+                  ->orWhereHas('member', function ($q) use ($search) {
+                      $q->where('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($memberId) {
+            $query->where('member_id', $memberId);
+        }
+
+        $invoices = $query->paginate($perPage);
+
+        $members = Member::select('id', 'first_name', 'last_name')
+            ->where('member_type', 'member')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        return Inertia::render('invoices/index', [
+            'invoices' => $invoices,
+            'members' => $members,
+            'filters' => [
+                'search' => $search,
+                'status' => $status,
+                'member' => $memberId,
+            ],
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new invoice.
+     */
+    public function create(Request $request)
+    {
+        $members = Member::select('id', 'first_name', 'last_name', 'email')
+            ->where('member_type', 'member')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        return Inertia::render('invoices/create', [
+            'members' => $members,
+            'selectedMember' => $request->get('member'),
+        ]);
+    }
+
+    /**
+     * Store a newly created invoice.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'status' => 'required|in:draft,sent,paid,overdue,cancelled',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string',
+            'recurring' => 'boolean',
+            'recurring_interval' => 'nullable|required_if:recurring,true|in:daily,weekly,monthly,yearly',
+            'recurring_interval_count' => 'nullable|integer|min:1',
+            'recurring_end_date' => 'nullable|date|after:invoice_date',
+            'items' => 'required|array|min:1',
+            'items.*.description' => 'required|string',
+            'items.*.quantity' => 'required|numeric|min:0',
+            'items.*.unit_price' => 'required|numeric|min:0',
+        ]);
+
+        // Generate invoice number
+        $validated['invoice_number'] = Invoice::generateInvoiceNumber();
+
+        // Calculate next invoice date if recurring
+        if ($validated['recurring'] ?? false) {
+            $invoiceDate = \Carbon\Carbon::parse($validated['invoice_date']);
+            $validated['next_invoice_date'] = $this->calculateNextDate(
+                $invoiceDate,
+                $validated['recurring_interval'],
+                $validated['recurring_interval_count'] ?? 1
+            );
+        }
+
+        $invoice = Invoice::create($validated);
+
+        // Create items
+        $subtotal = 0;
+        foreach ($validated['items'] as $index => $itemData) {
+            $total = $itemData['quantity'] * $itemData['unit_price'];
+            $invoice->items()->create([
+                'description' => $itemData['description'],
+                'quantity' => $itemData['quantity'],
+                'unit_price' => $itemData['unit_price'],
+                'total' => $total,
+                'sort_order' => $index,
+            ]);
+            $subtotal += $total;
+        }
+
+        // Update totals
+        $invoice->subtotal = $subtotal;
+        $invoice->total = $subtotal + ($validated['tax_amount'] ?? 0);
+        $invoice->save();
+
+        return redirect()->route('invoices.index')
+            ->with('success', 'Invoice created successfully.');
+    }
+
+    /**
+     * Display the specified invoice.
+     */
+    public function show(Invoice $invoice)
+    {
+        $invoice->load(['member', 'items']);
+
+        return Inertia::render('invoices/show', [
+            'invoice' => $invoice,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified invoice.
+     */
+    public function edit(Invoice $invoice)
+    {
+        $invoice->load(['member', 'items']);
+
+        $members = Member::select('id', 'first_name', 'last_name', 'email')
+            ->where('member_type', 'member')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        return Inertia::render('invoices/edit', [
+            'invoice' => $invoice,
+            'members' => $members,
+        ]);
+    }
+
+    /**
+     * Update the specified invoice.
+     */
+    public function update(Request $request, Invoice $invoice)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'status' => 'required|in:draft,sent,paid,overdue,cancelled',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string',
+            'recurring' => 'boolean',
+            'recurring_interval' => 'nullable|required_if:recurring,true|in:daily,weekly,monthly,yearly',
+            'recurring_interval_count' => 'nullable|integer|min:1',
+            'recurring_end_date' => 'nullable|date|after:invoice_date',
+            'items' => 'required|array|min:1',
+            'items.*.description' => 'required|string',
+            'items.*.quantity' => 'required|numeric|min:0',
+            'items.*.unit_price' => 'required|numeric|min:0',
+        ]);
+
+        // Calculate next invoice date if recurring changed
+        if ($validated['recurring'] ?? false) {
+            if (!$invoice->next_invoice_date || $request->get('recalculate_next_date')) {
+                $invoiceDate = \Carbon\Carbon::parse($validated['invoice_date']);
+                $validated['next_invoice_date'] = $this->calculateNextDate(
+                    $invoiceDate,
+                    $validated['recurring_interval'],
+                    $validated['recurring_interval_count'] ?? 1
+                );
+            }
+        } else {
+            $validated['next_invoice_date'] = null;
+        }
+
+        $invoice->update($validated);
+
+        // Delete old items and create new ones
+        $invoice->items()->delete();
+        
+        $subtotal = 0;
+        foreach ($validated['items'] as $index => $itemData) {
+            $total = $itemData['quantity'] * $itemData['unit_price'];
+            $invoice->items()->create([
+                'description' => $itemData['description'],
+                'quantity' => $itemData['quantity'],
+                'unit_price' => $itemData['unit_price'],
+                'total' => $total,
+                'sort_order' => $index,
+            ]);
+            $subtotal += $total;
+        }
+
+        // Update totals
+        $invoice->subtotal = $subtotal;
+        $invoice->total = $subtotal + ($validated['tax_amount'] ?? 0);
+        $invoice->save();
+
+        return redirect()->route('invoices.index')
+            ->with('success', 'Invoice updated successfully.');
+    }
+
+    /**
+     * Remove the specified invoice.
+     */
+    public function destroy(Invoice $invoice)
+    {
+        $invoice->delete();
+
+        return redirect()->route('invoices.index')
+            ->with('success', 'Invoice deleted successfully.');
+    }
+
+    /**
+     * Generate next recurring invoice manually.
+     */
+    public function generateNext(Invoice $invoice)
+    {
+        if (!$invoice->recurring) {
+            return back()->with('error', 'This invoice is not set up for recurring.');
+        }
+
+        $newInvoice = $invoice->createNextRecurringInvoice();
+
+        if (!$newInvoice) {
+            return back()->with('error', 'Could not generate next invoice. Check if recurring period has ended.');
+        }
+
+        return redirect()->route('invoices.show', $newInvoice)
+            ->with('success', 'Next recurring invoice generated successfully.');
+    }
+
+    /**
+     * Calculate next date helper
+     */
+    protected function calculateNextDate($fromDate, $interval, $count)
+    {
+        $date = \Carbon\Carbon::parse($fromDate);
+        
+        switch ($interval) {
+            case 'daily':
+                return $date->addDays($count);
+            case 'weekly':
+                return $date->addWeeks($count);
+            case 'monthly':
+                return $date->addMonths($count);
+            case 'yearly':
+                return $date->addYears($count);
+            default:
+                return $date;
+        }
+    }
+}

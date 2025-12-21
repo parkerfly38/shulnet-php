@@ -91,7 +91,7 @@ export default function TicketTypeEdit({ event, ticketType }: Readonly<Props>) {
                   <div className="text-right">
                     <p className="text-sm font-medium text-blue-900 dark:text-blue-100">Remaining</p>
                     <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
-                      {ticketType.quantity_available - ticketType.quantity_sold}
+                      {(ticketType.quantity_available ?? 0) - ticketType.quantity_sold}
                     </p>
                   </div>
                 )}

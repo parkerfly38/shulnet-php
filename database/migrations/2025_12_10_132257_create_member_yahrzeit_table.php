@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('member_yahrzeit', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->constrained()->onDelete('cascade');
-            $table->foreignId('yahrzeit_id')->constrained()->onDelete('cascade');
+            $table->foreignId('member_id')->constrained('members')->onDelete('cascade');
+            $table->foreignId('yahrzeit_id')->constrained('yahrzeit')->onDelete('cascade');
             $table->string('relationship')->nullable(); // e.g., 'Father', 'Mother', 'Spouse', 'Child', etc.
             $table->timestamps();
             

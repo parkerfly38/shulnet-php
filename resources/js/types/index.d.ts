@@ -113,3 +113,61 @@ export interface EventTicketType {
     created_at: string;
     updated_at: string;
 }
+
+export interface Invoice {
+    id: number;
+    member_id: number;
+    invoice_number: string;
+    invoice_date: string;
+    due_date: string;
+    status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+    subtotal: string;
+    tax_amount: string;
+    total: string;
+    notes?: string;
+    recurring: boolean;
+    recurring_interval?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+    recurring_interval_count: number;
+    next_invoice_date?: string;
+    last_invoice_date?: string;
+    recurring_end_date?: string;
+    parent_invoice_id?: number;
+    member?: Member;
+    items?: InvoiceItem[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface InvoiceItem {
+    id: number;
+    invoice_id: number;
+    description: string;
+    quantity: string;
+    unit_price: string;
+    total: string;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface PdfTemplateField {
+    name: string;
+    label: string;
+    type: 'text' | 'date' | 'number' | 'textarea';
+    description?: string;
+    required?: boolean;
+    default_value?: string;
+}
+
+export interface PdfTemplate {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    html_content: string;
+    available_fields: PdfTemplateField[];
+    category: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}

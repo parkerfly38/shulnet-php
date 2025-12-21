@@ -30,7 +30,7 @@ class MemberFactory extends Factory
             'state' => $this->faker->optional(0.7)->stateAbbr,
             'zip' => $this->faker->optional(0.7)->postcode,
             'country' => $this->faker->optional(0.5)->country,
-            'dob' => $this->faker->optional(0.6)->dateTimeBetween('-80 years', '-18 years')->format('Y-m-d'),
+            'dob' => $this->faker->optional(0.6)->passthrough($this->faker->dateTimeBetween('-80 years', '-18 years'))?->format('Y-m-d'),
             'gender' => $this->faker->optional(0.7)->randomElement(['male', 'female', 'other']),
         ];
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Star, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Star, User, Plus, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +19,22 @@ interface Member {
     hebrew_name?: string;
 }
 
+interface MemberRelationship {
+    member_id: string;
+    relationship: string;
+}
+
+interface YahrzeitMember extends Member {
+    pivot?: {
+        relationship: string;
+    };
+}
+
 interface Yahrzeit {
     id: number;
-    member: Member;
+    members: YahrzeitMember[];
     name: string;
     hebrew_name?: string;
-    relationship: string;
     date_of_death: string;
     hebrew_day_of_death: number;
     hebrew_month_of_death: number;
@@ -38,13 +48,12 @@ interface YahrzeitEditProps {
 }
 
 interface YahrzeitFormData {
-    member_id: string;
     name: string;
     hebrew_name: string;
-    relationship: string;
     date_of_death: string;
     observance_type: string;
     notes: string;
+    members: MemberRelationship[];
 }
 
 const RELATIONSHIP_OPTIONS = [
@@ -67,36 +76,66 @@ const HEBREW_MONTHS = [
 
 export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
     const { data, setData, put, processing, errors } = useForm<YahrzeitFormData>({
-        member_id: yahrzeit.member.id.toString(),
         name: yahrzeit.name,
         hebrew_name: yahrzeit.hebrew_name || '',
-        relationship: yahrzeit.relationship,
         date_of_death: yahrzeit.date_of_death,
         observance_type: yahrzeit.observance_type,
-        notes: yahrzeit.notes || ''
+        notes: yahrzeit.notes || '',
+        members: yahrzeit.members.map(m => ({
+            member_id: m.id.toString(),
+            relationship: m.pivot?.relationship || ''
+        }))
     });
 
-    const [memberSearch, setMemberSearch] = useState('');
-    const [filteredMembers, setFilteredMembers] = useState(members);
+    const [memberSearches, setMemberSearches] = useState<string[]>(
+        yahrzeit.members.map(() => '')
+    );
+    const [filteredMembers, setFilteredMembers] = useState<Member[][]>(
+        yahrzeit.members.map(() => members)
+    );
 
     useEffect(() => {
-        if (memberSearch) {
-            const filtered = members.filter(member =>
-                `${member.first_name} ${member.last_name}`.toLowerCase().includes(memberSearch.toLowerCase()) ||
-                (member.hebrew_name && member.hebrew_name.toLowerCase().includes(memberSearch.toLowerCase()))
-            );
-            setFilteredMembers(filtered);
-        } else {
-            setFilteredMembers(members);
+        const newFilteredMembers = memberSearches.map(search => {
+            if (search) {
+                return members.filter(member =>
+                    `${member.first_name} ${member.last_name}`.toLowerCase().includes(search.toLowerCase()) ||
+                    (member.hebrew_name && member.hebrew_name.toLowerCase().includes(search.toLowerCase()))
+                );
+            } else {
+                return members;
+            }
+        });
+        setFilteredMembers(newFilteredMembers);
+    }, [memberSearches, members]);
+
+    const addMember = () => {
+        setData('members', [...data.members, { member_id: '', relationship: '' }]);
+        setMemberSearches([...memberSearches, '']);
+    };
+
+    const removeMember = (index: number) => {
+        if (data.members.length > 1) {
+            setData('members', data.members.filter((_, i) => i !== index));
+            setMemberSearches(memberSearches.filter((_, i) => i !== index));
         }
-    }, [memberSearch, members]);
+    };
+
+    const updateMember = (index: number, field: 'member_id' | 'relationship', value: string) => {
+        const newMembers = [...data.members];
+        newMembers[index][field] = value;
+        setData('members', newMembers);
+    };
+
+    const updateMemberSearch = (index: number, value: string) => {
+        const newSearches = [...memberSearches];
+        newSearches[index] = value;
+        setMemberSearches(newSearches);
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(`/admin/yahrzeits/${yahrzeit.id}`);
     };
-
-    const selectedMember = members.find(m => m.id.toString() === data.member_id);
 
     const formatHebrewDate = (day: number, month: number) => {
         const monthName = HEBREW_MONTHS[month] || 'Unknown';
@@ -148,54 +187,110 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                 Member Information
                             </CardTitle>
                             <CardDescription>
-                                Select the congregation member who will observe this yahrzeit
+                                Select the congregation member(s) who will observe this yahrzeit
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <Label htmlFor="member_search">Search Member</Label>
-                                <Input
-                                    id="member_search"
-                                    type="text"
-                                    placeholder="Search by name or Hebrew name..."
-                                    value={memberSearch}
-                                    onChange={(e) => setMemberSearch(e.target.value)}
-                                    className="mb-2"
-                                />
-                            </div>
-
-                            <div>
-                                <Label htmlFor="member_id">Select Member *</Label>
-                                <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
-                                    <SelectTrigger className={errors.member_id ? 'border-red-500' : ''}>
-                                        <SelectValue placeholder="Choose a member..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {filteredMembers.map((member) => (
-                                            <SelectItem key={member.id} value={member.id.toString()}>
-                                                <div>
-                                                    <div>{member.first_name} {member.last_name}</div>
-                                                    {member.hebrew_name && (
-                                                        <div className="text-sm text-gray-600">{member.hebrew_name}</div>
-                                                    )}
-                                                </div>
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {errors.member_id && <p className="text-sm text-red-600 mt-1">{errors.member_id}</p>}
-                            </div>
-
-                            {selectedMember && (
-                                <Alert>
-                                    <AlertDescription>
-                                        Selected: <strong>{selectedMember.first_name} {selectedMember.last_name}</strong>
-                                        {selectedMember.hebrew_name && (
-                                            <span> ({selectedMember.hebrew_name})</span>
+                        <CardContent className="space-y-6">
+                            {data.members.map((memberRel, index) => {
+                                const selectedMember = members.find(m => m.id.toString() === memberRel.member_id);
+                                return (
+                                    <div key={index} className="space-y-4 p-4 border rounded-lg relative">
+                                        {data.members.length > 1 && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="absolute top-2 right-2"
+                                                onClick={() => removeMember(index)}
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
                                         )}
-                                    </AlertDescription>
-                                </Alert>
-                            )}
+                                        
+                                        <div>
+                                            <Label htmlFor={`member_search_${index}`}>Search Member</Label>
+                                            <Input
+                                                id={`member_search_${index}`}
+                                                type="text"
+                                                placeholder="Search by name or Hebrew name..."
+                                                value={memberSearches[index] || ''}
+                                                onChange={(e) => updateMemberSearch(index, e.target.value)}
+                                                className="mb-2"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor={`member_id_${index}`}>Select Member *</Label>
+                                            <Select 
+                                                value={memberRel.member_id} 
+                                                onValueChange={(value) => updateMember(index, 'member_id', value)}
+                                            >
+                                                <SelectTrigger className={errors[`members.${index}.member_id`] ? 'border-red-500' : ''}>
+                                                    <SelectValue placeholder="Choose a member..." />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {(filteredMembers[index] || members).map((member) => (
+                                                        <SelectItem key={member.id} value={member.id.toString()}>
+                                                            <div>
+                                                                <div>{member.first_name} {member.last_name}</div>
+                                                                {member.hebrew_name && (
+                                                                    <div className="text-sm text-gray-600">{member.hebrew_name}</div>
+                                                                )}
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors[`members.${index}.member_id`] && (
+                                                <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.member_id`]}</p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor={`relationship_${index}`}>Relationship *</Label>
+                                            <Select 
+                                                value={memberRel.relationship} 
+                                                onValueChange={(value) => updateMember(index, 'relationship', value)}
+                                            >
+                                                <SelectTrigger className={errors[`members.${index}.relationship`] ? 'border-red-500' : ''}>
+                                                    <SelectValue placeholder="Select relationship..." />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {RELATIONSHIP_OPTIONS.map((relationship) => (
+                                                        <SelectItem key={relationship} value={relationship}>
+                                                            {relationship}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors[`members.${index}.relationship`] && (
+                                                <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.relationship`]}</p>
+                                            )}
+                                        </div>
+
+                                        {selectedMember && (
+                                            <Alert>
+                                                <AlertDescription>
+                                                    Selected: <strong>{selectedMember.first_name} {selectedMember.last_name}</strong>
+                                                    {selectedMember.hebrew_name && (
+                                                        <span> ({selectedMember.hebrew_name})</span>
+                                                    )}
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+                                    </div>
+                                );
+                            })}
+
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={addMember}
+                            >
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Another Member
+                            </Button>
                         </CardContent>
                     </Card>
 
@@ -235,23 +330,6 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                     placeholder="Hebrew name (optional)"
                                 />
                                 {errors.hebrew_name && <p className="text-sm text-red-600 mt-1">{errors.hebrew_name}</p>}
-                            </div>
-
-                            <div>
-                                <Label htmlFor="relationship">Relationship *</Label>
-                                <Select value={data.relationship} onValueChange={(value) => setData('relationship', value)}>
-                                    <SelectTrigger className={errors.relationship ? 'border-red-500' : ''}>
-                                        <SelectValue placeholder="Select relationship..." />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {RELATIONSHIP_OPTIONS.map((relationship) => (
-                                            <SelectItem key={relationship} value={relationship}>
-                                                {relationship}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                {errors.relationship && <p className="text-sm text-red-600 mt-1">{errors.relationship}</p>}
                             </div>
                         </CardContent>
                     </Card>
