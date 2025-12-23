@@ -106,11 +106,6 @@ export default function InvoicesCreate({ members, selectedMember }: Readonly<Pro
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Link href="/admin/invoices">
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create Invoice</h1>
             <p className="text-gray-600 dark:text-gray-400">Create a new invoice for a member</p>

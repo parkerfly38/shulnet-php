@@ -119,12 +119,12 @@ export default function InvoicesIndex({ invoices, members, filters }: Readonly<P
               />
             </div>
             <div className="w-[180px]">
-              <Select value={status} onValueChange={setStatus}>
+              <Select value={status ?? " "} onValueChange={setStatus}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Statuses</SelectItem>
+                  <SelectItem value=" ">All Statuses</SelectItem>
                   <SelectItem value="draft">Draft</SelectItem>
                   <SelectItem value="sent">Sent</SelectItem>
                   <SelectItem value="paid">Paid</SelectItem>
@@ -134,12 +134,12 @@ export default function InvoicesIndex({ invoices, members, filters }: Readonly<P
               </Select>
             </div>
             <div className="w-[200px]">
-              <Select value={memberId} onValueChange={setMemberId}>
+              <Select value={memberId ?? " "} onValueChange={setMemberId}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Members" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Members</SelectItem>
+                  <SelectItem value=" ">All Members</SelectItem>
                   {members.map((member) => (
                     <SelectItem key={member.id} value={member.id.toString()}>
                       {member.first_name} {member.last_name}
