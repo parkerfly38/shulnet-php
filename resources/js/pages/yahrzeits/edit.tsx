@@ -145,20 +145,12 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
     return (
         <AppLayout>
             <Head title="Edit Yahrzeit Record" />
-            <div className="max-w-2xl mx-auto space-y-6">
-                {/* Header */}
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+          {/* Header */}
                 <div className="flex items-center gap-4">
-                    <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => router.get('/admin/yahrzeits')}
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to Yahrzeits
-                    </Button>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Edit Yahrzeit Record</h1>
-                        <p className="text-gray-600">Update memorial observance for {yahrzeit.name}</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Yahrzeit Record</h1>
+                        <p className="text-gray-600 dark:text-gray-400">Update memorial observance for {yahrzeit.name}</p>
                     </div>
                 </div>
 

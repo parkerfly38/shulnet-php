@@ -106,6 +106,11 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
+        $member->load(['membershipPeriods' => function ($query) {
+            $query->with('invoice:id,invoice_number,invoice_date,total,status')
+                  ->orderBy('begin_date', 'desc');
+        }]);
+
         return Inertia::render('members/show', [
             'member' => $member
         ]);

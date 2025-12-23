@@ -116,4 +116,14 @@ class HebrewCalendarService
     {
         return self::HEBREW_MONTHS;
     }
+
+    /**
+     * Get current Hebrew date
+     *
+     * @return array Current Hebrew calendar date
+     */
+    public function getCurrentHebrewDate(): array
+    {
+        return $this->gregorianToHebrew(date('Y-m-d'));
+    }
 }

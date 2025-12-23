@@ -73,6 +73,26 @@ export interface Member {
     brianbatorah?: boolean;
     maftir?: boolean;
     anniversary_date?: string;
+    membership_periods?: MembershipPeriod[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface MembershipPeriod {
+    id: number;
+    member_id: number;
+    invoice_id?: number;
+    begin_date: string;
+    end_date?: string;
+    membership_type?: string;
+    notes?: string;
+    invoice?: {
+        id: number;
+        invoice_number: string;
+        invoice_date: string;
+        total: string;
+        status: string;
+    };
     created_at: string;
     updated_at: string;
 }
@@ -170,4 +190,38 @@ export interface PdfTemplate {
     is_active: boolean;
     created_at: string;
     updated_at: string;
+}
+
+export interface Yahrzeit {
+    id: number;
+    name: string;
+    hebrew_name?: string;
+    hebrew_day_of_death: number;
+    hebrew_month_of_death: number;
+    date_of_death?: string;
+    members?: Array<{
+        id: number;
+        name: string;
+        relationship?: string;
+    }>;
+}
+
+export interface HebrewDate {
+    day: number;
+    month: number;
+    year: number;
+    formatted: string;
+}
+
+export interface Event {
+    id: number;
+    name: string;
+    tagline?: string;
+    event_start: string;
+    event_end: string;
+    all_day: boolean;
+    location?: string;
+    online: boolean;
+    registration_required: boolean;
+    members_only: boolean;
 }

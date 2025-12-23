@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Member extends Model
 {
@@ -53,5 +54,38 @@ class Member extends Model
         return $this->belongsToMany(Yahrzeit::class, 'member_yahrzeit')
                     ->withPivot('relationship')
                     ->withTimestamps();
+    }
+
+    /**
+     * Get all membership periods for this member.
+     */
+    public function membershipPeriods(): HasMany
+    {
+        return $this->hasMany(MembershipPeriod::class);
+    }
+
+    /**
+     * Get active membership periods.
+     */
+    public function activeMembershipPeriods(): HasMany
+    {
+        return $this->hasMany(MembershipPeriod::class)
+                    ->where(function ($query) {
+                        $query->whereNull('end_date')
+                              ->orWhere('end_date', '>=', now());
+                    });
+    }
+
+    /**
+     * Check if member has an active membership.
+     */
+    public function hasActiveMembership(): bool
+    {
+        return $this->membershipPeriods()
+                    ->where(function ($query) {
+                        $query->whereNull('end_date')
+                              ->orWhere('end_date', '>=', now());
+                    })
+                    ->exists();
     }
 }

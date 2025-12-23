@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\YahrzeitController;
 use App\Http\Controllers\CalendarController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PdfTemplateController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -21,9 +23,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Admin-only routes
     Route::middleware(['role:admin'])->group(function () {
@@ -41,6 +41,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'members.destroy',
             ]
         ]);
+
+        // Membership period management routes (nested under members)
+        Route::resource('admin/members.membership-periods', MembershipPeriodController::class, [
+            'names' => [
+                'create' => 'members.membership-periods.create',
+                'store' => 'members.membership-periods.store',
+                'edit' => 'members.membership-periods.edit',
+                'update' => 'members.membership-periods.update',
+                'destroy' => 'members.membership-periods.destroy',
+            ]
+        ])->except(['index', 'show']);
         
         // Yahrzeit management routes
         Route::resource('admin/yahrzeits', YahrzeitController::class, [

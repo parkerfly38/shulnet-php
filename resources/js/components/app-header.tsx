@@ -47,7 +47,7 @@ const mainNavItems: NavItem[] = [
 const rightNavItems: NavItem[] = [
     {
         title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
+        href: 'https://github.com/parkerfly38/shulnet-php',
         icon: Folder,
     },
     {

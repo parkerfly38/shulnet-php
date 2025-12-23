@@ -61,6 +61,11 @@ class Invoice extends Model
         return $this->hasMany(Invoice::class, 'parent_invoice_id');
     }
 
+    public function membershipPeriods(): HasMany
+    {
+        return $this->hasMany(MembershipPeriod::class);
+    }
+
     /**
      * Calculate totals from items
      */

@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Edit, Mail, Phone, MapPin, Calendar, User } from 'lucide-react';
+import { ArrowLeft, Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
 
 interface Props {
@@ -151,6 +151,101 @@ export default function MembersShow({ member }: Readonly<Props>) {
               </div>
             </div>
 
+            {/* Jewish Details */}
+            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                Jewish Details
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Hebrew Name</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.hebrew_name || <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Father's Hebrew Name</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.father_hebrew_name || <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Mother's Hebrew Name</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.mother_hebrew_name || <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Tribe</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.tribe ? <span className="capitalize">{member.tribe}</span> : <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">B'nai Mitzvah Date</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.bnaimitzvahdate ? (
+                      <span className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        {formatDate(member.bnaimitzvahdate)}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 dark:text-gray-500">Not set</span>
+                    )}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Aliyah</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.aliyah ? (
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                    ) : (
+                      <Badge variant="secondary">No</Badge>
+                    )}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Chazanut</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.chazanut ? (
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                    ) : (
+                      <Badge variant="secondary">No</Badge>
+                    )}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Dvar Torah</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.dvartorah ? (
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                    ) : (
+                      <Badge variant="secondary">No</Badge>
+                    )}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Maftir</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.maftir ? (
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                    ) : (
+                      <Badge variant="secondary">No</Badge>
+                    )}
+                  </dd>
+                </div>
+              </div>
+            </div>
+
             {/* Contact Information */}
             <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
@@ -282,6 +377,117 @@ export default function MembersShow({ member }: Readonly<Props>) {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Membership Periods Section */}
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
+              <Calendar className="h-5 w-5 mr-2" />
+              Membership Periods
+            </h2>
+            <Link href={`/admin/members/${member.id}/membership-periods/create`}>
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Period
+              </Button>
+            </Link>
+          </div>
+
+          {member.membership_periods && member.membership_periods.length > 0 ? (
+            <div className="space-y-4">
+              {member.membership_periods.map((period) => {
+                const isActive = !period.end_date || new Date(period.end_date) >= new Date();
+                
+                return (
+                  <div 
+                    key={period.id} 
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant={isActive ? "default" : "secondary"}>
+                            {isActive ? 'Active' : 'Expired'}
+                          </Badge>
+                          {period.membership_type && (
+                            <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                              {period.membership_type}
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">Start Date</dt>
+                            <dd className="text-gray-900 dark:text-gray-100">{formatDate(period.begin_date)}</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">End Date</dt>
+                            <dd className="text-gray-900 dark:text-gray-100">
+                              {period.end_date ? formatDate(period.end_date) : 'Ongoing'}
+                            </dd>
+                          </div>
+                        </div>
+
+                        {period.invoice && (
+                          <div className="mt-2 flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <CreditCard className="h-4 w-4 mr-1" />
+                            <Link 
+                              href={`/admin/invoices/${period.invoice.id}`}
+                              className="text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                              {period.invoice.invoice_number}
+                            </Link>
+                            <span className="mx-2">•</span>
+                            <span>${period.invoice.total}</span>
+                            <span className="mx-2">•</span>
+                            <span className="capitalize">{period.invoice.status}</span>
+                          </div>
+                        )}
+
+                        {period.notes && (
+                          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            {period.notes}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex gap-2 ml-4">
+                        <Link href={`/admin/members/${member.id}/membership-periods/${period.id}/edit`}>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => {
+                            if (confirm('Are you sure you want to delete this membership period?')) {
+                              router.delete(`/admin/members/${member.id}/membership-periods/${period.id}`);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <Calendar className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>No membership periods recorded.</p>
+              <Link href={`/admin/members/${member.id}/membership-periods/create`} className="inline-block mt-2">
+                <Button variant="outline" size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add First Period
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>
