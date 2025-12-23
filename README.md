@@ -1,10 +1,12 @@
-# Shulnet
+# ShulNET 2.0
 
 A modern synagogue management system built with Laravel and React.
 
 ## Overview
 
-Shulnet is a comprehensive web application designed to help synagogues manage their members, events, yahrzeits, invoices, and other essential operations. It features a clean, modern interface with support for Hebrew calendar integration.
+ShulNET is a comprehensive web application designed to help synagogues manage their members, events, yahrzeits, invoices, and other essential operations. It features a clean, modern interface with support for Hebrew calendar integration.
+
+This is a replacement for the previous open source solution based on Zenbership.  It is a complete ground-up rewrite designed to use best of breed, contemporary technology that is approachable for small organizations to maintain and extend.
 
 ## Features
 
@@ -42,7 +44,7 @@ Shulnet is a comprehensive web application designed to help synagogues manage th
 ## Tech Stack
 
 ### Backend
-- **Laravel 11.x** - PHP framework
+- **Laravel 12.x** - PHP framework
 - **Inertia.js** - Server-side rendering for React
 - **SQLite** - Database (configurable for MySQL/PostgreSQL)
 - **Fortify** - Authentication
