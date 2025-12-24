@@ -42,8 +42,18 @@ class MemberController extends Controller
 
         $members = $query->paginate($perPage);
 
+        // Calculate member statistics
+        $stats = [
+            'total' => Member::count(),
+            'member' => Member::where('member_type', 'member')->count(),
+            'contact' => Member::where('member_type', 'contact')->count(),
+            'prospect' => Member::where('member_type', 'prospect')->count(),
+            'former' => Member::where('member_type', 'former')->count(),
+        ];
+
         return Inertia::render('members/index', [
             'members' => $members,
+            'stats' => $stats,
             'filters' => [
                 'search' => $search,
                 'member_type' => $memberType,

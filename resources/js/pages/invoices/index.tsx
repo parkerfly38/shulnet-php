@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, FileText, Edit, Trash2, RefreshCw } from 'lucide-react';
+import { Plus, Search, FileText, Edit, Trash2, RefreshCw, DollarSign, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { BreadcrumbItem, Invoice, Member } from '@/types';
 
 interface PaginatedInvoices {
@@ -16,9 +16,25 @@ interface PaginatedInvoices {
   total: number;
 }
 
+interface InvoiceStats {
+  total_count: number;
+  total_amount: number;
+  draft_count: number;
+  draft_amount: number;
+  sent_count: number;
+  sent_amount: number;
+  paid_count: number;
+  paid_amount: number;
+  overdue_count: number;
+  overdue_amount: number;
+  unpaid_count: number;
+  unpaid_amount: number;
+}
+
 interface Props {
   invoices: PaginatedInvoices;
   members: Member[];
+  stats: InvoiceStats;
   filters: {
     search?: string;
     status?: string;
@@ -42,7 +58,7 @@ const statusLabels: Record<string, string> = {
   cancelled: 'Cancelled',
 };
 
-export default function InvoicesIndex({ invoices, members, filters }: Readonly<Props>) {
+export default function InvoicesIndex({ invoices, members, stats, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState(filters.status || '');
   const [memberId, setMemberId] = useState(filters.member || '');
@@ -73,11 +89,11 @@ export default function InvoicesIndex({ invoices, members, filters }: Readonly<P
     }
   };
 
-  const formatCurrency = (amount: string) => {
+  const formatCurrency = (amount: string | number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-    }).format(parseFloat(amount));
+    }).format(typeof amount === 'string' ? parseFloat(amount) : amount);
   };
 
   const formatDate = (dateString: string) => {
@@ -87,6 +103,56 @@ export default function InvoicesIndex({ invoices, members, filters }: Readonly<P
       day: 'numeric',
     });
   };
+
+  const statCards = [
+    {
+      title: 'Total Invoices',
+      count: stats.total_count,
+      amount: stats.total_amount,
+      icon: FileText,
+      color: 'bg-blue-500',
+      textColor: 'text-blue-600 dark:text-blue-400',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+    },
+    {
+      title: 'Unpaid/Open',
+      count: stats.unpaid_count,
+      amount: stats.unpaid_amount,
+      icon: AlertCircle,
+      color: 'bg-orange-500',
+      textColor: 'text-orange-600 dark:text-orange-400',
+      bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+      highlight: true,
+    },
+    {
+      title: 'Paid',
+      count: stats.paid_count,
+      amount: stats.paid_amount,
+      icon: CheckCircle,
+      color: 'bg-green-500',
+      textColor: 'text-green-600 dark:text-green-400',
+      bgColor: 'bg-green-50 dark:bg-green-900/20',
+    },
+    {
+      title: 'Overdue',
+      count: stats.overdue_count,
+      amount: stats.overdue_amount,
+      icon: Clock,
+      color: 'bg-red-500',
+      textColor: 'text-red-600 dark:text-red-400',
+      bgColor: 'bg-red-50 dark:bg-red-900/20',
+      highlight: true,
+    },
+    {
+      title: 'Draft',
+      count: stats.draft_count,
+      amount: stats.draft_amount,
+      icon: FileText,
+      color: 'bg-gray-500',
+      textColor: 'text-gray-600 dark:text-gray-400',
+      bgColor: 'bg-gray-50 dark:bg-gray-900/20',
+    },
+  ];
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -105,6 +171,37 @@ export default function InvoicesIndex({ invoices, members, filters }: Readonly<P
               New Invoice
             </Button>
           </Link>
+        </div>
+
+        {/* Stats Dashboard */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {statCards.map((stat) => (
+            <div
+              key={stat.title}
+              className={`bg-white dark:bg-gray-800 rounded-lg border ${
+                stat.highlight 
+                  ? 'border-2 ' + stat.color.replace('bg-', 'border-') 
+                  : 'border-gray-200 dark:border-gray-700'
+              } p-4 shadow-sm`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className={`p-2 rounded-full ${stat.bgColor}`}>
+                  <stat.icon className={`h-5 w-5 ${stat.textColor}`} />
+                </div>
+                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                  {stat.count} {stat.count === 1 ? 'invoice' : 'invoices'}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  {stat.title}
+                </p>
+                <p className={`text-xl font-bold mt-1 ${stat.textColor}`}>
+                  {formatCurrency(stat.amount || 0)}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Filters */}

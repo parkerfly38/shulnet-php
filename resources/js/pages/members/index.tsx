@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, Edit, Plus, Search, Eye } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type Member, type BreadcrumbItem } from '@/types';
 
@@ -38,15 +38,24 @@ interface PaginationData {
   total: number;
 }
 
+interface Stats {
+  total: number;
+  member: number;
+  contact: number;
+  prospect: number;
+  former: number;
+}
+
 interface Props {
   members: PaginationData;
+  stats: Stats;
   filters: {
     search?: string;
     member_type?: string;
   };
 }
 
-export default function MembersIndex({ members, filters }: Readonly<Props>) {
+export default function MembersIndex({ members, stats, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
   const [memberType, setMemberType] = useState(filters.member_type || '');
 
@@ -72,6 +81,49 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
     }
   };
 
+  const statCards = [
+    {
+      title: 'Total Members',
+      value: stats.total,
+      icon: Users,
+      color: 'bg-blue-500',
+      textColor: 'text-blue-600 dark:text-blue-400',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+    },
+    {
+      title: 'Active Members',
+      value: stats.member,
+      icon: UserCheck,
+      color: 'bg-green-500',
+      textColor: 'text-green-600 dark:text-green-400',
+      bgColor: 'bg-green-50 dark:bg-green-900/20',
+    },
+    {
+      title: 'Contacts',
+      value: stats.contact,
+      icon: UserPlus,
+      color: 'bg-purple-500',
+      textColor: 'text-purple-600 dark:text-purple-400',
+      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+    },
+    {
+      title: 'Prospects',
+      value: stats.prospect,
+      icon: UserMinus,
+      color: 'bg-yellow-500',
+      textColor: 'text-yellow-600 dark:text-yellow-400',
+      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+    },
+    {
+      title: 'Former Members',
+      value: stats.former,
+      icon: UserX,
+      color: 'bg-gray-500',
+      textColor: 'text-gray-600 dark:text-gray-400',
+      bgColor: 'bg-gray-50 dark:bg-gray-900/20',
+    },
+  ];
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Member Management" />
@@ -92,6 +144,30 @@ export default function MembersIndex({ members, filters }: Readonly<Props>) {
               Add Member
             </Button>
           </Link>
+        </div>
+
+        {/* Stats Dashboard */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {statCards.map((stat) => (
+            <div
+              key={stat.title}
+              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {stat.title}
+                  </p>
+                  <p className={`text-2xl font-bold mt-1 ${stat.textColor}`}>
+                    {stat.value}
+                  </p>
+                </div>
+                <div className={`p-3 rounded-full ${stat.bgColor}`}>
+                  <stat.icon className={`h-6 w-6 ${stat.textColor}`} />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Search */}

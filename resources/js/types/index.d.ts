@@ -225,3 +225,39 @@ export interface Event {
     registration_required: boolean;
     members_only: boolean;
 }
+
+export interface Gravesite {
+    id: number;
+    cemetery_name?: string;
+    section?: string;
+    row?: string;
+    plot_number: string;
+    block?: string;
+    status: 'available' | 'reserved' | 'occupied';
+    gravesite_type: 'single' | 'double' | 'family' | 'cremation';
+    size_length?: number;
+    size_width?: number;
+    member_id?: number;
+    member?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        email: string;
+    };
+    purchase_date?: string;
+    purchase_price?: number;
+    reserved_date?: string;
+    reserved_by?: string;
+    deceased_name?: string;
+    deceased_hebrew_name?: string;
+    date_of_birth?: string;
+    date_of_death?: string;
+    burial_date?: string;
+    notes?: string;
+    gps_coordinates?: string;
+    perpetual_care: boolean;
+    monument_inscription?: string;
+    full_location?: string;
+    created_at: string;
+    updated_at: string;
+}

@@ -50,9 +50,26 @@ class InvoiceController extends Controller
             ->orderBy('first_name')
             ->get();
 
+        // Calculate invoice statistics
+        $stats = [
+            'total_count' => Invoice::count(),
+            'total_amount' => Invoice::sum('total'),
+            'draft_count' => Invoice::where('status', 'draft')->count(),
+            'draft_amount' => Invoice::where('status', 'draft')->sum('total'),
+            'sent_count' => Invoice::where('status', 'sent')->count(),
+            'sent_amount' => Invoice::where('status', 'sent')->sum('total'),
+            'paid_count' => Invoice::where('status', 'paid')->count(),
+            'paid_amount' => Invoice::where('status', 'paid')->sum('total'),
+            'overdue_count' => Invoice::where('status', 'overdue')->count(),
+            'overdue_amount' => Invoice::where('status', 'overdue')->sum('total'),
+            'unpaid_count' => Invoice::whereIn('status', ['sent', 'overdue'])->count(),
+            'unpaid_amount' => Invoice::whereIn('status', ['sent', 'overdue'])->sum('total'),
+        ];
+
         return Inertia::render('invoices/index', [
             'invoices' => $invoices,
             'members' => $members,
+            'stats' => $stats,
             'filters' => [
                 'search' => $search,
                 'status' => $status,

@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Edit, Trash2, Eye, Calendar, FileText, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Calendar, FileText, AlertTriangle, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { type Note, type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,15 +38,26 @@ interface PaginationData {
     total: number;
 }
 
+interface NoteStats {
+    total: number;
+    high_priority: number;
+    medium_priority: number;
+    low_priority: number;
+    completed: number;
+    pending: number;
+    overdue: number;
+}
+
 interface Props {
     notes: PaginationData;
+    stats: NoteStats;
     filters: {
         search?: string;
         assigned?: string;
     };
 }
 
-export default function NotesIndex({notes, filters}: Readonly<Props>) {
+export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
     const [search, setSearch] = useState(filters.search ?? '');
     
     const handleSearch = (e: React.FormEvent) => {
@@ -62,6 +73,67 @@ export default function NotesIndex({notes, filters}: Readonly<Props>) {
             router.delete(`/admin/notes/${note.id}`);
         }
     };
+
+    const statCards = [
+        {
+            title: 'Total Notes',
+            value: stats.total,
+            icon: FileText,
+            color: 'bg-blue-500',
+            textColor: 'text-blue-600 dark:text-blue-400',
+            bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+        },
+        {
+            title: 'Pending',
+            value: stats.pending,
+            icon: Clock,
+            color: 'bg-yellow-500',
+            textColor: 'text-yellow-600 dark:text-yellow-400',
+            bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+        },
+        {
+            title: 'Completed',
+            value: stats.completed,
+            icon: CheckCircle,
+            color: 'bg-green-500',
+            textColor: 'text-green-600 dark:text-green-400',
+            bgColor: 'bg-green-50 dark:bg-green-900/20',
+        },
+        {
+            title: 'Overdue',
+            value: stats.overdue,
+            icon: AlertCircle,
+            color: 'bg-red-500',
+            textColor: 'text-red-600 dark:text-red-400',
+            bgColor: 'bg-red-50 dark:bg-red-900/20',
+            highlight: true,
+        },
+        {
+            title: 'High Priority',
+            value: stats.high_priority,
+            icon: AlertTriangle,
+            color: 'bg-red-500',
+            textColor: 'text-red-600 dark:text-red-400',
+            bgColor: 'bg-red-50 dark:bg-red-900/20',
+            highlight: true,
+        },
+        {
+            title: 'Medium Priority',
+            value: stats.medium_priority,
+            icon: AlertCircle,
+            color: 'bg-orange-500',
+            textColor: 'text-orange-600 dark:text-orange-400',
+            bgColor: 'bg-orange-50 dark:bg-orange-900/20',
+        },
+        {
+            title: 'Low Priority',
+            value: stats.low_priority,
+            icon: FileText,
+            color: 'bg-gray-500',
+            textColor: 'text-gray-600 dark:text-gray-400',
+            bgColor: 'bg-gray-50 dark:bg-gray-900/20',
+        },
+    ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -93,6 +165,33 @@ export default function NotesIndex({notes, filters}: Readonly<Props>) {
                         </Link>
                     </div>
                 </div>
+
+                {/* Stats Dashboard */}
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                    {statCards.map((stat) => (
+                        <div
+                            key={stat.title}
+                            className={`bg-white dark:bg-gray-800 rounded-lg border ${
+                                stat.highlight 
+                                    ? 'border-2 ' + stat.color.replace('bg-', 'border-') 
+                                    : 'border-gray-200 dark:border-gray-700'
+                            } p-4 shadow-sm`}
+                        >
+                            <div className="flex flex-col items-center text-center">
+                                <div className={`p-3 rounded-full ${stat.bgColor} mb-2`}>
+                                    <stat.icon className={`h-6 w-6 ${stat.textColor}`} />
+                                </div>
+                                <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                    {stat.title}
+                                </p>
+                                <p className={`text-2xl font-bold ${stat.textColor}`}>
+                                    {stat.value}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 {/* Search */}
         <div className="flex items-center space-x-4">
           <form onSubmit={handleSearch} className="flex items-center space-x-2 flex-1 max-w-md">

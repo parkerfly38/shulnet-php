@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PdfTemplateController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GravesiteController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -148,6 +149,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // PDF Template preview and generation
         Route::post('admin/pdf-templates/{pdfTemplate}/preview', [PdfTemplateController::class, 'preview'])->name('pdf-templates.preview');
         Route::post('admin/pdf-templates/{pdfTemplate}/generate', [PdfTemplateController::class, 'generate'])->name('pdf-templates.generate');
+        
+        // Gravesite management routes
+        Route::resource('admin/gravesites', GravesiteController::class, [
+            'names' => [
+                'index' => 'gravesites.index',
+                'create' => 'gravesites.create',
+                'store' => 'gravesites.store',
+                'show' => 'gravesites.show',
+                'edit' => 'gravesites.edit',
+                'update' => 'gravesites.update',
+                'destroy' => 'gravesites.destroy',
+            ]
+        ]);
         
         // Mark all user notifications as seen
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');

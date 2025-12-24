@@ -43,8 +43,23 @@ class NoteController extends Controller
 
         $notes = $query->paginate($perPage);
 
+        // Calculate note statistics
+        $stats = [
+            'total' => Note::count(),
+            'high_priority' => Note::where('priority', 'High')->count(),
+            'medium_priority' => Note::where('priority', 'Medium')->count(),
+            'low_priority' => Note::where('priority', 'Low')->count(),
+            'completed' => Note::whereNotNull('completed_date')->count(),
+            'pending' => Note::whereNull('completed_date')->count(),
+            'overdue' => Note::whereNull('completed_date')
+                ->whereNotNull('deadline_date')
+                ->where('deadline_date', '<', now())
+                ->count(),
+        ];
+
         return Inertia::render('notes/index', [
             'notes' => $notes,
+            'stats' => $stats,
             'filters' => [
                 'search' => $search,
                 'assigned' => $assigned

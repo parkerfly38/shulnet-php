@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -63,6 +63,15 @@ const adminNavItems: NavItem[] = [
     },
 ];
 
+const cemeteryNavItems: NavItem[] = [
+    {
+        groupTitle: 'Cemetery Management',
+        title: 'Gravesites',
+        href: '/admin/gravesites',
+        icon: MapPin,
+    },
+];
+
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
@@ -101,6 +110,9 @@ export function AppSidebar() {
                     <>
                         {/* Admin Section */}
                         <NavMain items={adminNavItems} />
+                        
+                        {/* Cemetery Management Section */}
+                        <NavMain items={cemeteryNavItems} />
                     </>
                 )}
             </SidebarContent>
