@@ -25,6 +25,16 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'brian.kresge@gmail.com'],
+            [
+                'name' => 'Brian Kresge',
+                'password' => 'password',
+                'email_verified_at' => now(),
+                'roles' => ['admin'],
+            ]
+        );
+
         $this->call([
             NoteSeeder::class,
             CalendarSeeder::class,
@@ -33,6 +43,8 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             EventRSVPSeeder::class,
             PdfTemplateSeeder::class,
+            CemeterySeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

@@ -15,7 +15,7 @@ class CalendarSeeder extends Seeder
     {
         //
         Calendar::factory()->create([
-            'title' => 'Shabbat Services',
+            'name' => 'Shabbat Services',
             'members_only' => false,
             'public' => true,
         ]);

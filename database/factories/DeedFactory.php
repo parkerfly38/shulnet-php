@@ -1,0 +1,68 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Member;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Deed>
+ */
+class DeedFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'member_id' => Member::factory(),
+            'deed_number' => 'DEED-' . $this->faker->unique()->numerify('####'),
+            'plot_location' => $this->faker->randomElement(['North Garden', 'South Garden', 'East Garden', 'West Garden', 'Memorial Garden']),
+            'section' => $this->faker->optional(0.8)->randomElement(['A', 'B', 'C', 'D', 'E']),
+            'row' => $this->faker->optional(0.8)->numberBetween(1, 20),
+            'plot_number' => $this->faker->numberBetween(1, 100),
+            'plot_type' => $this->faker->randomElement(['single', 'double', 'family']),
+            'purchase_date' => $this->faker->dateTimeBetween('-30 years', 'now'),
+            'purchase_price' => $this->faker->randomFloat(2, 1000, 15000),
+            'capacity' => function (array $attributes) {
+                return match ($attributes['plot_type']) {
+                    'single' => 1,
+                    'double' => 2,
+                    'family' => $this->faker->numberBetween(4, 8),
+                    default => 1,
+                };
+            },
+            'occupied' => 0,
+            'notes' => $this->faker->optional(0.3)->sentence,
+            'is_active' => $this->faker->boolean(95),
+        ];
+    }
+
+    /**
+     * Indicate that the deed is fully occupied.
+     */
+    public function occupied(): static
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'occupied' => $attributes['capacity'],
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the deed is partially occupied.
+     */
+    public function partiallyOccupied(): static
+    {
+        return $this->state(function (array $attributes) {
+            $capacity = $attributes['capacity'];
+            return [
+                'occupied' => $this->faker->numberBetween(1, max(1, $capacity - 1)),
+            ];
+        });
+    }
+}

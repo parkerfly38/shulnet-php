@@ -1,8 +1,8 @@
 import { router, Head } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Star, User, Edit, Trash2 } from 'lucide-react';
+import { Calendar, Star, Edit, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { type BreadcrumbItem } from '@/types';

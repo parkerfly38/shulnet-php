@@ -58,6 +58,15 @@ class Gravesite extends Model
     }
 
     /**
+     * Get the deeds associated with this gravesite.
+     */
+    public function deeds()
+    {
+        return $this->belongsToMany(Deed::class, 'deed_gravesite')
+            ->withTimestamps();
+    }
+
+    /**
      * Scope a query to only include available gravesites.
      */
     public function scopeAvailable($query)

@@ -96,7 +96,7 @@ class DashboardController extends Controller
             });
 
         // Get open invoices with aging
-        $openInvoices = Invoice::whereIn('status', ['sent', 'overdue', 'draft'])
+        $openInvoices = Invoice::whereIn('status', ['open', 'overdue', 'draft'])
             ->with('member:id,first_name,last_name')
             ->orderBy('due_date')
             ->get()

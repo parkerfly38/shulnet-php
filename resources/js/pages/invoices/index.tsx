@@ -21,8 +21,8 @@ interface InvoiceStats {
   total_amount: number;
   draft_count: number;
   draft_amount: number;
-  sent_count: number;
-  sent_amount: number;
+  open_count: number;
+  open_amount: number;
   paid_count: number;
   paid_amount: number;
   overdue_count: number;
@@ -44,7 +44,7 @@ interface Props {
 
 const statusColors: Record<string, string> = {
   draft: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
-  sent: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+  open: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
   paid: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
   overdue: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
   cancelled: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
@@ -52,7 +52,7 @@ const statusColors: Record<string, string> = {
 
 const statusLabels: Record<string, string> = {
   draft: 'Draft',
-  sent: 'Sent',
+  open: 'Open',
   paid: 'Paid',
   overdue: 'Overdue',
   cancelled: 'Cancelled',
@@ -223,7 +223,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                 <SelectContent>
                   <SelectItem value=" ">All Statuses</SelectItem>
                   <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="sent">Sent</SelectItem>
+                  <SelectItem value="open">Open</SelectItem>
                   <SelectItem value="paid">Paid</SelectItem>
                   <SelectItem value="overdue">Overdue</SelectItem>
                   <SelectItem value="cancelled">Cancelled</SelectItem>
@@ -258,7 +258,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
         </div>
 
         {/* Invoices Table */}
-        <div className="rounded-lg border bg-white dark:bg-gray-800 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700">

@@ -219,12 +219,12 @@ export default function GravesitesEdit({ gravesite, members }: Readonly<Props>) 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <Label htmlFor="member_id">Owner (Member)</Label>
-                                <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
+                                <Select value={data.member_id ?? ' '} onValueChange={(value) => setData('member_id', value)}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select member" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">None</SelectItem>
+                                        <SelectItem value=" ">None</SelectItem>
                                         {members.map((member) => (
                                             <SelectItem key={member.id} value={member.id.toString()}>
                                                 {member.first_name} {member.last_name}

@@ -28,6 +28,10 @@ export interface SharedData {
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    currentDate: {
+        gregorian: string;
+        hebrew: string;
+    };
     [key: string]: unknown;
 }
 
@@ -140,7 +144,7 @@ export interface Invoice {
     invoice_number: string;
     invoice_date: string;
     due_date: string;
-    status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+    status: 'draft' | 'open' | 'paid' | 'overdue' | 'cancelled';
     subtotal: string;
     tax_amount: string;
     total: string;
@@ -260,4 +264,111 @@ export interface Gravesite {
     full_location?: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface Deed {
+    id: number;
+    member_id: number;
+    deed_number: string;
+    plot_location: string;
+    section?: string;
+    row?: string;
+    plot_number: string;
+    plot_type: 'single' | 'double' | 'family';
+    purchase_date: string;
+    purchase_price?: string;
+    capacity: number;
+    occupied: number;
+    notes?: string;
+    is_active: boolean;
+    member?: Member;
+    interments?: Interment[];
+    gravesites?: Gravesite[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Interment {
+    id: number;
+    deed_id: number;
+    member_id?: number;
+    first_name: string;
+    last_name: string;
+    middle_name?: string;
+    hebrew_name?: string;
+    date_of_birth?: string;
+    date_of_death: string;
+    interment_date: string;
+    cause_of_death?: string;
+    funeral_home?: string;
+    rabbi_officiating?: string;
+    notes?: string;
+    deed?: Deed;
+    member?: Member;
+    created_at: string;
+    updated_at: string;
+}
+
+// Torah Reading Types
+export interface TorahReading {
+    k: string; // Book name (e.g., "Genesis", "Deuteronomy")
+    b: string; // Beginning verse (e.g., "21:1")
+    e: string; // Ending verse (e.g., "21:4")
+    v: number; // Number of verses
+    p?: number; // Parsha number (optional)
+    note?: string; // Optional note
+}
+
+export interface TorahReadingName {
+    en: string;
+    he: string;
+}
+
+export interface TorahReadingSummaryPart {
+    k: string; // Book name
+    b: string; // Beginning verse
+    e: string; // Ending verse
+}
+
+export interface TorahReadingItem {
+    date: string; // ISO date string
+    hdate: string; // Hebrew date (e.g., "26 Elul 5782")
+    name: TorahReadingName;
+    parshaNum?: number; // Parsha number (for weekly portions)
+    
+    // Weekday readings (Mon-Thu)
+    weekday?: {
+        [key: string]: TorahReading; // Keys: "1", "2", "3", etc.
+    };
+    
+    // Full kriyah (Shabbat/Holiday readings)
+    fullkriyah?: {
+        [key: string]: TorahReading; // Keys: "1"-"7", "M" (maftir)
+    };
+    
+    // Triennial cycle readings
+    triennial?: {
+        [key: string]: TorahReading;
+    };
+    triYear?: number; // Year in triennial cycle (1-3)
+    
+    // Haftarah readings
+    haft?: TorahReading;
+    haftara?: string; // Summary text (e.g., "Isaiah 61:10-63:9")
+    triHaft?: TorahReading;
+    triHaftara?: string;
+    
+    // Summaries
+    summary?: string; // Text summary
+    summaryParts?: TorahReadingSummaryPart[];
+}
+
+export interface TorahReadingResponse {
+    date: string; // ISO timestamp
+    location: string; // e.g., "Diaspora"
+    range: {
+        start: string; // ISO date
+        end: string; // ISO date
+    };
+    items: TorahReadingItem[];
 }

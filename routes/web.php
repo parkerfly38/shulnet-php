@@ -13,6 +13,10 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PdfTemplateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GravesiteController;
+use App\Http\Controllers\DeedController;
+use App\Http\Controllers\IntermentController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Admin\GabbaiController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -163,6 +167,49 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]
         ]);
         
+        // Deed management routes
+        Route::resource('admin/deeds', DeedController::class, [
+            'names' => [
+                'index' => 'deeds.index',
+                'create' => 'deeds.create',
+                'store' => 'deeds.store',
+                'show' => 'deeds.show',
+                'edit' => 'deeds.edit',
+                'update' => 'deeds.update',
+                'destroy' => 'deeds.destroy',
+            ]
+        ]);
+        
+        // Interment management routes
+        Route::resource('admin/interments', IntermentController::class, [
+            'names' => [
+                'index' => 'interments.index',
+                'create' => 'interments.create',
+                'store' => 'interments.store',
+                'show' => 'interments.show',
+                'edit' => 'interments.edit',
+                'update' => 'interments.update',
+                'destroy' => 'interments.destroy',
+            ]
+        ]);
+        
+        // Settings routes
+        Route::get('admin/settings', [SettingController::class, 'index'])->name('settings.index');
+        Route::put('admin/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        // Gabbai UI pages (Inertia)
+        Route::get('admin/gabbai', function () {
+            return Inertia::render('admin/gabbai/dashboard');
+        })->name('admin.gabbai.dashboard');
+
+        Route::get('admin/gabbai/anniversaries', function () {
+            return Inertia::render('admin/gabbai/anniversaries');
+        })->name('admin.gabbai.anniversaries');
+
+        Route::get('admin/gabbai/honors', function () {
+            return Inertia::render('admin/gabbai/honors');
+        })->name('admin.gabbai.honors');
+        
         // Mark all user notifications as seen
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');
     });
@@ -177,6 +224,13 @@ Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(functi
     
     // Yahrzeit search API endpoint
     Route::get('yahrzeits/search', [YahrzeitController::class, 'search'])->name('api.admin.yahrzeits.search');
+
+    // Gabbai endpoints
+    Route::get('gabbai/anniversaries', [GabbaiController::class, 'anniversaries'])->name('api.admin.gabbai.anniversaries');
+    Route::get('gabbai/pledges', [GabbaiController::class, 'pledges'])->name('api.admin.gabbai.pledges');
+    Route::get('gabbai/assignments', [GabbaiController::class, 'assignments'])->name('api.admin.gabbai.assignments');
+    Route::post('gabbai/assignments', [GabbaiController::class, 'saveAssignments'])->name('api.admin.gabbai.assignments.save');
+    Route::get('gabbai/config', [GabbaiController::class, 'config'])->name('api.admin.gabbai.config');
 });
 
 require __DIR__.'/settings.php';

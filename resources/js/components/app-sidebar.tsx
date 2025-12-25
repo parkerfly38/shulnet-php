@@ -13,7 +13,8 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings } from 'lucide-react';
+import { UserCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -26,7 +27,7 @@ const mainNavItems: NavItem[] = [
 
 const adminNavItems: NavItem[] = [
     {
-        groupTitle: 'Administration',
+        groupTitle: 'Member Administration',
         title: 'Users',
         href: '/admin/users',
         icon: Users,
@@ -69,6 +70,39 @@ const cemeteryNavItems: NavItem[] = [
         title: 'Gravesites',
         href: '/admin/gravesites',
         icon: MapPin,
+    },
+    {
+        title: 'Deeds',
+        href: '/admin/deeds',
+        icon: FileText,
+    },
+    {
+        title: 'Interments',
+        href: '/admin/interments',
+        icon: Users,
+    },
+];
+
+const gabbaiNavItems: NavItem[] = [
+    {
+        groupTitle: 'Gabbai Management',
+        title: 'Gabbai Dashboard',
+        href: '/admin/gabbai',
+        icon: UserCheck,
+    },
+    {
+        title: 'Anniversaries & Bnai',
+        href: '/admin/gabbai/anniversaries',
+        icon: BookOpen,
+    },
+];
+
+const systemNavItems: NavItem[] = [
+    {
+        groupTitle: 'System',
+        title: 'Settings',
+        href: '/admin/settings',
+        icon: Settings,
     },
 ];
 
@@ -113,6 +147,12 @@ export function AppSidebar() {
                         
                         {/* Cemetery Management Section */}
                         <NavMain items={cemeteryNavItems} />
+
+                        {/* Gabbai Management Section */}
+                        <NavMain items={gabbaiNavItems} />
+                        
+                        {/* System Section */}
+                        <NavMain items={systemNavItems} />
                     </>
                 )}
             </SidebarContent>

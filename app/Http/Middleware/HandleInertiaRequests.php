@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Note;
+use App\Services\HebrewCalendarService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -49,6 +50,11 @@ class HandleInertiaRequests extends Middleware
                 ->count();
         }
 
+        // Get current date in both Gregorian and Hebrew calendars
+        $hebrewCalendarService = app(HebrewCalendarService::class);
+        $hebrewDate = $hebrewCalendarService->getCurrentHebrewDate();
+        $gregorianDate = now()->format('l, F j, Y'); // e.g., "Tuesday, December 24, 2025"
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -68,6 +74,10 @@ class HandleInertiaRequests extends Middleware
                 'unseenNotifications' => $unseenNotifications,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'currentDate' => [
+                'gregorian' => $gregorianDate,
+                'hebrew' => $hebrewDate['formatted'],
+            ],
         ];
     }
 }
