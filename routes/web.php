@@ -209,6 +209,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/gabbai/honors', function () {
             return Inertia::render('admin/gabbai/honors');
         })->name('admin.gabbai.honors');
+
+        // School Management UI pages
+        Route::get('admin/school/class-definitions', function () { return Inertia::render('admin/school/class-definitions/index'); })->name('admin.school.class-definitions.index');
+        Route::get('admin/school/class-definitions/create', function () { return Inertia::render('admin/school/class-definitions/create'); })->name('admin.school.class-definitions.create');
+        Route::get('admin/school/class-definitions/{id}', function ($id) { 
+            $model = \App\Models\ClassDefinition::with('teacher')->findOrFail($id);
+            return Inertia::render('admin/school/class-definitions/show', ['item' => $model]); 
+        })->name('admin.school.class-definitions.show');
+        Route::get('admin/school/class-definitions/{id}/edit', function ($id) { 
+            $model = \App\Models\ClassDefinition::with('teacher')->findOrFail($id);
+            return Inertia::render('admin/school/class-definitions/edit', ['item' => $model]); 
+        })->name('admin.school.class-definitions.edit');
+        Route::get('admin/school/class-grades', function () { return Inertia::render('admin/school/class-grades'); })->name('admin.school.class-grades');
+        Route::get('admin/school/exams', function () { return Inertia::render('admin/school/exams'); })->name('admin.school.exams');
+        Route::get('admin/school/exam-grades', function () { return Inertia::render('admin/school/exam-grades'); })->name('admin.school.exam-grades');
+        Route::get('admin/school/parents', function () { return Inertia::render('admin/school/parents'); })->name('admin.school.parents');
+        Route::get('admin/school/students', function () { return Inertia::render('admin/school/students'); })->name('admin.school.students');
+        Route::get('admin/school/subjects', function () { return Inertia::render('admin/school/subjects'); })->name('admin.school.subjects');
+        Route::get('admin/school/subject-grades', function () { return Inertia::render('admin/school/subject-grades'); })->name('admin.school.subject-grades');
+        Route::get('admin/school/teachers', function () { return Inertia::render('admin/school/teachers'); })->name('admin.school.teachers');
         
         // Mark all user notifications as seen
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');
@@ -231,6 +251,17 @@ Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(functi
     Route::get('gabbai/assignments', [GabbaiController::class, 'assignments'])->name('api.admin.gabbai.assignments');
     Route::post('gabbai/assignments', [GabbaiController::class, 'saveAssignments'])->name('api.admin.gabbai.assignments.save');
     Route::get('gabbai/config', [GabbaiController::class, 'config'])->name('api.admin.gabbai.config');
+
+    // School resources
+    Route::apiResource('class-definitions', \App\Http\Controllers\ClassDefinitionController::class);
+    Route::apiResource('class-grades', \App\Http\Controllers\ClassGradeController::class);
+    Route::apiResource('exams', \App\Http\Controllers\ExamController::class);
+    Route::apiResource('exam-grades', \App\Http\Controllers\ExamGradeController::class);
+    Route::apiResource('parents', \App\Http\Controllers\ParentModelController::class);
+    Route::apiResource('students', \App\Http\Controllers\StudentController::class);
+    Route::apiResource('subjects', \App\Http\Controllers\SubjectController::class);
+    Route::apiResource('subject-grades', \App\Http\Controllers\SubjectGradeController::class);
+    Route::apiResource('teachers', \App\Http\Controllers\TeacherController::class);
 });
 
 require __DIR__.'/settings.php';

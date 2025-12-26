@@ -97,6 +97,55 @@ const gabbaiNavItems: NavItem[] = [
     },
 ];
 
+const schoolNavItems: NavItem[] = [
+    {
+        groupTitle: 'School Management',
+        title: 'Class Definitions',
+        href: '/admin/school/class-definitions',
+        icon: BookOpen,
+    },
+    {
+        title: 'Class Grades',
+        href: '/admin/school/class-grades',
+        icon: Folder,
+    },
+    {
+        title: 'Exams',
+        href: '/admin/school/exams',
+        icon: Calendar,
+    },
+    {
+        title: 'Exam Grades',
+        href: '/admin/school/exam-grades',
+        icon: Star,
+    },
+    {
+        title: 'Parents',
+        href: '/admin/school/parents',
+        icon: Users,
+    },
+    {
+        title: 'Students',
+        href: '/admin/school/students',
+        icon: UserPlus,
+    },
+    {
+        title: 'Subjects',
+        href: '/admin/school/subjects',
+        icon: BookOpen,
+    },
+    {
+        title: 'Subject Grades',
+        href: '/admin/school/subject-grades',
+        icon: FileText,
+    },
+    {
+        title: 'Teachers',
+        href: '/admin/school/teachers',
+        icon: UserCheck,
+    },
+];
+
 const systemNavItems: NavItem[] = [
     {
         groupTitle: 'System',
@@ -153,6 +202,9 @@ export function AppSidebar() {
                         
                         {/* System Section */}
                         <NavMain items={systemNavItems} />
+
+                        {/* School Management Section */}
+                        <NavMain items={schoolNavItems} />
                     </>
                 )}
             </SidebarContent>

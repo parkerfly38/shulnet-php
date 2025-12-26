@@ -56,12 +56,13 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
         { title: 'Gravesites', href: '/admin/gravesites' },
     ], []);
 
-    const handleFilter = () => {
+    const handleFilter = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
         router.get('/admin/gravesites', {
             search: search || undefined,
             status: status || undefined,
             cemetery: cemetery || undefined,
-        }, { preserveState: true });
+        }, { preserveState: true, replace: true });
     };
 
     const handleClearFilters = () => {
@@ -154,14 +155,15 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                 {/* Filters */}
                 <div className="rounded-lg border bg-white dark:bg-gray-800 p-4 shadow-sm">
                     <div className="flex flex-wrap gap-4">
-                        <div className="flex-1 min-w-[200px]">
+                        <form onSubmit={handleFilter} className="flex-1 min-w-[200px] relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
                                 placeholder="Search by plot number, section, or deceased name..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
+                                className="pl-10"
                             />
-                        </div>
+                        </form>
                         <div className="w-[150px]">
                             <Select value={status ?? " "} onValueChange={setStatus}>
                                 <SelectTrigger>
@@ -192,7 +194,7 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                                 </Select>
                             </div>
                         )}
-                        <Button onClick={handleFilter}>
+                        <Button type="button" onClick={(e) => handleFilter() }>
                             <Search className="h-4 w-4 mr-2" />
                             Filter
                         </Button>
@@ -338,6 +340,18 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                 {/* Pagination */}
                 {gravesites.last_page > 1 && (
                     <div className="flex items-center justify-between">
+                        <div className="flex gap-2">
+                            {gravesites.prev_page_url && (
+                                <Link href={gravesites.prev_page_url} preserveState>
+                                    <Button variant="outline">Previous</Button>
+                                </Link>
+                            )}
+                            {gravesites.next_page_url && (
+                                <Link href={gravesites.next_page_url} preserveState>
+                                    <Button variant="outline">Next</Button>
+                                </Link>
+                            )}
+                        </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                             Page {gravesites.current_page} of {gravesites.last_page}
                         </div>
