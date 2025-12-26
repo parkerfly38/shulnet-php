@@ -10,7 +10,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function SchoolIndexPage() {
     const items = [
-        { title: 'Class Definitions', href: '/admin/school/class-definitions' },
+        { title: 'Classes', href: '/admin/school/class-definitions' },
         { title: 'Class Grades', href: '/admin/school/class-grades' },
         { title: 'Exams', href: '/admin/school/exams' },
         { title: 'Exam Grades', href: '/admin/school/exam-grades' },
