@@ -80,11 +80,11 @@ export default function ClassDefinitionsIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Class Definitions" />
+            <Head title="Classes" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Class Definitions</h1>
+                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Classes</h1>
                         <p className="text-sm text-gray-600 dark:text-gray-400">Manage class offerings and schedules</p>
                     </div>
                     <Link href="/admin/school/class-definitions/create">

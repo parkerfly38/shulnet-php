@@ -5,7 +5,7 @@ import { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
-    { title: 'Class Definitions', href: '/admin/school/class-definitions' },
+    { title: 'Classes', href: '/admin/school/class-definitions' },
     { title: 'Create', href: '/admin/school/class-definitions/create' },
 ];
 

@@ -100,24 +100,14 @@ const gabbaiNavItems: NavItem[] = [
 const schoolNavItems: NavItem[] = [
     {
         groupTitle: 'School Management',
-        title: 'Class Definitions',
+        title: 'Classes',
         href: '/admin/school/class-definitions',
         icon: BookOpen,
-    },
-    {
-        title: 'Class Grades',
-        href: '/admin/school/class-grades',
-        icon: Folder,
     },
     {
         title: 'Exams',
         href: '/admin/school/exams',
         icon: Calendar,
-    },
-    {
-        title: 'Exam Grades',
-        href: '/admin/school/exam-grades',
-        icon: Star,
     },
     {
         title: 'Parents',
@@ -133,11 +123,6 @@ const schoolNavItems: NavItem[] = [
         title: 'Subjects',
         href: '/admin/school/subjects',
         icon: BookOpen,
-    },
-    {
-        title: 'Subject Grades',
-        href: '/admin/school/subject-grades',
-        icon: FileText,
     },
     {
         title: 'Teachers',
@@ -194,17 +179,18 @@ export function AppSidebar() {
                         {/* Admin Section */}
                         <NavMain items={adminNavItems} />
                         
-                        {/* Cemetery Management Section */}
-                        <NavMain items={cemeteryNavItems} />
-
                         {/* Gabbai Management Section */}
                         <NavMain items={gabbaiNavItems} />
+
+                        {/* School Management Section */}
+                        <NavMain items={schoolNavItems} />
+
+                        {/* Cemetery Management Section */}
+                        <NavMain items={cemeteryNavItems} />
                         
                         {/* System Section */}
                         <NavMain items={systemNavItems} />
 
-                        {/* School Management Section */}
-                        <NavMain items={schoolNavItems} />
                     </>
                 )}
             </SidebarContent>

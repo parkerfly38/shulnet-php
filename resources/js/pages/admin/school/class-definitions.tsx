@@ -6,16 +6,16 @@ import SchoolCrud from '@/components/school-crud';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
-    { title: 'Class Definitions', href: '/admin/school/class-definitions' },
+    { title: 'Classes', href: '/admin/school/class-definitions' },
 ];
 
 export default function ClassDefinitionsPage() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Class Definitions" />
+            <Head title="Classes" />
             <div className="p-4">
                 <SchoolCrud
-                    title="Class Definitions"
+                    title="Classes"
                     endpoint="/api/admin/class-definitions"
                     fields={[
                         { name: 'name', label: 'Name', type: 'text' },
