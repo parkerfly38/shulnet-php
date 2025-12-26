@@ -78,7 +78,7 @@ export default function TicketTypeEdit({ event, ticketType }: Readonly<Props>) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="rounded-lg border bg-white dark:bg-gray-800 p-6 shadow-sm">
+        <form onSubmit={handleSubmit} className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
           <div className="space-y-6">
             {/* Sales Stats */}
             <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 p-4">

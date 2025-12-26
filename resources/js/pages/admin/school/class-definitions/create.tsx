@@ -34,7 +34,7 @@ export default function ClassDefinitionsCreate() {
             <Head title="Create Class" />
             <div className="p-4">
                 <h1 className="text-2xl font-bold mb-4">Create Class Definition</h1>
-                <form onSubmit={submit} className="space-y-3 bg-white dark:bg-gray-800 p-4 rounded border">
+                <form onSubmit={submit} className="space-y-3 bg-white dark:bg-black p-4 rounded border">
                     <div>
                         <label className="block text-sm font-medium">Name</label>
                         <input value={form.data.name} onChange={(e) => form.setData('name', e.target.value)} className="w-full rounded border p-2" />

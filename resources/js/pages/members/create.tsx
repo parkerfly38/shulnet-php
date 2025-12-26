@@ -99,7 +99,7 @@ export default function MembersCreate() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
               Personal Information
             </h2>
@@ -212,7 +212,7 @@ export default function MembersCreate() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
               Contact Information
             </h2>
@@ -260,7 +260,7 @@ export default function MembersCreate() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
               Address Information
             </h2>
@@ -351,7 +351,7 @@ export default function MembersCreate() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
               Hebrew/Jewish Information
             </h2>
@@ -448,7 +448,7 @@ export default function MembersCreate() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
               Religious Roles & Capabilities
             </h2>

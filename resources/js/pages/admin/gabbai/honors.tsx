@@ -158,7 +158,7 @@ export default function GabbaiHonors() {
                 <div className="space-y-3">
                     {honors.length === 0 && <p className="text-sm text-gray-500">No honors found for this date.</p>}
                     {honors.map((h) => (
-                        <div key={h.key} className="flex items-center gap-4 bg-white dark:bg-gray-800 p-3 rounded border">
+                        <div key={h.key} className="flex items-center gap-4 bg-white dark:bg-black p-3 rounded border">
                             <div className="w-40">
                                 <div className="font-medium">{h.key === 'M' ? 'Maftir' : `Aliyah ${h.key}`}</div>
                                 <div className="text-sm text-gray-500">{h.meta.k} {h.meta.b} - {h.meta.e}</div>

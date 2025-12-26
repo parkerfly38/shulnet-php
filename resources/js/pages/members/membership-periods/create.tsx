@@ -88,7 +88,7 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6 flex items-center">
               <Calendar className="h-5 w-5 mr-2" />
               Membership Period Details

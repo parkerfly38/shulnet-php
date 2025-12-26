@@ -79,13 +79,13 @@ export default function GabbaiDashboard() {
 
             <div className="p-4 space-y-4">
                 <h1 className="text-2xl font-bold">Gabbai Dashboard</h1>
-                {triennialYear && (
-                    <div className="text-sm text-gray-600 mt-1">Triennial Year: {triennialYear}</div>
-                )}
-
+                
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg p-6 border">
                         <h2 className="text-lg font-semibold mb-3">Upcoming Parashah</h2>
+                        {triennialYear && (
+                            <h2 className="text-md font-semibold mb-3">Using Triennial Year: {triennialYear}</h2>
+                        )}
                         {loading && <p>Loading parashah...</p>}
                         {error && <p className="text-red-500">{error}</p>}
                         {!loading && !error && upcomingParsha && (

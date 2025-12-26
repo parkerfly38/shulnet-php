@@ -131,7 +131,7 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
-          <div className="rounded-lg border bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Invoice Details</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -209,7 +209,7 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
           </div>
 
           {/* Invoice Items */}
-          <div className="rounded-lg border bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Line Items</h2>
               <Button type="button" onClick={addItem} variant="outline" size="sm">
@@ -308,7 +308,7 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
           </div>
 
           {/* Recurring Settings */}
-          <div className="rounded-lg border bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recurring Settings</h2>
             
             <div className="flex items-center space-x-2 mb-4">

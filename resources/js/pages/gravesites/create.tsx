@@ -65,7 +65,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Location Information</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -133,7 +133,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Site Details</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -205,7 +205,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Ownership Information</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -273,7 +273,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Occupancy Information</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -343,7 +343,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Additional Notes</h2>
                         
                         <div>

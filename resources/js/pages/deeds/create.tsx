@@ -64,7 +64,7 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+          <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Deed Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

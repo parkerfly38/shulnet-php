@@ -71,7 +71,7 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="rounded-lg border bg-white dark:bg-gray-800 p-6 shadow-sm">
+        <form onSubmit={handleSubmit} className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
           <div className="space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">

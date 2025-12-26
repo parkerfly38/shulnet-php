@@ -222,12 +222,12 @@ export default function CreateNote({ members, users }: CreateNoteProps) {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="member_id">Related Member</Label>
-                                    <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
+                                    <Select value={data.member_id ?? ' '} onValueChange={(value) => setData('member_id', value)}>
                                         <SelectTrigger className={errors.member_id ? 'border-red-500' : ''}>
                                             <SelectValue placeholder="Select a member (optional)" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="">No member</SelectItem>
+                                            <SelectItem value=" ">No member</SelectItem>
                                             {members.map((member) => (
                                                 <SelectItem key={member.id} value={member.id.toString()}>
                                                     {member.first_name} {member.last_name} - {member.email}
@@ -242,12 +242,12 @@ export default function CreateNote({ members, users }: CreateNoteProps) {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="user_id">Assigned User</Label>
-                                    <Select value={data.user_id} onValueChange={(value) => setData('user_id', value)}>
+                                    <Select value={data.user_id ?? ' '} onValueChange={(value) => setData('user_id', value)}>
                                         <SelectTrigger className={errors.user_id ? 'border-red-500' : ''}>
                                             <SelectValue placeholder="Assign to user (optional)" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="">No user assigned</SelectItem>
+                                            <SelectItem value=" ">No user assigned</SelectItem>
                                             {users.map((user) => (
                                                 <SelectItem key={user.id} value={user.id.toString()}>
                                                     {user.name} - {user.email}
