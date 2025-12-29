@@ -67,7 +67,7 @@ export default function TeachersPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg border p-4">
+                    <div className="bg-white dark:bg-black rounded-lg border p-4">
                         <p className="text-sm text-gray-600">Total Teachers</p>
                         <p className="text-2xl font-bold mt-1 text-gray-900 dark:text-gray-100">{total}</p>
                     </div>
@@ -85,7 +85,7 @@ export default function TeachersPage() {
 
                 <div className="text-sm text-gray-600 dark:text-gray-400">Showing {from || (data.length?1:0)} to {to || data.length} of {total} teachers</div>
 
-                <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border overflow-hidden">
+                <div className="bg-white dark:bg-black shadow-sm rounded-lg border overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
@@ -96,7 +96,7 @@ export default function TeachersPage() {
                                     <th className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                                 {data.length > 0 ? (
                                     data.map((it) => (
                                         <tr key={it.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

@@ -29,7 +29,7 @@ export default function SchoolIndex({ title, endpoint }: Props) {
                 {!loading && items.length > 0 && (
                     <div className="space-y-2">
                         {items.slice(0, 50).map((it: any) => (
-                            <div key={it.id ?? JSON.stringify(it)} className="p-2 border rounded bg-white dark:bg-gray-800">
+                            <div key={it.id ?? JSON.stringify(it)} className="p-2 border rounded bg-white dark:bg-black">
                                 <pre className="text-xs">{JSON.stringify(it, null, 2)}</pre>
                             </div>
                         ))}

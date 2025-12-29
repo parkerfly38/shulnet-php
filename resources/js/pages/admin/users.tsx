@@ -179,7 +179,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -198,7 +198,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                 {users.data.length > 0 ? (
                   users.data.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -257,7 +257,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
 
           {/* Pagination */}
           {users.last_page > 1 && (
-            <div className="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
+            <div className="bg-white dark:bg-black px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1 flex justify-between sm:hidden">
                   {users.prev_page_url && (
@@ -286,7 +286,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                           return (
                             <span
                               key={index}
-                              className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400"
+                              className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-black text-sm font-medium text-gray-500 dark:text-gray-400"
                               dangerouslySetInnerHTML={{ __html: link.label }}
                             />
                           );
@@ -299,7 +299,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                             className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                               link.active
                                 ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                : 'bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                             dangerouslySetInnerHTML={{ __html: link.label }}
                           />
@@ -317,7 +317,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
       {/* Role Edit Modal */}
       {showRoleModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-black">
             <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">
               Edit Roles for {selectedUser.name}
             </h3>

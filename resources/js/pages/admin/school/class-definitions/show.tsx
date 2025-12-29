@@ -27,7 +27,7 @@ export default function ClassDefinitionsShow() {
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-4 rounded border">
+                <div className="bg-white dark:bg-black p-4 rounded border">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div><strong>Class #:</strong> {data.class_number}</div>
                         <div><strong>Teacher:</strong> {data.teacher_name ?? data.teacher_id}</div>

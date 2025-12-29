@@ -184,7 +184,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
         </div>
 
         {/* Yahrzeits Table */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -206,7 +206,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                 {yahrzeits.data.length > 0 ? (
                   yahrzeits.data.map((yahrzeit) => (
                     <tr key={yahrzeit.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -290,7 +290,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
 
           {/* Pagination */}
           {yahrzeits.last_page > 1 && (
-            <div className="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
+            <div className="bg-white dark:bg-black px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
               <div className="flex-1 flex justify-between sm:hidden">
                 {yahrzeits.prev_page_url && (
                   <Button variant="outline" onClick={() => router.get(yahrzeits.prev_page_url!)}>

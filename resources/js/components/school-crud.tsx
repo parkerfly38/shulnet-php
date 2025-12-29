@@ -147,7 +147,7 @@ export default function SchoolCrud({ title, endpoint, fields }: { title: string;
             {!loading && items.length > 0 && (
                 <div>
                     {/* table */}
-                    <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded border">
+                    <div className="overflow-x-auto bg-white dark:bg-black rounded border">
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="text-left">
@@ -194,7 +194,7 @@ export default function SchoolCrud({ title, endpoint, fields }: { title: string;
 
             {open && editing && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded w-full max-w-2xl">
+                    <div className="bg-white dark:bg-black p-4 rounded w-full max-w-2xl">
                         <h2 className="text-lg font-semibold mb-2">{editing.id ? 'Edit' : 'Create'}</h2>
                         <div className="space-y-3">
                             {fields.map((f) => (

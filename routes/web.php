@@ -211,24 +211,108 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('admin.gabbai.honors');
 
         // School Management UI pages
+        Route::get('admin/school', function () {
+            return Inertia::render('admin/school/index', [
+                'stats' => [
+                    'students' => \App\Models\Student::count(),
+                    'teachers' => \App\Models\Teacher::count(),
+                    'classes' => \App\Models\ClassDefinition::count(),
+                    'subjects' => \App\Models\Subject::count(),
+                    'exams' => \App\Models\Exam::count(),
+                    'parents' => \App\Models\ParentModel::count(),
+                ],
+                'recentStudents' => \App\Models\Student::with('parent')->latest()->take(5)->get(),
+                'upcomingExams' => \App\Models\Exam::with('subject')
+                    ->where('start_date', '>=', now())
+                    ->orderBy('start_date')
+                    ->take(5)
+                    ->get(),
+                'activeClasses' => \App\Models\ClassDefinition::with('teacher')->take(5)->get(),
+            ]);
+        })->name('admin.school.dashboard');
+        
         Route::get('admin/school/class-definitions', function () { return Inertia::render('admin/school/class-definitions/index'); })->name('admin.school.class-definitions.index');
-        Route::get('admin/school/class-definitions/create', function () { return Inertia::render('admin/school/class-definitions/create'); })->name('admin.school.class-definitions.create');
+        Route::get('admin/school/class-definitions/create', function () { 
+            return Inertia::render('admin/school/class-definitions/create', [
+                'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->get()
+            ]); 
+        })->name('admin.school.class-definitions.create');
         Route::get('admin/school/class-definitions/{id}', function ($id) { 
             $model = \App\Models\ClassDefinition::with('teacher')->findOrFail($id);
             return Inertia::render('admin/school/class-definitions/show', ['item' => $model]); 
         })->name('admin.school.class-definitions.show');
         Route::get('admin/school/class-definitions/{id}/edit', function ($id) { 
             $model = \App\Models\ClassDefinition::with('teacher')->findOrFail($id);
-            return Inertia::render('admin/school/class-definitions/edit', ['item' => $model]); 
+            return Inertia::render('admin/school/class-definitions/edit', [
+                'item' => $model,
+                'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->get()
+            ]); 
         })->name('admin.school.class-definitions.edit');
         Route::get('admin/school/class-grades', function () { return Inertia::render('admin/school/class-grades'); })->name('admin.school.class-grades');
-        Route::get('admin/school/exams', function () { return Inertia::render('admin/school/exams'); })->name('admin.school.exams');
+        
+        // Exams routes
+        Route::get('admin/school/exams', function () { return Inertia::render('admin/school/exams/index'); })->name('admin.school.exams.index');
+        Route::get('admin/school/exams/create', function () { return Inertia::render('admin/school/exams/create'); })->name('admin.school.exams.create');
+        Route::get('admin/school/exams/{id}', function ($id) { 
+            $model = \App\Models\Exam::with('subject')->findOrFail($id);
+            return Inertia::render('admin/school/exams/show', ['item' => $model]); 
+        })->name('admin.school.exams.show');
+        Route::get('admin/school/exams/{id}/edit', function ($id) { 
+            $model = \App\Models\Exam::with('subject')->findOrFail($id);
+            return Inertia::render('admin/school/exams/edit', ['item' => $model]); 
+        })->name('admin.school.exams.edit');
+        
         Route::get('admin/school/exam-grades', function () { return Inertia::render('admin/school/exam-grades'); })->name('admin.school.exam-grades');
-        Route::get('admin/school/parents', function () { return Inertia::render('admin/school/parents'); })->name('admin.school.parents');
-        Route::get('admin/school/students', function () { return Inertia::render('admin/school/students'); })->name('admin.school.students');
-        Route::get('admin/school/subjects', function () { return Inertia::render('admin/school/subjects'); })->name('admin.school.subjects');
+        
+        // Parents routes
+        Route::get('admin/school/parents', function () { return Inertia::render('admin/school/parents/index'); })->name('admin.school.parents.index');
+        Route::get('admin/school/parents/create', function () { return Inertia::render('admin/school/parents/create'); })->name('admin.school.parents.create');
+        Route::get('admin/school/parents/{id}', function ($id) { 
+            $model = \App\Models\ParentModel::findOrFail($id);
+            return Inertia::render('admin/school/parents/show', ['item' => $model]); 
+        })->name('admin.school.parents.show');
+        Route::get('admin/school/parents/{id}/edit', function ($id) { 
+            $model = \App\Models\ParentModel::findOrFail($id);
+            return Inertia::render('admin/school/parents/edit', ['item' => $model]); 
+        })->name('admin.school.parents.edit');
+        
+        // Students routes
+        Route::get('admin/school/students', function () { return Inertia::render('admin/school/students/index'); })->name('admin.school.students.index');
+        Route::get('admin/school/students/create', function () { return Inertia::render('admin/school/students/create'); })->name('admin.school.students.create');
+        Route::get('admin/school/students/{id}', function ($id) { 
+            $model = \App\Models\Student::with('parent')->findOrFail($id);
+            return Inertia::render('admin/school/students/show', ['item' => $model]); 
+        })->name('admin.school.students.show');
+        Route::get('admin/school/students/{id}/edit', function ($id) { 
+            $model = \App\Models\Student::with('parent')->findOrFail($id);
+            return Inertia::render('admin/school/students/edit', ['item' => $model]); 
+        })->name('admin.school.students.edit');
+        
+        // Subjects routes
+        Route::get('admin/school/subjects', function () { return Inertia::render('admin/school/subjects'); })->name('admin.school.subjects.index');
+        Route::get('admin/school/subjects/create', function () { return Inertia::render('admin/school/subjects/create'); })->name('admin.school.subjects.create');
+        Route::get('admin/school/subjects/{id}', function ($id) { 
+            $model = \App\Models\Subject::findOrFail($id);
+            return Inertia::render('admin/school/subjects/show', ['item' => $model]); 
+        })->name('admin.school.subjects.show');
+        Route::get('admin/school/subjects/{id}/edit', function ($id) { 
+            $model = \App\Models\Subject::findOrFail($id);
+            return Inertia::render('admin/school/subjects/edit', ['item' => $model]); 
+        })->name('admin.school.subjects.edit');
+        
         Route::get('admin/school/subject-grades', function () { return Inertia::render('admin/school/subject-grades'); })->name('admin.school.subject-grades');
-        Route::get('admin/school/teachers', function () { return Inertia::render('admin/school/teachers'); })->name('admin.school.teachers');
+        
+        // Teachers routes
+        Route::get('admin/school/teachers', function () { return Inertia::render('admin/school/teachers/index'); })->name('admin.school.teachers.index');
+        Route::get('admin/school/teachers/create', function () { return Inertia::render('admin/school/teachers/create'); })->name('admin.school.teachers.create');
+        Route::get('admin/school/teachers/{id}', function ($id) { 
+            $model = \App\Models\Teacher::findOrFail($id);
+            return Inertia::render('admin/school/teachers/show', ['item' => $model]); 
+        })->name('admin.school.teachers.show');
+        Route::get('admin/school/teachers/{id}/edit', function ($id) { 
+            $model = \App\Models\Teacher::findOrFail($id);
+            return Inertia::render('admin/school/teachers/edit', ['item' => $model]); 
+        })->name('admin.school.teachers.edit');
         
         // Mark all user notifications as seen
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');

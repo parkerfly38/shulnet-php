@@ -78,7 +78,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Location Information */}
-                        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                                 <MapPin className="h-5 w-5 mr-2" />
                                 Location Information
@@ -128,7 +128,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                         </div>
 
                         {/* Site Details */}
-                        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                                 Site Details
                             </h2>
@@ -168,7 +168,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                         {/* Ownership Information */}
                         {(gravesite.member || gravesite.purchase_date || gravesite.reserved_date) && (
-                            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                                     <User className="h-5 w-5 mr-2" />
                                     Ownership Information
@@ -231,7 +231,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                         {/* Occupancy Information */}
                         {gravesite.status === 'occupied' && (
-                            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                                     Occupancy Information
                                 </h2>
@@ -295,7 +295,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                         {/* Notes */}
                         {gravesite.notes && (
-                            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                                     Notes
                                 </h2>
@@ -308,7 +308,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                     {/* Sidebar */}
                     <div className="space-y-6">
-                        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                                 Status
                             </h3>
@@ -336,7 +336,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                             </div>
                         </div>
 
-                        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                                 Quick Actions
                             </h3>

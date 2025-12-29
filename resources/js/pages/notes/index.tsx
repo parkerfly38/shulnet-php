@@ -171,7 +171,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                     {statCards.map((stat) => (
                         <div
                             key={stat.title}
-                            className={`bg-white dark:bg-gray-800 rounded-lg border ${
+                            className={`bg-white dark:bg-black rounded-lg border ${
                                 stat.highlight 
                                     ? 'border-2 ' + stat.color.replace('bg-', 'border-') 
                                     : 'border-gray-200 dark:border-gray-700'
@@ -218,7 +218,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
         </div>
 
         {/* Notes Table */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -240,7 +240,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                 {notes.data.length > 0 ? (
                   notes.data.map((note) => (
                     <tr key={note.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -350,7 +350,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
 
           {/* Pagination */}
           {notes.last_page > 1 && (
-            <div className="bg-white dark:bg-gray-800 px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
+            <div className="bg-white dark:bg-black px-4 py-3 border-t border-gray-200 dark:border-gray-700 sm:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1 flex justify-between sm:hidden">
                   {notes.prev_page_url && (
@@ -379,7 +379,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                           return (
                             <span
                               key={index}
-                              className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400"
+                              className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-black text-sm font-medium text-gray-500 dark:text-gray-400"
                               dangerouslySetInnerHTML={{ __html: link.label }}
                             />
                           );
@@ -392,7 +392,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                             className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                               link.active
                                 ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                                : 'bg-white dark:bg-black border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
                             }`}
                             dangerouslySetInnerHTML={{ __html: link.label }}
                           />

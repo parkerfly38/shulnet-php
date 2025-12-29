@@ -67,7 +67,7 @@ export default function IntermentsShow({ interment }: Readonly<Props>) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Main Info */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Personal Information</h2>
               
               <div className="grid grid-cols-2 gap-4">
@@ -114,7 +114,7 @@ export default function IntermentsShow({ interment }: Readonly<Props>) {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Service Information</h2>
               
               <div className="grid grid-cols-2 gap-4">
@@ -145,7 +145,7 @@ export default function IntermentsShow({ interment }: Readonly<Props>) {
           {/* Sidebar */}
           <div className="space-y-4">
             {interment.deed && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+              <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Plot Location</h2>
                 <div className="flex items-start gap-3">
                   <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-full">
@@ -181,7 +181,7 @@ export default function IntermentsShow({ interment }: Readonly<Props>) {
             )}
 
             {interment.member && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+              <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Related Member</h2>
                 <div className="flex items-start gap-3">
                   <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-full">
@@ -202,7 +202,7 @@ export default function IntermentsShow({ interment }: Readonly<Props>) {
               </div>
             )}
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Metadata</h2>
               <div className="space-y-3">
                 <div>

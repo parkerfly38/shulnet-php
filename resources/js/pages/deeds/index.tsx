@@ -168,7 +168,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
           {statCards.map((stat) => (
             <div
               key={stat.title}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+              className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className={`p-2 rounded-full ${stat.bgColor}`}>
@@ -191,7 +191,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
+        <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
@@ -257,7 +257,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
         </div>
 
         {/* Deeds Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">

@@ -75,7 +75,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Main Info */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Deed Information</h2>
               
               <div className="grid grid-cols-2 gap-4">
@@ -143,7 +143,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
             </div>
 
             {/* Interments */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Interments</h2>
                 <Link href={`/admin/interments/create?deed=${deed.id}`}>
@@ -188,7 +188,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
             </div>
 
             {/* Gravesites */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Associated Gravesites</h2>
 
               {deed.gravesites && deed.gravesites.length > 0 ? (
@@ -247,7 +247,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
 
           {/* Sidebar */}
           <div className="space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Owner</h2>
               {deed.member ? (
                 <div className="flex items-start gap-3">
@@ -271,7 +271,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
               )}
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Metadata</h2>
               <div className="space-y-3">
                 <div>

@@ -180,7 +180,7 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                     {Object.entries(initialSettings).map(([group, groupSettings]) => (
                         <div
                             key={group}
-                            className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
+                            className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm"
                         >
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                                 {groupTitles[group] || group}

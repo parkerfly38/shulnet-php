@@ -133,7 +133,7 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                     {statCards.map((stat) => (
                         <div
                             key={stat.title}
-                            className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+                            className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <div className={`p-2 rounded-full ${stat.bgColor}`}>
@@ -153,7 +153,7 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                 </div>
 
                 {/* Filters */}
-                <div className="rounded-lg border bg-white dark:bg-gray-800 p-4 shadow-sm">
+                <div className="rounded-lg border bg-white dark:bg-black p-4 shadow-sm">
                     <div className="flex flex-wrap gap-4">
                         <form onSubmit={handleFilter} className="flex-1 min-w-[200px] relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -212,7 +212,7 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                 </div>
 
                 {/* Gravesites Table */}
-                <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
@@ -237,7 +237,7 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                                 {gravesites.data.length > 0 ? (
                                     gravesites.data.map((gravesite) => (
                                         <tr key={gravesite.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

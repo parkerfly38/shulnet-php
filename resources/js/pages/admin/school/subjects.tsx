@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Eye, Edit } from 'lucide-react';
+import { Search, Plus, Eye, Edit, Trash2 } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -54,6 +54,13 @@ export default function SubjectsPage() {
 
     function handleSearch(e: React.FormEvent) { e.preventDefault(); load(1, search); }
 
+    function handleDelete(id: number, name: string) {
+        if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+        fetchJson(`/api/admin/subjects/${id}`, { method: 'DELETE' })
+            .then(() => load(page, search))
+            .catch((err) => alert('Failed to delete subject'));
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Subjects" />
@@ -67,7 +74,7 @@ export default function SubjectsPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg border p-4">
+                    <div className="bg-white dark:bg-black rounded-lg border p-4">
                         <p className="text-sm text-gray-600">Total Subjects</p>
                         <p className="text-2xl font-bold mt-1 text-gray-900 dark:text-gray-100">{total}</p>
                     </div>
@@ -85,7 +92,7 @@ export default function SubjectsPage() {
 
                 <div className="text-sm text-gray-600 dark:text-gray-400">Showing {from || (data.length?1:0)} to {to || data.length} of {total} subjects</div>
 
-                <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border overflow-hidden">
+                <div className="bg-white dark:bg-black shadow-sm rounded-lg border overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
@@ -96,7 +103,7 @@ export default function SubjectsPage() {
                                     <th className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                                 {data.length > 0 ? (
                                     data.map((it) => (
                                         <tr key={it.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -107,6 +114,14 @@ export default function SubjectsPage() {
                                                 <div className="flex gap-2 justify-end">
                                                     <Link href={`/admin/school/subjects/${it.id}`}><Button variant="outline" size="sm"><Eye className="h-4 w-4"/></Button></Link>
                                                     <Link href={`/admin/school/subjects/${it.id}/edit`}><Button variant="outline" size="sm"><Edit className="h-4 w-4"/></Button></Link>
+                                                    <Button 
+                                                        variant="outline" 
+                                                        size="sm" 
+                                                        onClick={() => handleDelete(it.id, it.name)}
+                                                        className="text-red-600 hover:text-red-700 hover:border-red-600"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
                                                 </div>
                                             </td>
                                         </tr>

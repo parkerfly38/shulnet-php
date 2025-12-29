@@ -92,7 +92,7 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
         </div>
 
         {/* Ticket Types Table */}
-        <div className="rounded-lg border bg-white dark:bg-gray-800 shadow-sm">
+        <div className="rounded-lg border bg-white dark:bg-black shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -120,7 +120,7 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                 {ticketTypes.length > 0 ? (
                   ticketTypes.map((ticketType) => (
                     <tr key={ticketType.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

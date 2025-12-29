@@ -81,7 +81,7 @@ export default function GabbaiDashboard() {
                 <h1 className="text-2xl font-bold">Gabbai Dashboard</h1>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg p-6 border">
+                    <div className="lg:col-span-2 bg-white dark:bg-black rounded-lg p-6 border">
                         <h2 className="text-lg font-semibold mb-3">Upcoming Parashah</h2>
                         {triennialYear && (
                             <h2 className="text-md font-semibold mb-3">Using Triennial Year: {triennialYear}</h2>
@@ -100,12 +100,12 @@ export default function GabbaiDashboard() {
                     </div>
 
                     <div className="space-y-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border">
+                        <div className="bg-white dark:bg-black rounded-lg p-6 border">
                             <h3 className="font-semibold">Upcoming Anniversaries & Bnai</h3>
                             <p className="text-sm text-gray-500 mt-2">See details on the <Link href="/admin/gabbai/anniversaries" className="text-blue-600">Anniversaries & Bnai page</Link>.</p>
                         </div>
 
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border">
+                        <div className="bg-white dark:bg-black rounded-lg p-6 border">
                             <h3 className="font-semibold">Assign Honors — Next Shabbos</h3>
                             <div className="mt-2">
                                 <label className="block text-sm text-gray-500">View assignments for date</label>
@@ -122,7 +122,7 @@ export default function GabbaiDashboard() {
                                     {honors.map((h) => {
                                         const found = assignments.find((a) => a.honor === h.key);
                                         return (
-                                            <div key={h.key} className="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded border">
+                                            <div key={h.key} className="flex items-center justify-between bg-white dark:bg-black p-2 rounded border">
                                                 <div>
                                                     <div className="font-medium">{h.key === 'M' ? 'Maftir' : `Aliyah ${h.key}`}</div>
                                                     <div className="text-xs text-gray-500">{h.meta.k} {h.meta.b}–{h.meta.e}</div>
@@ -135,7 +135,7 @@ export default function GabbaiDashboard() {
                             </div>
                         </div>
 
-                        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border">
+                        <div className="bg-white dark:bg-black rounded-lg p-6 border">
                             <h3 className="font-semibold">Pledges (Aliyah)</h3>
                             <p className="text-sm text-gray-500 mt-2">Pledges from Torah honors will appear here (based on invoice components labeled "Aliyah").</p>
                         </div>

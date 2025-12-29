@@ -100,6 +100,11 @@ const gabbaiNavItems: NavItem[] = [
 const schoolNavItems: NavItem[] = [
     {
         groupTitle: 'School Management',
+        title: 'School Dashboard',
+        href: '/admin/school',
+        icon: LayoutGrid,
+    },
+    {
         title: 'Classes',
         href: '/admin/school/class-definitions',
         icon: BookOpen,

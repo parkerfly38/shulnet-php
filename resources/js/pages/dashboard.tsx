@@ -68,7 +68,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* User role indicators */}
                 {user?.roles && user.roles.length > 0 && (
-                    <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
+                    <div className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
                         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Roles</h3>
                         <div className="flex flex-wrap gap-2">
                             {user.roles.map((role: string) => {
@@ -95,7 +95,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                 )}
 
                 {/* Members Joined Chart */}
-                <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <div className="mb-4">
                         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                             Members Joined in {currentYear}
@@ -141,7 +141,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
 
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     {/* Current Hebrew Month Yahrzeits */}
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                                 <Calendar className="h-4 w-4 mr-2" />
@@ -208,7 +208,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     </div>
 
                     {/* Upcoming Events */}
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                                 <CalendarDays className="h-4 w-4 mr-2" />
@@ -297,7 +297,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     </div>
 
                     {/* Open Invoices by Aging */}
-                    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
+                    <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                                 <DollarSign className="h-4 w-4 mr-2" />

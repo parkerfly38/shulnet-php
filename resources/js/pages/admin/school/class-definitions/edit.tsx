@@ -8,10 +8,22 @@ const breadcrumbsBase: BreadcrumbItem[] = [
     { title: 'Classes', href: '/admin/school/class-definitions' },
 ];
 
+interface Teacher {
+    id: number;
+    first_name: string;
+    last_name: string;
+}
+
+interface EditProps {
+    item: any;
+    teachers: Teacher[];
+}
+
 export default function ClassDefinitionsEdit() {
-    const { props } = usePage();
-    const pageProps: any = props;
+    const { props } = usePage<EditProps>();
+    const pageProps = props;
     const item = pageProps.item ?? {};
+    const teachers = pageProps.teachers ?? [];
 
     const breadcrumbs: BreadcrumbItem[] = [...breadcrumbsBase, { title: item.name ?? 'Edit', href: `/admin/school/class-definitions/${item.id}/edit` }];
 
@@ -53,6 +65,21 @@ export default function ClassDefinitionsEdit() {
                         <textarea value={form.data.description} onChange={(e) => form.setData('description', e.target.value)} className="w-full rounded border p-2" />
                     </div>
                     <div>
+                        <label className="block text-sm font-medium">Teacher</label>
+                        <select 
+                            value={form.data.teacher_id} 
+                            onChange={(e) => form.setData('teacher_id', e.target.value)} 
+                            className="w-full rounded border p-2"
+                        >
+                            <option value="">-- Select Teacher --</option>
+                            {teachers.map((teacher) => (
+                                <option key={teacher.id} value={teacher.id}>
+                                    {teacher.last_name}, {teacher.first_name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
                         <label className="block text-sm font-medium">Capacity</label>
                         <input type="number" value={form.data.capacity} onChange={(e) => form.setData('capacity', e.target.value)} className="w-full rounded border p-2" />
                     </div>
@@ -75,8 +102,10 @@ export default function ClassDefinitionsEdit() {
                         <input type="number" step="0.01" value={form.data.fee} onChange={(e) => form.setData('fee', e.target.value)} className="w-full rounded border p-2" />
                     </div>
                     <div className="flex gap-2 justify-end">
-                        <Link href={`/admin/school/class-definitions/${item.id}`} className="px-3 py-1 border rounded">Cancel</Link>
-                        <button type="submit" className="px-3 py-1 bg-blue-600 text-white rounded">Save</button>
+                        <Link href={`/admin/school/class-definitions/${item.id}`}>
+                            <Button type="button" variant="outline">Cancel</Button>
+                        </Link>
+                        <Button type="submit" disabled={form.processing}>Update Class</Button>
                     </div>
                 </form>
             </div>

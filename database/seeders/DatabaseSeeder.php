@@ -45,6 +45,14 @@ class DatabaseSeeder extends Seeder
             PdfTemplateSeeder::class,
             CemeterySeeder::class,
             SettingSeeder::class,
+            
+            // School Management Seeders
+            SubjectSeeder::class,
+            TeacherSeeder::class,
+            ParentSeeder::class,
+            StudentSeeder::class,
+            ClassDefinitionSeeder::class,
+            ExamSeeder::class,
         ]);
     }
 }

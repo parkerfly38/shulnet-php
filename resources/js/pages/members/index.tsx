@@ -151,7 +151,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
           {statCards.map((stat) => (
             <div
               key={stat.title}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+              className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -228,7 +228,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
         </div>
 
         {/* Members Table */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -253,7 +253,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                 {members.data.length > 0 ? (
                   members.data.map((member) => (
                     <tr key={member.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

@@ -58,7 +58,7 @@ export default function GabbaiAnniversaries() {
                 {items.length > 0 && (
                     <div className="space-y-2">
                         {items.map((it) => (
-                            <div key={it.id} className="bg-white dark:bg-gray-800 p-4 rounded border">
+                            <div key={it.id} className="bg-white dark:bg-black p-4 rounded border">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="font-medium">{it.name}</p>

@@ -87,7 +87,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Personal Information */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                 <User className="h-5 w-5 mr-2" />
                 Personal Information
@@ -152,7 +152,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
             </div>
 
             {/* Jewish Details */}
-            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                 Jewish Details
               </h2>
@@ -247,7 +247,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
             </div>
 
             {/* Contact Information */}
-            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                 <Mail className="h-5 w-5 mr-2" />
                 Contact Information
@@ -292,7 +292,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
 
             {/* Address Information */}
             {getFullAddress() && (
-              <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+              <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                   <MapPin className="h-5 w-5 mr-2" />
                   Address Information
@@ -318,7 +318,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                 Member Status
               </h3>
@@ -346,7 +346,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                 Quick Actions
               </h3>
@@ -380,7 +380,7 @@ export default function MembersShow({ member }: Readonly<Props>) {
         </div>
 
         {/* Membership Periods Section */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
               <Calendar className="h-5 w-5 mr-2" />

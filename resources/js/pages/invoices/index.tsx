@@ -178,7 +178,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
           {statCards.map((stat) => (
             <div
               key={stat.title}
-              className={`bg-white dark:bg-gray-800 rounded-lg border ${
+              className={`bg-white dark:bg-black rounded-lg border ${
                 stat.highlight 
                   ? 'border-2 ' + stat.color.replace('bg-', 'border-') 
                   : 'border-gray-200 dark:border-gray-700'
@@ -205,7 +205,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
         </div>
 
         {/* Filters */}
-        <div className="rounded-lg border bg-white dark:bg-gray-800 p-4 shadow-sm">
+        <div className="rounded-lg border bg-white dark:bg-black p-4 shadow-sm">
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <Input
@@ -258,7 +258,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
         </div>
 
         {/* Invoices Table */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700">
@@ -289,7 +289,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
                 {invoices.data.length > 0 ? (
                   invoices.data.map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

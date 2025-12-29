@@ -11,11 +11,16 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('first_name')->nullable();
+            $table->string('middle_name')->nullable();
             $table->string('last_name')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->date('dob')->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('parents')->nullOnDelete();
+            $table->text('address')->nullable();
+            $table->string('picture_url')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone')->nullable();
+            $table->boolean('is_parent_email')->default(false);
+            $table->foreignId('parent_id')->nullable()->constrained('parents')->nullOnDelete();
             $table->timestamps();
         });
     }
