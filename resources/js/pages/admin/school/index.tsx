@@ -72,6 +72,13 @@ interface SchoolDashboardProps {
 export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, activeClasses }: Readonly<SchoolDashboardProps>) {
     const quickActions = [
         { 
+            title: 'Mark Attendance', 
+            href: '/admin/school/attendance/mark', 
+            icon: UserPlus,
+            description: 'Take daily attendance',
+            color: 'text-emerald-600'
+        },
+        { 
             title: 'Add Student', 
             href: '/admin/school/students/create', 
             icon: UserPlus,

@@ -27,7 +27,7 @@ const mainNavItems: NavItem[] = [
 
 const adminNavItems: NavItem[] = [
     {
-        groupTitle: 'Member Administration',
+        groupTitle: 'Shul Administration',
         title: 'Users',
         href: '/admin/users',
         icon: Users,
@@ -62,6 +62,11 @@ const adminNavItems: NavItem[] = [
         href: '/admin/yahrzeits',
         icon: Star,
     },
+    {
+        title: 'Gabbai Dashboard',
+        href: '/admin/gabbai',
+        icon: UserCheck,
+    },
 ];
 
 const cemeteryNavItems: NavItem[] = [
@@ -83,26 +88,17 @@ const cemeteryNavItems: NavItem[] = [
     },
 ];
 
-const gabbaiNavItems: NavItem[] = [
-    {
-        groupTitle: 'Gabbai Management',
-        title: 'Gabbai Dashboard',
-        href: '/admin/gabbai',
-        icon: UserCheck,
-    },
-    {
-        title: 'Anniversaries & Bnai',
-        href: '/admin/gabbai/anniversaries',
-        icon: BookOpen,
-    },
-];
-
 const schoolNavItems: NavItem[] = [
     {
         groupTitle: 'School Management',
         title: 'School Dashboard',
         href: '/admin/school',
         icon: LayoutGrid,
+    },
+    {
+        title: 'Attendance',
+        href: '/admin/school/attendance',
+        icon: UserCheck,
     },
     {
         title: 'Classes',
@@ -183,9 +179,6 @@ export function AppSidebar() {
                     <>
                         {/* Admin Section */}
                         <NavMain items={adminNavItems} />
-                        
-                        {/* Gabbai Management Section */}
-                        <NavMain items={gabbaiNavItems} />
 
                         {/* School Management Section */}
                         <NavMain items={schoolNavItems} />

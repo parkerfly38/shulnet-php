@@ -288,6 +288,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return Inertia::render('admin/school/students/edit', ['item' => $model]); 
         })->name('admin.school.students.edit');
         
+        // Attendance routes
+        Route::get('admin/school/attendance', function () { return Inertia::render('admin/school/attendance/index'); })->name('admin.school.attendance.index');
+        Route::get('admin/school/attendance/mark', function () { 
+            $students = \App\Models\Student::select('id', 'first_name', 'last_name')->orderBy('last_name')->get();
+            $classes = \App\Models\ClassDefinition::with('teacher')->select('id', 'class_name', 'teacher_id')->get();
+            return Inertia::render('admin/school/attendance/mark', ['students' => $students, 'classes' => $classes]); 
+        })->name('admin.school.attendance.mark');
+        
         // Subjects routes
         Route::get('admin/school/subjects', function () { return Inertia::render('admin/school/subjects'); })->name('admin.school.subjects.index');
         Route::get('admin/school/subjects/create', function () { return Inertia::render('admin/school/subjects/create'); })->name('admin.school.subjects.create');
@@ -337,6 +345,7 @@ Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(functi
     Route::get('gabbai/config', [GabbaiController::class, 'config'])->name('api.admin.gabbai.config');
 
     // School resources
+    Route::apiResource('attendances', \App\Http\Controllers\AttendanceController::class);
     Route::apiResource('class-definitions', \App\Http\Controllers\ClassDefinitionController::class);
     Route::apiResource('class-grades', \App\Http\Controllers\ClassGradeController::class);
     Route::apiResource('exams', \App\Http\Controllers\ExamController::class);

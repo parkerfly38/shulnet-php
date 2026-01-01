@@ -32,6 +32,7 @@ interface FormData {
   recurring_interval: string;
   recurring_interval_count: string;
   recurring_end_date: string;
+  send_email: boolean;
   items: InvoiceItem[];
 }
 
@@ -58,6 +59,7 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
     recurring_interval: invoice.recurring_interval || 'monthly',
     recurring_interval_count: invoice.recurring_interval_count.toString(),
     recurring_end_date: invoice.recurring_end_date ? formatDateForInput(invoice.recurring_end_date) : '',
+    send_email: false,
     items: invoice.items?.map(item => ({
       description: item.description,
       quantity: item.quantity,
@@ -375,6 +377,25 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
                   <strong>Next Invoice:</strong> {new Date(invoice.next_invoice_date).toLocaleDateString()}
                 </p>
               </div>
+            )}
+          </div>
+
+          {/* Email Invoice */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="send_email"
+                checked={data.send_email}
+                onCheckedChange={(checked) => setData('send_email', checked as boolean)}
+              />
+              <Label htmlFor="send_email" className="cursor-pointer">
+                Generate PDF and email invoice to member
+              </Label>
+            </div>
+            {data.send_email && (
+              <p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
+                A PDF invoice will be generated and emailed to the member's email address after saving.
+              </p>
             )}
           </div>
 

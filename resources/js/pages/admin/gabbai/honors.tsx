@@ -116,9 +116,14 @@ export default function GabbaiHonors() {
                 date,
                 assignments: Object.keys(assignments).map((honor) => ({ honor, member_id: assignments[honor] })),
             };
+            const token = document.head.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             const res = await fetch('/api/admin/gabbai/assignments', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token || '',
+                },
                 body: JSON.stringify(payload),
             });
             if (res.ok) {

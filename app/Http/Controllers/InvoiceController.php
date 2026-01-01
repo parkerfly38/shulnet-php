@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\Member;
+use App\Mail\InvoiceMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 
 class InvoiceController extends Controller
@@ -151,8 +155,13 @@ class InvoiceController extends Controller
         $invoice->total = $subtotal + ($validated['tax_amount'] ?? 0);
         $invoice->save();
 
+        // Generate and email PDF if requested
+        if ($request->boolean('send_email')) {
+            $this->generateAndEmailInvoice($invoice);
+        }
+
         return redirect()->route('invoices.index')
-            ->with('success', 'Invoice created successfully.');
+            ->with('success', 'Invoice created successfully.' . ($request->boolean('send_email') ? ' PDF emailed to member.' : ''));
     }
 
     /**
@@ -240,13 +249,13 @@ class InvoiceController extends Controller
             $subtotal += $total;
         }
 
-        // Update totals
-        $invoice->subtotal = $subtotal;
-        $invoice->total = $subtotal + ($validated['tax_amount'] ?? 0);
-        $invoice->save();
+        // Generate and email PDF if requested
+        if ($request->boolean('send_email')) {
+            $this->generateAndEmailInvoice($invoice);
+        }
 
         return redirect()->route('invoices.index')
-            ->with('success', 'Invoice updated successfully.');
+            ->with('success', 'Invoice updated successfully.' . ($request->boolean('send_email') ? ' PDF emailed to member.' : ''));
     }
 
     /**
@@ -294,9 +303,45 @@ class InvoiceController extends Controller
             case 'monthly':
                 return $date->addMonths($count);
             case 'yearly':
-                return $date->addYears($count);
+                  return $date->addYears($count);
             default:
                 return $date;
         }
     }
+        
+    /**
+     * Generate invoice PDF and email it to the member
+     */
+    protected function generateAndEmailInvoice(Invoice $invoice)
+    {
+        $invoice->load(['member', 'items']);
+
+        // Generate PDF HTML
+        $html = view('invoices.pdf', ['invoice' => $invoice])->render();
+        $pdf = Pdf::loadHTML($html);
+        $pdf->setPaper('letter', 'portrait');
+
+        // Save PDF to temporary file
+        $filename = 'invoice-' . $invoice->invoice_number . '.pdf';
+        $tempPath = storage_path('app/temp/' . $filename);
+        
+        // Ensure temp directory exists
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        $pdf->save($tempPath);
+
+        // Send email with PDF attachment
+        try {
+            Mail::to($invoice->member->email)
+                ->send(new InvoiceMail($invoice, $tempPath));
+        } finally {
+            // Clean up temporary file
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+        }
+    }
+              
 }
