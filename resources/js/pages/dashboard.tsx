@@ -598,13 +598,25 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                     first_name: '',
                     last_name: '',
                     middle_name: '',
+                    title: '',
                     email: '',
-                    phone: '',
-                    address: '',
-                    date_of_birth: '',
+                    phone1: '',
+                    phone2: '',
+                    address_line_1: '',
+                    address_line_2: '',
+                    city: '',
+                    state: '',
+                    zip: '',
+                    country: '',
+                    member_type: '',
                     gender: '',
+                    dob: '',
+                    hebrew_name: '',
+                    father_hebrew_name: '',
+                    mother_hebrew_name: '',
+                    anniversary_date: '',
                     membership_tier_id: '',
-                    start_date: '',
+                    start_date: new Date().toISOString().split('T')[0],
                     create_invoice: true,
                     email_invoice: false,
                 });
@@ -936,7 +948,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                     return selectedTier ? (
                                         <>
                                             <div className="font-medium">{selectedTier.name}</div>
-                                            <div className="text-sm">Start Date: {formData.begin_date}</div>
+                                            <div className="text-sm">Start Date: {formData.start_date}</div>
                                             <div className="text-sm capitalize">{selectedTier.billing_period} - {formatCurrency(parseFloat(selectedTier.price), currency)}</div>
                                         </>
                                     ) : null;
@@ -1079,7 +1091,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
     const handleSubmit = () => {
         console.log('Student onboarding - submitting with data:', { students, parent_data: parentData, tuition_data: tuitionData });
         router.post('/onboarding/student', {
-            students,
+            students: students as any,
             parent_data: parentData,
             tuition_data: tuitionData,
         }, {
@@ -1103,9 +1115,9 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                     member_id: '',
                     first_name: '',
                     last_name: '',
-                    email: '',
-                    phone: '',
+                    date_of_birth: '',
                     address: '',
+                    email: '',
                 });
                 setTuitionData({
                     tuition_tier_id: '',

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, FileText, Edit, Trash2, RefreshCw, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { Plus, Search, FileText, Edit, Trash2, RefreshCw, Clock, CheckCircle, AlertCircle, XCircle, Printer } from 'lucide-react';
 import { BreadcrumbItem, Invoice, Member } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 
@@ -331,12 +331,20 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end gap-2">
                           <Link href={`/admin/invoices/${invoice.id}`}>
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" title="View">
                               <FileText className="h-4 w-4" />
                             </Button>
                           </Link>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => window.open(`/admin/invoices/${invoice.id}/print`, '_blank')}
+                            title="Print"
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Button>
                           <Link href={`/admin/invoices/${invoice.id}/edit`}>
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" title="Edit">
                               <Edit className="h-4 w-4" />
                             </Button>
                           </Link>
@@ -344,6 +352,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDelete(invoice)}
+                            title="Delete"
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\Yahrzeit;
+use App\Imports\YahrzeitsImport;
 use App\Services\HebrewCalendarService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 use Inertia\Inertia;
 
 class YahrzeitController extends Controller
@@ -254,5 +256,66 @@ class YahrzeitController extends Controller
             ->get();
 
         return response()->json($yahrzeits);
+    }
+
+    /**
+     * Import yahrzeits from CSV/Excel file
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
+        ]);
+
+        try {
+            $import = new YahrzeitsImport($this->hebrewCalendar);
+            Excel::import($import, $request->file('file'));
+
+            $errors = $import->getErrors();
+
+            return redirect()->route('yahrzeits.index')->with([
+                'success' => sprintf(
+                    'Import completed! %d yahrzeits imported, %d updated.',
+                    $import->getImported(),
+                    $import->getUpdated()
+                ),
+                'import_errors' => $errors,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download a sample CSV template for importing yahrzeits
+     */
+    public function downloadTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="yahrzeits-import-template.csv"',
+        ];
+
+        $columns = ['name', 'hebrew_name', 'date_of_death', 'observance_type', 'notes', 'member_email', 'relationship'];
+
+        $callback = function() use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            
+            // Add sample row
+            fputcsv($file, [
+                'John Doe',
+                'יוחנן בן דוד',
+                '2020-01-15',
+                'standard',
+                'Optional notes about the deceased',
+                'member@example.com',
+                'Father'
+            ]);
+            
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

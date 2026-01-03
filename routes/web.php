@@ -82,6 +82,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]
         ]);
         
+        // Yahrzeit import routes
+        Route::post('admin/yahrzeits/import', [YahrzeitController::class, 'import'])->name('yahrzeits.import');
+        Route::get('admin/yahrzeits/template/download', [YahrzeitController::class, 'downloadTemplate'])->name('yahrzeits.template.download');
+        
         // Calendar management routes
         Route::resource('admin/calendars', CalendarController::class, [
             'names' => [
@@ -147,6 +151,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Generate next recurring invoice
         Route::post('admin/invoices/{invoice}/generate-next', [InvoiceController::class, 'generateNext'])->name('invoices.generate-next');
+        
+        // Print invoice
+        Route::get('admin/invoices/{invoice}/print', [InvoiceController::class, 'print'])->name('invoices.print');
         
         // Membership Tier management routes
         Route::resource('admin/membership-tiers', MembershipTierController::class, [

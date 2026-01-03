@@ -7,8 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Plus, Trash2, Printer } from 'lucide-react';
 import { BreadcrumbItem, Invoice, Member } from '@/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface Props {
   invoice: Invoice;
@@ -119,11 +120,6 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Link href={`/admin/invoices/${invoice.id}`}>
-            <Button variant="outline" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               Edit Invoice {invoice.invoice_number}
@@ -408,6 +404,14 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
                 Cancel
               </Button>
             </Link>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => window.open(`/admin/invoices/${invoice.id}/print`, '_blank')}
+            >
+              <Printer className="h-4 w-4 mr-2" />
+              Print
+            </Button>
             <Button type="submit" disabled={processing}>
               <Save className="h-4 w-4 mr-2" />
               {processing ? 'Updating...' : 'Update Invoice'}

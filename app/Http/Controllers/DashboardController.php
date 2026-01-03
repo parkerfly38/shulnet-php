@@ -12,9 +12,11 @@ use App\Models\Yahrzeit;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Mail\InvoiceMail;
 use App\Services\HebrewCalendarService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -271,7 +273,20 @@ class DashboardController extends Controller
                     'total' => $tier->price,
                 ]);
 
-                // TODO: Send email if email_invoice is true
+                // Send email if requested
+                if ($validated['email_invoice'] ?? false) {
+                    if ($member->email) {
+                        try {
+                            // Generate PDF path (you may need to implement PDF generation)
+                            $pdfPath = storage_path('app/invoices/invoice-' . $invoice->invoice_number . '.pdf');
+                            
+                            Mail::to($member->email)->send(new InvoiceMail($invoice->load('member', 'items'), $pdfPath));
+                        } catch (\Exception $e) {
+                            // Log error but don't fail the onboarding
+                            \Log::warning('Failed to send invoice email: ' . $e->getMessage());
+                        }
+                    }
+                }
             }
 
             DB::commit();
@@ -391,7 +406,21 @@ class DashboardController extends Controller
                     'total' => $total,
                 ]);
 
-                // TODO: Send email if email_invoice is true
+                // Send email if requested
+                if ($validated['tuition_data']['email_invoice'] ?? false) {
+                    $parent = ParentModel::find($parentId);
+                    if ($parent && $parent->email) {
+                        try {
+                            // Generate PDF path (you may need to implement PDF generation)
+                            $pdfPath = storage_path('app/invoices/invoice-' . $invoice->invoice_number . '.pdf');
+                            
+                            Mail::to($parent->email)->send(new InvoiceMail($invoice->load('member', 'items'), $pdfPath));
+                        } catch (\Exception $e) {
+                            // Log error but don't fail the onboarding
+                            \Log::warning('Failed to send invoice email: ' . $e->getMessage());
+                        }
+                    }
+                }
             }
 
             DB::commit();

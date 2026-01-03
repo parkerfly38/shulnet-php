@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Edit, Trash2, RefreshCw, Calendar, User, FileText } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, RefreshCw, Calendar, User, FileText, Printer } from 'lucide-react';
 import { BreadcrumbItem, Invoice } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 
@@ -69,11 +69,6 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/admin/invoices">
-              <Button variant="outline" size="icon">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 Invoice {invoice.invoice_number}
@@ -90,6 +85,13 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                 Generate Next
               </Button>
             )}
+            <Button
+              variant="outline"
+              onClick={() => window.open(`/admin/invoices/${invoice.id}/print`, '_blank')}
+            >
+              <Printer className="h-4 w-4 mr-2" />
+              Print
+            </Button>
             <Link href={`/admin/invoices/${invoice.id}/edit`}>
               <Button variant="outline">
                 <Edit className="h-4 w-4 mr-2" />

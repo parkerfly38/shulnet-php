@@ -343,5 +343,18 @@ class InvoiceController extends Controller
             }
         }
     }
+
+    /**
+     * Display a printable invoice view.
+     */
+    public function print(Invoice $invoice)
+    {
+        $invoice->load(['member', 'items']);
+        
+        return view('invoices.print', [
+            'invoice' => $invoice,
+            'member' => $invoice->member,
+        ]);
+    }
               
 }

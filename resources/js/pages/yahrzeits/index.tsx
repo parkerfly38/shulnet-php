@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import React, { useState, useRef } from 'react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, Edit, Plus, Search, Eye, Calendar, Star } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Eye, Calendar, Star, Upload, Download } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { type BreadcrumbItem } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -91,6 +99,10 @@ const OBSERVANCE_LABELS = {
 
 export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { flash } = usePage().props as any;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,6 +110,33 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
       preserveState: true,
       replace: true,
     });
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleImport = () => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    router.post('/admin/yahrzeits/import', formData, {
+      onSuccess: () => {
+        setShowImportDialog(false);
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      },
+    });
+  };
+
+  const handleDownloadTemplate = () => {
+    window.location.href = '/admin/yahrzeits/template/download';
   };
 
   const handleDelete = (yahrzeit: Yahrzeit) => {
@@ -124,6 +163,29 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
       <Head title="Yahrzeits" />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+        {flash?.success && (
+          <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
+            {flash.success}
+          </div>
+        )}
+        {flash?.error && (
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+            {flash.error}
+          </div>
+        )}
+        {flash?.import_errors && flash.import_errors.length > 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded">
+            <p className="font-semibold mb-2">Import completed with some errors:</p>
+            <ul className="list-disc list-inside space-y-1">
+              {flash.import_errors.map((error: any, idx: number) => (
+                <li key={idx} className="text-sm">
+                  Row {error.row}: {error.errors.join(', ')}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
@@ -133,12 +195,64 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
               Manage memorial observances and remembrance dates
             </p>
           </div>
-          <Link href="/admin/yahrzeits/create">
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Add Yahrzeit
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  Import Yahrzeits
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Import Yahrzeits from CSV</DialogTitle>
+                  <DialogDescription>
+                    Upload a CSV file to import or update yahrzeit records. Download the template to see the required format.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 pt-4">
+                  <div>
+                    <Button
+                      variant="outline"
+                      onClick={handleDownloadTemplate}
+                      className="w-full flex items-center gap-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download CSV Template
+                    </Button>
+                  </div>
+                  <div className="border-t pt-4">
+                    <Input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,.xlsx,.xls"
+                      onChange={handleFileSelect}
+                      className="cursor-pointer"
+                    />
+                    {selectedFile && (
+                      <p className="text-sm text-gray-600 mt-2">
+                        Selected: {selectedFile.name}
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    onClick={handleImport}
+                    disabled={!selectedFile}
+                    className="w-full"
+                  >
+                    Import Yahrzeits
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            
+            <Link href="/admin/yahrzeits/create">
+              <Button className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Add Yahrzeit
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Search */}
