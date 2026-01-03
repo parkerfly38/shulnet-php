@@ -70,7 +70,7 @@ export default function CreateMembershipTier() {
   const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Membership Tiers', href: '/admin/membership-tiers' },
-    { title: 'Create', href: '/admin/membership-tiers/create', current: true },
+    { title: 'Create', href: '/admin/membership-tiers/create' },
   ];
 
   return (

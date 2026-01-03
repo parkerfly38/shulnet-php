@@ -60,6 +60,3 @@ class InvoiceMail extends Mailable
         ];
     }
 }
-        return [];
-    }
-}

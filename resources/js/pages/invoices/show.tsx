@@ -47,10 +47,10 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
     if (confirm('Generate the next recurring invoice now?')) {
       router.post(`/admin/invoices/${invoice.id}/generate-next`);
     }
-  };Amount = (amount: string) => {
-    return formatCurrency(amount, currency
-      currency: 'USD',
-    }).format(parseFloat(amount));
+  };
+
+  const formatAmount = (amount: string) => {
+    return formatCurrency(parseFloat(amount), currency);
   };
 
   const formatDate = (dateString: string) => {
@@ -181,11 +181,11 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                           <td className="py-3 text-gray-900 dark:text-gray-100">{item.description}</td>
                           <td className="py-3 text-right text-gray-600 dark:text-gray-400">{item.quantity}</td>
                           <td className="py-3 text-right text-gray-600 dark:text-gray-400">
-                            {formatCurrency(item.unit_price)}
-                          </td>Amount(item.unit_price)}
+                            {formatAmount(item.unit_price)}
                           </td>
                           <td className="py-3 text-right font-medium text-gray-900 dark:text-gray-100">
-                            {formatAmount
+                            {formatAmount((parseFloat(item.unit_price) * parseFloat(item.quantity.toString())).toString())}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -197,8 +197,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
                     <span className="font-medium text-gray-900 dark:text-gray-100">
-                      {formatCurrency(invoice.subtotal)}
-                    </span>Amount(invoice.subtotal)}
+                      {formatAmount(invoice.subtotal)}
                     </span>
                   </div>
                   {parseFloat(invoice.tax_amount) > 0 && (
@@ -212,7 +211,8 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                   <div className="flex justify-between text-lg font-bold pt-2 border-t">
                     <span className="text-gray-900 dark:text-gray-100">Total:</span>
                     <span className="text-gray-900 dark:text-gray-100">
-                      {formatAmount
+                      {formatAmount(invoice.total)}
+                    </span>
                   </div>
                 </div>
               </CardContent>

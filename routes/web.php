@@ -3,6 +3,7 @@
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\MembershipTierController;
+use App\Http\Controllers\SchoolTuitionTierController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\YahrzeitController;
 use App\Http\Controllers\CalendarController;
@@ -31,6 +32,10 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Onboarding routes
+    Route::post('onboarding/member', [DashboardController::class, 'onboardMember'])->name('onboarding.member');
+    Route::post('onboarding/student', [DashboardController::class, 'onboardStudent'])->name('onboarding.student');
     
     // Admin-only routes
     Route::middleware(['role:admin'])->group(function () {
@@ -153,6 +158,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'membership-tiers.edit',
                 'update' => 'membership-tiers.update',
                 'destroy' => 'membership-tiers.destroy',
+            ]
+        ]);
+        
+        // School Tuition Tier management routes
+        Route::resource('admin/school-tuition-tiers', SchoolTuitionTierController::class, [
+            'names' => [
+                'index' => 'school-tuition-tiers.index',
+                'create' => 'school-tuition-tiers.create',
+                'store' => 'school-tuition-tiers.store',
+                'show' => 'school-tuition-tiers.show',
+                'edit' => 'school-tuition-tiers.edit',
+                'update' => 'school-tuition-tiers.update',
+                'destroy' => 'school-tuition-tiers.destroy',
             ]
         ]);
         

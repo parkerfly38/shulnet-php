@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\MembershipTier;
+use App\Models\MembershipPeriod;
+use App\Models\SchoolTuitionTier;
+use App\Models\ParentModel;
+use App\Models\Student;
 use App\Models\Yahrzeit;
 use App\Models\Event;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Services\HebrewCalendarService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -150,6 +157,27 @@ class DashboardController extends Controller
             $invoiceAging[$category]['count']++;
             $invoiceAging[$category]['total'] += floatval($invoice['total']);
         }
+        
+        // Get active membership tiers for onboarding workflow
+        $membershipTiers = MembershipTier::active()
+            ->ordered()
+            ->get(['id', 'name', 'slug', 'description', 'price', 'billing_period', 'features']);
+        
+        // Get active school tuition tiers for student onboarding workflow
+        $schoolTuitionTiers = SchoolTuitionTier::active()
+            ->ordered()
+            ->get(['id', 'name', 'slug', 'description', 'price', 'billing_period', 'features']);
+
+        // Get parents and members for student onboarding workflow
+        $parents = ParentModel::select('id', 'first_name', 'last_name', 'email')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
+
+        $members = Member::select('id', 'first_name', 'last_name', 'email')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->get();
 
         return Inertia::render('dashboard', [
             'membersJoinedData' => $chartData,
@@ -159,6 +187,219 @@ class DashboardController extends Controller
             'upcomingEvents' => $upcomingEvents,
             'openInvoices' => $openInvoices->take(10), // Limit to 10 most recent
             'invoiceAging' => $invoiceAging,
+            'membershipTiers' => $membershipTiers,
+            'schoolTuitionTiers' => $schoolTuitionTiers,
+            'parents' => $parents,
+            'members' => $members,
         ]);
+    }
+
+    public function onboardMember(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string|in:male,female,other',
+            'membership_tier_id' => 'required|exists:membership_tiers,id',
+            'start_date' => 'required|date',
+            'create_invoice' => 'boolean',
+            'email_invoice' => 'boolean',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Create the member
+            $member = Member::create([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'middle_name' => $validated['middle_name'] ?? null,
+                'email' => $validated['email'],
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'date_of_birth' => $validated['date_of_birth'] ?? null,
+                'gender' => $validated['gender'] ?? null,
+                'status' => 'active',
+            ]);
+
+            // Create membership period
+            $tier = MembershipTier::findOrFail($validated['membership_tier_id']);
+            $startDate = $validated['start_date'];
+            
+            // Calculate end date based on billing period
+            $endDate = match($tier->billing_period) {
+                'annual' => date('Y-m-d', strtotime($startDate . ' +1 year -1 day')),
+                'monthly' => date('Y-m-d', strtotime($startDate . ' +1 month -1 day')),
+                'lifetime' => null,
+                default => date('Y-m-d', strtotime($startDate . ' +1 year -1 day')),
+            };
+
+            $membershipPeriod = MembershipPeriod::create([
+                'member_id' => $member->id,
+                'membership_tier_id' => $tier->id,
+                'begin_date' => $startDate,
+                'end_date' => $endDate,
+                'price' => $tier->price,
+                'status' => 'active',
+            ]);
+
+            // Create invoice if requested
+            if ($validated['create_invoice'] ?? false) {
+                $invoice = Invoice::create([
+                    'member_id' => $member->id,
+                    'invoiceable_type' => Member::class,
+                    'invoiceable_id' => $member->id,
+                    'invoice_number' => 'INV-' . date('Y') . '-' . str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
+                    'invoice_date' => now(),
+                    'due_date' => date('Y-m-d', strtotime('+30 days')),
+                    'subtotal' => $tier->price,
+                    'tax' => 0,
+                    'total' => $tier->price,
+                    'status' => 'open',
+                    'notes' => 'Membership: ' . $tier->name,
+                ]);
+
+                InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'description' => $tier->name . ' Membership',
+                    'quantity' => 1,
+                    'unit_price' => $tier->price,
+                    'total' => $tier->price,
+                ]);
+
+                // TODO: Send email if email_invoice is true
+            }
+
+            DB::commit();
+            
+            return redirect()->route('dashboard')->with('success', 'Member onboarded successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Failed to onboard member: ' . $e->getMessage()]);
+        }
+    }
+
+    public function onboardStudent(Request $request)
+    {
+        $validated = $request->validate([
+            'students' => 'required|array|min:1',
+            'students.*.first_name' => 'required|string|max:255',
+            'students.*.last_name' => 'required|string|max:255',
+            'students.*.middle_name' => 'nullable|string|max:255',
+            'students.*.email' => 'nullable|email|max:255',
+            'students.*.gender' => 'nullable|string|in:male,female,other',
+            'students.*.date_of_birth' => 'nullable|date',
+            'students.*.address' => 'nullable|string',
+            'parent_data.selection_type' => 'required|in:existing_parent,existing_member,new_parent',
+            'parent_data.parent_id' => 'required_if:parent_data.selection_type,existing_parent',
+            'parent_data.member_id' => 'required_if:parent_data.selection_type,existing_member',
+            'parent_data.first_name' => 'required_if:parent_data.selection_type,new_parent|string|max:255',
+            'parent_data.last_name' => 'required_if:parent_data.selection_type,new_parent|string|max:255',
+            'parent_data.email' => 'required_if:parent_data.selection_type,new_parent|email|max:255',
+            'parent_data.phone' => 'nullable|string|max:50',
+            'parent_data.address' => 'nullable|string',
+            'tuition_data.tuition_tier_id' => 'required|exists:school_tuition_tiers,id',
+            'tuition_data.quantity' => 'required|integer|min:1',
+            'tuition_data.start_date' => 'required|date',
+            'tuition_data.create_invoice' => 'boolean',
+            'tuition_data.email_invoice' => 'boolean',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // Handle parent creation/selection
+            $parentId = null;
+            $parentData = $validated['parent_data'];
+            
+            if ($parentData['selection_type'] === 'existing_parent') {
+                $parentId = $parentData['parent_id'];
+            } elseif ($parentData['selection_type'] === 'existing_member') {
+                // Convert member to parent
+                $member = Member::findOrFail($parentData['member_id']);
+                $parent = ParentModel::create([
+                    'first_name' => $member->first_name,
+                    'last_name' => $member->last_name,
+                    'email' => $member->email,
+                    'phone' => $member->phone,
+                    'address' => $member->address,
+                    'member_id' => $member->id,
+                ]);
+                $parentId = $parent->id;
+            } else {
+                // Create new parent
+                $parent = ParentModel::create([
+                    'first_name' => $parentData['first_name'],
+                    'last_name' => $parentData['last_name'],
+                    'email' => $parentData['email'],
+                    'phone' => $parentData['phone'] ?? null,
+                    'address' => $parentData['address'] ?? null,
+                ]);
+                $parentId = $parent->id;
+            }
+
+            // Create students
+            $students = [];
+            foreach ($validated['students'] as $studentData) {
+                $student = Student::create([
+                    'first_name' => $studentData['first_name'],
+                    'last_name' => $studentData['last_name'],
+                    'middle_name' => $studentData['middle_name'] ?? null,
+                    'email' => $studentData['email'] ?? null,
+                    'gender' => $studentData['gender'] ?? null,
+                    'date_of_birth' => $studentData['date_of_birth'] ?? null,
+                    'address' => $studentData['address'] ?? null,
+                    'parent_id' => $parentId,
+                    'status' => 'active',
+                ]);
+                $students[] = $student;
+            }
+
+            // Create invoice if requested
+            $tuitionData = $validated['tuition_data'];
+            if ($tuitionData['create_invoice'] ?? false) {
+                $tier = SchoolTuitionTier::findOrFail($tuitionData['tuition_tier_id']);
+                $quantity = $tuitionData['quantity'];
+                $total = $tier->price * $quantity;
+
+                // Get parent to check if they have a member_id
+                $parent = ParentModel::find($parentId);
+                $memberId = $parent->member_id ?? null;
+
+                $invoice = Invoice::create([
+                    'member_id' => $memberId,
+                    'invoiceable_type' => ParentModel::class,
+                    'invoiceable_id' => $parentId,
+                    'invoice_number' => 'INV-' . date('Y') . '-' . str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
+                    'invoice_date' => now(),
+                    'due_date' => date('Y-m-d', strtotime('+30 days')),
+                    'subtotal' => $total,
+                    'tax' => 0,
+                    'total' => $total,
+                    'status' => 'open',
+                    'notes' => 'Tuition for ' . count($students) . ' student(s): ' . $tier->name,
+                ]);
+
+                InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'description' => $tier->name . ' (' . $quantity . ' student' . ($quantity > 1 ? 's' : '') . ')',
+                    'quantity' => $quantity,
+                    'unit_price' => $tier->price,
+                    'total' => $total,
+                ]);
+
+                // TODO: Send email if email_invoice is true
+            }
+
+            DB::commit();
+            
+            return redirect()->route('dashboard')->with('success', count($students) . ' student(s) onboarded successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Failed to onboard student(s): ' . $e->getMessage()]);
+        }
     }
 }

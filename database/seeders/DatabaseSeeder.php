@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
             NoteSeeder::class,
             CalendarSeeder::class,
             MemberSeeder::class,
+            MembershipTierSeeder::class,
             YahrzeitSeeder::class,
             EventSeeder::class,
             EventRSVPSeeder::class,
@@ -48,6 +49,7 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             
             // School Management Seeders
+            SchoolTuitionTierSeeder::class,
             SubjectSeeder::class,
             TeacherSeeder::class,
             ParentSeeder::class,

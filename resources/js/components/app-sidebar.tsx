@@ -101,6 +101,11 @@ const schoolNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Tuition Tiers',
+        href: '/admin/school-tuition-tiers',
+        icon: Award,
+    },
+    {
         title: 'Attendance',
         href: '/admin/school/attendance',
         icon: UserCheck,

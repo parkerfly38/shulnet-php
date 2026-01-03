@@ -8,25 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, X } from 'lucide-react';
+import { ArrowLeft, Plus, X } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
-
-interface MembershipTier {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  price: string;
-  billing_period: 'annual' | 'monthly' | 'lifetime' | 'custom';
-  max_members: number | null;
-  is_active: boolean;
-  sort_order: number;
-  features: string[] | null;
-}
-
-interface Props {
-  tier: MembershipTier;
-}
 
 interface FormData {
   name: string;
@@ -34,29 +17,29 @@ interface FormData {
   description: string;
   price: string;
   billing_period: string;
-  max_members: string;
+  max_students: string;
   is_active: boolean;
   sort_order: string;
   features: string[];
 }
 
-export default function EditMembershipTier({ tier }: Props) {
+export default function CreateSchoolTuitionTier() {
   const [currentFeature, setCurrentFeature] = useState('');
-  const { data, setData, put, processing, errors } = useForm<FormData>({
-    name: tier.name,
-    slug: tier.slug,
-    description: tier.description || '',
-    price: tier.price,
-    billing_period: tier.billing_period,
-    max_members: tier.max_members?.toString() || '',
-    is_active: tier.is_active,
-    sort_order: tier.sort_order.toString(),
-    features: tier.features || [],
+  const { data, setData, post, processing, errors } = useForm<FormData>({
+    name: '',
+    slug: '',
+    description: '',
+    price: '0.00',
+    billing_period: 'annual',
+    max_students: '',
+    is_active: true,
+    sort_order: '0',
+    features: [],
   });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    put(`/admin/membership-tiers/${tier.id}`);
+    post('/admin/school-tuition-tiers');
   };
 
   const addFeature = () => {
@@ -79,30 +62,29 @@ export default function EditMembershipTier({ tier }: Props) {
 
   const handleNameChange = (value: string) => {
     setData('name', value);
-    // Only auto-update slug if it matches the current generated slug
-    if (data.slug === generateSlug(tier.name)) {
+    if (!data.slug) {
       setData('slug', generateSlug(value));
     }
   };
 
   const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Membership Tiers', href: '/admin/membership-tiers' },
-    { title: tier.name, href: `/admin/membership-tiers/${tier.id}` },
-    { title: 'Edit', href: `/admin/membership-tiers/${tier.id}/edit`},
+    { title: 'School Management', href: '/admin/school' },
+    { title: 'Tuition Tiers', href: '/admin/school-tuition-tiers' },
+    { title: 'Create', href: '/admin/school-tuition-tiers/create' },
   ];
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={`Edit ${tier.name}`} />
+      <Head title="Create School Tuition Tier" />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Membership Tier</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Create Tuition Tier</h1>
             <p className="text-muted-foreground mt-2">
-              Update details for {tier.name}
+              Add a new school tuition tier type with pricing
             </p>
           </div>
         </div>
@@ -113,7 +95,7 @@ export default function EditMembershipTier({ tier }: Props) {
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
               <CardDescription>
-                Enter the basic details for this membership tier
+                Enter the basic details for this tuition tier
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -124,7 +106,7 @@ export default function EditMembershipTier({ tier }: Props) {
                     id="name"
                     value={data.name}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="e.g., Family Membership"
+                    placeholder="e.g., Full Tuition"
                     required
                   />
                   {errors.name && (
@@ -138,11 +120,14 @@ export default function EditMembershipTier({ tier }: Props) {
                     id="slug"
                     value={data.slug}
                     onChange={(e) => setData('slug', e.target.value)}
-                    placeholder="e.g., family-membership"
+                    placeholder="e.g., full-tuition"
                   />
                   {errors.slug && (
                     <p className="text-sm text-destructive">{errors.slug}</p>
                   )}
+                  <p className="text-sm text-muted-foreground">
+                    Auto-generated from name if left empty
+                  </p>
                 </div>
               </div>
 
@@ -152,7 +137,7 @@ export default function EditMembershipTier({ tier }: Props) {
                   id="description"
                   value={data.description}
                   onChange={(e) => setData('description', e.target.value)}
-                  placeholder="Optional description of this membership tier"
+                  placeholder="Optional description of this tuition tier"
                   rows={3}
                 />
                 {errors.description && (
@@ -198,8 +183,8 @@ export default function EditMembershipTier({ tier }: Props) {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="annual">Annual</SelectItem>
+                      <SelectItem value="semester">Semester</SelectItem>
                       <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="lifetime">Lifetime</SelectItem>
                       <SelectItem value="custom">Custom</SelectItem>
                     </SelectContent>
                   </Select>
@@ -221,17 +206,17 @@ export default function EditMembershipTier({ tier }: Props) {
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="max_members">Maximum Members</Label>
+                  <Label htmlFor="max_students">Maximum Students</Label>
                   <Input
-                    id="max_members"
+                    id="max_students"
                     type="number"
                     min="1"
-                    value={data.max_members}
-                    onChange={(e) => setData('max_members', e.target.value)}
+                    value={data.max_students}
+                    onChange={(e) => setData('max_students', e.target.value)}
                     placeholder="Leave empty for unlimited"
                   />
-                  {errors.max_members && (
-                    <p className="text-sm text-destructive">{errors.max_members}</p>
+                  {errors.max_students && (
+                    <p className="text-sm text-destructive">{errors.max_students}</p>
                   )}
                 </div>
 
@@ -264,7 +249,7 @@ export default function EditMembershipTier({ tier }: Props) {
             <CardHeader>
               <CardTitle>Features</CardTitle>
               <CardDescription>
-                Add features included in this membership tier
+                Add features included in this tuition tier
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -272,7 +257,7 @@ export default function EditMembershipTier({ tier }: Props) {
                 <Input
                   value={currentFeature}
                   onChange={(e) => setCurrentFeature(e.target.value)}
-                  placeholder="e.g., Access to all events"
+                  placeholder="e.g., All course materials included"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -309,13 +294,13 @@ export default function EditMembershipTier({ tier }: Props) {
           </Card>
 
           <div className="flex justify-end gap-4">
-            <Link href="/admin/membership-tiers">
+            <Link href="/admin/school-tuition-tiers">
               <Button type="button" variant="outline">
                 Cancel
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>
-              {processing ? 'Saving...' : 'Save Changes'}
+              Create Tuition Tier
             </Button>
           </div>
         </form>
