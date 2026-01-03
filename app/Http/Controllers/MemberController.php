@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Imports\MembersImport;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MemberController extends Controller
 {
@@ -210,5 +212,90 @@ class MemberController extends Controller
             ->get();
 
         return response()->json($members);
+    }
+
+    /**
+     * Import members from CSV/Excel file
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,xlsx,xls|max:10240', // Max 10MB
+        ]);
+
+        try {
+            $import = new MembersImport();
+            Excel::import($import, $request->file('file'));
+
+            $errors = $import->getErrors();
+            
+            return back()->with([
+                'success' => sprintf(
+                    'Import completed! %d members imported, %d updated.',
+                    $import->getImported(),
+                    $import->getUpdated()
+                ),
+                'import_errors' => $errors,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download a sample CSV template for importing members
+     */
+    public function downloadTemplate()
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="members-import-template.csv"',
+        ];
+
+        $columns = [
+            'title',
+            'first_name',
+            'last_name',
+            'email',
+            'phone1',
+            'phone2',
+            'member_type',
+            'address_line_1',
+            'address_line_2',
+            'city',
+            'state',
+            'zip',
+            'country',
+            'dob',
+            'gender',
+        ];
+
+        $callback = function() use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+            
+            // Add a sample row
+            fputcsv($file, [
+                'Mr.',
+                'John',
+                'Doe',
+                'john.doe@example.com',
+                '555-1234',
+                '555-5678',
+                'individual',
+                '123 Main St',
+                'Apt 4B',
+                'Anytown',
+                'CA',
+                '12345',
+                'USA',
+                '1990-01-01',
+                'Male',
+            ]);
+            
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +37,8 @@ interface FormData {
 }
 
 export default function InvoicesCreate({ members, selectedMember }: Readonly<Props>) {
+  const { currency } = usePage().props as any;
+
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Invoices', href: '/admin/invoices' },
@@ -97,7 +99,7 @@ export default function InvoicesCreate({ members, selectedMember }: Readonly<Pro
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currency,
     }).format(amount);
   };
 

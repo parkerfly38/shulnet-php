@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
             PdfTemplateSeeder::class,
             CemeterySeeder::class,
             SettingSeeder::class,
+            InvoiceSeeder::class,
             
             // School Management Seeders
             SubjectSeeder::class,

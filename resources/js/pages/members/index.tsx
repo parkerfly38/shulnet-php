@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import React, { useState, useRef } from 'react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type Member, type BreadcrumbItem } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -58,6 +66,10 @@ interface Props {
 export default function MembersIndex({ members, stats, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
   const [memberType, setMemberType] = useState(filters.member_type || '');
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { flash } = usePage().props as any;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +85,33 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
       preserveState: true,
       replace: true,
     });
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const handleImport = () => {
+    if (!selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    router.post('/admin/members/import', formData, {
+      onSuccess: () => {
+        setShowImportDialog(false);
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      },
+    });
+  };
+
+  const handleDownloadTemplate = () => {
+    window.location.href = '/admin/members/template/download';
   };
 
   const handleDelete = (member: Member) => {
@@ -102,9 +141,9 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
       title: 'Contacts',
       value: stats.contact,
       icon: UserPlus,
-      color: 'bg-purple-500',
-      textColor: 'text-purple-600 dark:text-purple-400',
-      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+      color: 'bg-blue-500',
+      textColor: 'text-blue-600 dark:text-blue-400',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
     },
     {
       title: 'Prospects',
@@ -129,6 +168,17 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
       <Head title="Member Management" />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+        {flash?.success && (
+          <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
+            {flash.success}
+          </div>
+        )}
+        {flash?.error && (
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+            {flash.error}
+          </div>
+        )}
+        
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
@@ -138,12 +188,64 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
               Manage synagogue members and their information
             </p>
           </div>
-          <Link href="/admin/members/create">
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Add Member
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  Import Members
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Import Members from CSV</DialogTitle>
+                  <DialogDescription>
+                    Upload a CSV file to import or update members. Download the template to see the required format.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 pt-4">
+                  <div>
+                    <Button
+                      variant="outline"
+                      onClick={handleDownloadTemplate}
+                      className="w-full flex items-center gap-2"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download CSV Template
+                    </Button>
+                  </div>
+                  <div className="border-t pt-4">
+                    <Input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,.xlsx,.xls"
+                      onChange={handleFileSelect}
+                      className="cursor-pointer"
+                    />
+                    {selectedFile && (
+                      <p className="text-sm text-gray-600 mt-2">
+                        Selected: {selectedFile.name}
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    onClick={handleImport}
+                    disabled={!selectedFile}
+                    className="w-full"
+                  >
+                    Import Members
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+            
+            <Link href="/admin/members/create">
+              <Button className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Add Member
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Dashboard */}

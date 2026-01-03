@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Note;
 use App\Services\HebrewCalendarService;
+use App\Services\SettingsService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -55,6 +56,10 @@ class HandleInertiaRequests extends Middleware
         $hebrewDate = $hebrewCalendarService->getCurrentHebrewDate();
         $gregorianDate = now()->format('l, F j, Y'); // e.g., "Tuesday, December 24, 2025"
 
+        // Get system currency setting
+        $settingsService = app(SettingsService::class);
+        $currency = $settingsService->getCurrency();
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -74,6 +79,7 @@ class HandleInertiaRequests extends Middleware
                 'unseenNotifications' => $unseenNotifications,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'currency' => $currency,
             'currentDate' => [
                 'gregorian' => $gregorianDate,
                 'hebrew' => $hebrewDate['formatted'],

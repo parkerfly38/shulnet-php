@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Edit, Trash2, RefreshCw, Calendar, User, FileText } from 'lucide-react';
 import { BreadcrumbItem, Invoice } from '@/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface Props {
   invoice: Invoice;
@@ -28,6 +29,8 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function InvoicesShow({ invoice }: Readonly<Props>) {
+  const { currency } = usePage().props as any;
+
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Invoices', href: '/admin/invoices' },
@@ -44,11 +47,8 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
     if (confirm('Generate the next recurring invoice now?')) {
       router.post(`/admin/invoices/${invoice.id}/generate-next`);
     }
-  };
-
-  const formatCurrency = (amount: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
+  };Amount = (amount: string) => {
+    return formatCurrency(amount, currency
       currency: 'USD',
     }).format(parseFloat(amount));
   };
@@ -182,10 +182,10 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                           <td className="py-3 text-right text-gray-600 dark:text-gray-400">{item.quantity}</td>
                           <td className="py-3 text-right text-gray-600 dark:text-gray-400">
                             {formatCurrency(item.unit_price)}
+                          </td>Amount(item.unit_price)}
                           </td>
                           <td className="py-3 text-right font-medium text-gray-900 dark:text-gray-100">
-                            {formatCurrency(item.total)}
-                          </td>
+                            {formatAmount
                         </tr>
                       ))}
                     </tbody>
@@ -198,21 +198,21 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                     <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
                     <span className="font-medium text-gray-900 dark:text-gray-100">
                       {formatCurrency(invoice.subtotal)}
+                    </span>Amount(invoice.subtotal)}
                     </span>
                   </div>
                   {parseFloat(invoice.tax_amount) > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600 dark:text-gray-400">Tax:</span>
                       <span className="font-medium text-gray-900 dark:text-gray-100">
-                        {formatCurrency(invoice.tax_amount)}
+                        {formatAmount(invoice.tax_amount)}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between text-lg font-bold pt-2 border-t">
                     <span className="text-gray-900 dark:text-gray-100">Total:</span>
                     <span className="text-gray-900 dark:text-gray-100">
-                      {formatCurrency(invoice.total)}
-                    </span>
+                      {formatAmount
                   </div>
                 </div>
               </CardContent>

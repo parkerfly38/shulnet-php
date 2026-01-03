@@ -79,6 +79,19 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                         { value: 'annual', label: 'Annual (Full Torah)' },
                         { value: 'triennial', label: 'Triennial Cycle' },
                     ];
+                } else if (setting.key === 'currency') {
+                    options = [
+                        { value: 'USD', label: 'USD ($) - US Dollar' },
+                        { value: 'EUR', label: 'EUR (€) - Euro' },
+                        { value: 'GBP', label: 'GBP (£) - British Pound' },
+                        { value: 'CAD', label: 'CAD ($) - Canadian Dollar' },
+                        { value: 'AUD', label: 'AUD ($) - Australian Dollar' },
+                        { value: 'ILS', label: 'ILS (₪) - Israeli Shekel' },
+                        { value: 'JPY', label: 'JPY (¥) - Japanese Yen' },
+                        { value: 'CHF', label: 'CHF (Fr) - Swiss Franc' },
+                        { value: 'CNY', label: 'CNY (¥) - Chinese Yuan' },
+                        { value: 'INR', label: 'INR (₹) - Indian Rupee' },
+                    ];
                 } else if (setting.key === 'smtp_encryption') {
                     options = [
                         { value: 'tls', label: 'TLS' },

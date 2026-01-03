@@ -105,7 +105,7 @@ class DashboardController extends Controller
                 $agingCategory = 'current';
                 
                 if ($invoice->due_date) {
-                    $daysOverdue = now()->diffInDays($invoice->due_date, false);
+                    $daysOverdue = (int) floor(now()->diffInDays($invoice->due_date, false));
                     
                     if ($daysOverdue < 0) {
                         $daysOverdue = abs($daysOverdue);

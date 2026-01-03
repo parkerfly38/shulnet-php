@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award } from 'lucide-react';
 import { UserCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -36,6 +36,11 @@ const adminNavItems: NavItem[] = [
         title: 'Members',
         href: '/admin/members',
         icon: UserPlus,
+    },
+    {
+        title: 'Membership Tiers',
+        href: '/admin/membership-tiers',
+        icon: Award,
     },
     {
         title: 'Invoices',
@@ -135,6 +140,11 @@ const schoolNavItems: NavItem[] = [
 const systemNavItems: NavItem[] = [
     {
         groupTitle: 'System',
+        title: 'Reports',
+        href: '/admin/reports',
+        icon: FileSpreadsheet,
+    },
+    {
         title: 'Settings',
         href: '/admin/settings',
         icon: Settings,

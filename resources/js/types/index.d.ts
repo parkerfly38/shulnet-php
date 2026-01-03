@@ -32,6 +32,7 @@ export interface SharedData {
         gregorian: string;
         hebrew: string;
     };
+    currency: string;
     [key: string]: unknown;
 }
 

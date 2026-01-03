@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, FileText, Edit, Trash2, RefreshCw, DollarSign, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { Plus, Search, FileText, Edit, Trash2, RefreshCw, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import { BreadcrumbItem, Invoice, Member } from '@/types';
+import { formatCurrency } from '@/lib/utils';
 
 interface PaginatedInvoices {
   data: Invoice[];
@@ -62,6 +63,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState(filters.status || '');
   const [memberId, setMemberId] = useState(filters.member || '');
+  const { currency } = usePage().props as any;
 
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
@@ -89,11 +91,8 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
     }
   };
 
-  const formatCurrency = (amount: string | number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(typeof amount === 'string' ? parseFloat(amount) : amount);
+  const formatAmount = (amount: string | number) => {
+    return formatCurrency(amount, currency);
   };
 
   const formatDate = (dateString: string) => {
@@ -197,7 +196,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                   {stat.title}
                 </p>
                 <p className={`text-xl font-bold mt-1 ${stat.textColor}`}>
-                  {formatCurrency(stat.amount || 0)}
+                  {formatAmount(stat.amount || 0)}
                 </p>
               </div>
             </div>
@@ -313,7 +312,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                         {formatDate(invoice.due_date)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                        {formatCurrency(invoice.total)}
+                        {formatAmount(invoice.total)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <Badge className={statusColors[invoice.status]}>

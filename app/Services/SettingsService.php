@@ -55,6 +55,14 @@ class SettingsService
     }
 
     /**
+     * Get currency code.
+     */
+    public function getCurrency(): string
+    {
+        return $this->get('currency', 'USD');
+    }
+
+    /**
      * Get SMTP configuration as array.
      */
     public function getSmtpConfig(): array

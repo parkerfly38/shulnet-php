@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipPeriodController;
+use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\YahrzeitController;
 use App\Http\Controllers\CalendarController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\DeedController;
 use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -46,6 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'members.destroy',
             ]
         ]);
+        
+        // Member import routes
+        Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
+        Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
 
         // Membership period management routes (nested under members)
         Route::resource('admin/members.membership-periods', MembershipPeriodController::class, [
@@ -137,6 +143,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Generate next recurring invoice
         Route::post('admin/invoices/{invoice}/generate-next', [InvoiceController::class, 'generateNext'])->name('invoices.generate-next');
         
+        // Membership Tier management routes
+        Route::resource('admin/membership-tiers', MembershipTierController::class, [
+            'names' => [
+                'index' => 'membership-tiers.index',
+                'create' => 'membership-tiers.create',
+                'store' => 'membership-tiers.store',
+                'show' => 'membership-tiers.show',
+                'edit' => 'membership-tiers.edit',
+                'update' => 'membership-tiers.update',
+                'destroy' => 'membership-tiers.destroy',
+            ]
+        ]);
+        
         // PDF Template management routes
         Route::resource('admin/pdf-templates', PdfTemplateController::class, [
             'names' => [
@@ -196,6 +215,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Settings routes
         Route::get('admin/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('admin/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        // Reports routes
+        Route::get('admin/reports', [ReportsController::class, 'index'])->name('reports.index');
+        Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('reports.export.members');
+        Route::post('admin/reports/export/invoices', [ReportsController::class, 'exportInvoices'])->name('reports.export.invoices');
+        Route::post('admin/reports/export/students', [ReportsController::class, 'exportStudents'])->name('reports.export.students');
+        Route::post('admin/reports/export/financial-summary', [ReportsController::class, 'exportFinancialSummary'])->name('reports.export.financial-summary');
+        Route::post('admin/reports/export/yahrzeit', [ReportsController::class, 'exportYahrzeit'])->name('reports.export.yahrzeit');
 
         // Gabbai UI pages (Inertia)
         Route::get('admin/gabbai', function () {

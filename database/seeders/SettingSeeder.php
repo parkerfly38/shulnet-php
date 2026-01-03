@@ -28,6 +28,13 @@ class SettingSeeder extends Seeder
                 'type' => 'select',
                 'description' => 'Timezone for the portal',
             ],
+            [
+                'key' => 'currency',
+                'value' => 'USD',
+                'group' => 'general',
+                'type' => 'select',
+                'description' => 'Default currency for invoicing and financial displays',
+            ],
             
             // Jewish Calendar Settings
             [

@@ -3,8 +3,9 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Calendar, CalendarDays, MapPin, Globe, DollarSign, AlertCircle } from 'lucide-react';
+import { Calendar, CalendarDays, MapPin, Globe, AlertCircle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { formatCurrency } from '@/lib/utils';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -44,8 +45,23 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ membersJoinedData, currentYear, currentHebrewDate, currentMonthYahrzeits, upcomingEvents, openInvoices, invoiceAging }: DashboardProps) {
-    const { auth } = usePage().props as any;
+    const { auth, currency } = usePage().props as any;
     const user = auth.user;
+
+    // Currency symbol mapping
+    const currencySymbols: Record<string, string> = {
+        USD: '$',
+        EUR: '€',
+        GBP: '£',
+        CAD: '$',
+        AUD: '$',
+        ILS: '₪',
+        JPY: '¥',
+        CHF: 'Fr',
+        CNY: '¥',
+        INR: '₹',
+    };
+    const currencySymbol = currencySymbols[currency] || '$';
 
     const hebrewMonthNames: Record<number, string> = {
         1: 'Tishrei',
@@ -300,7 +316,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <DollarSign className="h-4 w-4 mr-2" />
+                                <span className="text-lg mr-2">{currencySymbol}</span>
                                 Open Invoices
                             </h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -338,7 +354,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                 </span>
                                                 <div className="text-right">
                                                     <div className="text-sm font-bold">
-                                                        ${data.total.toFixed(2)}
+                                                        {currencySymbol}{data.total.toFixed(2)}
                                                     </div>
                                                     <div className="text-xs opacity-75">
                                                         {data.count} {data.count === 1 ? 'invoice' : 'invoices'}
@@ -374,7 +390,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                     </div>
                                                     <div className="flex-shrink-0 text-right">
                                                         <div className="font-semibold text-gray-900 dark:text-gray-100">
-                                                            ${parseFloat(invoice.total).toFixed(2)}
+                                                            {formatCurrency(invoice.total, currency)}
                                                         </div>
                                                         {invoice.days_overdue !== null && invoice.days_overdue > 0 && (
                                                             <div className="flex items-center text-red-600 dark:text-red-400">

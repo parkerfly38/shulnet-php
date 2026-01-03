@@ -13,6 +13,7 @@ class MembershipPeriod extends Model
 
     protected $fillable = [
         'member_id',
+        'membership_tier_id',
         'invoice_id',
         'begin_date',
         'end_date',
@@ -31,6 +32,14 @@ class MembershipPeriod extends Model
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
+    }
+
+    /**
+     * Get the membership tier for this period.
+     */
+    public function membershipTier(): BelongsTo
+    {
+        return $this->belongsTo(MembershipTier::class);
     }
 
     /**
