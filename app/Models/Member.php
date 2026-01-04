@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -43,7 +44,8 @@ class Member extends Model
         'hebrew_name',
         'briabatorah',
         'maftir',
-        'anniversary_date'
+        'anniversary_date',
+        'parent_id'
     ];
 
     /**
@@ -87,5 +89,13 @@ class Member extends Model
                               ->orWhere('end_date', '>=', now());
                     })
                     ->exists();
+    }
+
+    /**
+     * Get the parent record associated with this member.
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(ParentModel::class, 'parent_id');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ParentModel extends Model
 {
@@ -20,5 +21,10 @@ class ParentModel extends Model
     public function students(): HasMany
     {
         return $this->hasMany(Student::class, 'parent_id');
+    }
+
+    public function member(): HasOne
+    {
+        return $this->hasOne(Member::class, 'parent_id');
     }
 }
