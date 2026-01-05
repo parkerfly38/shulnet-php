@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Head, Link, useForm, router } from '@inertiajs/react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,16 +8,29 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { ArrowLeft, Plus, Trash2, Send, Printer } from 'lucide-react';
 import { BreadcrumbItem, Member, Gravesite } from '@/types';
 
 interface Props {
   members: Member[];
   gravesites: Gravesite[];
+  deed?: any;
 }
 
-export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
+interface FlashProps {
+  print_url?: string;
+  success?: string;
+}
+
+interface PageProps {
+  flash?: FlashProps;
+  deed?: any;
+  [key: string]: any;
+}
+
+export default function DeedsCreate({ members, gravesites, deed: propsDeed }: Readonly<Props>) {
+  const { props } = usePage<PageProps>();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [createdDeed, setCreatedDeed] = useState<any>(null);
   const [sendMethod, setSendMethod] = useState<'none' | 'email' | 'print' | 'both'>('none');
@@ -28,14 +41,8 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
   const { data, setData, post, processing, errors } = useForm({
     member_id: '',
     deed_number: '',
-    plot_location: '',
-    section: '',
-    row: '',
-    plot_number: '',
-    plot_type: 'single' as 'single' | 'double' | 'family',
     purchase_date: '',
     purchase_price: '',
-    capacity: '1',
     notes: '',
     gravesite_ids: [] as number[],
   });
@@ -51,6 +58,32 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
     recipient_name: '',
   });
 
+  // Pre-fill invoice with deed data when deed is available
+  useEffect(() => {
+    if (propsDeed) {
+      console.log('Deed received from props:', propsDeed);
+      setCreatedDeed(propsDeed);
+      
+      // Pre-fill invoice with deed data
+      const selectedMember = members.find(m => m.id === propsDeed.member_id);
+      if (selectedMember) {
+        invoiceForm.setData({
+          ...invoiceForm.data,
+          recipient_email: selectedMember.email || '',
+          recipient_name: `${selectedMember.first_name} ${selectedMember.last_name}`,
+        });
+      }
+      if (propsDeed.purchase_price) {
+        setInvoiceItems([{
+          description: 'Cemetery Plot Purchase',
+          quantity: 1,
+          unit_price: propsDeed.purchase_price
+        }]);
+      }
+      setShowInvoiceModal(true);
+    }
+  }, [propsDeed]);
+
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Cemetery', href: '/admin/deeds' },
@@ -62,37 +95,7 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
     e.preventDefault();
     post('/admin/deeds', {
       preserveScroll: true,
-      onSuccess: (page) => {
-        // Extract deed from page props
-        const deed = (page.props as any).deed || (page.props as any).flash?.deed;
-        if (deed) {
-          setCreatedDeed(deed);
-          // Pre-fill invoice with deed data
-          const selectedMember = members.find(m => m.id === parseInt(data.member_id));
-          if (selectedMember) {
-            invoiceForm.setData({
-              ...invoiceForm.data,
-              recipient_email: selectedMember.email || '',
-              recipient_name: `${selectedMember.first_name} ${selectedMember.last_name}`,
-            });
-          }
-          setInvoiceItems([{
-            description: 'Cemetery Plot Purchase',
-            quantity: 1,
-            unit_price: data.purchase_price || ''
-          }]);
-          setShowInvoiceModal(true);
-        }
-      }
     });
-  };
-
-  const handlePlotTypeChange = (value: string) => {
-    setData('plot_type', value as 'single' | 'double' | 'family');
-    // Auto-set capacity based on plot type
-    if (value === 'single') setData('capacity', '1');
-    else if (value === 'double') setData('capacity', '2');
-    else if (value === 'family') setData('capacity', '4');
   };
 
   return (
@@ -142,80 +145,6 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plot_location">Plot Location *</Label>
-                <Input
-                  id="plot_location"
-                  value={data.plot_location}
-                  onChange={(e) => setData('plot_location', e.target.value)}
-                  placeholder="North Garden"
-                  required
-                />
-                {errors.plot_location && <p className="text-sm text-red-600">{errors.plot_location}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="section">Section</Label>
-                <Input
-                  id="section"
-                  value={data.section}
-                  onChange={(e) => setData('section', e.target.value)}
-                  placeholder="A"
-                />
-                {errors.section && <p className="text-sm text-red-600">{errors.section}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="row">Row</Label>
-                <Input
-                  id="row"
-                  value={data.row}
-                  onChange={(e) => setData('row', e.target.value)}
-                  placeholder="12"
-                />
-                {errors.row && <p className="text-sm text-red-600">{errors.row}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="plot_number">Plot Number *</Label>
-                <Input
-                  id="plot_number"
-                  value={data.plot_number}
-                  onChange={(e) => setData('plot_number', e.target.value)}
-                  placeholder="45"
-                  required
-                />
-                {errors.plot_number && <p className="text-sm text-red-600">{errors.plot_number}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="plot_type">Plot Type *</Label>
-                <Select value={data.plot_type} onValueChange={handlePlotTypeChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="single">Single</SelectItem>
-                    <SelectItem value="double">Double</SelectItem>
-                    <SelectItem value="family">Family</SelectItem>
-                  </SelectContent>
-                </Select>
-                {errors.plot_type && <p className="text-sm text-red-600">{errors.plot_type}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="capacity">Capacity *</Label>
-                <Input
-                  id="capacity"
-                  type="number"
-                  min="1"
-                  value={data.capacity}
-                  onChange={(e) => setData('capacity', e.target.value)}
-                  required
-                />
-                {errors.capacity && <p className="text-sm text-red-600">{errors.capacity}</p>}
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="purchase_date">Purchase Date *</Label>
                 <Input
                   id="purchase_date"
@@ -242,13 +171,16 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
               </div>
 
               <div className="md:col-span-2 space-y-3">
-                <Label>Associated Gravesites</Label>
+                <Label>Associated Gravesites *</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
-                  {gravesites.map((gravesite) => (
+                  {gravesites.map((gravesite) => {
+                    const isUnavailable = gravesite.status === 'reserved' || gravesite.status === 'occupied';
+                    return (
                     <div key={gravesite.id} className="flex items-start space-x-2">
                       <Checkbox
                         id={`gravesite-${gravesite.id}`}
                         checked={data.gravesite_ids.includes(gravesite.id)}
+                        disabled={isUnavailable}
                         onCheckedChange={(checked) => {
                           if (checked) {
                             setData('gravesite_ids', [...data.gravesite_ids, gravesite.id]);
@@ -259,7 +191,7 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
                       />
                       <label
                         htmlFor={`gravesite-${gravesite.id}`}
-                        className="text-sm cursor-pointer"
+                        className={`text-sm cursor-pointer ${isUnavailable ? 'opacity-50' : ''}`}
                       >
                         <div className="font-medium text-gray-900 dark:text-gray-100">
                           Plot {gravesite.plot_number}
@@ -276,11 +208,12 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
                         </div>
                       </label>
                     </div>
-                  ))}
+                  );})}
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Selected {data.gravesite_ids.length} gravesite{data.gravesite_ids.length !== 1 ? 's' : ''}
+                  Selected {data.gravesite_ids.length} gravesite{data.gravesite_ids.length !== 1 ? 's' : ''} - At least one gravesite is required
                 </p>
+                {errors.gravesite_ids && <p className="text-sm text-red-600">{errors.gravesite_ids}</p>}
               </div>
 
               <div className="md:col-span-2 space-y-2">
@@ -454,30 +387,24 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
 
               <div className="space-y-3">
                 <Label>Delivery Method *</Label>
-                <RadioGroup value={sendMethod} onValueChange={(value: any) => setSendMethod(value)}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="none" id="none" />
-                    <Label htmlFor="none" className="font-normal cursor-pointer">Create invoice only (no email or print)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="email" id="email" />
-                    <Label htmlFor="email" className="font-normal cursor-pointer flex items-center gap-2">
-                      <Send className="h-4 w-4" />
-                      Email invoice to recipient
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="print" id="print" />
-                    <Label htmlFor="print" className="font-normal cursor-pointer flex items-center gap-2">
-                      <Printer className="h-4 w-4" />
-                      Open print view
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="both" id="both" />
-                    <Label htmlFor="both" className="font-normal cursor-pointer">Email and print</Label>
-                  </div>
-                </RadioGroup>
+                <ToggleGroup type="single" value={sendMethod} onValueChange={(value: any) => value && setSendMethod(value)} className="flex flex-col items-start gap-2">
+                  <ToggleGroupItem value="none" className="w-full justify-start">
+                    Create invoice only (no email or print)
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="email" className="w-full justify-start">
+                    <Send className="h-4 w-4 mr-2" />
+                    Email invoice to recipient
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="print" className="w-full justify-start">
+                    <Printer className="h-4 w-4 mr-2" />
+                    Open print view
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="both" className="w-full justify-start">
+                    <Send className="h-4 w-4 mr-2" />
+                    <Printer className="h-4 w-4 mr-2" />
+                    Email and print
+                  </ToggleGroupItem>
+                </ToggleGroup>
               </div>
 
               {(sendMethod === 'email' || sendMethod === 'both') && (
@@ -521,19 +448,40 @@ export default function DeedsCreate({ members, gravesites }: Readonly<Props>) {
               <Button
                 type="button"
                 onClick={() => {
-                  invoiceForm.setData({
-                    ...invoiceForm.data,
+                  console.log('Creating invoice for deed:', createdDeed?.id);
+                  console.log('Invoice items:', invoiceItems);
+                  console.log('Send method:', sendMethod);
+                  
+                  const invoiceData: any = {
+                    invoice_date: invoiceForm.data.invoice_date,
+                    due_date: invoiceForm.data.due_date,
                     items: invoiceItems,
+                    tax_amount: invoiceForm.data.tax_amount || '0.00',
+                    notes: invoiceForm.data.notes || '',
                     send_method: sendMethod,
-                  });
-                  invoiceForm.post(`/admin/deeds/${createdDeed?.id}/invoice`, {
+                  };
+                  
+                  // Only include recipient fields if sending email or printing
+                  if (sendMethod === 'email' || sendMethod === 'both') {
+                    invoiceData.recipient_email = invoiceForm.data.recipient_email;
+                    invoiceData.recipient_name = invoiceForm.data.recipient_name;
+                  } else if (sendMethod === 'print') {
+                    invoiceData.recipient_name = invoiceForm.data.recipient_name;
+                  }
+                  
+                  console.log('Posting invoice data:', invoiceData);
+                  
+                  router.post(`/admin/deeds/${createdDeed?.id}/invoice`, invoiceData, {
                     preserveScroll: true,
                     onSuccess: (page) => {
+                      console.log('Invoice created successfully');
                       const printUrl = (page.props as any).flash?.print_url;
                       if (printUrl) {
                         window.open(printUrl, '_blank');
                       }
-                      router.visit(`/admin/deeds/${createdDeed?.id}`);
+                    },
+                    onError: (errors) => {
+                      console.error('Invoice creation errors:', errors);
                     }
                   });
                 }}

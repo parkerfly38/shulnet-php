@@ -42,7 +42,26 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
     });
   };
 
-  const availableSpace = deed.capacity - deed.occupied;
+  // Helper function to get capacity from gravesite type
+  const getGravesiteCapacity = (type: string): number => {
+    switch (type) {
+      case 'single':
+      case 'cremation':
+        return 1;
+      case 'double':
+        return 2;
+      case 'family':
+        return 4;
+      default:
+        return 1;
+    }
+  };
+
+  // Calculate capacity from gravesites
+  const totalCapacity = Array.isArray(deed.gravesites) 
+    ? deed.gravesites.reduce((sum, g) => sum + getGravesiteCapacity(g.gravesite_type), 0) 
+    : 0;
+  const availableSpace = totalCapacity - (Number(deed.occupied) || 0);
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -85,29 +104,16 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
                 </div>
                 
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Plot Type</p>
-                  <Badge className="mt-1">
-                    {deed.plot_type.charAt(0).toUpperCase() + deed.plot_type.slice(1)}
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                  <Badge className="mt-1" variant={deed.is_active ? 'default' : 'secondary'}>
+                    {deed.is_active ? 'Active' : 'Inactive'}
                   </Badge>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Location</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <MapPin className="h-4 w-4 text-gray-400" />
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      {deed.plot_location}
-                      {deed.section && ` - ${deed.section}`}
-                      {deed.row && `-${deed.row}`}
-                      {` #${deed.plot_number}`}
-                    </p>
-                  </div>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Capacity</p>
                   <p className="font-medium text-gray-900 dark:text-gray-100">
-                    {deed.occupied} / {deed.capacity} occupied
+                    {deed.occupied || 0} / {totalCapacity} occupied
                     {availableSpace > 0 && (
                       <span className="text-green-600 dark:text-green-400 ml-2">
                         ({availableSpace} available)

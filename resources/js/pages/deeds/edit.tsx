@@ -20,14 +20,8 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
   const { data, setData, put, processing, errors } = useForm({
     member_id: deed.member_id.toString(),
     deed_number: deed.deed_number,
-    plot_location: deed.plot_location,
-    section: deed.section || '',
-    row: deed.row || '',
-    plot_number: deed.plot_number,
-    plot_type: deed.plot_type,
     purchase_date: deed.purchase_date,
     purchase_price: deed.purchase_price || '',
-    capacity: deed.capacity.toString(),
     notes: deed.notes || '',
     is_active: deed.is_active,
     gravesite_ids: deed.gravesites?.map(g => g.id) || [] as number[],
@@ -92,71 +86,6 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plot_location">Plot Location *</Label>
-                <Input
-                  id="plot_location"
-                  value={data.plot_location}
-                  onChange={(e) => setData('plot_location', e.target.value)}
-                  required
-                />
-                {errors.plot_location && <p className="text-sm text-red-600">{errors.plot_location}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="section">Section</Label>
-                <Input
-                  id="section"
-                  value={data.section}
-                  onChange={(e) => setData('section', e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="row">Row</Label>
-                <Input
-                  id="row"
-                  value={data.row}
-                  onChange={(e) => setData('row', e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="plot_number">Plot Number *</Label>
-                <Input
-                  id="plot_number"
-                  value={data.plot_number}
-                  onChange={(e) => setData('plot_number', e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="plot_type">Plot Type *</Label>
-                <Select value={data.plot_type} onValueChange={(value: any) => setData('plot_type', value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="single">Single</SelectItem>
-                    <SelectItem value="double">Double</SelectItem>
-                    <SelectItem value="family">Family</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="capacity">Capacity *</Label>
-                <Input
-                  id="capacity"
-                  type="number"
-                  min="1"
-                  value={data.capacity}
-                  onChange={(e) => setData('capacity', e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="purchase_date">Purchase Date *</Label>
                 <Input
                   id="purchase_date"
@@ -180,13 +109,17 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
               </div>
 
               <div className="md:col-span-2 space-y-3">
-                <Label>Associated Gravesites</Label>
+                <Label>Associated Gravesites *</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
-                  {gravesites.map((gravesite) => (
+                  {gravesites.map((gravesite) => {
+                    const isAlreadyLinked = data.gravesite_ids.includes(gravesite.id);
+                    const isUnavailable = (gravesite.status === 'reserved' || gravesite.status === 'occupied') && !isAlreadyLinked;
+                    return (
                     <div key={gravesite.id} className="flex items-start space-x-2">
                       <Checkbox
                         id={`gravesite-${gravesite.id}`}
                         checked={data.gravesite_ids.includes(gravesite.id)}
+                        disabled={isUnavailable}
                         onCheckedChange={(checked) => {
                           if (checked) {
                             setData('gravesite_ids', [...data.gravesite_ids, gravesite.id]);
@@ -197,7 +130,7 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
                       />
                       <label
                         htmlFor={`gravesite-${gravesite.id}`}
-                        className="text-sm cursor-pointer"
+                        className={`text-sm cursor-pointer ${isUnavailable ? 'opacity-50' : ''}`}
                       >
                         <div className="font-medium text-gray-900 dark:text-gray-100">
                           Plot {gravesite.plot_number}
@@ -214,7 +147,7 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
                         </div>
                       </label>
                     </div>
-                  ))}
+                  );})}
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   Selected {data.gravesite_ids.length} gravesite{data.gravesite_ids.length !== 1 ? 's' : ''}

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, FileText, Edit, Trash2, MapPin, Users, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Search, FileText, Edit, Trash2, Users, Filter, CheckCircle, XCircle } from 'lucide-react';
 import { BreadcrumbItem, Deed, Member } from '@/types';
 
 interface PaginatedDeeds {
@@ -18,12 +18,7 @@ interface PaginatedDeeds {
 
 interface DeedStats {
   total_count: number;
-  available_space: number;
-  total_capacity: number;
   total_occupied: number;
-  single_plots: number;
-  double_plots: number;
-  family_plots: number;
 }
 
 interface Props {
@@ -33,28 +28,27 @@ interface Props {
   filters: {
     search?: string;
     member?: string;
-    plot_type?: string;
-    has_space?: string;
   };
 }
-
-const plotTypeColors: Record<string, string> = {
-  single: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
-  double: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400',
-  family: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
-};
-
-const plotTypeLabels: Record<string, string> = {
-  single: 'Single',
-  double: 'Double',
-  family: 'Family',
-};
 
 export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
   const [memberId, setMemberId] = useState(filters.member || '');
-  const [plotType, setPlotType] = useState(filters.plot_type || '');
-  const [hasSpace, setHasSpace] = useState(filters.has_space || '');
+
+  // Helper function to get capacity from gravesite type
+  const getGravesiteCapacity = (type: string): number => {
+    switch (type) {
+      case 'single':
+      case 'cremation':
+        return 1;
+      case 'double':
+        return 2;
+      case 'family':
+        return 4;
+      default:
+        return 1;
+    }
+  };
 
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
@@ -66,16 +60,12 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
     router.get('/admin/deeds', {
       search: search || undefined,
       member: memberId || undefined,
-      plot_type: plotType || undefined,
-      has_space: hasSpace || undefined,
     }, { preserveState: true });
   };
 
   const handleClearFilters = () => {
     setSearch('');
     setMemberId('');
-    setPlotType('');
-    setHasSpace('');
     router.get('/admin/deeds');
   };
 
@@ -105,42 +95,18 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
     {
       title: 'Total Deeds',
       count: stats.total_count,
-      subtitle: `${stats.total_capacity} total spaces`,
+      subtitle: 'Cemetery deed records',
       icon: FileText,
       textColor: 'text-blue-600 dark:text-blue-400',
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
     },
     {
-      title: 'Available Space',
-      count: stats.available_space,
-      subtitle: `${stats.total_capacity - stats.total_occupied} spaces open`,
-      icon: CheckCircle,
-      textColor: 'text-green-600 dark:text-green-400',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-    },
-    {
-      title: 'Single Plots',
-      count: stats.single_plots,
-      subtitle: '1 space each',
-      icon: MapPin,
+      title: 'Total Occupied',
+      count: stats.total_occupied,
+      subtitle: 'Burial spaces used',
+      icon: Users,
       textColor: 'text-purple-600 dark:text-purple-400',
       bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-    },
-    {
-      title: 'Double Plots',
-      count: stats.double_plots,
-      subtitle: '2 spaces each',
-      icon: Users,
-      textColor: 'text-orange-600 dark:text-orange-400',
-      bgColor: 'bg-orange-50 dark:bg-orange-900/20',
-    },
-    {
-      title: 'Family Plots',
-      count: stats.family_plots,
-      subtitle: '4+ spaces each',
-      icon: Users,
-      textColor: 'text-indigo-600 dark:text-indigo-400',
-      bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
     },
   ];
 
@@ -164,7 +130,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
         </div>
 
         {/* Stats Dashboard */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {statCards.map((stat) => (
             <div
               key={stat.title}
@@ -192,8 +158,8 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
 
         {/* Filters */}
         <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="md:col-span-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-1">
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -220,39 +186,15 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Select value={plotType ?? ' '} onValueChange={setPlotType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Plot Types" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value=" ">All Types</SelectItem>
-                  <SelectItem value="single">Single</SelectItem>
-                  <SelectItem value="double">Double</SelectItem>
-                  <SelectItem value="family">Family</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex gap-2">
+              <Button onClick={handleFilter} className="flex-1">
+                <Filter className="h-4 w-4 mr-2" />
+                Filter
+              </Button>
+              <Button onClick={handleClearFilters} variant="outline" className="flex-1">
+                Clear
+              </Button>
             </div>
-            <div>
-              <Select value={hasSpace ?? ' '} onValueChange={setHasSpace}>
-                <SelectTrigger>
-                  <SelectValue placeholder="All Deeds" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value=" ">All Deeds</SelectItem>
-                  <SelectItem value="true">Has Space</SelectItem>
-                  <SelectItem value="false">Full</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="flex gap-2 mt-4">
-            <Button onClick={handleFilter} size="sm">
-              Apply Filters
-            </Button>
-            <Button onClick={handleClearFilters} variant="outline" size="sm">
-              Clear
-            </Button>
           </div>
         </div>
 
@@ -264,9 +206,6 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Deed Number
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Location
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Owner
@@ -290,7 +229,17 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {deeds.data.map((deed) => {
-                  const availableSpace = deed.capacity - deed.occupied;
+                  // Calculate capacity from gravesites
+                  const totalCapacity = Array.isArray(deed.gravesites)
+                    ? deed.gravesites.reduce((sum, g) => sum + getGravesiteCapacity(g.gravesite_type), 0)
+                    : 0;
+                  const availableSpace = totalCapacity - (Number(deed.occupied) || 0);
+                  
+                  // Get unique gravesite types
+                  const gravesiteTypes = Array.isArray(deed.gravesites)
+                    ? [...new Set(deed.gravesites.map(g => g.gravesite_type))].join(', ')
+                    : 'N/A';
+                  
                   return (
                     <tr
                       key={deed.id}
@@ -305,17 +254,6 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                         </Link>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4 text-gray-400" />
-                          <span>
-                            {deed.plot_location}
-                            {deed.section && ` - ${deed.section}`}
-                            {deed.row && `-${deed.row}`}
-                            {` #${deed.plot_number}`}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
                         {deed.member ? (
                           <Link
                             href={`/admin/members/${deed.member.id}`}
@@ -328,13 +266,13 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                         )}
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        <Badge className={plotTypeColors[deed.plot_type]}>
-                          {plotTypeLabels[deed.plot_type]}
-                        </Badge>
+                        <span className="text-gray-900 dark:text-gray-100">
+                          {gravesiteTypes}
+                        </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
                         <div className="flex items-center gap-2">
-                          <span>{deed.occupied}/{deed.capacity}</span>
+                          <span>{deed.occupied || 0}/{totalCapacity}</span>
                           {availableSpace > 0 ? (
                             <CheckCircle className="h-4 w-4 text-green-500" />
                           ) : (

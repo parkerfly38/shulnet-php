@@ -15,14 +15,8 @@ class Deed extends Model
     protected $fillable = [
         'member_id',
         'deed_number',
-        'plot_location',
-        'section',
-        'row',
-        'plot_number',
-        'plot_type',
         'purchase_date',
         'purchase_price',
-        'capacity',
         'occupied',
         'notes',
         'is_active',
@@ -68,11 +62,26 @@ class Deed extends Model
     }
 
     /**
+     * Get the total capacity from all gravesites.
+     */
+    public function getTotalCapacityAttribute(): int
+    {
+        return $this->gravesites->sum(function ($gravesite) {
+            return match($gravesite->gravesite_type) {
+                'single', 'cremation' => 1,
+                'double' => 2,
+                'family' => 4,
+                default => 1,
+            };
+        }) ?? 0;
+    }
+
+    /**
      * Check if the deed has available space.
      */
     public function hasAvailableSpace(): bool
     {
-        return $this->occupied < $this->capacity;
+        return $this->occupied < $this->total_capacity;
     }
 
     /**
@@ -80,6 +89,6 @@ class Deed extends Model
      */
     public function getAvailableSpaceAttribute(): int
     {
-        return $this->capacity - $this->occupied;
+        return max(0, $this->total_capacity - $this->occupied);
     }
 }

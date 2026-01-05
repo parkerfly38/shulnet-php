@@ -272,14 +272,8 @@ export interface Deed {
     id: number;
     member_id: number;
     deed_number: string;
-    plot_location: string;
-    section?: string;
-    row?: string;
-    plot_number: string;
-    plot_type: 'single' | 'double' | 'family';
     purchase_date: string;
     purchase_price?: string;
-    capacity: number;
     occupied: number;
     notes?: string;
     is_active: boolean;

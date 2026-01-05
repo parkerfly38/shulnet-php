@@ -20,10 +20,6 @@ class DeedFactory extends Factory
         return [
             'member_id' => Member::factory(),
             'deed_number' => 'DEED-' . $this->faker->unique()->numerify('####'),
-            'plot_location' => $this->faker->randomElement(['North Garden', 'South Garden', 'East Garden', 'West Garden', 'Memorial Garden']),
-            'section' => $this->faker->optional(0.8)->randomElement(['A', 'B', 'C', 'D', 'E']),
-            'row' => $this->faker->optional(0.8)->numberBetween(1, 20),
-            'plot_number' => $this->faker->numberBetween(1, 100),
             'plot_type' => $this->faker->randomElement(['single', 'double', 'family']),
             'purchase_date' => $this->faker->dateTimeBetween('-30 years', 'now'),
             'purchase_price' => $this->faker->randomFloat(2, 1000, 15000),

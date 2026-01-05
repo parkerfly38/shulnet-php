@@ -30,8 +30,7 @@ class IntermentController extends Controller
                   ->orWhere('last_name', 'like', "%{$search}%")
                   ->orWhere('hebrew_name', 'like', "%{$search}%")
                   ->orWhereHas('deed', function ($q) use ($search) {
-                      $q->where('deed_number', 'like', "%{$search}%")
-                        ->orWhere('plot_location', 'like', "%{$search}%");
+                      $q->where('deed_number', 'like', "%{$search}%");
                   });
             });
         }
@@ -46,9 +45,8 @@ class IntermentController extends Controller
 
         $interments = $query->paginate($perPage);
 
-        $deeds = Deed::select('id', 'deed_number', 'plot_location')
+        $deeds = Deed::select('id', 'deed_number')
             ->where('is_active', true)
-            ->orderBy('plot_location')
             ->orderBy('deed_number')
             ->get();
 
@@ -86,10 +84,9 @@ class IntermentController extends Controller
      */
     public function create(Request $request)
     {
-        $deeds = Deed::select('id', 'deed_number', 'plot_location', 'capacity', 'occupied')
+        $deeds = Deed::select('id', 'deed_number', 'capacity', 'occupied')
             ->where('is_active', true)
             ->whereColumn('occupied', '<', 'capacity')
-            ->orderBy('plot_location')
             ->orderBy('deed_number')
             ->get();
 
@@ -162,13 +159,12 @@ class IntermentController extends Controller
      */
     public function edit(Interment $interment)
     {
-        $deeds = Deed::select('id', 'deed_number', 'plot_location', 'capacity', 'occupied')
+        $deeds = Deed::select('id', 'deed_number', 'capacity', 'occupied')
             ->where('is_active', true)
             ->where(function ($q) use ($interment) {
                 $q->whereColumn('occupied', '<', 'capacity')
                   ->orWhere('id', $interment->deed_id);
             })
-            ->orderBy('plot_location')
             ->orderBy('deed_number')
             ->get();
 
