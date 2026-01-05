@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\User;
+use App\Enums\UserRole;
 use App\Imports\MembersImport;
+use App\Mail\TemporaryPasswordMail;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -23,7 +29,7 @@ class MemberController extends Controller
         $query = Member::query()
             ->select([
                 'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1', 
-                'city', 'state', 'created_at', 'updated_at'
+                'city', 'state', 'user_id', 'created_at', 'updated_at'
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
@@ -297,5 +303,65 @@ class MemberController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Create a user account for a member.
+     */
+    public function createUser(Request $request, Member $member)
+    {
+        // Check if member already has a user
+        if ($member->user_id) {
+            return back()->with('error', 'This member already has an associated user account.');
+        }
+
+        // Check if email already exists as a user
+        if (User::where('email', $member->email)->exists()) {
+            return back()->with('error', 'A user with this email already exists.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'method' => 'required|in:manual,email',
+            'password' => 'required_if:method,manual|nullable|string|min:8|confirmed',
+            'roles' => 'nullable|array',
+        ]);
+
+        $temporaryPassword = null;
+        
+        // Determine the password based on method
+        if ($validated['method'] === 'email') {
+            // Generate a random temporary password
+            $temporaryPassword = Str::random(12);
+            $password = $temporaryPassword;
+        } else {
+            // Use the manually entered password
+            $password = $validated['password'];
+        }
+
+        // Create the user
+        $user = User::create([
+            'name' => trim($member->first_name . ' ' . $member->last_name),
+            'email' => $member->email,
+            'password' => Hash::make($password),
+            'roles' => [UserRole::Member],
+            'email_verified_at' => now(), // Auto-verify since it's created by admin
+        ]);
+
+        // Link the user to the member
+        $member->user_id = $user->id;
+        $member->save();
+
+        // Send email with temporary password if method is email
+        if ($validated['method'] === 'email' && $temporaryPassword) {
+            try {
+                Mail::to($user->email)->send(new TemporaryPasswordMail($user, $temporaryPassword));
+                return back()->with('success', 'User account created and temporary password sent to ' . $member->email);
+            } catch (\Exception $e) {
+                return back()->with('success', 'User account created but failed to send email. Temporary password: ' . $temporaryPassword);
+            }
+        }
+
+        return back()->with('success', 'User account created successfully for ' . $member->first_name . ' ' . $member->last_name);
     }
 }

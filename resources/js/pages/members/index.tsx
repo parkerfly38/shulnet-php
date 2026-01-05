@@ -3,7 +3,8 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download, KeyRound } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type Member, type BreadcrumbItem } from '@/types';
 import {
@@ -67,6 +68,11 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
   const [search, setSearch] = useState(filters.search || '');
   const [memberType, setMemberType] = useState(filters.member_type || '');
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showCreateUserDialog, setShowCreateUserDialog] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [passwordMethod, setPasswordMethod] = useState<'email' | 'manual'>('email');
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { flash } = usePage().props as any;
@@ -118,6 +124,37 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
     if (confirm(`Are you sure you want to delete ${member.first_name} ${member.last_name}?`)) {
       router.delete(`/admin/members/${member.id}`);
     }
+  };
+
+  const handleCreateUser = (member: Member) => {
+    setSelectedMember(member);
+    setShowCreateUserDialog(true);
+    setPasswordMethod('email');
+    setPassword('');
+    setPasswordConfirmation('');
+  };
+
+  const submitCreateUser = () => {
+    if (!selectedMember) return;
+
+    const data: any = {
+      method: passwordMethod,
+    };
+
+    if (passwordMethod === 'manual') {
+      data.password = password;
+      data.password_confirmation = passwordConfirmation;
+    }
+
+    router.post(`/admin/members/${selectedMember.id}/create-user`, data, {
+      onSuccess: () => {
+        setShowCreateUserDialog(false);
+        setSelectedMember(null);
+        setPasswordMethod('email');
+        setPassword('');
+        setPasswordConfirmation('');
+      },
+    });
   };
 
   const statCards = [
@@ -398,6 +435,17 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex gap-2 justify-end">
+                          {!member.user_id && member.email && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCreateUser(member)}
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20"
+                              title="Create User Account"
+                            >
+                              <KeyRound className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Link href={`/admin/members/${member.id}`}>
                             <Button variant="outline" size="sm">
                               <Eye className="h-4 w-4" />
@@ -459,6 +507,112 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
             </div>
           </div>
         )}
+
+        {/* Create User Dialog */}
+        <Dialog open={showCreateUserDialog} onOpenChange={setShowCreateUserDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create User Account</DialogTitle>
+              <DialogDescription>
+                Create a user account for {selectedMember?.first_name} {selectedMember?.last_name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 pt-4">
+              <div>
+                <Label htmlFor="email">Email (from member record)</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={selectedMember?.email || ''}
+                  disabled
+                  className="bg-gray-50 dark:bg-gray-800"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label>Password Method</Label>
+                <div className="flex gap-4">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="method-email"
+                      name="password-method"
+                      value="email"
+                      checked={passwordMethod === 'email'}
+                      onChange={(e) => setPasswordMethod(e.target.value as 'email' | 'manual')}
+                      className="h-4 w-4 text-blue-600"
+                    />
+                    <Label htmlFor="method-email" className="cursor-pointer font-normal">
+                      Send temporary password via email
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="method-manual"
+                      name="password-method"
+                      value="manual"
+                      checked={passwordMethod === 'manual'}
+                      onChange={(e) => setPasswordMethod(e.target.value as 'email' | 'manual')}
+                      className="h-4 w-4 text-blue-600"
+                    />
+                    <Label htmlFor="method-manual" className="cursor-pointer font-normal">
+                      Enter password manually
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              {passwordMethod === 'manual' && (
+                <>
+                  <div>
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter password"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="password_confirmation">Confirm Password</Label>
+                    <Input
+                      id="password_confirmation"
+                      type="password"
+                      value={passwordConfirmation}
+                      onChange={(e) => setPasswordConfirmation(e.target.value)}
+                      placeholder="Confirm password"
+                    />
+                  </div>
+                </>
+              )}
+
+              {passwordMethod === 'email' && (
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    A temporary password will be generated and sent to {selectedMember?.email}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCreateUserDialog(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={submitCreateUser}
+                  disabled={passwordMethod === 'manual' && (!password || !passwordConfirmation || password !== passwordConfirmation)}
+                >
+                  Create User
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );

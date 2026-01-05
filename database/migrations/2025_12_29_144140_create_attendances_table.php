@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->timestamps();
             
-            $table->unique(['student_id', 'attendance_date', 'class_definition_id']);
+            $table->unique(['student_id', 'attendance_date', 'class_definition_id'], 'attendances_unique');
         });
     }
 

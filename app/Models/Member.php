@@ -45,7 +45,8 @@ class Member extends Model
         'briabatorah',
         'maftir',
         'anniversary_date',
-        'parent_id'
+        'parent_id',
+        'user_id'
     ];
 
     /**
@@ -97,5 +98,13 @@ class Member extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(ParentModel::class, 'parent_id');
+    }
+
+    /**
+     * Get the user associated with this member.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

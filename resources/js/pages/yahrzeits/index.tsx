@@ -3,7 +3,8 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, Edit, Plus, Search, Eye, Calendar, Star, Upload, Download } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Trash2, Edit, Plus, Search, Eye, Calendar, Star, Upload, Download, Mail, Printer } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { type BreadcrumbItem } from '@/types';
 import {
@@ -100,6 +101,12 @@ const OBSERVANCE_LABELS = {
 export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showReminderDialog, setShowReminderDialog] = useState(false);
+  const [selectedYahrzeit, setSelectedYahrzeit] = useState<Yahrzeit | null>(null);
+  const [reminderType, setReminderType] = useState<'email' | 'print'>('email');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientName, setRecipientName] = useState('');
+  const [gregorianDate, setGregorianDate] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { flash } = usePage().props as any;
@@ -142,6 +149,66 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const handleDelete = (yahrzeit: Yahrzeit) => {
     if (confirm(`Are you sure you want to delete the yahrzeit record for ${yahrzeit.name}?`)) {
       router.delete(`/admin/yahrzeits/${yahrzeit.id}`);
+    }
+  };
+
+  const handleSendReminder = (yahrzeit: Yahrzeit) => {
+    setSelectedYahrzeit(yahrzeit);
+    setReminderType('email');
+    setRecipientEmail('');
+    setRecipientName('');
+    setGregorianDate('');
+    setShowReminderDialog(true);
+  };
+
+  const submitReminder = () => {
+    if (!selectedYahrzeit) return;
+
+    if (reminderType === 'email') {
+      router.post(`/admin/yahrzeits/${selectedYahrzeit.id}/send-reminder`, {
+        recipient_email: recipientEmail,
+        recipient_name: recipientName,
+        gregorian_date: gregorianDate,
+      }, {
+        onSuccess: () => {
+          setShowReminderDialog(false);
+          setSelectedYahrzeit(null);
+        },
+      });
+    } else {
+      // Open print view in new window
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = `/admin/yahrzeits/${selectedYahrzeit.id}/print-reminder`;
+      form.target = '_blank';
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (csrfToken) {
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+      }
+
+      const nameInput = document.createElement('input');
+      nameInput.type = 'hidden';
+      nameInput.name = 'recipient_name';
+      nameInput.value = recipientName;
+      form.appendChild(nameInput);
+
+      const dateInput = document.createElement('input');
+      dateInput.type = 'hidden';
+      dateInput.name = 'gregorian_date';
+      dateInput.value = gregorianDate;
+      form.appendChild(dateInput);
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      setShowReminderDialog(false);
+      setSelectedYahrzeit(null);
     }
   };
 
@@ -355,6 +422,15 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleSendReminder(yahrzeit)}
+                            className="text-blue-600 hover:text-blue-800"
+                            title="Send/Print Reminder"
+                          >
+                            <Mail className="h-4 w-4" />
+                          </Button>
                           <Link href={`/admin/yahrzeits/${yahrzeit.id}`}>
                             <Button variant="outline" size="sm">
                               <Eye className="h-4 w-4" />
@@ -448,6 +524,108 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
             </div>
           )}
         </div>
+
+        {/* Yahrzeit Reminder Dialog */}
+        <Dialog open={showReminderDialog} onOpenChange={setShowReminderDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Send Yahrzeit Reminder</DialogTitle>
+              <DialogDescription>
+                Send a reminder for {selectedYahrzeit?.name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 pt-4">
+              <div className="space-y-3">
+                <Label>Reminder Method</Label>
+                <div className="flex gap-4">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="reminder-email"
+                      name="reminder-method"
+                      value="email"
+                      checked={reminderType === 'email'}
+                      onChange={(e) => setReminderType(e.target.value as 'email' | 'print')}
+                      className="h-4 w-4 text-blue-600"
+                    />
+                    <Label htmlFor="reminder-email" className="cursor-pointer font-normal flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      Send via Email
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      id="reminder-print"
+                      name="reminder-method"
+                      value="print"
+                      checked={reminderType === 'print'}
+                      onChange={(e) => setReminderType(e.target.value as 'email' | 'print')}
+                      className="h-4 w-4 text-blue-600"
+                    />
+                    <Label htmlFor="reminder-print" className="cursor-pointer font-normal flex items-center gap-2">
+                      <Printer className="h-4 w-4" />
+                      Print Letter
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="recipient_name">Recipient Name</Label>
+                <Input
+                  id="recipient_name"
+                  type="text"
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value)}
+                  placeholder="Enter recipient name"
+                />
+              </div>
+
+              {reminderType === 'email' && (
+                <div>
+                  <Label htmlFor="recipient_email">Recipient Email</Label>
+                  <Input
+                    id="recipient_email"
+                    type="email"
+                    value={recipientEmail}
+                    onChange={(e) => setRecipientEmail(e.target.value)}
+                    placeholder="Enter recipient email"
+                  />
+                </div>
+              )}
+
+              <div>
+                <Label htmlFor="gregorian_date">Gregorian Date (This Year)</Label>
+                <Input
+                  id="gregorian_date"
+                  type="text"
+                  value={gregorianDate}
+                  onChange={(e) => setGregorianDate(e.target.value)}
+                  placeholder="e.g., January 15, 2026"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Enter the date this yahrzeit falls on this year in Gregorian calendar
+                </p>
+              </div>
+
+              <div className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowReminderDialog(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={submitReminder}
+                  disabled={!recipientName || !gregorianDate || (reminderType === 'email' && !recipientEmail)}
+                >
+                  {reminderType === 'email' ? 'Send Email' : 'Open Print View'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );

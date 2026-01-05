@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Member;
 use App\Models\Yahrzeit;
 use App\Imports\YahrzeitsImport;
+use App\Mail\YahrzeitReminderMail;
 use App\Services\HebrewCalendarService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Inertia\Inertia;
 
@@ -317,5 +319,48 @@ class YahrzeitController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Send yahrzeit reminder email to family members
+     */
+    public function sendReminder(Request $request, Yahrzeit $yahrzeit)
+    {
+        $validated = $request->validate([
+            'recipient_email' => 'required|email',
+            'recipient_name' => 'required|string',
+            'gregorian_date' => 'required|string',
+        ]);
+
+        try {
+            Mail::to($validated['recipient_email'])->send(
+                new YahrzeitReminderMail(
+                    $yahrzeit,
+                    $validated['gregorian_date'],
+                    $validated['recipient_name']
+                )
+            );
+
+            return back()->with('success', 'Yahrzeit reminder sent to ' . $validated['recipient_email']);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to send reminder: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Print yahrzeit reminder letter
+     */
+    public function printReminder(Yahrzeit $yahrzeit, Request $request)
+    {
+        $validated = $request->validate([
+            'recipient_name' => 'required|string',
+            'gregorian_date' => 'required|string',
+        ]);
+
+        return view('yahrzeits.print-reminder', [
+            'yahrzeit' => $yahrzeit,
+            'recipientName' => $validated['recipient_name'],
+            'gregorianDate' => $validated['gregorian_date'],
+        ]);
     }
 }

@@ -14,14 +14,16 @@ interface Member {
     last_name: string;
     middle_name?: string;
     hebrew_name?: string;
+    pivot: {
+        relationship: string;
+    };
 }
 
 interface Yahrzeit {
     id: number;
-    member: Member;
+    members: Member[];
     name: string;
     hebrew_name?: string;
-    relationship: string;
     date_of_death: string;
     hebrew_day_of_death: number;
     hebrew_month_of_death: number;
@@ -155,18 +157,44 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                                     <p className="text-lg text-gray-900 dark:text-gray-100">{yahrzeit.hebrew_name}</p>
                                 </div>
                             )}
-
-                            <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Relationship</label>
-                                <div className="mt-1">
-                                    <Badge variant="secondary" className="text-sm">
-                                        {yahrzeit.relationship}
-                                    </Badge>
-                                </div>
-                            </div>
                         </CardContent>
                     </Card>
 
+                    {/* Related Members */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                Related Family Members
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {yahrzeit.members && yahrzeit.members.length > 0 ? (
+                                <div className="space-y-3">
+                                    {yahrzeit.members.map((member) => (
+                                        <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                            <div>
+                                                <p className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {member.first_name} {member.last_name}
+                                                </p>
+                                                {member.hebrew_name && (
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                        {member.hebrew_name}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <Badge variant="secondary" className="text-sm">
+                                                {member.pivot.relationship}
+                                            </Badge>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                    No family members associated with this yahrzeit.
+                                </p>
+                            )}
+                        </CardContent>
+                    </Card>
                     
                 </div>
 

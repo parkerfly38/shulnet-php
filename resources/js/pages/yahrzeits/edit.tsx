@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Star, User, Plus, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { BreadcrumbItem } from '@/types';
 
 interface Member {
     id: number;
@@ -142,8 +143,27 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
         return `${day} ${monthName}`;
     };
 
+    const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
+            {
+                title: 'Dashboard',
+                href: '/dashboard',
+            },
+            {
+                title: 'Yahrzeits',
+                href: '/admin/yahrzeits',
+            },
+            {
+                title: yahrzeit.name,
+                href: `/admin/yahrzeits/${yahrzeit.id}`,
+            },
+            {
+                title: 'Edit',
+                href: `/admin/yahrzeits/${yahrzeit.id}/edit`,
+            }
+        ], [yahrzeit.name, yahrzeit.id]);
+
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Edit Yahrzeit Record" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
           {/* Header */}

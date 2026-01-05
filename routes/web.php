@@ -57,6 +57,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Member import routes
         Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
         Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
+        
+        // Member user creation route
+        Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
 
         // Membership period management routes (nested under members)
         Route::resource('admin/members.membership-periods', MembershipPeriodController::class, [
@@ -85,6 +88,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Yahrzeit import routes
         Route::post('admin/yahrzeits/import', [YahrzeitController::class, 'import'])->name('yahrzeits.import');
         Route::get('admin/yahrzeits/template/download', [YahrzeitController::class, 'downloadTemplate'])->name('yahrzeits.template.download');
+        
+        // Yahrzeit reminder routes
+        Route::post('admin/yahrzeits/{yahrzeit}/send-reminder', [YahrzeitController::class, 'sendReminder'])->name('yahrzeits.send-reminder');
+        Route::post('admin/yahrzeits/{yahrzeit}/print-reminder', [YahrzeitController::class, 'printReminder'])->name('yahrzeits.print-reminder');
         
         // Calendar management routes
         Route::resource('admin/calendars', CalendarController::class, [
