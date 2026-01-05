@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Carbon\Carbon;
 
 class Invoice extends Model
 {
     protected $fillable = [
         'member_id',
+        'invoiceable_type',
+        'invoiceable_id',
         'invoice_number',
         'invoice_date',
         'due_date',
@@ -44,6 +47,11 @@ class Invoice extends Model
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function invoiceable(): MorphTo
+    {
+        return $this->morphTo();
     }
 
     public function items(): HasMany

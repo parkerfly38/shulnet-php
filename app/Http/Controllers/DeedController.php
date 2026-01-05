@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Deed;
 use App\Models\Gravesite;
 use App\Models\Member;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Mail\InvoiceMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class DeedController extends Controller
@@ -143,9 +147,10 @@ class DeedController extends Controller
             $deed->gravesites()->sync($request->gravesite_ids);
         }
 
-        return redirect()
-            ->route('deeds.show', $deed)
-            ->with('success', 'Deed created successfully.');
+        return back()->with([
+            'success' => 'Deed created successfully.',
+            'deed' => $deed->load('member'),
+        ]);
     }
 
     /**
@@ -238,5 +243,93 @@ class DeedController extends Controller
         return redirect()
             ->route('deeds.index')
             ->with('success', 'Deed deleted successfully.');
+    }
+
+    /**
+     * Create an invoice for the deed.
+     */
+    public function createInvoice(Request $request, Deed $deed)
+    {
+        $validated = $request->validate([
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'items' => 'required|array|min:1',
+            'items.*.description' => 'required|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.unit_price' => 'required|numeric|min:0',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string',
+            'send_method' => 'required|in:email,print,both,none',
+            'recipient_email' => 'required_if:send_method,email,both|email',
+            'recipient_name' => 'required_if:send_method,email,both,print|string',
+        ]);
+
+        // Create the invoice
+        $invoice = new Invoice([
+            'member_id' => $deed->member_id,
+            'invoice_number' => Invoice::generateInvoiceNumber(),
+            'invoice_date' => $validated['invoice_date'],
+            'due_date' => $validated['due_date'],
+            'status' => 'open',
+            'tax_amount' => $validated['tax_amount'] ?? 0,
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        $invoice->invoiceable()->associate($deed);
+        $invoice->save();
+
+        // Create invoice items
+        $subtotal = 0;
+        foreach ($validated['items'] as $index => $item) {
+            $total = $item['quantity'] * $item['unit_price'];
+            $subtotal += $total;
+
+            InvoiceItem::create([
+                'invoice_id' => $invoice->id,
+                'description' => $item['description'],
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['unit_price'],
+                'total' => $total,
+                'sort_order' => $index,
+            ]);
+        }
+
+        // Update invoice totals
+        $invoice->subtotal = $subtotal;
+        $invoice->total = $subtotal + $invoice->tax_amount;
+        $invoice->save();
+
+        // Handle sending invoice
+        $sendMethod = $validated['send_method'];
+        $response = ['invoice' => $invoice->load('items')];
+
+        if (in_array($sendMethod, ['email', 'both'])) {
+            try {
+                Mail::to($validated['recipient_email'])
+                    ->send(new InvoiceMail($invoice, $validated['recipient_name']));
+                $response['email_sent'] = true;
+            } catch (\Exception $e) {
+                $response['email_error'] = 'Failed to send email: ' . $e->getMessage();
+            }
+        }
+
+        if (in_array($sendMethod, ['print', 'both'])) {
+            $response['print_url'] = route('deeds.invoice.print', [$deed, $invoice]);
+        }
+
+        return back()->with('success', 'Invoice created successfully.');
+    }
+
+    /**
+     * Show a printable version of the deed invoice.
+     */
+    public function printInvoice(Deed $deed, Invoice $invoice)
+    {
+        $invoice->load(['items', 'member', 'invoiceable']);
+
+        return view('deeds.print-invoice', [
+            'deed' => $deed,
+            'invoice' => $invoice,
+        ]);
     }
 }

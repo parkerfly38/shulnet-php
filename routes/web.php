@@ -231,6 +231,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]
         ]);
         
+        // Deed invoice routes
+        Route::post('admin/deeds/{deed}/invoice', [DeedController::class, 'createInvoice'])->name('deeds.invoice.create');
+        Route::get('admin/deeds/{deed}/invoice/{invoice}/print', [DeedController::class, 'printInvoice'])->name('deeds.invoice.print');
+        
         // Interment management routes
         Route::resource('admin/interments', IntermentController::class, [
             'names' => [

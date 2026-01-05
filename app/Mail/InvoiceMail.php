@@ -19,7 +19,8 @@ class InvoiceMail extends Mailable
      */
     public function __construct(
         public Invoice $invoice,
-        public string $pdfPath
+        public ?string $pdfPath = null,
+        public ?string $recipientName = null
     ) {}
 
     /**
@@ -42,6 +43,7 @@ class InvoiceMail extends Mailable
             with: [
                 'invoice' => $this->invoice,
                 'member' => $this->invoice->member,
+                'recipientName' => $this->recipientName,
             ],
         );
     }
@@ -53,6 +55,10 @@ class InvoiceMail extends Mailable
      */
     public function attachments(): array
     {
+        if (!$this->pdfPath) {
+            return [];
+        }
+
         return [
             Attachment::fromPath($this->pdfPath)
                 ->as('invoice-' . $this->invoice->invoice_number . '.pdf')
