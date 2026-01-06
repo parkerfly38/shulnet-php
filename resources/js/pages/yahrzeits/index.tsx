@@ -33,6 +33,7 @@ interface Member {
     last_name: string;
     middle_name?: string;
     hebrew_name?: string;
+    email?: string;
     pivot: {
         relationship: string;
     };
@@ -104,8 +105,8 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [selectedYahrzeit, setSelectedYahrzeit] = useState<Yahrzeit | null>(null);
   const [reminderType, setReminderType] = useState<'email' | 'print'>('email');
-  const [recipientEmail, setRecipientEmail] = useState('');
-  const [recipientName, setRecipientName] = useState('');
+  const [familyMembers, setFamilyMembers] = useState<Member[]>([]);
+  const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
   const [gregorianDate, setGregorianDate] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -152,31 +153,61 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
     }
   };
 
-  const handleSendReminder = (yahrzeit: Yahrzeit) => {
+  const handleSendReminder = async (yahrzeit: Yahrzeit) => {
     setSelectedYahrzeit(yahrzeit);
     setReminderType('email');
-    setRecipientEmail('');
-    setRecipientName('');
+    setFamilyMembers([]);
+    setSelectedMembers([]);
     setGregorianDate('');
     setShowReminderDialog(true);
+
+    // Fetch family members and calculated Gregorian date
+    try {
+      const response = await fetch(`/admin/yahrzeits/${yahrzeit.id}/prepare-reminder`);
+      const data = await response.json();
+      
+      // Set the calculated Gregorian date
+      if (data.gregorian_date) {
+        setGregorianDate(data.gregorian_date);
+      }
+
+      // Set family members and select all by default
+      if (data.family_members && data.family_members.length > 0) {
+        setFamilyMembers(data.family_members);
+        setSelectedMembers(data.family_members.map((m: Member) => m.id));
+      }
+    } catch (error) {
+      console.error('Failed to fetch reminder data:', error);
+    }
   };
 
   const submitReminder = () => {
-    if (!selectedYahrzeit) return;
+    if (!selectedYahrzeit || selectedMembers.length === 0) return;
+
+    const selectedFamilyMembers = familyMembers.filter(m => selectedMembers.includes(m.id));
 
     if (reminderType === 'email') {
-      router.post(`/admin/yahrzeits/${selectedYahrzeit.id}/send-reminder`, {
-        recipient_email: recipientEmail,
-        recipient_name: recipientName,
-        gregorian_date: gregorianDate,
-      }, {
-        onSuccess: () => {
-          setShowReminderDialog(false);
-          setSelectedYahrzeit(null);
-        },
+      // Send email to each selected member
+      selectedFamilyMembers.forEach((member, index) => {
+        if (!member.email) return;
+        
+        router.post(`/admin/yahrzeits/${selectedYahrzeit.id}/send-reminder`, {
+          recipient_email: member.email,
+          recipient_name: `${member.first_name} ${member.last_name}`,
+          gregorian_date: gregorianDate,
+        }, {
+          preserveState: true,
+          onSuccess: () => {
+            // Close dialog after last email is sent
+            if (index === selectedFamilyMembers.length - 1) {
+              setShowReminderDialog(false);
+              setSelectedYahrzeit(null);
+            }
+          },
+        });
       });
     } else {
-      // Open print view in new window
+      // Generate PDF with one page per selected member
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = `/admin/yahrzeits/${selectedYahrzeit.id}/print-reminder`;
@@ -191,11 +222,12 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
         form.appendChild(csrfInput);
       }
 
-      const nameInput = document.createElement('input');
-      nameInput.type = 'hidden';
-      nameInput.name = 'recipient_name';
-      nameInput.value = recipientName;
-      form.appendChild(nameInput);
+      // Send member IDs to backend
+      const memberIdsInput = document.createElement('input');
+      memberIdsInput.type = 'hidden';
+      memberIdsInput.name = 'member_ids';
+      memberIdsInput.value = JSON.stringify(selectedMembers);
+      form.appendChild(memberIdsInput);
 
       const dateInput = document.createElement('input');
       dateInput.type = 'hidden';
@@ -206,7 +238,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
       document.body.appendChild(form);
       form.submit();
       document.body.removeChild(form);
-
+      
       setShowReminderDialog(false);
       setSelectedYahrzeit(null);
     }
@@ -572,28 +604,49 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
               </div>
 
               <div>
-                <Label htmlFor="recipient_name">Recipient Name</Label>
-                <Input
-                  id="recipient_name"
-                  type="text"
-                  value={recipientName}
-                  onChange={(e) => setRecipientName(e.target.value)}
-                  placeholder="Enter recipient name"
-                />
-              </div>
-
-              {reminderType === 'email' && (
-                <div>
-                  <Label htmlFor="recipient_email">Recipient Email</Label>
-                  <Input
-                    id="recipient_email"
-                    type="email"
-                    value={recipientEmail}
-                    onChange={(e) => setRecipientEmail(e.target.value)}
-                    placeholder="Enter recipient email"
-                  />
+                <Label>Select Recipients</Label>
+                <div className="space-y-2 max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
+                  {familyMembers.length === 0 ? (
+                    <p className="text-sm text-gray-500">Loading family members...</p>
+                  ) : (
+                    familyMembers.map((member) => (
+                      <div key={member.id} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={`member-${member.id}`}
+                          checked={selectedMembers.includes(member.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedMembers([...selectedMembers, member.id]);
+                            } else {
+                              setSelectedMembers(selectedMembers.filter(id => id !== member.id));
+                            }
+                          }}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <Label htmlFor={`member-${member.id}`} className="cursor-pointer font-normal flex-1">
+                          <div className="flex flex-col">
+                            <span>{member.first_name} {member.last_name}</span>
+                            {reminderType === 'email' && (
+                              <span className="text-xs text-gray-500">
+                                {member.email || 'No email address'}
+                              </span>
+                            )}
+                            <span className="text-xs text-gray-400 capitalize">
+                              {member.pivot.relationship}
+                            </span>
+                          </div>
+                        </Label>
+                      </div>
+                    ))
+                  )}
                 </div>
-              )}
+                <p className="text-xs text-gray-500 mt-1">
+                  {reminderType === 'email' 
+                    ? 'One email will be sent per selected family member'
+                    : 'One page will be printed per selected family member'}
+                </p>
+              </div>
 
               <div>
                 <Label htmlFor="gregorian_date">Gregorian Date (This Year)</Label>
@@ -605,7 +658,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   placeholder="e.g., January 15, 2026"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Enter the date this yahrzeit falls on this year in Gregorian calendar
+                  Auto-calculated from Hebrew date for current Hebrew year
                 </p>
               </div>
 
@@ -618,9 +671,9 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                 </Button>
                 <Button
                   onClick={submitReminder}
-                  disabled={!recipientName || !gregorianDate || (reminderType === 'email' && !recipientEmail)}
+                  disabled={selectedMembers.length === 0 || !gregorianDate || (reminderType === 'email' && !familyMembers.filter(m => selectedMembers.includes(m.id)).some(m => m.email))}
                 >
-                  {reminderType === 'email' ? 'Send Email' : 'Open Print View'}
+                  {reminderType === 'email' ? `Send Email (${selectedMembers.length})` : `Print Letter (${selectedMembers.length})`}
                 </Button>
               </div>
             </div>

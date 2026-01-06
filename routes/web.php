@@ -90,6 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/yahrzeits/template/download', [YahrzeitController::class, 'downloadTemplate'])->name('yahrzeits.template.download');
         
         // Yahrzeit reminder routes
+        Route::get('admin/yahrzeits/{yahrzeit}/prepare-reminder', [YahrzeitController::class, 'prepareReminder'])->name('yahrzeits.prepare-reminder');
         Route::post('admin/yahrzeits/{yahrzeit}/send-reminder', [YahrzeitController::class, 'sendReminder'])->name('yahrzeits.send-reminder');
         Route::post('admin/yahrzeits/{yahrzeit}/print-reminder', [YahrzeitController::class, 'printReminder'])->name('yahrzeits.print-reminder');
         

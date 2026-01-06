@@ -126,4 +126,62 @@ class HebrewCalendarService
     {
         return $this->gregorianToHebrew(date('Y-m-d'));
     }
+
+    /**
+     * Convert Hebrew date to Gregorian date for a specific Hebrew year
+     *
+     * @param int $hebrewDay
+     * @param int $hebrewMonth
+     * @param int $hebrewYear
+     * @return string|null Gregorian date in 'F j, Y' format or null if conversion fails
+     */
+    public function hebrewToGregorian(int $hebrewDay, int $hebrewMonth, int $hebrewYear): ?string
+    {
+        try {
+            // Convert Hebrew date to Julian Day Number
+            $julianDay = jewishtojd($hebrewMonth, $hebrewDay, $hebrewYear);
+            
+            if ($julianDay === 0) {
+                return null;
+            }
+
+            // Convert Julian Day to Gregorian
+            $gregorianDate = jdtogregorian($julianDay);
+            
+            if (empty($gregorianDate)) {
+                return null;
+            }
+
+            // Parse the Gregorian date (format: "month/day/year")
+            $parts = explode('/', $gregorianDate);
+            
+            if (count($parts) !== 3) {
+                return null;
+            }
+
+            $month = (int)$parts[0];
+            $day = (int)$parts[1];
+            $year = (int)$parts[2];
+
+            // Format as readable date
+            $dateObj = \DateTime::createFromFormat('m/d/Y', sprintf('%02d/%02d/%04d', $month, $day, $year));
+            
+            return $dateObj ? $dateObj->format('F j, Y') : null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get Gregorian date for a Hebrew date in the current Hebrew year
+     *
+     * @param int $hebrewDay
+     * @param int $hebrewMonth
+     * @return string|null Gregorian date in 'F j, Y' format
+     */
+    public function getGregorianDateForCurrentYear(int $hebrewDay, int $hebrewMonth): ?string
+    {
+        $currentHebrewYear = $this->getCurrentHebrewDate()['year'];
+        return $this->hebrewToGregorian($hebrewDay, $hebrewMonth, $currentHebrewYear);
+    }
 }

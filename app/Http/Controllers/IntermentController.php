@@ -84,9 +84,8 @@ class IntermentController extends Controller
      */
     public function create(Request $request)
     {
-        $deeds = Deed::select('id', 'deed_number', 'capacity', 'occupied')
+        $deeds = Deed::with('gravesites')
             ->where('is_active', true)
-            ->whereColumn('occupied', '<', 'capacity')
             ->orderBy('deed_number')
             ->get();
 
@@ -110,6 +109,7 @@ class IntermentController extends Controller
     {
         $validated = $request->validate([
             'deed_id' => 'required|exists:deeds,id',
+            'gravesite_id' => 'required|exists:gravesites,id',
             'member_id' => 'nullable|exists:members,id',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -136,6 +136,19 @@ class IntermentController extends Controller
 
         // Update deed occupied count
         $deed->increment('occupied');
+
+        // Update gravesite status to occupied
+        $gravesite = \App\Models\Gravesite::find($validated['gravesite_id']);
+        if ($gravesite) {
+            $gravesite->update([
+                'status' => 'occupied',
+                'deceased_name' => $validated['first_name'] . ' ' . $validated['last_name'],
+                'deceased_hebrew_name' => $validated['hebrew_name'] ?? null,
+                'date_of_birth' => $validated['date_of_birth'] ?? null,
+                'date_of_death' => $validated['date_of_death'],
+                'burial_date' => $validated['interment_date'],
+            ]);
+        }
 
         return redirect()
             ->route('interments.show', $interment)

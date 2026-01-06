@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft } from 'lucide-react';
-import { BreadcrumbItem, Deed, Member } from '@/types';
+import { BreadcrumbItem, Deed, Member, Gravesite } from '@/types';
 
 interface Props {
   deeds: Deed[];
@@ -18,6 +18,7 @@ interface Props {
 export default function IntermentsCreate({ deeds, members, selectedDeed }: Readonly<Props>) {
   const { data, setData, post, processing, errors } = useForm({
     deed_id: selectedDeed || '',
+    gravesite_id: '',
     member_id: '',
     first_name: '',
     last_name: '',
@@ -152,20 +153,49 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="deed_id">Deed/Plot *</Label>
-                <Select value={data.deed_id} onValueChange={(value) => setData('deed_id', value)}>
+                <Label htmlFor="deed_id">Deed *</Label>
+                <Select value={data.deed_id} onValueChange={(value) => {
+                  setData('deed_id', value);
+                  setData('gravesite_id', ''); // Reset gravesite when deed changes
+                }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select deed" />
                   </SelectTrigger>
                   <SelectContent>
-                    {deeds.map((deed) => (
-                      <SelectItem key={deed.id} value={deed.id.toString()}>
-                        {deed.deed_number} - {deed.plot_location} (Available: {deed.capacity - deed.occupied})
-                      </SelectItem>
-                    ))}
+                    {deeds.map((deed) => {
+                      const availableGravesites = deed.gravesites?.filter((g: Gravesite) => g.status === 'available').length || 0;
+                      return (
+                        <SelectItem key={deed.id} value={deed.id.toString()}>
+                          {deed.deed_number} ({availableGravesites} available gravesite{availableGravesites !== 1 ? 's' : ''})
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
                 {errors.deed_id && <p className="text-sm text-red-600">{errors.deed_id}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="gravesite_id">Gravesite *</Label>
+                <Select 
+                  value={data.gravesite_id} 
+                  onValueChange={(value) => setData('gravesite_id', value)}
+                  disabled={!data.deed_id}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={data.deed_id ? "Select gravesite" : "Select deed first"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {data.deed_id && deeds.find(d => d.id.toString() === data.deed_id)?.gravesites
+                      ?.filter((g: Gravesite) => g.status === 'available')
+                      .map((gravesite: Gravesite) => (
+                        <SelectItem key={gravesite.id} value={gravesite.id.toString()}>
+                          Plot {gravesite.plot_number} - {gravesite.section && `Section ${gravesite.section}`} {gravesite.row && `Row ${gravesite.row}`} ({gravesite.gravesite_type})
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                {errors.gravesite_id && <p className="text-sm text-red-600">{errors.gravesite_id}</p>}
               </div>
 
               <div className="space-y-2">

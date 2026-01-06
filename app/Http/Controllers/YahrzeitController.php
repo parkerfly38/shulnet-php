@@ -322,6 +322,26 @@ class YahrzeitController extends Controller
     }
 
     /**
+     * Prepare yahrzeit reminder data with family members and calculated date
+     */
+    public function prepareReminder(Yahrzeit $yahrzeit)
+    {
+        $yahrzeit->load('members');
+        
+        // Calculate Gregorian date for current Hebrew year
+        $hebrewCalendarService = app(\App\Services\HebrewCalendarService::class);
+        $gregorianDate = $hebrewCalendarService->getGregorianDateForCurrentYear(
+            $yahrzeit->hebrew_day_of_death,
+            $yahrzeit->hebrew_month_of_death
+        );
+
+        return response()->json([
+            'family_members' => $yahrzeit->members,
+            'gregorian_date' => $gregorianDate,
+        ]);
+    }
+
+    /**
      * Send yahrzeit reminder email to family members
      */
     public function sendReminder(Request $request, Yahrzeit $yahrzeit)
@@ -353,13 +373,20 @@ class YahrzeitController extends Controller
     public function printReminder(Yahrzeit $yahrzeit, Request $request)
     {
         $validated = $request->validate([
-            'recipient_name' => 'required|string',
+            'member_ids' => 'required|json',
             'gregorian_date' => 'required|string',
         ]);
 
+        $memberIds = json_decode($validated['member_ids'], true);
+        
+        // Load the selected members
+        $yahrzeit->load(['members' => function ($query) use ($memberIds) {
+            $query->whereIn('members.id', $memberIds)->withPivot('relationship');
+        }]);
+
         return view('yahrzeits.print-reminder', [
             'yahrzeit' => $yahrzeit,
-            'recipientName' => $validated['recipient_name'],
+            'members' => $yahrzeit->members,
             'gregorianDate' => $validated['gregorian_date'],
         ]);
     }

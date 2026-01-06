@@ -13,6 +13,7 @@ class Interment extends Model
 
     protected $fillable = [
         'deed_id',
+        'gravesite_id',
         'member_id',
         'first_name',
         'last_name',
@@ -39,6 +40,14 @@ class Interment extends Model
     public function deed(): BelongsTo
     {
         return $this->belongsTo(Deed::class);
+    }
+
+    /**
+     * Get the gravesite this interment belongs to.
+     */
+    public function gravesite(): BelongsTo
+    {
+        return $this->belongsTo(Gravesite::class);
     }
 
     /**
