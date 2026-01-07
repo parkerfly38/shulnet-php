@@ -107,4 +107,14 @@ class Member extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * Get all email campaigns this member is subscribed to.
+     */
+    public function campaigns(): BelongsToMany
+    {
+        return $this->belongsToMany(EmailCampaign::class, 'campaign_subscriptions')
+            ->withPivot('status', 'confirmation_token', 'confirmed_at', 'unsubscribed_at')
+            ->withTimestamps();
+    }
 }

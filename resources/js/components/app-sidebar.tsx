@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail } from 'lucide-react';
 import { UserCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -66,6 +66,11 @@ const adminNavItems: NavItem[] = [
         title: 'Yahrzeits',
         href: '/admin/yahrzeits',
         icon: Star,
+    },
+    {
+        title: 'Email Campaigns',
+        href: '/admin/campaigns',
+        icon: Mail,
     },
     {
         title: 'Gabbai Dashboard',
@@ -150,15 +155,24 @@ const systemNavItems: NavItem[] = [
         icon: FileSpreadsheet,
     },
     {
-        title: 'Settings',
+        title: 'General Settings',
         href: '/admin/settings',
         icon: Settings,
+    },{
+        title: 'Email Settings',
+        href: '/admin/email-settings',
+        icon: Mail,
+    },
+    {
+        title: 'Email Templates',
+        href: '/admin/templates',
+        icon: FileText,
     },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
+        title: 'Repository',    
         href: 'https://github.com/parkerfly38/shulnet-php',
         icon: Folder,
     },

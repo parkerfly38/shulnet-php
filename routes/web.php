@@ -20,6 +20,9 @@ use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\GabbaiController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\EmailCampaignController;
+use App\Http\Controllers\EmailTemplateController;
+use App\Http\Controllers\EmailSettingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -60,6 +63,43 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
+
+        // Email campaign management routes
+        Route::resource('admin/campaigns', EmailCampaignController::class, [
+            'names' => [
+                'index' => 'campaigns.index',
+                'create' => 'campaigns.create',
+                'store' => 'campaigns.store',
+                'show' => 'campaigns.show',
+                'edit' => 'campaigns.edit',
+                'update' => 'campaigns.update',
+                'destroy' => 'campaigns.destroy',
+            ]
+        ]);
+        
+        // Campaign subscription routes
+        Route::post('admin/campaigns/{campaign}/subscribe', [EmailCampaignController::class, 'subscribe'])->name('campaigns.subscribe');
+        Route::post('admin/campaigns/{campaign}/bulk-subscribe', [EmailCampaignController::class, 'bulkSubscribe'])->name('campaigns.bulk-subscribe');
+        Route::post('admin/campaigns/{campaign}/unsubscribe', [EmailCampaignController::class, 'unsubscribe'])->name('campaigns.unsubscribe');
+        Route::post('admin/campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
+
+        // Email template management routes
+        Route::resource('admin/templates', EmailTemplateController::class, [
+            'names' => [
+                'index' => 'admin.templates.index',
+                'create' => 'admin.templates.create',
+                'store' => 'admin.templates.store',
+                'show' => 'admin.templates.show',
+                'edit' => 'admin.templates.edit',
+                'update' => 'admin.templates.update',
+                'destroy' => 'admin.templates.destroy',
+            ]
+        ]);
+
+        // Email settings routes
+        Route::get('admin/email-settings', [EmailSettingController::class, 'index'])->name('admin.email-settings.index');
+        Route::post('admin/email-settings', [EmailSettingController::class, 'update'])->name('admin.email-settings.update');
+        Route::post('admin/email-settings/test', [EmailSettingController::class, 'test'])->name('admin.email-settings.test');
 
         // Membership period management routes (nested under members)
         Route::resource('admin/members.membership-periods', MembershipPeriodController::class, [
@@ -420,5 +460,9 @@ Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(functi
     Route::apiResource('subject-grades', \App\Http\Controllers\SubjectGradeController::class);
     Route::apiResource('teachers', \App\Http\Controllers\TeacherController::class);
 });
+
+// Public campaign routes (no auth required)
+Route::get('campaigns/confirm/{token}', [EmailCampaignController::class, 'confirm'])->name('campaigns.confirm');
+Route::get('campaigns/{campaign}/unsubscribe/{member}', [EmailCampaignController::class, 'unsubscribePublic'])->name('campaigns.unsubscribe.public');
 
 require __DIR__.'/settings.php';

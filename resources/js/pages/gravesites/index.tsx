@@ -16,6 +16,8 @@ interface PaginatedGravesites {
     total: number;
     from: number;
     to: number;
+    prev_page_url: string | null;
+    next_page_url: string | null;
 }
 
 interface GravesiteStats {
