@@ -29,48 +29,14 @@ class CemeterySeeder extends Seeder
         // Create 15 deeds with various configurations
         $deeds = collect();
         
-        // Create 5 single plot deeds
-        for ($i = 0; $i < 5; $i++) {
+        // Create 15 deeds
+        for ($i = 0; $i < 15; $i++) {
             $deed = Deed::factory()->create([
                 'member_id' => $members->random()->id,
-                'plot_type' => 'single',
-                'capacity' => 1,
             ]);
             
-            // Associate 1-2 gravesites with each deed
-            $gravesiteCount = rand(1, 2);
-            $selectedGravesites = $availableGravesites->random(min($gravesiteCount, $availableGravesites->count()));
-            $deed->gravesites()->attach($selectedGravesites->pluck('id'));
-            
-            $deeds->push($deed);
-        }
-
-        // Create 5 double plot deeds
-        for ($i = 0; $i < 5; $i++) {
-            $deed = Deed::factory()->create([
-                'member_id' => $members->random()->id,
-                'plot_type' => 'double',
-                'capacity' => 2,
-            ]);
-            
-            // Associate 2-3 gravesites with each deed
-            $gravesiteCount = rand(2, 3);
-            $selectedGravesites = $availableGravesites->random(min($gravesiteCount, $availableGravesites->count()));
-            $deed->gravesites()->attach($selectedGravesites->pluck('id'));
-            
-            $deeds->push($deed);
-        }
-
-        // Create 5 family plot deeds
-        for ($i = 0; $i < 5; $i++) {
-            $deed = Deed::factory()->create([
-                'member_id' => $members->random()->id,
-                'plot_type' => 'family',
-                'capacity' => 4,
-            ]);
-            
-            // Associate 3-6 gravesites with each deed
-            $gravesiteCount = rand(3, 6);
+            // Associate 1-4 gravesites with each deed
+            $gravesiteCount = rand(1, 4);
             $selectedGravesites = $availableGravesites->random(min($gravesiteCount, $availableGravesites->count()));
             $deed->gravesites()->attach($selectedGravesites->pluck('id'));
             
@@ -82,7 +48,7 @@ class CemeterySeeder extends Seeder
         $deedsForInterments = $deeds->random(10);
         
         foreach ($deedsForInterments as $deed) {
-            $intermentCount = rand(1, min(3, $deed->capacity));
+            $intermentCount = rand(1, 3);
             
             for ($j = 0; $j < $intermentCount; $j++) {
                 // Randomly decide if interment is linked to a member
