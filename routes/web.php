@@ -23,6 +23,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\EmailCampaignController;
 use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\EmailSettingController;
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -100,6 +101,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/email-settings', [EmailSettingController::class, 'index'])->name('admin.email-settings.index');
         Route::post('admin/email-settings', [EmailSettingController::class, 'update'])->name('admin.email-settings.update');
         Route::post('admin/email-settings/test', [EmailSettingController::class, 'test'])->name('admin.email-settings.test');
+
+        // Forms routes
+        Route::resource('admin/forms', FormController::class, [
+            'names' => [
+                'index' => 'admin.forms.index',
+                'create' => 'admin.forms.create',
+                'store' => 'admin.forms.store',
+                'show' => 'admin.forms.show',
+                'edit' => 'admin.forms.edit',
+                'update' => 'admin.forms.update',
+                'destroy' => 'admin.forms.destroy',
+            ]
+        ]);
+        Route::get('admin/forms/{form}/preview', [FormController::class, 'preview'])->name('admin.forms.preview');
+        Route::get('admin/forms/{form}/submissions', [FormController::class, 'submissions'])->name('admin.forms.submissions');
 
         // Membership period management routes (nested under members)
         Route::resource('admin/members.membership-periods', MembershipPeriodController::class, [
@@ -464,5 +480,8 @@ Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(functi
 // Public campaign routes (no auth required)
 Route::get('campaigns/confirm/{token}', [EmailCampaignController::class, 'confirm'])->name('campaigns.confirm');
 Route::get('campaigns/{campaign}/unsubscribe/{member}', [EmailCampaignController::class, 'unsubscribePublic'])->name('campaigns.unsubscribe.public');
+
+// Public form routes (no auth required)
+Route::post('forms/{form}/submit', [FormController::class, 'submit'])->name('forms.submit');
 
 require __DIR__.'/settings.php';

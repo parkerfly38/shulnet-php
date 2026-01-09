@@ -22,7 +22,7 @@ interface Props {
 export default function TemplateShow({ template }: Readonly<Props>) {
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: 'Dashboard',
+      title: 'System',
       href: '/dashboard',
     },
     {

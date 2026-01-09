@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { type BreadcrumbItem } from '@/types';
 import { useState } from 'react';
 
 type EmailProvider = 'smtp' | 'mailgun' | 'sendgrid' | 'ses' | 'log';
@@ -36,6 +37,21 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
     const [testEmail, setTestEmail] = useState('');
     const [isTesting, setIsTesting] = useState(false);
 
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'System',
+            href: '/dashboard',
+        },
+        {
+            title: 'Settings',
+            href: '/admin/settings',
+        },
+        {
+            title: 'Email Settings',
+            href: '/admin/email-settings',
+        },
+    ];
     const { data, setData, post, processing, errors } = useForm<EmailSettings>(settings);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -63,7 +79,6 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
             });
 
             const result = await response.json();
-
             if (result.success) {
                 alert('Test email sent successfully');
             } else {
@@ -78,7 +93,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
     };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Email Settings" />
 
             <div className="py-12">

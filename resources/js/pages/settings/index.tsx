@@ -26,7 +26,7 @@ interface Props {
 
 export default function SettingsIndex({ settings: initialSettings }: Readonly<Props>) {
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
-        { title: 'Dashboard', href: '/dashboard' },
+        { title: 'System', href: '/dashboard' },
         { title: 'Settings', href: '/admin/settings' },
     ], []);
 

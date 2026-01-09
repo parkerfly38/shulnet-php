@@ -10,7 +10,7 @@ import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Dashboard',
+    title: 'System',
     href: '/dashboard',
   },
   {

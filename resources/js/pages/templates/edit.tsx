@@ -30,7 +30,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: 'Dashboard',
+      title: 'System',
       href: '/dashboard',
     },
     {

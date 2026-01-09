@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { type BreadcrumbItem } from '@/types';
-import { Edit2, Save, X, FileText } from 'lucide-react';
+import { Edit2, Save, X, FileText, Copy, Check } from 'lucide-react';
 
 interface Member {
   id: number;
@@ -68,6 +68,7 @@ export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [emailSubject, setEmailSubject] = useState(campaign.subject);
   const [emailContent, setEmailContent] = useState(campaign.content);
+  const [isCopied, setIsCopied] = useState(false);
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -92,6 +93,45 @@ export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
   const confirmedCount = campaign.subscribers.filter(s => s.pivot.status === 'confirmed').length;
   const pendingCount = campaign.subscribers.filter(s => s.pivot.status === 'pending').length;
   const unsubscribedCount = campaign.subscribers.filter(s => s.pivot.status === 'unsubscribed').length;
+
+  const generateEmbedCode = () => {
+    const baseUrl = window.location.origin;
+    const subscribeUrl = `${baseUrl}/admin/campaigns/${campaign.id}/subscribe`;
+    
+    return `<!-- Email Campaign Signup Form -->
+<div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px; font-family: system-ui, -apple-system, sans-serif;">
+  <h3 style="margin: 0 0 16px 0; font-size: 20px; font-weight: 600; color: #111827;">Subscribe to ${campaign.name.replace(/"/g, '&quot;')}</h3>
+  ${campaign.description ? `<p style="margin: 0 0 16px 0; color: #6b7280; font-size: 14px;">${campaign.description.replace(/"/g, '&quot;')}</p>` : ''}
+  <form action="${subscribeUrl}" method="POST" style="display: flex; flex-direction: column; gap: 12px;">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+    <div>
+      <label style="display: block; margin-bottom: 4px; font-size: 14px; font-weight: 500; color: #374151;">First Name</label>
+      <input type="text" name="first_name" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+    </div>
+    <div>
+      <label style="display: block; margin-bottom: 4px; font-size: 14px; font-weight: 500; color: #374151;">Last Name</label>
+      <input type="text" name="last_name" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+    </div>
+    <div>
+      <label style="display: block; margin-bottom: 4px; font-size: 14px; font-weight: 500; color: #374151;">Email Address</label>
+      <input type="email" name="email" required style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+    </div>
+    <button type="submit" style="width: 100%; padding: 10px 16px; background-color: #3b82f6; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;">Subscribe</button>
+    ${campaign.opt_in_type === 'double' ? '<p style="margin: 8px 0 0 0; font-size: 12px; color: #6b7280; text-align: center;">You will receive a confirmation email.</p>' : ''}
+  </form>
+</div>`;
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(generateEmbedCode());
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      alert('Failed to copy code to clipboard');
+    }
+  };
 
   const handleSubscribe = () => {
     if (selectedMember) {
@@ -256,6 +296,34 @@ export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
               )}
             </div>
           </div>
+        </div>
+
+        <div className="border rounded-lg p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Embeddable Signup Form</h2>
+            <Button variant="outline" size="sm" onClick={handleCopy}>
+              {isCopied ? (
+                <>
+                  <Check className="w-4 h-4 mr-2" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy Code
+                </>
+              )}
+            </Button>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Copy this code and paste it into any webpage to allow visitors to subscribe to this campaign.
+          </p>
+          <Textarea
+            value={generateEmbedCode()}
+            readOnly
+            className="font-mono text-xs h-64"
+            onClick={(e) => e.currentTarget.select()}
+          />
         </div>
 
         <div>

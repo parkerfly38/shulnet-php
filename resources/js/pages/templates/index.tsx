@@ -17,7 +17,7 @@ import { FileText, Trash2 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
-    title: 'Dashboard',
+    title: 'System',
     href: '/dashboard',
   },
   {

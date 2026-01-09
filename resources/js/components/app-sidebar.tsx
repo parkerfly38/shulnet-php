@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList } from 'lucide-react';
 import { UserCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -71,6 +71,11 @@ const adminNavItems: NavItem[] = [
         title: 'Email Campaigns',
         href: '/admin/campaigns',
         icon: Mail,
+    },
+    {
+        title: 'Custom Forms',
+        href: '/admin/forms',
+        icon: ClipboardList,
     },
     {
         title: 'Gabbai Dashboard',
