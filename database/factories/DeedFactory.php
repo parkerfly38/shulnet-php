@@ -20,17 +20,8 @@ class DeedFactory extends Factory
         return [
             'member_id' => Member::factory(),
             'deed_number' => 'DEED-' . $this->faker->unique()->numerify('####'),
-            'plot_type' => $this->faker->randomElement(['single', 'double', 'family']),
             'purchase_date' => $this->faker->dateTimeBetween('-30 years', 'now'),
             'purchase_price' => $this->faker->randomFloat(2, 1000, 15000),
-            'capacity' => function (array $attributes) {
-                return match ($attributes['plot_type']) {
-                    'single' => 1,
-                    'double' => 2,
-                    'family' => $this->faker->numberBetween(4, 8),
-                    default => 1,
-                };
-            },
             'occupied' => 0,
             'notes' => $this->faker->optional(0.3)->sentence,
             'is_active' => $this->faker->boolean(95),
@@ -44,7 +35,7 @@ class DeedFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'occupied' => $attributes['capacity'],
+                'occupied' => $this->faker->numberBetween(1, 3),
             ];
         });
     }
