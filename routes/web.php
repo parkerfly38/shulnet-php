@@ -19,6 +19,7 @@ use App\Http\Controllers\DeedController;
 use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\EmailCampaignController;
 use App\Http\Controllers\EmailTemplateController;
@@ -36,6 +37,10 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Member portal routes
+    Route::get('member/dashboard', [MemberDashboardController::class, 'index'])->name('member.dashboard');
+    Route::get('member/invoices/{id}', [MemberDashboardController::class, 'showInvoice'])->name('member.invoices.show');
     
     // Onboarding routes
     Route::post('onboarding/member', [DashboardController::class, 'onboardMember'])->name('onboarding.member');

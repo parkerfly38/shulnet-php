@@ -56,6 +56,9 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             ClassDefinitionSeeder::class,
             ExamSeeder::class,
+            
+            // Member Portal Test Data
+            MemberPortalTestSeeder::class,
         ]);
     }
 }

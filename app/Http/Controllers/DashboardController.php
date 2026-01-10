@@ -21,7 +21,35 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    public function index(HebrewCalendarService $hebrewCalendarService)
+    public function index(HebrewCalendarService $hebrewCalendarService, Request $request)
+    {
+        $user = $request->user();
+        
+        // Check if user is an admin
+        if ($user->hasRole('admin')) {
+            return $this->adminDashboard($hebrewCalendarService);
+        }
+        
+        // Check if user has a member profile
+        if ($user->member) {
+            return redirect()->route('member.dashboard');
+        }
+        
+        // Default user dashboard (no member profile)
+        return $this->defaultDashboard($user);
+    }
+    
+    private function defaultDashboard($user)
+    {
+        return Inertia::render('dashboard', [
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+        ]);
+    }
+    
+    private function adminDashboard(HebrewCalendarService $hebrewCalendarService)
     {
         // Get members joined by month for the current year
         $currentYear = now()->year;
@@ -181,7 +209,7 @@ class DashboardController extends Controller
             ->orderBy('first_name')
             ->get();
 
-        return Inertia::render('dashboard', [
+        return Inertia::render('admin/dashboard', [
             'membersJoinedData' => $chartData,
             'currentYear' => $currentYear,
             'currentHebrewDate' => $currentHebrewDate,
