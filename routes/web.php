@@ -20,6 +20,7 @@ use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Admin\GabbaiController;
 use App\Http\Controllers\Member\MemberDashboardController;
+use App\Http\Controllers\Member\PaymentController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\EmailCampaignController;
 use App\Http\Controllers\EmailTemplateController;
@@ -41,6 +42,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Member portal routes
     Route::get('member/dashboard', [MemberDashboardController::class, 'index'])->name('member.dashboard');
     Route::get('member/invoices/{id}', [MemberDashboardController::class, 'showInvoice'])->name('member.invoices.show');
+    
+    // Payment routes
+    Route::get('member/invoices/{id}/pay', [PaymentController::class, 'create'])->name('member.invoices.pay');
+    Route::post('member/invoices/{id}/pay', [PaymentController::class, 'store'])->name('member.invoices.payment.store');
+    Route::get('member/payment/setup-intent', [PaymentController::class, 'setupIntent'])->name('member.payment.setup-intent');
     
     // Onboarding routes
     Route::post('onboarding/member', [DashboardController::class, 'onboardMember'])->name('onboarding.member');

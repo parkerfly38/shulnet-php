@@ -162,7 +162,7 @@ class MemberDashboardController extends Controller
         }
 
         // Get the invoice and verify it belongs to this member
-        $invoice = Invoice::with('items')->findOrFail($id);
+        $invoice = Invoice::with(['items', 'payments'])->findOrFail($id);
 
         if ($invoice->member_id !== $member->id) {
             abort(403, 'You do not have permission to view this invoice.');
@@ -190,6 +190,8 @@ class MemberDashboardController extends Controller
                 'subtotal' => $invoice->subtotal,
                 'tax_amount' => $invoice->tax_amount,
                 'total' => $invoice->total,
+                'amount_paid' => $invoice->amount_paid,
+                'balance' => $invoice->balance,
                 'notes' => $invoice->notes,
                 'created_at' => $invoice->created_at,
                 'items' => $invoice->items->map(function ($item) {
@@ -199,6 +201,16 @@ class MemberDashboardController extends Controller
                         'quantity' => $item->quantity,
                         'unit_price' => $item->unit_price,
                         'total' => $item->total,
+                    ];
+                }),
+                'payments' => $invoice->payments->map(function ($payment) {
+                    return [
+                        'id' => $payment->id,
+                        'amount' => $payment->amount,
+                        'payment_method' => $payment->payment_method,
+                        'status' => $payment->status,
+                        'paid_at' => $payment->paid_at,
+                        'transaction_id' => $payment->transaction_id,
                     ];
                 }),
             ],

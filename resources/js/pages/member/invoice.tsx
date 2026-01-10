@@ -9,6 +9,15 @@ interface InvoiceItem {
     total: number;
 }
 
+interface Payment {
+    id: number;
+    amount: number;
+    payment_method: string;
+    status: string;
+    paid_at: string;
+    transaction_id: string | null;
+}
+
 interface Invoice {
     id: number;
     invoice_number: string;
@@ -17,8 +26,11 @@ interface Invoice {
     status: string;
     subtotal: number;
     total: number;
+    amount_paid: number;
+    balance: number;
     notes: string | null;
     items: InvoiceItem[];
+    payments: Payment[];
 }
 
 interface Member {
@@ -63,6 +75,8 @@ export default function InvoiceView({ member, invoice }: Props) {
         switch (status) {
             case 'paid':
                 return 'bg-green-100 text-green-800';
+            case 'partial':
+                return 'bg-blue-100 text-blue-800';
             case 'pending':
                 return 'bg-yellow-100 text-yellow-800';
             case 'overdue':
@@ -89,15 +103,29 @@ export default function InvoiceView({ member, invoice }: Props) {
                             </svg>
                             Back to Dashboard
                         </Link>
-                        <button
-                            onClick={handlePrint}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
-                        >
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                            </svg>
-                            Print Invoice
-                        </button>
+                        <div className="flex gap-3">
+                            {invoice.balance > 0 && (
+                                <Link
+                                    href={`/member/invoices/${invoice.id}/pay`}
+                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center"
+                                >
+                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                    Pay Now
+                                </Link>
+                            )}
+                            <button
+                                onClick={handlePrint}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
+                            >
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
+                                Print Invoice
+                            </button>
+                        </div>
+                    </div>
                     </div>
 
                     {/* Invoice Container */}
@@ -181,18 +209,70 @@ export default function InvoiceView({ member, invoice }: Props) {
                                     <span className="text-gray-600">Subtotal:</span>
                                     <span className="text-gray-900 font-semibold">{formatCurrency(invoice.subtotal)}</span>
                                 </div>
-                                <div className="flex justify-between py-3 border-t-2 border-gray-900">
-                                    <span className="text-gray-900 font-bold text-lg">Total:</span>
-                                    <span className="text-gray-900 font-bold text-lg">{formatCurrency(invoice.total)}</span>
+                                <div className="flex justify-between py-3 border-b border-gray-200">
+                                    <span className="text-gray-900 font-bold">Total:</span>
+                                    <span className="text-gray-900 font-bold">{formatCurrency(invoice.total)}</span>
                                 </div>
+                                {invoice.amount_paid > 0 && (
+                                    <div className="flex justify-between py-2 border-b border-gray-200">
+                                        <span className="text-gray-600">Amount Paid:</span>
+                                        <span className="text-green-600 font-semibold">{formatCurrency(invoice.amount_paid)}</span>
+                                    </div>
+                                )}
+                                {invoice.balance > 0 && (
+                                    <div className="flex justify-between py-3 border-t-2 border-gray-900">
+                                        <span className="text-gray-900 font-bold text-lg">Balance Due:</span>
+                                        <span className="text-gray-900 font-bold text-lg">{formatCurrency(invoice.balance)}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
                         {/* Notes */}
                         {invoice.notes && (
-                            <div className="border-t pt-6">
+                            <div className="border-t pt-6 mb-6">
                                 <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Notes</h3>
                                 <p className="text-gray-700 whitespace-pre-line">{invoice.notes}</p>
+                            </div>
+                        )}
+
+                        {/* Payment History */}
+                        {invoice.payments && invoice.payments.length > 0 && (
+                            <div className="border-t pt-6">
+                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Payment History</h3>
+                                <div className="space-y-2">
+                                    {invoice.payments.map((payment) => (
+                                        <div key={payment.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                            <div>
+                                                <span className="font-medium">{formatCurrency(payment.amount)}</span>
+                                                <span className="text-gray-600 text-sm ml-2">
+                                                    via {payment.payment_method.replace('_', ' ')}
+                                                </span>
+                                                {payment.transaction_id && (
+                                                    <span className="text-gray-500 text-xs ml-2">
+                                                        (#{payment.transaction_id.substring(0, 12)}...)
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-sm text-gray-600">
+                                                    {new Date(payment.paid_at).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                    })}
+                                                </div>
+                                                <span className={`text-xs px-2 py-1 rounded ${
+                                                    payment.status === 'completed' 
+                                                        ? 'bg-green-100 text-green-800' 
+                                                        : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {payment.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>

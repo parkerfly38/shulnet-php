@@ -10,13 +10,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "authorizenet/authorizenet": "^2.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
-        "maatwebsite/excel": "^3.1"
+        "maatwebsite/excel": "^3.1",
+        "paypal/paypal-checkout-sdk": "^1.0",
+        "stripe/stripe-php": "^19.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

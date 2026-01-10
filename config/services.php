@@ -35,4 +35,21 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'public_key' => env('STRIPE_PUBLIC_KEY'),
+        'secret_key' => env('STRIPE_SECRET_KEY'),
+    ],
+
+    'authorize_net' => [
+        'api_login_id' => env('AUTHORIZE_NET_API_LOGIN_ID'),
+        'transaction_key' => env('AUTHORIZE_NET_TRANSACTION_KEY'),
+        'environment' => env('AUTHORIZE_NET_ENVIRONMENT', 'sandbox'),
+    ],
+
+    'paypal' => [
+        'client_id' => env('PAYPAL_CLIENT_ID'),
+        'secret' => env('PAYPAL_SECRET'),
+        'mode' => env('PAYPAL_MODE', 'sandbox'),
+    ],
+
 ];

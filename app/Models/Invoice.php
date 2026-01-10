@@ -21,6 +21,7 @@ class Invoice extends Model
         'subtotal',
         'tax_amount',
         'total',
+        'amount_paid',
         'notes',
         'recurring',
         'recurring_interval',
@@ -40,9 +41,34 @@ class Invoice extends Model
         'subtotal' => 'decimal:2',
         'tax_amount' => 'decimal:2',
         'total' => 'decimal:2',
+        'amount_paid' => 'decimal:2',
         'recurring' => 'boolean',
         'recurring_interval_count' => 'integer',
     ];
+
+    /**
+     * Get the remaining balance on the invoice
+     */
+    public function getBalanceAttribute(): float
+    {
+        return (float) ($this->total - $this->amount_paid);
+    }
+
+    /**
+     * Check if invoice is fully paid
+     */
+    public function isFullyPaid(): bool
+    {
+        return $this->balance <= 0;
+    }
+
+    /**
+     * Check if invoice has partial payment
+     */
+    public function hasPartialPayment(): bool
+    {
+        return $this->amount_paid > 0 && $this->balance > 0;
+    }
 
     public function member(): BelongsTo
     {
@@ -57,6 +83,11 @@ class Invoice extends Model
     public function items(): HasMany
     {
         return $this->hasMany(InvoiceItem::class)->orderBy('sort_order');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function parentInvoice(): BelongsTo
