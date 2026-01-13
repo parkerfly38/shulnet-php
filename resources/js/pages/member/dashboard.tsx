@@ -98,7 +98,15 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Invoices */}
                     <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                        <h2 className="text-lg font-semibold mb-4">My Invoices</h2>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-semibold">My Invoices</h2>
+                            <Link 
+                                href="/member/invoices"
+                                className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                            >
+                                View All →
+                            </Link>
+                        </div>
                         {invoices.length === 0 ? (
                             <p className="text-sm text-gray-500">No invoices found.</p>
                         ) : (

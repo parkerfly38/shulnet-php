@@ -48,4 +48,9 @@ class Event extends Model
     {
         return $this->hasMany(EventTicketType::class)->orderBy('sort_order');
     }
+
+    public function rsvps(): HasMany
+    {
+        return $this->hasMany(EventRSVP::class);
+    }
 }

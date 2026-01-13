@@ -122,7 +122,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['calendar']);
+        $event->load(['calendar', 'rsvps.member']);
         
         // Map database fields to frontend expected fields
         $eventData = [
@@ -133,11 +133,28 @@ class EventController extends Controller
             'start_date' => $event->event_start, // Map event_start to start_date
             'end_date' => $event->event_end, // Map event_end to end_date
             'all_day' => $event->all_day,
-            'location' => null, // Field doesn't exist in model
+            'location' => $event->location,
             'members_only' => $event->members_only,
             'calendar' => $event->calendar,
             'created_at' => $event->created_at,
             'updated_at' => $event->updated_at,
+            'rsvps' => $event->rsvps->map(function ($rsvp) {
+                return [
+                    'id' => $rsvp->id,
+                    'name' => $rsvp->name,
+                    'email' => $rsvp->email,
+                    'phone' => $rsvp->phone,
+                    'guests' => $rsvp->guests,
+                    'status' => $rsvp->status,
+                    'notes' => $rsvp->notes,
+                    'created_at' => $rsvp->created_at,
+                    'member' => $rsvp->member ? [
+                        'id' => $rsvp->member->id,
+                        'first_name' => $rsvp->member->first_name,
+                        'last_name' => $rsvp->member->last_name,
+                    ] : null,
+                ];
+            }),
         ];
         
         return Inertia::render('events/show', [

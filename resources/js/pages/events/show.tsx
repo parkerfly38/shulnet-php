@@ -25,6 +25,22 @@ interface Calendar {
     public: boolean;
 }
 
+interface RSVP {
+    id: number;
+    name: string;
+    email: string;
+    phone: string | null;
+    guests: number;
+    status: string;
+    notes: string | null;
+    created_at: string;
+    member: {
+        id: number;
+        first_name: string;
+        last_name: string;
+    } | null;
+}
+
 interface Event {
     id: number;
     title: string;
@@ -37,6 +53,7 @@ interface Event {
     calendar: Calendar;
     created_at: string;
     updated_at: string;
+    rsvps: RSVP[];
 }
 
 interface EventShowProps {
@@ -64,7 +81,14 @@ export default function EventShow({ event }: EventShowProps) {
             router.delete(`/admin/events/${event.id}`);
         }
     };
-
+    const getStatusBadge = (status: string) => {
+        const colors = {
+            confirmed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+            pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+            cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+        };
+        return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    };
     const formatDateTime = (dateString: string) => {
         const date = new Date(dateString);
         if (event.all_day) {
@@ -307,6 +331,85 @@ export default function EventShow({ event }: EventShowProps) {
                         </div>
                     </CardContent>
                 </Card>
+
+                {/* RSVPs */}
+                {event.rsvps && event.rsvps.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Event RSVPs ({event.rsvps.length})</CardTitle>
+                            <CardDescription>
+                                Registered attendees for this event
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead className="border-b">
+                                        <tr className="text-left">
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Name</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Email</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Phone</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Guests</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Status</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Registered</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y">
+                                        {event.rsvps.map((rsvp) => (
+                                            <tr key={rsvp.id} className="hover:bg-gray-50 dark:hover:bg-gray-900">
+                                                <td className="py-3">
+                                                    <div>
+                                                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                                                            {rsvp.name}
+                                                        </p>
+                                                        {rsvp.member && (
+                                                            <p className="text-xs text-gray-500">
+                                                                Member: {rsvp.member.first_name} {rsvp.member.last_name}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="py-3 text-gray-900 dark:text-gray-100">
+                                                    {rsvp.email}
+                                                </td>
+                                                <td className="py-3 text-gray-900 dark:text-gray-100">
+                                                    {rsvp.phone || '-'}
+                                                </td>
+                                                <td className="py-3 text-gray-900 dark:text-gray-100">
+                                                    {rsvp.guests > 0 ? rsvp.guests : '-'}
+                                                </td>
+                                                <td className="py-3">
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(rsvp.status)}`}>
+                                                        {rsvp.status.charAt(0).toUpperCase() + rsvp.status.slice(1)}
+                                                    </span>
+                                                </td>
+                                                <td className="py-3 text-sm text-gray-500">
+                                                    {new Date(rsvp.created_at).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            {event.rsvps.some(rsvp => rsvp.notes) && (
+                                <div className="mt-6 space-y-3">
+                                    <h4 className="text-sm font-medium text-gray-500">Special Requests / Notes</h4>
+                                    {event.rsvps.filter(rsvp => rsvp.notes).map((rsvp) => (
+                                        <div key={rsvp.id} className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3">
+                                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                {rsvp.name}
+                                            </p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                                {rsvp.notes}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </AppLayout>
     );

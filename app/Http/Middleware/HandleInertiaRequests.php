@@ -75,6 +75,11 @@ class HandleInertiaRequests extends Middleware
                     'is_parent' => $user->isParent(),
                     'is_student' => $user->isStudent(),
                     'is_member' => $user->isMember(),
+                    'member' => $user->member ? [
+                        'id' => $user->member->id,
+                        'first_name' => $user->member->first_name,
+                        'last_name' => $user->member->last_name,
+                    ] : null,
                 ] : null,
                 'unseenNotifications' => $unseenNotifications,
             ],

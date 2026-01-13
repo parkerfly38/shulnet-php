@@ -13,8 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList } from 'lucide-react';
-import { UserCheck } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -22,6 +21,30 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+];
+
+const memberNavItems: NavItem[] = [
+    {
+        groupTitle: 'Member Portal',
+        title: 'My Dashboard',
+        href: '/member/dashboard',
+        icon: Home,
+    },
+    {
+        title: 'My Invoices',
+        href: '/member/invoices',
+        icon: Receipt,
+    },
+    {
+        title: 'My Events',
+        href: '/member/events',
+        icon: CalendarDays,
+    },
+    {
+        title: 'My Information',
+        href: '/member/profile',
+        icon: UserCircle,
     },
 ];
 
@@ -192,6 +215,7 @@ export function AppSidebar() {
     const { auth } = usePage().props as any;
     const user = auth.user;
     const isAdmin = user?.is_admin || false;
+    const isMember = user?.is_member || false;
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -208,9 +232,16 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                
+                
+                {/* Member Portal Section */}
+                {isMember && (
+                    <NavMain items={memberNavItems} />
+                )}
+                
                 {isAdmin && (
                     <>
+                        <NavMain items={mainNavItems} />
                         {/* Admin Section */}
                         <NavMain items={adminNavItems} />
 

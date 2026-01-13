@@ -8,8 +8,11 @@ use App\Models\Member;
 use App\Models\ParentModel;
 use App\Models\Student;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\Yahrzeit;
 use App\Models\GabbaiAssignment;
+use App\Models\Event;
+use App\Models\Calendar;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 
@@ -105,7 +108,7 @@ class MemberPortalTestSeeder extends Seeder
         ]);
 
         // Create invoices
-        Invoice::create([
+        $invoice1 = Invoice::create([
             'member_id' => $member->id,
             'invoice_number' => 'INV-2026-001',
             'notes' => 'Annual Membership Dues 2026',
@@ -113,10 +116,21 @@ class MemberPortalTestSeeder extends Seeder
             'due_date' => Carbon::now()->subDays(30),
             'total' => 500.00,
             'subtotal' => 500.00,
+            'amount_paid' => 500.00,
             'status' => 'paid',
         ]);
 
-        Invoice::create([
+        // Add invoice items for invoice 1
+        InvoiceItem::create([
+            'invoice_id' => $invoice1->id,
+            'description' => 'Annual Membership Dues',
+            'quantity' => 1,
+            'unit_price' => 500.00,
+            'total' => 500.00,
+            'sort_order' => 1,
+        ]);
+
+        $invoice2 = Invoice::create([
             'member_id' => $member->id,
             'invoice_number' => 'INV-2026-002',
             'notes' => 'Hebrew School Tuition - Spring Semester',
@@ -124,10 +138,30 @@ class MemberPortalTestSeeder extends Seeder
             'due_date' => Carbon::now()->addDays(15),
             'total' => 1200.00,
             'subtotal' => 1200.00,
+            'amount_paid' => 0.00,
             'status' => 'open',
         ]);
 
-        Invoice::create([
+        // Add invoice items for invoice 2
+        InvoiceItem::create([
+            'invoice_id' => $invoice2->id,
+            'description' => 'Hebrew School Tuition - Rachel Cohen',
+            'quantity' => 1,
+            'unit_price' => 600.00,
+            'total' => 600.00,
+            'sort_order' => 1,
+        ]);
+
+        InvoiceItem::create([
+            'invoice_id' => $invoice2->id,
+            'description' => 'Hebrew School Tuition - Jacob Cohen',
+            'quantity' => 1,
+            'unit_price' => 600.00,
+            'total' => 600.00,
+            'sort_order' => 2,
+        ]);
+
+        $invoice3 = Invoice::create([
             'member_id' => $member->id,
             'invoice_number' => 'INV-2026-003',
             'notes' => 'High Holiday Seats',
@@ -135,7 +169,18 @@ class MemberPortalTestSeeder extends Seeder
             'due_date' => Carbon::now()->addDays(45),
             'total' => 180.00,
             'subtotal' => 180.00,
+            'amount_paid' => 0.00,
             'status' => 'open',
+        ]);
+
+        // Add invoice items for invoice 3
+        InvoiceItem::create([
+            'invoice_id' => $invoice3->id,
+            'description' => 'High Holiday Reserved Seat - Main Sanctuary',
+            'quantity' => 2,
+            'unit_price' => 90.00,
+            'total' => 180.00,
+            'sort_order' => 1,
         ]);
 
         // Create yahrzeits
@@ -180,8 +225,78 @@ class MemberPortalTestSeeder extends Seeder
             'honor' => '5',
         ]);
 
+        // Create a calendar if it doesn't exist
+        $calendar = Calendar::firstOrCreate(
+            ['name' => 'Community Events'],
+            [
+                'public' => true,
+                'members_only' => false,
+            ]
+        );
+
+        // Create upcoming registerable events
+        Event::create([
+            'name' => 'Annual Community Dinner',
+            'tagline' => 'Join us for our annual community celebration',
+            'calendar_id' => $calendar->id,
+            'event_start' => Carbon::now()->addWeeks(3)->setTime(18, 0),
+            'event_end' => Carbon::now()->addWeeks(3)->setTime(21, 0),
+            'location' => 'Main Hall',
+            'description' => 'An evening of community, food, and celebration. Bring your family and friends!',
+            'registration_required' => true,
+            'registration_starts' => Carbon::now()->subDays(7),
+            'registration_ends' => Carbon::now()->addWeeks(2),
+            'public' => true,
+            'members_only' => false,
+            'allow_guests' => true,
+            'max_guests' => 4,
+            'maxrsvp' => 100,
+            'all_day' => false,
+            'online' => false,
+        ]);
+
+        Event::create([
+            'name' => 'Torah Study Session',
+            'tagline' => 'Weekly Torah discussion and learning',
+            'calendar_id' => $calendar->id,
+            'event_start' => Carbon::now()->addDays(5)->setTime(19, 30),
+            'event_end' => Carbon::now()->addDays(5)->setTime(21, 0),
+            'location' => 'Study Room',
+            'description' => 'Join Rabbi for weekly Torah study and discussion.',
+            'registration_required' => true,
+            'registration_starts' => Carbon::now(),
+            'registration_ends' => Carbon::now()->addDays(4),
+            'public' => true,
+            'members_only' => true,
+            'allow_guests' => false,
+            'maxrsvp' => 25,
+            'all_day' => false,
+            'online' => false,
+        ]);
+
+        Event::create([
+            'name' => 'Youth Program - Family Fun Day',
+            'tagline' => 'Activities and games for the whole family',
+            'calendar_id' => $calendar->id,
+            'event_start' => Carbon::now()->addWeeks(2)->setTime(14, 0),
+            'event_end' => Carbon::now()->addWeeks(2)->setTime(17, 0),
+            'location' => 'Community Center',
+            'description' => 'Outdoor activities, games, crafts, and fun for all ages!',
+            'registration_required' => true,
+            'registration_starts' => Carbon::now(),
+            'registration_ends' => Carbon::now()->addWeeks(1)->addDays(5),
+            'public' => true,
+            'members_only' => false,
+            'allow_guests' => true,
+            'max_guests' => 10,
+            'maxrsvp' => 50,
+            'all_day' => false,
+            'online' => false,
+        ]);
+
         $this->command->info('Member portal test data created:');
         $this->command->info('Email: david.cohen@test.com');
         $this->command->info('Password: password');
+        $this->command->info('Created 3 upcoming registerable events');
     }
 }

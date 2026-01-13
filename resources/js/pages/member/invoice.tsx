@@ -126,7 +126,6 @@ export default function InvoiceView({ member, invoice }: Props) {
                             </button>
                         </div>
                     </div>
-                    </div>
 
                     {/* Invoice Container */}
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">

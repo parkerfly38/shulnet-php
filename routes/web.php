@@ -41,7 +41,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Member portal routes
     Route::get('member/dashboard', [MemberDashboardController::class, 'index'])->name('member.dashboard');
+    Route::get('member/invoices', [MemberDashboardController::class, 'invoices'])->name('member.invoices');
     Route::get('member/invoices/{id}', [MemberDashboardController::class, 'showInvoice'])->name('member.invoices.show');
+    Route::get('member/profile', [MemberDashboardController::class, 'profile'])->name('member.profile');
+    Route::put('member/profile', [MemberDashboardController::class, 'updateProfile'])->name('member.profile.update');    Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');    
+    Route::post('member/events/{event}/register', [MemberDashboardController::class, 'registerForEvent'])->name('member.events.register');
     
     // Payment routes
     Route::get('member/invoices/{id}/pay', [PaymentController::class, 'create'])->name('member.invoices.pay');

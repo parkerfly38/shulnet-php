@@ -117,4 +117,12 @@ class Member extends Model
             ->withPivot('status', 'confirmation_token', 'confirmed_at', 'unsubscribed_at')
             ->withTimestamps();
     }
+
+    /**
+     * Get all event RSVPs for this member.
+     */
+    public function rsvps(): HasMany
+    {
+        return $this->hasMany(EventRSVP::class);
+    }
 }
