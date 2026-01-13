@@ -17,8 +17,8 @@ interface Event {
     maxrsvp?: number | null;
     members_only?: boolean;
     allow_guests: boolean;
-    max_guests: number | null;    ticket_types?: TicketType[];
-    has_paid_tickets?: boolean;
+    max_guests: number | null;    ticket_types: TicketType[];
+    has_paid_tickets: boolean;
 }
 
 interface TicketType {
