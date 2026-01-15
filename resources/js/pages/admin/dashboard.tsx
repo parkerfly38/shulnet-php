@@ -127,34 +127,6 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                {/* User role indicators */}
-                {user?.roles && user.roles.length > 0 && (
-                    <div className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
-                        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Roles</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {user.roles.map((role: string) => {
-                                const roleColors = {
-                                    admin: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-                                    teacher: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-                                    parent: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-                                    student: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-                                    member: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
-                                };
-                                const colorClass = roleColors[role as keyof typeof roleColors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
-                                
-                                return (
-                                    <span
-                                        key={role}
-                                        className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${colorClass}`}
-                                    >
-                                        {role.charAt(0).toUpperCase() + role.slice(1)}
-                                    </span>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-
                 {/* Members Joined Chart and Workflows */}
                 <div className="grid gap-4 lg:grid-cols-12">
                     <div className="lg:col-span-8 bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
