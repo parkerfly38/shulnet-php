@@ -43,6 +43,7 @@ class UserController extends Controller
                 'is_parent' => $user->isParent(),
                 'is_student' => $user->isStudent(),
                 'is_member' => $user->isMember(),
+                'is_default_admin' => $user->is_default_admin,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
             ];
@@ -84,6 +85,32 @@ class UserController extends Controller
                 'email' => $user->email,
                 'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : [],
                 'role_labels' => $user->role_labels,
+            ]
+        ]);
+    }
+
+    /**
+     * Set user as default admin.
+     */
+    public function setDefaultAdmin(Request $request, User $user)
+    {
+        // Check if user can be default admin (must have admin role)
+        if (!$user->canBeDefaultAdmin()) {
+            return response()->json([
+                'message' => 'User must have admin role to be set as default admin.',
+            ], 422);
+        }
+
+        // Set as default admin (automatically removes from other users)
+        $user->setAsDefaultAdmin();
+
+        return response()->json([
+            'message' => 'User set as default admin successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'is_default_admin' => true,
             ]
         ]);
     }

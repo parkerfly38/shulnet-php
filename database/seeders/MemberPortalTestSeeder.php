@@ -13,6 +13,13 @@ use App\Models\Yahrzeit;
 use App\Models\GabbaiAssignment;
 use App\Models\Event;
 use App\Models\Calendar;
+use App\Models\ClassDefinition;
+use App\Models\ClassGrade;
+use App\Models\Subject;
+use App\Models\SubjectGrade;
+use App\Models\Exam;
+use App\Models\ExamGrade;
+use App\Models\Attendance;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
 
@@ -57,6 +64,7 @@ class MemberPortalTestSeeder extends Seeder
             'email' => 'david.cohen@test.com',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
+            'roles' => ['member'],
         ]);
 
         // Create a parent record first
@@ -206,6 +214,182 @@ class MemberPortalTestSeeder extends Seeder
         $member->yahrzeits()->attach($yahrzeit1->id, ['relationship' => 'Father']);
         $member->yahrzeits()->attach($yahrzeit2->id, ['relationship' => 'Grandmother']);
 
+        // ===== STUDENT ENROLLMENTS AND ACADEMIC DATA =====
+        
+        // Get classes and subjects (assuming they exist from other seeders)
+        $hebrewLevel1 = ClassDefinition::where('class_number', 'HEB-101')->first();
+        $hebrewLevel2 = ClassDefinition::where('class_number', 'HEB-201')->first();
+        $torahStudies = ClassDefinition::where('class_number', 'TOR-101')->first();
+        $jewishHistory = ClassDefinition::where('class_number', 'HIS-201')->first();
+        $holidaysClass = ClassDefinition::where('class_number', 'HOL-101')->first();
+        
+        // Rachel Cohen (older child) - enrolled in multiple classes
+        if ($hebrewLevel2) {
+            $rachelHebrew = ClassGrade::create([
+                'student_id' => $student1->id,
+                'class_definition_id' => $hebrewLevel2->id,
+                'grade' => 'A-',
+            ]);
+        }
+        
+        if ($torahStudies) {
+            $rachelTorah = ClassGrade::create([
+                'student_id' => $student1->id,
+                'class_definition_id' => $torahStudies->id,
+                'grade' => 'B+',
+            ]);
+        }
+        
+        if ($jewishHistory) {
+            $rachelHistory = ClassGrade::create([
+                'student_id' => $student1->id,
+                'class_definition_id' => $jewishHistory->id,
+                'grade' => 'A',
+            ]);
+        }
+        
+        // Jacob Cohen (younger child) - enrolled in beginner classes
+        if ($hebrewLevel1) {
+            $jacobHebrew = ClassGrade::create([
+                'student_id' => $student2->id,
+                'class_definition_id' => $hebrewLevel1->id,
+                'grade' => 'B',
+            ]);
+        }
+        
+        if ($holidaysClass) {
+            $jacobHolidays = ClassGrade::create([
+                'student_id' => $student2->id,
+                'class_definition_id' => $holidaysClass->id,
+                'grade' => 'A-',
+            ]);
+        }
+        
+        // Add subject grades for Rachel
+        $hebrewSubject = Subject::where('name', 'Hebrew Language')->first();
+        $torahSubject = Subject::where('name', 'Torah')->first();
+        $historySubject = Subject::where('name', 'Jewish History')->first();
+        $prayerSubject = Subject::where('name', 'Prayer and Liturgy')->first();
+        
+        if ($hebrewSubject) {
+            SubjectGrade::create([
+                'student_id' => $student1->id,
+                'subject_id' => $hebrewSubject->id,
+                'grade' => 'A-',
+            ]);
+        }
+        
+        if ($torahSubject) {
+            SubjectGrade::create([
+                'student_id' => $student1->id,
+                'subject_id' => $torahSubject->id,
+                'grade' => 'B+',
+            ]);
+        }
+        
+        if ($historySubject) {
+            SubjectGrade::create([
+                'student_id' => $student1->id,
+                'subject_id' => $historySubject->id,
+                'grade' => 'A',
+            ]);
+        }
+        
+        if ($prayerSubject) {
+            SubjectGrade::create([
+                'student_id' => $student1->id,
+                'subject_id' => $prayerSubject->id,
+                'grade' => 'A',
+            ]);
+        }
+        
+        // Add subject grades for Jacob
+        if ($hebrewSubject) {
+            SubjectGrade::create([
+                'student_id' => $student2->id,
+                'subject_id' => $hebrewSubject->id,
+                'grade' => 'B',
+            ]);
+        }
+        
+        $holidaysSubject = Subject::where('name', 'Holidays and Traditions')->first();
+        if ($holidaysSubject) {
+            SubjectGrade::create([
+                'student_id' => $student2->id,
+                'subject_id' => $holidaysSubject->id,
+                'grade' => 'A-',
+            ]);
+        }
+        
+        // Add exam grades
+        $midtermExam = Exam::where('name', 'LIKE', '%Midterm%')->first();
+        $finalExam = Exam::where('name', 'LIKE', '%Final%')->first();
+        
+        if ($midtermExam) {
+            ExamGrade::create([
+                'student_id' => $student1->id,
+                'exam_id' => $midtermExam->id,
+                'grade' => '90',
+            ]);
+            
+            ExamGrade::create([
+                'student_id' => $student2->id,
+                'exam_id' => $midtermExam->id,
+                'grade' => '84',
+            ]);
+        }
+        
+        if ($finalExam) {
+            ExamGrade::create([
+                'student_id' => $student1->id,
+                'exam_id' => $finalExam->id,
+                'grade' => '93',
+            ]);
+            
+            ExamGrade::create([
+                'student_id' => $student2->id,
+                'exam_id' => $finalExam->id,
+                'grade' => '86',
+            ]);
+        }
+        
+        // Add attendance records for Rachel (past 3 months)
+        $classes = [$hebrewLevel2, $torahStudies, $jewishHistory];
+        $statuses = ['present', 'present', 'present', 'present', 'present', 'tardy', 'present', 'present', 'absent', 'present'];
+        
+        foreach ($classes as $class) {
+            if ($class) {
+                for ($i = 0; $i < 30; $i++) {
+                    $status = $statuses[array_rand($statuses)];
+                    Attendance::create([
+                        'student_id' => $student1->id,
+                        'class_definition_id' => $class->id,
+                        'attendance_date' => Carbon::now()->subDays($i * 3),
+                        'status' => $status,
+                        'notes' => $status === 'absent' ? 'Family vacation' : ($status === 'tardy' ? 'Traffic delay' : null),
+                    ]);
+                }
+            }
+        }
+        
+        // Add attendance records for Jacob (past 3 months)
+        $jacobClasses = [$hebrewLevel1, $holidaysClass];
+        
+        foreach ($jacobClasses as $class) {
+            if ($class) {
+                for ($i = 0; $i < 30; $i++) {
+                    $status = $statuses[array_rand($statuses)];
+                    Attendance::create([
+                        'student_id' => $student2->id,
+                        'class_definition_id' => $class->id,
+                        'attendance_date' => Carbon::now()->subDays($i * 3),
+                        'status' => $status,
+                        'notes' => $status === 'absent' ? 'Illness' : ($status === 'tardy' ? 'Doctor appointment' : null),
+                    ]);
+                }
+            }
+        }
+
         // Create aliyah assignments
         GabbaiAssignment::create([
             'member_id' => $member->id,
@@ -297,6 +481,7 @@ class MemberPortalTestSeeder extends Seeder
         $this->command->info('Member portal test data created:');
         $this->command->info('Email: david.cohen@test.com');
         $this->command->info('Password: password');
+        $this->command->info('Created 2 students with class enrollments, grades, and attendance');
         $this->command->info('Created 3 upcoming registerable events');
     }
 }

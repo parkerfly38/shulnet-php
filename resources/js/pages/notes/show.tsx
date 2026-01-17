@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileText, Calendar, Clock, Edit, Trash2, User, Tag, AlertTriangle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, FileText, Calendar, CalendarPlus, Clock, Edit, Trash2, User, Tag, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreadcrumbItem, Note } from '@/types';
@@ -40,6 +40,10 @@ export default function NoteShow({ note }: NoteShowProps) {
                 completed_date: new Date().toISOString()
             });
         }
+    };
+
+    const handleDownloadICS = () => {
+        window.location.href = `/admin/notes/${note.id}/ics`;
     };
 
     const formatDateTime = (dateString?: string) => {
@@ -248,6 +252,12 @@ export default function NoteShow({ note }: NoteShowProps) {
                                             <CheckCircle className="h-4 w-4 mr-2" />
                                             Mark as Complete
                                         </Button>
+                                        {note.deadline_date && (
+                                            <Button onClick={handleDownloadICS} variant="outline">
+                                                <CalendarPlus className="h-4 w-4 mr-2" />
+                                                Add to Calendar
+                                            </Button>
+                                        )}
                                     </div>
                                 </CardContent>
                             </Card>

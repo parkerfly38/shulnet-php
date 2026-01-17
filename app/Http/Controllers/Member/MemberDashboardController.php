@@ -9,6 +9,8 @@ use App\Models\Student;
 use App\Models\Yahrzeit;
 use App\Models\GabbaiAssignment;
 use App\Models\Event;
+use App\Models\Note;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -45,7 +47,7 @@ class MemberDashboardController extends Controller
         $students = [];
         if ($member->parent_id) {
             $students = Student::where('parent_id', $member->parent_id)
-                ->with(['classGrades.classDefinition', 'classGrades.teacher'])
+                ->with(['classGrades.classDefinition.teacher'])
                 ->get()
                 ->map(function ($student) {
                     return [
@@ -57,7 +59,7 @@ class MemberDashboardController extends Controller
                             return [
                                 'id' => $classGrade->id,
                                 'class_name' => $classGrade->classDefinition->class_name ?? 'N/A',
-                                'teacher_name' => $classGrade->teacher ? ($classGrade->teacher->first_name . ' ' . $classGrade->teacher->last_name) : 'N/A',
+                                'teacher_name' => $classGrade->classDefinition->teacher ? ($classGrade->classDefinition->teacher->first_name . ' ' . $classGrade->classDefinition->teacher->last_name) : 'N/A',
                                 'grade' => $classGrade->grade,
                             ];
                         }),
@@ -314,6 +316,209 @@ class MemberDashboardController extends Controller
 
         return redirect()->route('member.profile')->with('success', 'Profile updated successfully!');
     }
+    public function students(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (!$member) {
+            return redirect()->route('dashboard')->with('error', 'No member profile found.');
+        }
+
+        // Get students if member is a parent
+        $students = [];
+        if ($member->parent_id) {
+            $students = Student::where('parent_id', $member->parent_id)
+                ->with([
+                    'classGrades.classDefinition.teacher',
+                    'examGrades.exam',
+                    'subjectGrades.subject',
+                    'attendances.classDefinition'
+                ])
+                ->get()
+                ->map(function ($student) {
+                    // Calculate attendance statistics
+                    $totalAttendances = $student->attendances->count();
+                    $presentCount = $student->attendances->where('status', 'present')->count();
+                    $absentCount = $student->attendances->where('status', 'absent')->count();
+                    $tardyCount = $student->attendances->where('status', 'tardy')->count();
+                    $excusedCount = $student->attendances->where('status', 'excused')->count();
+                    
+                    $attendanceRate = $totalAttendances > 0 
+                        ? round(($presentCount / $totalAttendances) * 100, 1) 
+                        : null;
+
+                    return [
+                        'id' => $student->id,
+                        'first_name' => $student->first_name,
+                        'last_name' => $student->last_name,
+                        'middle_name' => $student->middle_name,
+                        'gender' => $student->gender,
+                        'date_of_birth' => $student->date_of_birth,
+                        'email' => $student->email,
+                        'address' => $student->address,
+                        'picture_url' => $student->picture_url,
+                        'classes' => $student->classGrades->map(function ($classGrade) {
+                            return [
+                                'id' => $classGrade->id,
+                                'class_name' => $classGrade->classDefinition->class_name ?? 'N/A',
+                                'teacher_name' => $classGrade->classDefinition->teacher
+                                    ? ($classGrade->classDefinition->teacher->first_name . ' ' . $classGrade->classDefinition->teacher->last_name)
+                                    : 'N/A',
+                                'grade' => $classGrade->grade,
+                                'school_year' => $classGrade->classDefinition->school_year ?? null,
+                            ];
+                        }),
+                        'subject_grades' => $student->subjectGrades->map(function ($subjectGrade) {
+                            return [
+                                'id' => $subjectGrade->id,
+                                'subject_name' => $subjectGrade->subject->name ?? 'N/A',
+                                'grade' => $subjectGrade->grade,
+                            ];
+                        }),
+                        'exam_grades' => $student->examGrades->map(function ($examGrade) {
+                            return [
+                                'id' => $examGrade->id,
+                                'exam_name' => $examGrade->exam->name ?? 'N/A',
+                                'grade' => $examGrade->grade,
+                                'date_taken' => $examGrade->exam->start_date ?? null,
+                            ];
+                        }),
+                        'attendance' => [
+                            'total' => $totalAttendances,
+                            'present' => $presentCount,
+                            'absent' => $absentCount,
+                            'tardy' => $tardyCount,
+                            'excused' => $excusedCount,
+                            'attendance_rate' => $attendanceRate,
+                        ],
+                        'recent_attendances' => $student->attendances()
+                            ->with('classDefinition')
+                            ->orderBy('attendance_date', 'desc')
+                            ->limit(10)
+                            ->get()
+                            ->map(function ($attendance) {
+                                return [
+                                    'id' => $attendance->id,
+                                    'date' => $attendance->attendance_date,
+                                    'status' => $attendance->status,
+                                    'class_name' => $attendance->classDefinition->class_name ?? 'N/A',
+                                    'notes' => $attendance->notes,
+                                ];
+                            }),
+                    ];
+                });
+        }
+
+        return Inertia::render('member/students', [
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+            ],
+            'students' => $students,
+            'hasStudents' => $member->parent_id !== null,
+        ]);
+    }
+
+    public function updateStudent(Request $request, Student $student)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (!$member) {
+            return redirect()->route('dashboard')->with('error', 'No member profile found.');
+        }
+
+        // Verify that this student belongs to this member's parent
+        if ($student->parent_id !== $member->parent_id) {
+            abort(403, 'Unauthorized to update this student.');
+        }
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|in:male,female,other',
+            'date_of_birth' => 'nullable|date',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
+        ]);
+
+        $student->update($validated);
+
+        return redirect()->route('member.students')
+            ->with('success', 'Student information updated successfully.');
+    }
+
+    public function yahrzeits(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (!$member) {
+            return redirect()->route('dashboard')->with('error', 'No member profile found.');
+        }
+
+        // Get all yahrzeits for this member
+        $yahrzeits = $member->yahrzeits()
+            ->get()
+            ->map(function ($yahrzeit) {
+                // Calculate next occurrence
+                $occurrence = null;
+                $currentYearOccurrence = null;
+                $nextYearOccurrence = null;
+                $daysUntil = null;
+
+                if ($yahrzeit->date_of_death) {
+                    $occurrence = Carbon::parse($yahrzeit->date_of_death);
+                    $currentYearOccurrence = Carbon::createFromDate(
+                        Carbon::today()->year,
+                        $occurrence->month,
+                        $occurrence->day
+                    );
+
+                    if ($currentYearOccurrence->lt(Carbon::today())) {
+                        $nextYearOccurrence = Carbon::createFromDate(
+                            Carbon::today()->year + 1,
+                            $occurrence->month,
+                            $occurrence->day
+                        );
+                        $nextOccurrence = $nextYearOccurrence;
+                    } else {
+                        $nextOccurrence = $currentYearOccurrence;
+                    }
+
+                    $daysUntil = (int) round(Carbon::today()->diffInDays($nextOccurrence, false));
+                }
+
+                return [
+                    'id' => $yahrzeit->id,
+                    'name' => $yahrzeit->name,
+                    'hebrew_name' => $yahrzeit->hebrew_name,
+                    'relationship' => $yahrzeit->pivot->relationship ?? 'Unknown',
+                    'date_of_death' => $yahrzeit->date_of_death,
+                    'hebrew_day_of_death' => $yahrzeit->hebrew_day_of_death,
+                    'hebrew_month_of_death' => $yahrzeit->hebrew_month_of_death,
+                    'hebrew_year_of_death' => $yahrzeit->hebrew_year_of_death,
+                    'observance_type' => $yahrzeit->observance_type,
+                    'notes' => $yahrzeit->notes,
+                    'next_occurrence' => $nextOccurrence?->toDateString(),
+                    'days_until' => $daysUntil,
+                ];
+            })
+            ->sortBy('days_until')
+            ->values();
+
+        return Inertia::render('member/yahrzeits', [
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+            ],
+            'yahrzeits' => $yahrzeits,
+        ]);
+    }
 
     public function events(Request $request)
     {
@@ -551,5 +756,46 @@ class MemberDashboardController extends Controller
         }
 
         return redirect()->route('member.events')->with('success', $message);
+    }
+
+    public function requestYahrzeitChange(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (!$member) {
+            return redirect()->route('dashboard')->with('error', 'No member profile found.');
+        }
+
+        $validated = $request->validate([
+            'yahrzeit_id' => 'required|exists:yahrzeit,id',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        // Get the yahrzeit to include its details in the note
+        $yahrzeit = Yahrzeit::find($validated['yahrzeit_id']);
+
+        // Get the default admin user
+        $defaultAdmin = User::getDefaultAdmin();
+
+        if (!$defaultAdmin) {
+            return back()->with('error', 'No default admin configured. Please contact support.');
+        }
+
+        // Create a note for the default admin
+        Note::create([
+            'name' => 'Yahrzeit Change Request',
+            'note_text' => "Member: {$member->first_name} {$member->last_name}\n" .
+                          "Yahrzeit: {$yahrzeit->name}" . ($yahrzeit->hebrew_name ? " ({$yahrzeit->hebrew_name})" : "") . "\n" .
+                          "Date of Death: {$yahrzeit->date_of_death}\n\n" .
+                          "Requested Change:\n{$validated['message']}",
+            'user_id' => $defaultAdmin->id,
+            'member_id' => $member->id,
+            'item_scope' => 'Member',
+            'priority' => 'Medium',
+            'visibility' => 'Admin',
+        ]);
+
+        return back()->with('success', 'Your change request has been submitted to the administrator.');
     }
 }

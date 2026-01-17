@@ -30,6 +30,7 @@ interface User {
   is_parent: boolean;
   is_student: boolean;
   is_member: boolean;
+  is_default_admin: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -118,6 +119,32 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
     }
   };
 
+  const setDefaultAdmin = async (userId: number) => {
+    if (!confirm('Are you sure you want to set this user as the default admin? The current default admin will be unset.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/users/${userId}/set-default-admin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+        },
+      });
+
+      if (response.ok) {
+        router.reload();
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to set default admin');
+      }
+    } catch (error) {
+      console.error('Error setting default admin:', error);
+      alert('An error occurred while setting default admin');
+    }
+  };
+
   const getRoleBadgeClass = (role: string) => {
     const colors = {
       admin: 'bg-red-100 text-red-800',
@@ -191,6 +218,9 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                     Roles
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    Default Admin
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Created
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -221,6 +251,24 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                           )}
                         </div>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {user.is_default_admin ? (
+                          <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                            Default Admin
+                          </Badge>
+                        ) : user.is_admin ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setDefaultAdmin(user.id)}
+                            className="text-xs"
+                          >
+                            Set as Default
+                          </Button>
+                        ) : (
+                          <span className="text-sm text-gray-400">-</span>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                         {new Date(user.created_at).toLocaleDateString()}
                       </td>
@@ -238,7 +286,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center">
+                    <td colSpan={5} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center">
                         <Users className="h-12 w-12 text-gray-400 mb-4" />
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No users found</h3>

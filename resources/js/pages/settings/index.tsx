@@ -69,7 +69,13 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
             case 'select':
                 let options: { value: string; label: string }[] = [];
                 
-                if (setting.key === 'jewish_calendar_location') {
+                if (setting.key === 'payment_processor') {
+                    options = [
+                        { value: 'stripe', label: 'Stripe' },
+                        { value: 'authorize_net', label: 'Authorize.Net' },
+                        { value: 'paypal', label: 'PayPal' },
+                    ];
+                } else if (setting.key === 'jewish_calendar_location') {
                     options = [
                         { value: 'diaspora', label: 'Diaspora' },
                         { value: 'israel', label: 'Israel' },

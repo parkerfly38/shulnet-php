@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Edit, Trash2, Eye, Calendar, FileText, AlertTriangle, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Calendar, CalendarPlus, FileText, AlertTriangle, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { type Note, type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -72,6 +72,10 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
         if (confirm(`Are you sure you want to delete ${note.name}?`)) {
             router.delete(`/admin/notes/${note.id}`);
         }
+    };
+
+    const handleDownloadICS = (note: Note) => {
+        window.location.href = `/admin/notes/${note.id}/ics`;
     };
 
     const statCards = [
@@ -311,6 +315,16 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                               <Edit className="h-4 w-4" />
                             </Button>
                           </Link>
+                          {!note.completed_date && note.deadline_date && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDownloadICS(note)}
+                              title="Add to calendar"
+                            >
+                              <CalendarPlus className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Button
                             variant="outline"
                             size="sm"

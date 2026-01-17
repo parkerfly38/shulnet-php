@@ -168,6 +168,14 @@ class NoteController extends Controller
             'user_id' => 'nullable|exists:users,id'
         ]);
 
+        // Convert ISO datetime strings to MySQL format
+        if (isset($validated['completed_date'])) {
+            $validated['completed_date'] = \Carbon\Carbon::parse($validated['completed_date'])->format('Y-m-d H:i:s');
+        }
+        if (isset($validated['deadline_date'])) {
+            $validated['deadline_date'] = \Carbon\Carbon::parse($validated['deadline_date'])->format('Y-m-d H:i:s');
+        }
+
         $note->update($validated);
 
         return redirect('/admin/notes')
@@ -198,5 +206,58 @@ class NoteController extends Controller
 
         return redirect()->back()
             ->with('success', 'All notifications marked as seen.');
+    }
+
+    /**
+     * Download note as ICS calendar file.
+     */
+    public function downloadICS(Note $note)
+    {
+        if (!$note->deadline_date) {
+            return redirect()->back()
+                ->with('error', 'Note has no deadline to export.');
+        }
+
+        $deadline = \Carbon\Carbon::parse($note->deadline_date);
+        
+        // Generate ICS content
+        $ics = "BEGIN:VCALENDAR\r\n";
+        $ics .= "VERSION:2.0\r\n";
+        $ics .= "PRODID:-//ShulNet//Notes//EN\r\n";
+        $ics .= "CALSCALE:GREGORIAN\r\n";
+        $ics .= "METHOD:PUBLISH\r\n";
+        $ics .= "BEGIN:VEVENT\r\n";
+        $ics .= "UID:" . md5($note->id . $note->created_at) . "@shulnet\r\n";
+        $ics .= "DTSTAMP:" . now()->format('Ymd\THis\Z') . "\r\n";
+        $ics .= "DTSTART:" . $deadline->format('Ymd\THis\Z') . "\r\n";
+        $ics .= "DTEND:" . $deadline->addHour()->format('Ymd\THis\Z') . "\r\n";
+        $ics .= "SUMMARY:" . $this->escapeICSString($note->name) . "\r\n";
+        
+        if ($note->note_text) {
+            $ics .= "DESCRIPTION:" . $this->escapeICSString($note->note_text) . "\r\n";
+        }
+        
+        $ics .= "PRIORITY:" . ($note->priority === 'High' ? '1' : ($note->priority === 'Medium' ? '5' : '9')) . "\r\n";
+        $ics .= "STATUS:CONFIRMED\r\n";
+        $ics .= "END:VEVENT\r\n";
+        $ics .= "END:VCALENDAR\r\n";
+
+        $filename = \Illuminate\Support\Str::slug($note->name) . '.ics';
+
+        return response($ics, 200)
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    }
+
+    /**
+     * Escape special characters for ICS format.
+     */
+    private function escapeICSString(string $text): string
+    {
+        $text = str_replace('\\', '\\\\', $text);
+        $text = str_replace(',', '\\,', $text);
+        $text = str_replace(';', '\\;', $text);
+        $text = str_replace("\n", '\\n', $text);
+        return $text;
     }
 }

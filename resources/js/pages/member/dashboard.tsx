@@ -172,7 +172,15 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                     {/* Students (if parent) */}
                     {students.length > 0 && (
                         <div className="bg-white dark:bg-black rounded-lg p-6 border lg:col-span-2">
-                            <h2 className="text-lg font-semibold mb-4">My Children</h2>
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-lg font-semibold">My Children</h2>
+                                <Link
+                                    href="/member/students"
+                                    className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                >
+                                    View All →
+                                </Link>
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {students.map((student) => (
                                     <div key={student.id} className="p-4 bg-gray-50 dark:bg-gray-900 rounded border">
@@ -208,7 +216,15 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
 
                     {/* Upcoming Yahrzeits */}
                     <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                        <h2 className="text-lg font-semibold mb-4">Upcoming Yahrzeits</h2>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-semibold">Upcoming Yahrzeits</h2>
+                            <Link
+                                href="/member/yahrzeits"
+                                className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                            >
+                                View All →
+                            </Link>
+                        </div>
                         {yahrzeits.length === 0 ? (
                             <p className="text-sm text-gray-500">No upcoming yahrzeits in the next 60 days.</p>
                         ) : (

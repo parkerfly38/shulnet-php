@@ -2,31 +2,46 @@
 
 namespace App\Services;
 
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Core\SandboxEnvironment;
-use PayPalCheckoutSdk\Core\ProductionEnvironment;
-use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
-use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
-use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
+use PaypalServerSdkLib\Logging\LoggingConfigurationBuilder;
+use PaypalServerSdkLib\Logging\RequestLoggingConfigurationBuilder;
+use PaypalServerSdkLib\Logging\ResponseLoggingConfigurationBuilder;
+use Psr\Log\LogLevel;
+use PaypalServerSdkLib\Environment;
+use PaypalServerSdkLib\Authentication\ClientCredentialsAuthCredentialsBuilder;
+use PaypalServerSdkLib\PaypalServerSdkClientBuilder;
 use Exception;
 
 class PayPalPaymentGateway implements PaymentGatewayInterface
 {
-    protected PayPalHttpClient $client;
+    private const PREFER_REPRESENTATION = 'return=representation';
+    
+    protected $client;
     protected string $mode;
+    protected string $currency;
 
     public function __construct()
     {
         $clientId = config('services.paypal.client_id') ?: '';
         $clientSecret = config('services.paypal.secret') ?: '';
         $this->mode = config('services.paypal.mode', 'sandbox');
+        // Default currency can be set in config/services.php as 'paypal.currency'
+        // Fallback to USD
+        $this->currency = strtoupper(config('services.paypal.currency', 'USD'));
 
-        $environment = $this->mode === 'production'
-            ? new ProductionEnvironment($clientId, $clientSecret)
-            : new SandboxEnvironment($clientId, $clientSecret);
+        $env = $this->mode === 'production' ? Environment::PRODUCTION : Environment::SANDBOX;
 
-        $this->client = new PayPalHttpClient($environment);
+        $this->client = PaypalServerSdkClientBuilder::init()
+            ->clientCredentialsAuthCredentials(
+                ClientCredentialsAuthCredentialsBuilder::init($clientId, $clientSecret)
+            )
+            ->environment($env)
+            ->loggingConfiguration(
+                LoggingConfigurationBuilder::init()
+                    ->level(LogLevel::INFO)
+                    ->requestConfiguration(RequestLoggingConfigurationBuilder::init()->body(false))
+                    ->responseConfiguration(ResponseLoggingConfigurationBuilder::init()->headers(false))
+            )
+            ->build();
     }
 
     public function processPayment(float $amount, array $paymentDetails): array
@@ -37,21 +52,39 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
                 return $this->captureOrder($paymentDetails['order_id']);
             }
 
-            // Otherwise create a new order
-            $request = new OrdersCreateRequest();
-            $request->prefer('return=representation');
-            $request->body = [
-                'intent' => 'CAPTURE',
-                'purchase_units' => [
-                    [
-                        'reference_id' => $paymentDetails['invoice_id'] ?? 'default',
-                        'amount' => [
-                            'currency_code' => 'USD',
-                            'value' => number_format($amount, 2, '.', ''),
-                        ],
-                        'description' => $paymentDetails['description'] ?? 'Invoice Payment',
-                    ],
+            // Otherwise create a new order via OrdersController
+            $ordersController = $this->client->getOrdersController();
+
+            $currency = strtoupper($paymentDetails['currency'] ?? $this->currency ?? 'USD');
+
+            $purchaseUnit = [
+                'reference_id' => $paymentDetails['reference_id'] ?? $paymentDetails['invoice_id'] ?? 'default',
+                'amount' => [
+                    'currency_code' => $currency,
+                    'value' => number_format($amount, 2, '.', ''),
                 ],
+            ];
+
+            if (!empty($paymentDetails['invoice_id'])) {
+                $purchaseUnit['invoice_id'] = $paymentDetails['invoice_id'];
+            }
+
+            if (!empty($paymentDetails['custom_id'])) {
+                $purchaseUnit['custom_id'] = $paymentDetails['custom_id'];
+            }
+
+            if (!empty($paymentDetails['description'])) {
+                $purchaseUnit['description'] = $paymentDetails['description'];
+            }
+
+            if (!empty($paymentDetails['items']) && is_array($paymentDetails['items'])) {
+                $purchaseUnit['items'] = $paymentDetails['items'];
+            }
+
+            // Allow metadata/custom fields via soft_descriptor or custom_id where supported
+            $body = [
+                'intent' => 'CAPTURE',
+                'purchase_units' => [ $purchaseUnit ],
                 'application_context' => [
                     'brand_name' => config('app.name'),
                     'locale' => 'en-US',
@@ -60,13 +93,19 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
                 ],
             ];
 
-            $response = $this->client->execute($request);
+            $collect = [
+                'body' => $body,
+                'prefer' => self::PREFER_REPRESENTATION,
+            ];
+
+            $apiResponse = $ordersController->createOrder($collect);
+            $result = $apiResponse->getResult();
 
             return [
                 'success' => true,
-                'order_id' => $response->result->id,
-                'status' => $response->result->status,
-                'details' => $response->result,
+                'order_id' => $result->id ?? null,
+                'status' => $result->status ?? null,
+                'details' => $result,
             ];
         } catch (Exception $e) {
             return [
@@ -79,19 +118,24 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
     protected function captureOrder(string $orderId): array
     {
         try {
-            $request = new OrdersCaptureRequest($orderId);
-            $request->prefer('return=representation');
+            $ordersController = $this->client->getOrdersController();
 
-            $response = $this->client->execute($request);
+            $collect = [
+                'id' => $orderId,
+                'prefer' => self::PREFER_REPRESENTATION,
+            ];
 
-            $captureId = $response->result->purchase_units[0]->payments->captures[0]->id ?? null;
+            $apiResponse = $ordersController->captureOrder($collect);
+            $result = $apiResponse->getResult();
+
+            $captureId = $result->purchase_units[0]->payments->captures[0]->id ?? null;
 
             return [
                 'success' => true,
                 'transaction_id' => $captureId,
-                'order_id' => $response->result->id,
-                'status' => $response->result->status,
-                'details' => $response->result,
+                'order_id' => $result->id ?? null,
+                'status' => $result->status ?? null,
+                'details' => $result,
             ];
         } catch (Exception $e) {
             return [
@@ -104,28 +148,31 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
     public function refundPayment(string $transactionId, ?float $amount = null): array
     {
         try {
-            $request = new CapturesRefundRequest($transactionId);
-            $request->prefer('return=representation');
+            $paymentsController = $this->client->getPaymentsController();
 
-            $requestBody = [];
+            $collect = [
+                'captureId' => $transactionId,
+                'prefer' => self::PREFER_REPRESENTATION,
+            ];
+
             if ($amount !== null) {
-                $requestBody['amount'] = [
-                    'currency_code' => 'USD',
-                    'value' => number_format($amount, 2, '.', ''),
+                $currency = strtoupper($this->currency ?? config('services.paypal.currency', 'USD'));
+                $collect['body'] = [
+                    'amount' => [
+                        'currency_code' => $currency,
+                        'value' => number_format($amount, 2, '.', ''),
+                    ],
                 ];
             }
 
-            if (!empty($requestBody)) {
-                $request->body = $requestBody;
-            }
-
-            $response = $this->client->execute($request);
+            $apiResponse = $paymentsController->refundCapturedPayment($collect);
+            $result = $apiResponse->getResult();
 
             return [
                 'success' => true,
-                'refund_id' => $response->result->id,
-                'status' => $response->result->status,
-                'details' => $response->result,
+                'refund_id' => $result->id ?? null,
+                'status' => $result->status ?? null,
+                'details' => $result,
             ];
         } catch (Exception $e) {
             return [
@@ -138,13 +185,14 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
     public function getPaymentDetails(string $transactionId): array
     {
         try {
-            // TransactionId could be an order ID
-            $request = new OrdersGetRequest($transactionId);
-            $response = $this->client->execute($request);
+            // Try to get as an order
+            $ordersController = $this->client->getOrdersController();
+            $apiResponse = $ordersController->getOrder(['id' => $transactionId]);
+            $result = $apiResponse->getResult();
 
             return [
                 'success' => true,
-                'details' => $response->result,
+                'details' => $result,
             ];
         } catch (Exception $e) {
             return [

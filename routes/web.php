@@ -44,7 +44,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('member/invoices', [MemberDashboardController::class, 'invoices'])->name('member.invoices');
     Route::get('member/invoices/{id}', [MemberDashboardController::class, 'showInvoice'])->name('member.invoices.show');
     Route::get('member/profile', [MemberDashboardController::class, 'profile'])->name('member.profile');
-    Route::put('member/profile', [MemberDashboardController::class, 'updateProfile'])->name('member.profile.update');    Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');    
+    Route::put('member/profile', [MemberDashboardController::class, 'updateProfile'])->name('member.profile.update');
+    Route::get('member/students', [MemberDashboardController::class, 'students'])->name('member.students');
+    Route::put('member/students/{student}', [MemberDashboardController::class, 'updateStudent'])->name('member.students.update');
+    Route::get('member/yahrzeits', [MemberDashboardController::class, 'yahrzeits'])->name('member.yahrzeits');
+    Route::post('member/yahrzeits/request-change', [MemberDashboardController::class, 'requestYahrzeitChange'])->name('member.yahrzeits.request-change');
+    Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');    
     Route::post('member/events/{event}/register', [MemberDashboardController::class, 'registerForEvent'])->name('member.events.register');
     
     // Payment routes
@@ -214,6 +219,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'notes.destroy',
             ]
         ]);
+        Route::get('admin/notes/{note}/ics', [NoteController::class, 'downloadICS'])->name('notes.ics');
 
         // Invoice management routes
         Route::resource('admin/invoices', InvoiceController::class, [
@@ -465,6 +471,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // API routes for admin functionality
 Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(function () {
     Route::put('users/{user}/roles', [UserController::class, 'updateRoles'])->name('api.admin.users.roles.update');
+    Route::post('users/{user}/set-default-admin', [UserController::class, 'setDefaultAdmin'])->name('api.admin.users.set-default-admin');
     
     // Member search API endpoint
     Route::get('members/search', [MemberController::class, 'search'])->name('api.admin.members.search');
