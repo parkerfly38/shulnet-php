@@ -75,7 +75,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
     };
 
     const handleDownloadICS = (note: Note) => {
-        window.location.href = `/admin/notes/${note.id}/ics`;
+        window.location.assign(`/admin/notes/${note.id}/ics`);
     };
 
     const statCards = [

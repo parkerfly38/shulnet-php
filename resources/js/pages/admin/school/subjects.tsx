@@ -30,8 +30,6 @@ export default function SubjectsPage() {
     const [to, setTo] = useState(0);
     const [lastPage, setLastPage] = useState(1);
 
-    useEffect(() => { load(page, search); }, []);
-
     function load(p: number = 1, s: string = '') {
         setLoading(true);
         const params = new URLSearchParams();
@@ -51,6 +49,8 @@ export default function SubjectsPage() {
             .catch(() => { setData([]); setTotal(0); setFrom(0); setTo(0); setLastPage(1); })
             .finally(() => setLoading(false));
     }
+
+    useEffect(() => { load(page, search); }, []);
 
     function handleSearch(e: React.FormEvent) { e.preventDefault(); load(1, search); }
 

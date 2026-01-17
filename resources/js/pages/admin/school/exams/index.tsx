@@ -30,8 +30,6 @@ export default function ExamsIndex() {
     const [to, setTo] = useState<number>(0);
     const [lastPage, setLastPage] = useState<number>(1);
 
-    useEffect(() => { load(page,search); }, []);
-
     function updateUrl(p: number = 1, s: string = '') {
         const params = new URLSearchParams();
         if (s) params.append('search', s);
@@ -66,6 +64,8 @@ export default function ExamsIndex() {
             })
             .finally(() => setLoading(false));
     }
+
+    useEffect(() => { load(page,search); }, []);
 
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();

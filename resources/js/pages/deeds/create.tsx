@@ -9,8 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { ArrowLeft, Plus, Trash2, Send, Printer } from 'lucide-react';
+import { Plus, Trash2, Send, Printer } from 'lucide-react';
 import { BreadcrumbItem, Member, Gravesite } from '@/types';
+
+// Calculate default dates outside component to avoid impure function calls during render
+const getDefaultDates = () => ({
+  today: new Date().toISOString().split('T')[0],
+  thirtyDaysLater: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+});
+
+const defaultDates = getDefaultDates();
 
 interface Props {
   members: Member[];
@@ -48,8 +56,8 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed }: Re
   });
 
   const invoiceForm = useForm({
-    invoice_date: new Date().toISOString().split('T')[0],
-    due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    invoice_date: defaultDates.today,
+    due_date: defaultDates.thirtyDaysLater,
     items: invoiceItems,
     tax_amount: '0.00',
     notes: '',

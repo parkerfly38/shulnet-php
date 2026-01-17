@@ -30,8 +30,6 @@ export default function ClassDefinitionsIndex() {
     const [to, setTo] = useState(0);
     const [lastPage, setLastPage] = useState(1);
 
-    useEffect(() => { load(page, search); }, []);
-
     function updateUrl(p: number, s: string) {
         const params = new URLSearchParams();
         if (s) params.set('search', s);
@@ -67,6 +65,8 @@ export default function ClassDefinitionsIndex() {
             })
             .finally(() => setLoading(false));
     }
+
+    useEffect(() => { load(page, search); }, []);
 
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();

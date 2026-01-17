@@ -29,8 +29,6 @@ interface Props {
     stripePublicKey?: string;
 }
 
-let stripePromise: Promise<Stripe | null> | null = null;
-
 function StripePaymentForm({ invoice, member }: { invoice: Invoice; member: Member }) {
     const stripe = useStripe();
     const elements = useElements();
@@ -336,10 +334,13 @@ export default function PaymentPage({ invoice, member, processor, stripePublicKe
         });
     };
 
-    // Initialize Stripe
-    if (processor === 'stripe' && stripePublicKey && !stripePromise) {
-        stripePromise = loadStripe(stripePublicKey);
-    }
+    // Initialize Stripe promise once
+    const [stripePromise] = useState<Promise<Stripe | null> | null>(() => {
+        if (processor === 'stripe' && stripePublicKey) {
+            return loadStripe(stripePublicKey);
+        }
+        return null;
+    });
 
     return (
         <AppLayout>

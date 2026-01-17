@@ -10,6 +10,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Save, Plus, Trash2 } from 'lucide-react';
 import { BreadcrumbItem, Member } from '@/types';
 
+// Calculate default dates outside component to avoid impure function calls during render
+const getDefaultDates = () => ({
+  today: new Date().toISOString().split('T')[0],
+  thirtyDaysLater: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+});
+
+const defaultDates = getDefaultDates();
+
 interface Props {
   members: Member[];
   selectedMember?: string;
@@ -47,8 +55,8 @@ export default function InvoicesCreate({ members, selectedMember }: Readonly<Pro
 
   const { data, setData, post, processing, errors } = useForm<FormData>({
     member_id: selectedMember || '',
-    invoice_date: new Date().toISOString().split('T')[0],
-    due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    invoice_date: defaultDates.today,
+    due_date: defaultDates.thirtyDaysLater,
     status: 'draft',
     tax_amount: '0.00',
     notes: '',
