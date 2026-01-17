@@ -1027,12 +1027,13 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
         email_invoice: false,
     });
 
-    // Sync quantity with student count
-    useEffect(() => {
-        setTuitionData(prev => ({ ...prev, quantity: students.length }));
-    }, [students.length]);
+    // Sync quantity with student count - move to useMemo or derive from state
+    const quantityFromStudents = students.length;
 
-    const handleNext = () => setStep(step + 1);
+    const handleNext = () => {
+        setTuitionData(prev => ({ ...prev, quantity: quantityFromStudents }));
+        setStep(step + 1);
+    };
     const handleBack = () => setStep(step - 1);
 
     const addStudent = () => {

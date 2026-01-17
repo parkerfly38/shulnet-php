@@ -14,7 +14,7 @@ class AdminUserManagementTest extends TestCase
     public function test_admin_can_access_user_management_page(): void
     {
         $admin = User::factory()->create([
-            'roles' => [UserRole::Admin]
+            'roles' => [UserRole::Admin],
         ]);
 
         $response = $this->actingAs($admin)->get('/admin/users');
@@ -25,7 +25,7 @@ class AdminUserManagementTest extends TestCase
     public function test_non_admin_cannot_access_user_management_page(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Member]
+            'roles' => [UserRole::Member],
         ]);
 
         $response = $this->actingAs($user)->get('/admin/users');
@@ -36,7 +36,7 @@ class AdminUserManagementTest extends TestCase
     public function test_admin_can_fetch_user_list(): void
     {
         $admin = User::factory()->create(['roles' => [UserRole::Admin]]);
-        
+
         // Create some test users
         User::factory()->create(['roles' => [UserRole::Teacher]]);
         User::factory()->create(['roles' => [UserRole::Student]]);
@@ -45,7 +45,7 @@ class AdminUserManagementTest extends TestCase
         $response = $this->actingAs($admin)->get('/admin/users');
 
         $response->assertStatus(200);
-        
+
         // Assert Inertia props contain user data
         $response->assertInertia(fn ($page) => $page
             ->component('admin/users')
@@ -70,11 +70,11 @@ class AdminUserManagementTest extends TestCase
         $targetUser = User::factory()->create(['roles' => [UserRole::Member]]);
 
         $response = $this->actingAs($admin)->put("/api/admin/users/{$targetUser->id}/roles", [
-            'roles' => ['teacher', 'parent']
+            'roles' => ['teacher', 'parent'],
         ]);
 
         $response->assertStatus(200);
-        
+
         $targetUser->refresh();
         $this->assertTrue($targetUser->hasRole(UserRole::Teacher));
         $this->assertTrue($targetUser->hasRole(UserRole::Parent));
@@ -84,14 +84,14 @@ class AdminUserManagementTest extends TestCase
     public function test_admin_can_search_users(): void
     {
         $admin = User::factory()->create(['roles' => [UserRole::Admin]]);
-        
+
         $john = User::factory()->create(['name' => 'John Doe', 'email' => 'john@example.com']);
         $jane = User::factory()->create(['name' => 'Jane Smith', 'email' => 'jane@example.com']);
 
         // Search by name
         $response = $this->actingAs($admin)->get('/admin/users?search=John');
         $response->assertStatus(200);
-        
+
         $response->assertInertia(fn ($page) => $page
             ->where('filters.search', 'John')
             ->has('users.data')
@@ -101,14 +101,14 @@ class AdminUserManagementTest extends TestCase
     public function test_admin_can_filter_users_by_role(): void
     {
         $admin = User::factory()->create(['roles' => [UserRole::Admin]]);
-        
+
         $teacher = User::factory()->create(['roles' => [UserRole::Teacher]]);
         $student = User::factory()->create(['roles' => [UserRole::Student]]);
 
         // Filter by teacher role
         $response = $this->actingAs($admin)->get('/admin/users?role=teacher');
         $response->assertStatus(200);
-        
+
         $response->assertInertia(fn ($page) => $page
             ->where('filters.role', 'teacher')
             ->has('users.data')

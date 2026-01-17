@@ -29,6 +29,7 @@ class SubjectController extends Controller
     {
         $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
         $model = Subject::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -37,6 +38,7 @@ class SubjectController extends Controller
         $model = Subject::findOrFail($id);
         $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -44,6 +46,7 @@ class SubjectController extends Controller
     {
         $model = Subject::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

@@ -35,7 +35,7 @@ class SettingSeeder extends Seeder
                 'type' => 'select',
                 'description' => 'Default currency for invoicing and financial displays',
             ],
-            
+
             // Jewish Calendar Settings
             [
                 'key' => 'jewish_calendar_location',
@@ -65,7 +65,7 @@ class SettingSeeder extends Seeder
                 'type' => 'text',
                 'description' => 'Minutes after sunset for Havdalah',
             ],
-            
+
             // Email Settings
             [
                 'key' => 'mail_from_address',
@@ -116,7 +116,7 @@ class SettingSeeder extends Seeder
                 'type' => 'select',
                 'description' => 'SMTP encryption (tls/ssl)',
             ],
-            
+
             // Template Settings
             [
                 'key' => 'email_header_color',

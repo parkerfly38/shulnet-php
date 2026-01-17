@@ -15,7 +15,7 @@ class Calendar extends Model
     protected $fillable = [
         'name',
         'members_only',
-        'public'
+        'public',
     ];
 
     public function events(): HasMany

@@ -19,7 +19,7 @@ class DeedFactory extends Factory
     {
         return [
             'member_id' => Member::factory(),
-            'deed_number' => 'DEED-' . $this->faker->unique()->numerify('####'),
+            'deed_number' => 'DEED-'.$this->faker->unique()->numerify('####'),
             'purchase_date' => $this->faker->dateTimeBetween('-30 years', 'now'),
             'purchase_price' => $this->faker->randomFloat(2, 1000, 15000),
             'occupied' => 0,
@@ -47,6 +47,7 @@ class DeedFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $capacity = $attributes['capacity'];
+
             return [
                 'occupied' => $this->faker->numberBetween(1, max(1, $capacity - 1)),
             ];

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
-use App\Models\User;
 use App\Enums\UserRole;
 use App\Imports\MembersImport;
 use App\Mail\TemporaryPasswordMail;
+use App\Models\Member;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -28,8 +28,8 @@ class MemberController extends Controller
 
         $query = Member::query()
             ->select([
-                'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1', 
-                'city', 'state', 'user_id', 'created_at', 'updated_at'
+                'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1',
+                'city', 'state', 'user_id', 'created_at', 'updated_at',
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
@@ -37,10 +37,10 @@ class MemberController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('city', 'like', "%{$search}%")
-                  ->orWhere('state', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%");
             });
         }
 
@@ -65,7 +65,7 @@ class MemberController extends Controller
             'filters' => [
                 'search' => $search,
                 'member_type' => $memberType,
-            ]
+            ],
         ]);
     }
 
@@ -126,11 +126,11 @@ class MemberController extends Controller
     {
         $member->load(['membershipPeriods' => function ($query) {
             $query->with('invoice:id,invoice_number,invoice_date,total,status')
-                  ->orderBy('begin_date', 'desc');
+                ->orderBy('begin_date', 'desc');
         }]);
 
         return Inertia::render('members/show', [
-            'member' => $member
+            'member' => $member,
         ]);
     }
 
@@ -140,7 +140,7 @@ class MemberController extends Controller
     public function edit(Member $member)
     {
         return Inertia::render('members/edit', [
-            'member' => $member
+            'member' => $member,
         ]);
     }
 
@@ -209,8 +209,8 @@ class MemberController extends Controller
             ->select(['id', 'first_name', 'last_name', 'email', 'city', 'state'])
             ->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             })
             ->orderBy('last_name')
             ->orderBy('first_name')
@@ -230,11 +230,11 @@ class MemberController extends Controller
         ]);
 
         try {
-            $import = new MembersImport();
+            $import = new MembersImport;
             Excel::import($import, $request->file('file'));
 
             $errors = $import->getErrors();
-            
+
             return back()->with([
                 'success' => sprintf(
                     'Import completed! %d members imported, %d updated.',
@@ -244,7 +244,7 @@ class MemberController extends Controller
                 'import_errors' => $errors,
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Import failed: ' . $e->getMessage());
+            return back()->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 
@@ -276,10 +276,10 @@ class MemberController extends Controller
             'gender',
         ];
 
-        $callback = function() use ($columns) {
+        $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
-            
+
             // Add a sample row
             fputcsv($file, [
                 'Mr.',
@@ -298,7 +298,7 @@ class MemberController extends Controller
                 '1990-01-01',
                 'Male',
             ]);
-            
+
             fclose($file);
         };
 
@@ -328,7 +328,7 @@ class MemberController extends Controller
         ]);
 
         $temporaryPassword = null;
-        
+
         // Determine the password based on method
         if ($validated['method'] === 'email') {
             // Generate a random temporary password
@@ -341,7 +341,7 @@ class MemberController extends Controller
 
         // Create the user
         $user = User::create([
-            'name' => trim($member->first_name . ' ' . $member->last_name),
+            'name' => trim($member->first_name.' '.$member->last_name),
             'email' => $member->email,
             'password' => Hash::make($password),
             'roles' => [UserRole::Member],
@@ -356,21 +356,23 @@ class MemberController extends Controller
         if ($validated['method'] === 'email' && $temporaryPassword) {
             try {
                 Mail::to($user->email)->send(new TemporaryPasswordMail($user, $temporaryPassword));
-                return back()->with('success', 'User account created and temporary password sent to ' . $member->email);
+
+                return back()->with('success', 'User account created and temporary password sent to '.$member->email);
             } catch (\Exception $e) {
-                return back()->with('success', 'User account created but failed to send email. Temporary password: ' . $temporaryPassword);
+                return back()->with('success', 'User account created but failed to send email. Temporary password: '.$temporaryPassword);
             }
         }
 
-        return back()->with('success', 'User account created successfully for ' . $member->first_name . ' ' . $member->last_name);
+        return back()->with('success', 'User account created successfully for '.$member->first_name.' '.$member->last_name);
     }
 
     // ==================== API Methods ====================
 
     /**
      * API: Create a new member
-     * 
+     *
      * @group Members
+     *
      * @authenticated
      */
     public function apiStore(Request $request)
@@ -410,14 +412,15 @@ class MemberController extends Controller
 
         return response()->json([
             'message' => 'Member created successfully',
-            'data' => $member
+            'data' => $member,
         ], 201);
     }
 
     /**
      * API: Update an existing member
-     * 
+     *
      * @group Members
+     *
      * @authenticated
      */
     public function apiUpdate(Request $request, Member $member)
@@ -457,48 +460,51 @@ class MemberController extends Controller
 
         return response()->json([
             'message' => 'Member updated successfully',
-            'data' => $member->fresh()
+            'data' => $member->fresh(),
         ]);
     }
 
     /**
      * API: Delete a member
-     * 
+     *
      * @group Members
+     *
      * @authenticated
      */
     public function apiDestroy(Member $member)
     {
-        $memberName = $member->first_name . ' ' . $member->last_name;
+        $memberName = $member->first_name.' '.$member->last_name;
         $member->delete();
 
         return response()->json([
-            'message' => "Member '{$memberName}' deleted successfully"
+            'message' => "Member '{$memberName}' deleted successfully",
         ]);
     }
 
     /**
      * API: Get a single member
-     * 
+     *
      * @group Members
+     *
      * @authenticated
      */
     public function apiShow(Member $member)
     {
         $member->load(['membershipPeriods' => function ($query) {
             $query->with('invoice:id,invoice_number,invoice_date,total,status')
-                  ->orderBy('begin_date', 'desc');
+                ->orderBy('begin_date', 'desc');
         }]);
 
         return response()->json([
-            'data' => $member
+            'data' => $member,
         ]);
     }
 
     /**
      * API: List all members with pagination
-     * 
+     *
      * @group Members
+     *
      * @authenticated
      */
     public function apiIndex(Request $request)
@@ -509,8 +515,8 @@ class MemberController extends Controller
 
         $query = Member::query()
             ->select([
-                'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1', 
-                'city', 'state', 'user_id', 'created_at', 'updated_at'
+                'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1',
+                'city', 'state', 'user_id', 'created_at', 'updated_at',
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
@@ -518,10 +524,10 @@ class MemberController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('city', 'like', "%{$search}%")
-                  ->orWhere('state', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%");
             });
         }
 

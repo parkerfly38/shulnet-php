@@ -9,8 +9,7 @@ interface RichTextEditorProps {
 
 export default function RichTextEditor({ 
   value, 
-  onChange, 
-  placeholder = 'Enter content...',
+  onChange,
   className = ''
 }: RichTextEditorProps) {
   return (

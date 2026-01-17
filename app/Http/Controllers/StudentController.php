@@ -16,8 +16,8 @@ class StudentController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('first_name', 'like', "%{$q}%")
-                  ->orWhere('last_name', 'like', "%{$q}%")
-                  ->orWhere('email', 'like', "%{$q}%");
+                    ->orWhere('last_name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
             });
         }
 
@@ -33,6 +33,7 @@ class StudentController extends Controller
     {
         $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'dob' => 'nullable|date', 'parent_id' => 'nullable|integer', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
         $model = Student::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -41,6 +42,7 @@ class StudentController extends Controller
         $model = Student::findOrFail($id);
         $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'dob' => 'nullable|date', 'parent_id' => 'nullable|integer', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -48,6 +50,7 @@ class StudentController extends Controller
     {
         $model = Student::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

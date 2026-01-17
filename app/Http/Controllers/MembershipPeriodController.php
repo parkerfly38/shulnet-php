@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use App\Models\Member;
 use App\Models\MembershipPeriod;
-use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -40,7 +40,7 @@ class MembershipPeriodController extends Controller
         ]);
 
         // Verify invoice belongs to this member if provided
-        if (!empty($validated['invoice_id'])) {
+        if (! empty($validated['invoice_id'])) {
             $invoice = Invoice::findOrFail($validated['invoice_id']);
             if ($invoice->member_id !== $member->id) {
                 return back()->withErrors(['invoice_id' => 'Invoice must belong to this member.']);
@@ -94,7 +94,7 @@ class MembershipPeriodController extends Controller
         ]);
 
         // Verify invoice belongs to this member if provided
-        if (!empty($validated['invoice_id'])) {
+        if (! empty($validated['invoice_id'])) {
             $invoice = Invoice::findOrFail($validated['invoice_id']);
             if ($invoice->member_id !== $member->id) {
                 return back()->withErrors(['invoice_id' => 'Invoice must belong to this member.']);

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
-use App\Models\MembershipTier;
-use App\Models\MembershipPeriod;
-use App\Models\SchoolTuitionTier;
-use App\Models\ParentModel;
-use App\Models\Student;
-use App\Models\Yahrzeit;
+use App\Mail\InvoiceMail;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
-use App\Mail\InvoiceMail;
+use App\Models\Member;
+use App\Models\MembershipPeriod;
+use App\Models\MembershipTier;
+use App\Models\ParentModel;
+use App\Models\SchoolTuitionTier;
+use App\Models\Student;
+use App\Models\Yahrzeit;
 use App\Services\HebrewCalendarService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,21 +24,21 @@ class DashboardController extends Controller
     public function index(HebrewCalendarService $hebrewCalendarService, Request $request)
     {
         $user = $request->user();
-        
+
         // Check if user is an admin
         if ($user->hasRole('admin')) {
             return $this->adminDashboard($hebrewCalendarService);
         }
-        
+
         // Check if user has a member profile
         if ($user->member) {
             return redirect()->route('member.dashboard');
         }
-        
+
         // Default user dashboard (no member profile)
         return $this->defaultDashboard($user);
     }
-    
+
     private function defaultDashboard($user)
     {
         return Inertia::render('dashboard', [
@@ -48,37 +48,37 @@ class DashboardController extends Controller
             ],
         ]);
     }
-    
+
     private function adminDashboard(HebrewCalendarService $hebrewCalendarService)
     {
         // Get members joined by month for the current year
         $currentYear = now()->year;
-        
+
         // SQLite-compatible query using strftime
         $driver = DB::connection()->getDriverName();
-        
+
         if ($driver === 'sqlite') {
             $monthExpression = "CAST(strftime('%m', created_at) AS INTEGER)";
         } else {
             // MySQL/PostgreSQL
             $monthExpression = 'MONTH(created_at)';
         }
-        
+
         $membersJoinedByMonth = Member::select(
             DB::raw("$monthExpression as month"),
             DB::raw('COUNT(*) as count')
         )
-        ->whereYear('created_at', $currentYear)
-        ->groupBy('month')
-        ->orderBy('month')
-        ->get()
-        ->pluck('count', 'month')
-        ->toArray();
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('count', 'month')
+            ->toArray();
 
         // Fill in missing months with 0
         $chartData = [];
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        
+
         for ($month = 1; $month <= 12; $month++) {
             $chartData[] = [
                 'month' => $monthNames[$month - 1],
@@ -88,7 +88,7 @@ class DashboardController extends Controller
 
         // Get current Hebrew date
         $currentHebrewDate = $hebrewCalendarService->getCurrentHebrewDate();
-        
+
         // Get yahrzeits for the current Hebrew month
         $currentMonthYahrzeits = Yahrzeit::where('hebrew_month_of_death', $currentHebrewDate['month'])
             ->with('members:id,first_name,last_name')
@@ -105,7 +105,7 @@ class DashboardController extends Controller
                     'members' => $yahrzeit->members->map(function ($member) {
                         return [
                             'id' => $member->id,
-                            'name' => $member->first_name . ' ' . $member->last_name,
+                            'name' => $member->first_name.' '.$member->last_name,
                             'relationship' => $member->pivot->relationship,
                         ];
                     }),
@@ -140,10 +140,10 @@ class DashboardController extends Controller
             ->map(function ($invoice) {
                 $daysOverdue = null;
                 $agingCategory = 'current';
-                
+
                 if ($invoice->due_date) {
                     $daysOverdue = (int) floor(now()->diffInDays($invoice->due_date, false));
-                    
+
                     if ($daysOverdue < 0) {
                         $daysOverdue = abs($daysOverdue);
                         if ($daysOverdue <= 30) {
@@ -157,12 +157,12 @@ class DashboardController extends Controller
                         }
                     }
                 }
-                
+
                 return [
                     'id' => $invoice->id,
                     'invoice_number' => $invoice->invoice_number,
-                    'member_name' => $invoice->member ? 
-                        $invoice->member->first_name . ' ' . $invoice->member->last_name : 
+                    'member_name' => $invoice->member ?
+                        $invoice->member->first_name.' '.$invoice->member->last_name :
                         'Unknown',
                     'member_id' => $invoice->member_id,
                     'due_date' => $invoice->due_date?->format('Y-m-d'),
@@ -187,12 +187,12 @@ class DashboardController extends Controller
             $invoiceAging[$category]['count']++;
             $invoiceAging[$category]['total'] += floatval($invoice['total']);
         }
-        
+
         // Get active membership tiers for onboarding workflow
         $membershipTiers = MembershipTier::active()
             ->ordered()
             ->get(['id', 'name', 'slug', 'description', 'price', 'billing_period', 'features']);
-        
+
         // Get active school tuition tiers for student onboarding workflow
         $schoolTuitionTiers = SchoolTuitionTier::active()
             ->ordered()
@@ -259,13 +259,13 @@ class DashboardController extends Controller
             // Create membership period
             $tier = MembershipTier::findOrFail($validated['membership_tier_id']);
             $startDate = $validated['start_date'];
-            
+
             // Calculate end date based on billing period
-            $endDate = match($tier->billing_period) {
-                'annual' => date('Y-m-d', strtotime($startDate . ' +1 year -1 day')),
-                'monthly' => date('Y-m-d', strtotime($startDate . ' +1 month -1 day')),
+            $endDate = match ($tier->billing_period) {
+                'annual' => date('Y-m-d', strtotime($startDate.' +1 year -1 day')),
+                'monthly' => date('Y-m-d', strtotime($startDate.' +1 month -1 day')),
                 'lifetime' => null,
-                default => date('Y-m-d', strtotime($startDate . ' +1 year -1 day')),
+                default => date('Y-m-d', strtotime($startDate.' +1 year -1 day')),
             };
 
             $membershipPeriod = MembershipPeriod::create([
@@ -283,19 +283,19 @@ class DashboardController extends Controller
                     'member_id' => $member->id,
                     'invoiceable_type' => Member::class,
                     'invoiceable_id' => $member->id,
-                    'invoice_number' => 'INV-' . date('Y') . '-' . str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
+                    'invoice_number' => 'INV-'.date('Y').'-'.str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
                     'invoice_date' => now(),
                     'due_date' => date('Y-m-d', strtotime('+30 days')),
                     'subtotal' => $tier->price,
                     'tax' => 0,
                     'total' => $tier->price,
                     'status' => 'open',
-                    'notes' => 'Membership: ' . $tier->name,
+                    'notes' => 'Membership: '.$tier->name,
                 ]);
 
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
-                    'description' => $tier->name . ' Membership',
+                    'description' => $tier->name.' Membership',
                     'quantity' => 1,
                     'unit_price' => $tier->price,
                     'total' => $tier->price,
@@ -306,23 +306,24 @@ class DashboardController extends Controller
                     if ($member->email) {
                         try {
                             // Generate PDF path (you may need to implement PDF generation)
-                            $pdfPath = storage_path('app/invoices/invoice-' . $invoice->invoice_number . '.pdf');
-                            
+                            $pdfPath = storage_path('app/invoices/invoice-'.$invoice->invoice_number.'.pdf');
+
                             Mail::to($member->email)->send(new InvoiceMail($invoice->load('member', 'items'), $pdfPath));
                         } catch (\Exception $e) {
                             // Log error but don't fail the onboarding
-                            \Log::warning('Failed to send invoice email: ' . $e->getMessage());
+                            \Log::warning('Failed to send invoice email: '.$e->getMessage());
                         }
                     }
                 }
             }
 
             DB::commit();
-            
+
             return redirect()->route('dashboard')->with('success', 'Member onboarded successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to onboard member: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Failed to onboard member: '.$e->getMessage()]);
         }
     }
 
@@ -357,7 +358,7 @@ class DashboardController extends Controller
             // Handle parent creation/selection
             $parentId = null;
             $parentData = $validated['parent_data'];
-            
+
             if ($parentData['selection_type'] === 'existing_parent') {
                 $parentId = $parentData['parent_id'];
             } elseif ($parentData['selection_type'] === 'existing_member') {
@@ -416,19 +417,19 @@ class DashboardController extends Controller
                     'member_id' => $memberId,
                     'invoiceable_type' => ParentModel::class,
                     'invoiceable_id' => $parentId,
-                    'invoice_number' => 'INV-' . date('Y') . '-' . str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
+                    'invoice_number' => 'INV-'.date('Y').'-'.str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
                     'invoice_date' => now(),
                     'due_date' => date('Y-m-d', strtotime('+30 days')),
                     'subtotal' => $total,
                     'tax' => 0,
                     'total' => $total,
                     'status' => 'open',
-                    'notes' => 'Tuition for ' . count($students) . ' student(s): ' . $tier->name,
+                    'notes' => 'Tuition for '.count($students).' student(s): '.$tier->name,
                 ]);
 
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
-                    'description' => $tier->name . ' (' . $quantity . ' student' . ($quantity > 1 ? 's' : '') . ')',
+                    'description' => $tier->name.' ('.$quantity.' student'.($quantity > 1 ? 's' : '').')',
                     'quantity' => $quantity,
                     'unit_price' => $tier->price,
                     'total' => $total,
@@ -440,23 +441,24 @@ class DashboardController extends Controller
                     if ($parent && $parent->email) {
                         try {
                             // Generate PDF path (you may need to implement PDF generation)
-                            $pdfPath = storage_path('app/invoices/invoice-' . $invoice->invoice_number . '.pdf');
-                            
+                            $pdfPath = storage_path('app/invoices/invoice-'.$invoice->invoice_number.'.pdf');
+
                             Mail::to($parent->email)->send(new InvoiceMail($invoice->load('member', 'items'), $pdfPath));
                         } catch (\Exception $e) {
                             // Log error but don't fail the onboarding
-                            \Log::warning('Failed to send invoice email: ' . $e->getMessage());
+                            \Log::warning('Failed to send invoice email: '.$e->getMessage());
                         }
                     }
                 }
             }
 
             DB::commit();
-            
-            return redirect()->route('dashboard')->with('success', count($students) . ' student(s) onboarded successfully!');
+
+            return redirect()->route('dashboard')->with('success', count($students).' student(s) onboarded successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to onboard student(s): ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Failed to onboard student(s): '.$e->getMessage()]);
         }
     }
 }

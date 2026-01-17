@@ -38,7 +38,7 @@ class EventTicketType extends Model
 
     public function isAvailable(): bool
     {
-        if (!$this->active) {
+        if (! $this->active) {
             return false;
         }
 

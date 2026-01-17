@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
-use App\Models\Event;
 use App\Models\Calendar;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,14 +22,14 @@ class EventController extends Controller
             ->with(['calendar'])
             ->select([
                 'id', 'calendar_id', 'name', 'description', 'event_start', 'event_end',
-                'all_day', 'members_only', 'created_at', 'updated_at'
+                'all_day', 'members_only', 'created_at', 'updated_at',
             ])
             ->orderBy('event_start', 'desc');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
@@ -62,7 +60,7 @@ class EventController extends Controller
             'filters' => [
                 'search' => $search,
                 'calendar' => $calendar,
-            ]
+            ],
         ]);
     }
 
@@ -74,7 +72,7 @@ class EventController extends Controller
         $calendars = Calendar::select('id', 'name', 'members_only', 'public')
             ->orderBy('name')
             ->get();
-        
+
         $selectedCalendar = $request->get('calendar');
 
         return Inertia::render('events/create', [
@@ -123,7 +121,7 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $event->load(['calendar', 'rsvps.member']);
-        
+
         // Map database fields to frontend expected fields
         $eventData = [
             'id' => $event->id,
@@ -156,9 +154,9 @@ class EventController extends Controller
                 ];
             }),
         ];
-        
+
         return Inertia::render('events/show', [
-            'event' => $eventData
+            'event' => $eventData,
         ]);
     }
 
@@ -168,7 +166,7 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $event->load(['calendar']);
-        
+
         $calendars = Calendar::select('id', 'name', 'members_only', 'public')
             ->orderBy('name')
             ->get();

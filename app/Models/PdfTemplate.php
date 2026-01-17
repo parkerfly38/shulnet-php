@@ -23,8 +23,8 @@ class PdfTemplate extends Model
 
     /**
      * Replace template placeholders with actual field values
-     * 
-     * @param array $fieldValues Associative array of field_name => value
+     *
+     * @param  array  $fieldValues  Associative array of field_name => value
      * @return string HTML content with replaced values
      */
     public function renderWithFields(array $fieldValues): string
@@ -33,7 +33,7 @@ class PdfTemplate extends Model
 
         foreach ($fieldValues as $fieldName => $value) {
             // Replace {{field_name}} with the actual value
-            $content = str_replace('{{' . $fieldName . '}}', $value, $content);
+            $content = str_replace('{{'.$fieldName.'}}', $value, $content);
         }
 
         // Replace any remaining unreplaced fields with empty string
@@ -44,29 +44,28 @@ class PdfTemplate extends Model
 
     /**
      * Extract field names from HTML content
-     * 
+     *
      * @return array List of field names found in template
      */
     public function extractFields(): array
     {
         preg_match_all('/\{\{([^}]+)\}\}/', $this->html_content, $matches);
+
         return array_unique($matches[1]);
     }
 
     /**
      * Validate that all required fields are provided
-     * 
-     * @param array $fieldValues
+     *
      * @return array Missing required fields
      */
     public function getMissingFields(array $fieldValues): array
     {
         $requiredFields = collect($this->available_fields)
-            ->filter(fn($field) => $field['required'] ?? false)
+            ->filter(fn ($field) => $field['required'] ?? false)
             ->pluck('name')
             ->toArray();
 
         return array_diff($requiredFields, array_keys($fieldValues));
     }
 }
-

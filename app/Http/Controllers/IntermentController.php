@@ -27,11 +27,11 @@ class IntermentController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('hebrew_name', 'like', "%{$search}%")
-                  ->orWhereHas('deed', function ($q) use ($search) {
-                      $q->where('deed_number', 'like', "%{$search}%");
-                  });
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('hebrew_name', 'like', "%{$search}%")
+                    ->orWhereHas('deed', function ($q) use ($search) {
+                        $q->where('deed_number', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -126,7 +126,7 @@ class IntermentController extends Controller
 
         // Check if deed has available space
         $deed = Deed::findOrFail($validated['deed_id']);
-        if (!$deed->hasAvailableSpace()) {
+        if (! $deed->hasAvailableSpace()) {
             return back()
                 ->withErrors(['deed_id' => 'The selected deed has no available space.'])
                 ->withInput();
@@ -142,7 +142,7 @@ class IntermentController extends Controller
         if ($gravesite) {
             $gravesite->update([
                 'status' => 'occupied',
-                'deceased_name' => $validated['first_name'] . ' ' . $validated['last_name'],
+                'deceased_name' => $validated['first_name'].' '.$validated['last_name'],
                 'deceased_hebrew_name' => $validated['hebrew_name'] ?? null,
                 'date_of_birth' => $validated['date_of_birth'] ?? null,
                 'date_of_death' => $validated['date_of_death'],
@@ -176,7 +176,7 @@ class IntermentController extends Controller
             ->where('is_active', true)
             ->where(function ($q) use ($interment) {
                 $q->whereColumn('occupied', '<', 'capacity')
-                  ->orWhere('id', $interment->deed_id);
+                    ->orWhere('id', $interment->deed_id);
             })
             ->orderBy('deed_number')
             ->get();
@@ -218,7 +218,7 @@ class IntermentController extends Controller
         // If deed is being changed, check space and update counts
         if ($interment->deed_id !== $validated['deed_id']) {
             $newDeed = Deed::findOrFail($validated['deed_id']);
-            if (!$newDeed->hasAvailableSpace()) {
+            if (! $newDeed->hasAvailableSpace()) {
                 return back()
                     ->withErrors(['deed_id' => 'The selected deed has no available space.'])
                     ->withInput();

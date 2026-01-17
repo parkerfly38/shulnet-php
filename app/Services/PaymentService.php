@@ -11,11 +11,11 @@ class PaymentService
     public function __construct()
     {
         $processor = Setting::where('key', 'payment_processor')->value('value') ?? 'stripe';
-        
+
         $this->gateway = match ($processor) {
-            'authorize_net' => new AuthorizeNetPaymentGateway(),
-            'paypal' => new PayPalPaymentGateway(),
-            default => new StripePaymentGateway(),
+            'authorize_net' => new AuthorizeNetPaymentGateway,
+            'paypal' => new PayPalPaymentGateway,
+            default => new StripePaymentGateway,
         };
     }
 

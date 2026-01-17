@@ -2,14 +2,16 @@
 
 namespace App\Services;
 
+use Exception;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
-use Exception;
 
 class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
 {
     protected string $apiLoginId;
+
     protected string $transactionKey;
+
     protected string $environment;
 
     public function __construct()
@@ -23,25 +25,25 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
     {
         try {
             // Set the transaction's reference ID
-            $refId = 'ref' . time();
+            $refId = 'ref'.time();
 
             // Create the payment object
-            $creditCard = new AnetAPI\CreditCardType();
+            $creditCard = new AnetAPI\CreditCardType;
             $creditCard->setCardNumber($paymentDetails['card_number']);
             $creditCard->setExpirationDate($paymentDetails['expiration_date']);
             $creditCard->setCardCode($paymentDetails['cvv']);
 
-            $paymentOne = new AnetAPI\PaymentType();
+            $paymentOne = new AnetAPI\PaymentType;
             $paymentOne->setCreditCard($creditCard);
 
             // Create the transaction request
-            $transactionRequestType = new AnetAPI\TransactionRequestType();
+            $transactionRequestType = new AnetAPI\TransactionRequestType;
             $transactionRequestType->setTransactionType('authCaptureTransaction');
             $transactionRequestType->setAmount($amount);
             $transactionRequestType->setPayment($paymentOne);
 
             // Create the request
-            $request = new AnetAPI\CreateTransactionRequest();
+            $request = new AnetAPI\CreateTransactionRequest;
             $request->setMerchantAuthentication($this->getMerchantAuthentication());
             $request->setRefId($refId);
             $request->setTransactionRequest($transactionRequestType);
@@ -49,8 +51,8 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
             // Execute the request
             $controller = new AnetController\CreateTransactionController($request);
             $response = $controller->executeWithApiResponse(
-                $this->environment === 'production' 
-                    ? \net\authorize\api\constants\ANetEnvironment::PRODUCTION 
+                $this->environment === 'production'
+                    ? \net\authorize\api\constants\ANetEnvironment::PRODUCTION
                     : \net\authorize\api\constants\ANetEnvironment::SANDBOX
             );
 
@@ -72,6 +74,7 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
                 }
 
                 $errorMessages = $response->getMessages()->getMessage();
+
                 return [
                     'success' => false,
                     'error' => $errorMessages[0]->getText(),
@@ -93,25 +96,25 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
     public function refundPayment(string $transactionId, ?float $amount = null): array
     {
         try {
-            $refId = 'ref' . time();
+            $refId = 'ref'.time();
 
             // Create the payment object (you would need to get the last 4 digits from storage)
-            $creditCard = new AnetAPI\CreditCardType();
+            $creditCard = new AnetAPI\CreditCardType;
             $creditCard->setCardNumber('XXXX'); // Last 4 digits
             $creditCard->setExpirationDate('XXXX');
 
-            $paymentOne = new AnetAPI\PaymentType();
+            $paymentOne = new AnetAPI\PaymentType;
             $paymentOne->setCreditCard($creditCard);
 
             // Create the transaction request
-            $transactionRequestType = new AnetAPI\TransactionRequestType();
+            $transactionRequestType = new AnetAPI\TransactionRequestType;
             $transactionRequestType->setTransactionType('refundTransaction');
             $transactionRequestType->setAmount($amount);
             $transactionRequestType->setPayment($paymentOne);
             $transactionRequestType->setRefTransId($transactionId);
 
             // Create the request
-            $request = new AnetAPI\CreateTransactionRequest();
+            $request = new AnetAPI\CreateTransactionRequest;
             $request->setMerchantAuthentication($this->getMerchantAuthentication());
             $request->setRefId($refId);
             $request->setTransactionRequest($transactionRequestType);
@@ -119,8 +122,8 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
             // Execute the request
             $controller = new AnetController\CreateTransactionController($request);
             $response = $controller->executeWithApiResponse(
-                $this->environment === 'production' 
-                    ? \net\authorize\api\constants\ANetEnvironment::PRODUCTION 
+                $this->environment === 'production'
+                    ? \net\authorize\api\constants\ANetEnvironment::PRODUCTION
                     : \net\authorize\api\constants\ANetEnvironment::SANDBOX
             );
 
@@ -138,6 +141,7 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
             }
 
             $errorMessages = $response->getMessages()->getMessage();
+
             return [
                 'success' => false,
                 'error' => $errorMessages[0]->getText(),
@@ -153,14 +157,14 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
     public function getPaymentDetails(string $transactionId): array
     {
         try {
-            $request = new AnetAPI\GetTransactionDetailsRequest();
+            $request = new AnetAPI\GetTransactionDetailsRequest;
             $request->setMerchantAuthentication($this->getMerchantAuthentication());
             $request->setTransId($transactionId);
 
             $controller = new AnetController\GetTransactionDetailsController($request);
             $response = $controller->executeWithApiResponse(
-                $this->environment === 'production' 
-                    ? \net\authorize\api\constants\ANetEnvironment::PRODUCTION 
+                $this->environment === 'production'
+                    ? \net\authorize\api\constants\ANetEnvironment::PRODUCTION
                     : \net\authorize\api\constants\ANetEnvironment::SANDBOX
             );
 
@@ -185,7 +189,7 @@ class AuthorizeNetPaymentGateway implements PaymentGatewayInterface
 
     protected function getMerchantAuthentication(): AnetAPI\MerchantAuthenticationType
     {
-        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
         $merchantAuthentication->setName($this->apiLoginId);
         $merchantAuthentication->setTransactionKey($this->transactionKey);
 

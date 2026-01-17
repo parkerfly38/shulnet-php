@@ -57,7 +57,7 @@ class MembershipPeriod extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('end_date')
-              ->orWhere('end_date', '>=', now());
+                ->orWhere('end_date', '>=', now());
         });
     }
 
@@ -67,6 +67,6 @@ class MembershipPeriod extends Model
     public function scopeExpired($query)
     {
         return $query->whereNotNull('end_date')
-                    ->where('end_date', '<', now());
+            ->where('end_date', '<', now());
     }
 }

@@ -14,7 +14,7 @@ class UserRolesTest extends TestCase
     public function test_user_can_have_single_role(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Admin]
+            'roles' => [UserRole::Admin],
         ]);
 
         $this->assertTrue($user->hasRole(UserRole::Admin));
@@ -25,7 +25,7 @@ class UserRolesTest extends TestCase
     public function test_user_can_have_multiple_roles(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Teacher, UserRole::Parent]
+            'roles' => [UserRole::Teacher, UserRole::Parent],
         ]);
 
         $this->assertTrue($user->hasRole(UserRole::Teacher));
@@ -38,7 +38,7 @@ class UserRolesTest extends TestCase
     public function test_user_role_checking_methods(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Teacher, UserRole::Admin]
+            'roles' => [UserRole::Teacher, UserRole::Admin],
         ]);
 
         $this->assertTrue($user->hasAnyRole([UserRole::Student, UserRole::Teacher]));
@@ -49,7 +49,7 @@ class UserRolesTest extends TestCase
     public function test_user_can_add_role(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Student]
+            'roles' => [UserRole::Student],
         ]);
 
         $user->addRole(UserRole::Parent);
@@ -61,7 +61,7 @@ class UserRolesTest extends TestCase
     public function test_user_can_remove_role(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Teacher, UserRole::Parent]
+            'roles' => [UserRole::Teacher, UserRole::Parent],
         ]);
 
         $user->removeRole(UserRole::Teacher);
@@ -73,7 +73,7 @@ class UserRolesTest extends TestCase
     public function test_user_can_set_roles(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Student]
+            'roles' => [UserRole::Student],
         ]);
 
         $user->setRoles([UserRole::Admin, UserRole::Teacher]);
@@ -86,7 +86,7 @@ class UserRolesTest extends TestCase
     public function test_role_labels_accessor(): void
     {
         $user = User::factory()->create([
-            'roles' => [UserRole::Admin, UserRole::Teacher]
+            'roles' => [UserRole::Admin, UserRole::Teacher],
         ]);
 
         $this->assertStringContainsString('Administrator', $user->role_labels);

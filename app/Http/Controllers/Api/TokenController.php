@@ -9,15 +9,16 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * @group Authentication
+ *
  * @authenticated
  */
 class TokenController extends Controller
 {
     /**
      * Create API Token
-     * 
+     *
      * Generate a new API token for server-to-server authentication.
-     * 
+     *
      * @unauthenticated
      */
     public function create(Request $request)
@@ -30,14 +31,14 @@ class TokenController extends Controller
 
         $user = \App\Models\User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         // Check if user has admin role
-        if (!$user->hasRole('admin')) {
+        if (! $user->hasRole('admin')) {
             throw ValidationException::withMessages([
                 'email' => ['Only admin users can create API tokens.'],
             ]);
@@ -56,7 +57,7 @@ class TokenController extends Controller
 
     /**
      * List API Tokens
-     * 
+     *
      * Get all API tokens for the authenticated user.
      */
     public function index(Request $request)
@@ -78,14 +79,14 @@ class TokenController extends Controller
 
     /**
      * Revoke API Token
-     * 
+     *
      * Delete a specific API token by ID.
      */
     public function destroy(Request $request, $tokenId)
     {
         $token = $request->user()->tokens()->where('id', $tokenId)->first();
 
-        if (!$token) {
+        if (! $token) {
             return response()->json([
                 'message' => 'Token not found',
             ], 404);
@@ -101,7 +102,7 @@ class TokenController extends Controller
 
     /**
      * Revoke All API Tokens
-     * 
+     *
      * Delete all API tokens for the authenticated user.
      */
     public function destroyAll(Request $request)
@@ -116,7 +117,7 @@ class TokenController extends Controller
 
     /**
      * Show API Tokens Management Page
-     * 
+     *
      * Display the API tokens management UI.
      */
     public function page(Request $request)

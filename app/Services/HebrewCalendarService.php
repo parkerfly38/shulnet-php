@@ -19,13 +19,13 @@ class HebrewCalendarService
         9 => 'Sivan',
         10 => 'Tammuz',
         11 => 'Av',
-        12 => 'Elul'
+        12 => 'Elul',
     ];
 
     /**
      * Convert Gregorian date to Hebrew calendar
      *
-     * @param string $gregorianDate Date in Y-m-d format
+     * @param  string  $gregorianDate  Date in Y-m-d format
      * @return array Hebrew calendar components
      */
     public function gregorianToHebrew(string $gregorianDate): array
@@ -41,39 +41,39 @@ class HebrewCalendarService
 
         // Convert Julian Day to Jewish calendar
         $hebrewDate = jdtojewish($julianDay);
-        
+
         if (empty($hebrewDate)) {
             // Fallback if conversion fails
             return [
-                'day' => (int)$day,
-                'month' => $this->getHebrewMonthNumberApproximate((int)$month),
-                'year' => (int)$year + 3760, // Approximate Hebrew year
-                'formatted' => null
+                'day' => (int) $day,
+                'month' => $this->getHebrewMonthNumberApproximate((int) $month),
+                'year' => (int) $year + 3760, // Approximate Hebrew year
+                'formatted' => null,
             ];
         }
 
         // Parse the Hebrew date (format: "month/day/year")
         $parts = explode('/', $hebrewDate);
-        
+
         if (count($parts) !== 3) {
             // Fallback parsing
             return [
-                'day' => (int)$day,
-                'month' => $this->getHebrewMonthNumberApproximate((int)$month),
-                'year' => (int)$year + 3760,
-                'formatted' => null
+                'day' => (int) $day,
+                'month' => $this->getHebrewMonthNumberApproximate((int) $month),
+                'year' => (int) $year + 3760,
+                'formatted' => null,
             ];
         }
 
-        $hebrewMonth = (int)$parts[0];
-        $hebrewDay = (int)$parts[1];
-        $hebrewYear = (int)$parts[2];
+        $hebrewMonth = (int) $parts[0];
+        $hebrewDay = (int) $parts[1];
+        $hebrewYear = (int) $parts[2];
 
         return [
             'day' => $hebrewDay,
             'month' => $hebrewMonth,
             'year' => $hebrewYear,
-            'formatted' => sprintf('%d %s %d', $hebrewDay, $this->getHebrewMonthName($hebrewMonth), $hebrewYear)
+            'formatted' => sprintf('%d %s %d', $hebrewDay, $this->getHebrewMonthName($hebrewMonth), $hebrewYear),
         ];
     }
 
@@ -103,7 +103,7 @@ class HebrewCalendarService
             9 => 12,  // September -> Elul
             10 => 1,  // October -> Tishrei
             11 => 2,  // November -> Cheshvan
-            12 => 3   // December -> Kislev
+            12 => 3,   // December -> Kislev
         ];
 
         return $approximateMapping[$gregorianMonth] ?? 1;
@@ -130,9 +130,6 @@ class HebrewCalendarService
     /**
      * Convert Hebrew date to Gregorian date for a specific Hebrew year
      *
-     * @param int $hebrewDay
-     * @param int $hebrewMonth
-     * @param int $hebrewYear
      * @return string|null Gregorian date in 'F j, Y' format or null if conversion fails
      */
     public function hebrewToGregorian(int $hebrewDay, int $hebrewMonth, int $hebrewYear): ?string
@@ -140,32 +137,32 @@ class HebrewCalendarService
         try {
             // Convert Hebrew date to Julian Day Number
             $julianDay = jewishtojd($hebrewMonth, $hebrewDay, $hebrewYear);
-            
+
             if ($julianDay === 0) {
                 return null;
             }
 
             // Convert Julian Day to Gregorian
             $gregorianDate = jdtogregorian($julianDay);
-            
+
             if (empty($gregorianDate)) {
                 return null;
             }
 
             // Parse the Gregorian date (format: "month/day/year")
             $parts = explode('/', $gregorianDate);
-            
+
             if (count($parts) !== 3) {
                 return null;
             }
 
-            $month = (int)$parts[0];
-            $day = (int)$parts[1];
-            $year = (int)$parts[2];
+            $month = (int) $parts[0];
+            $day = (int) $parts[1];
+            $year = (int) $parts[2];
 
             // Format as readable date
             $dateObj = \DateTime::createFromFormat('m/d/Y', sprintf('%02d/%02d/%04d', $month, $day, $year));
-            
+
             return $dateObj ? $dateObj->format('F j, Y') : null;
         } catch (\Exception $e) {
             return null;
@@ -175,13 +172,12 @@ class HebrewCalendarService
     /**
      * Get Gregorian date for a Hebrew date in the current Hebrew year
      *
-     * @param int $hebrewDay
-     * @param int $hebrewMonth
      * @return string|null Gregorian date in 'F j, Y' format
      */
     public function getGregorianDateForCurrentYear(int $hebrewDay, int $hebrewMonth): ?string
     {
         $currentHebrewYear = $this->getCurrentHebrewDate()['year'];
+
         return $this->hebrewToGregorian($hebrewDay, $hebrewMonth, $currentHebrewYear);
     }
 }

@@ -13,7 +13,7 @@ interface Props {
   placeholder?: string;
 }
 
-export default function AsyncMemberSelect({ value = null, onChange, placeholder = 'Search members...' }: Props) {
+export default function AsyncMemberSelect({ onChange, placeholder = 'Search members...' }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Member[]>([]);
   const [open, setOpen] = useState(false);

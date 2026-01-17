@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member;
-use App\Models\InvoiceItem;
 use App\Models\GabbaiAssignment;
+use App\Models\InvoiceItem;
+use App\Models\Member;
+use App\Services\SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
-use App\Services\SettingsService;
 
 class GabbaiController extends Controller
 {
@@ -24,7 +24,7 @@ class GabbaiController extends Controller
 
         $members = Member::query()->where(function ($q) {
             $q->whereNotNull('anniversary_date')
-              ->orWhereNotNull('bnaimitzvahdate');
+                ->orWhereNotNull('bnaimitzvahdate');
         })->get();
 
         $results = [];
@@ -40,7 +40,7 @@ class GabbaiController extends Controller
                 if ($occurrence->between($start, $end)) {
                     $results[] = [
                         'id' => $member->id,
-                        'name' => $member->first_name . ' ' . $member->last_name,
+                        'name' => $member->first_name.' '.$member->last_name,
                         'type' => 'wedding',
                         'date' => $occurrence->toDateString(),
                     ];
@@ -57,7 +57,7 @@ class GabbaiController extends Controller
                 if ($occurrence->between($start, $end)) {
                     $results[] = [
                         'id' => $member->id,
-                        'name' => $member->first_name . ' ' . $member->last_name,
+                        'name' => $member->first_name.' '.$member->last_name,
                         'type' => 'bnai',
                         'date' => $occurrence->toDateString(),
                     ];
@@ -88,7 +88,7 @@ class GabbaiController extends Controller
                     'id' => $a->id,
                     'honor' => $a->honor,
                     'member_id' => $a->member_id,
-                    'member_name' => $a->member ? ($a->member->first_name . ' ' . $a->member->last_name) : null,
+                    'member_name' => $a->member ? ($a->member->first_name.' '.$a->member->last_name) : null,
                 ];
             });
 
@@ -138,7 +138,7 @@ class GabbaiController extends Controller
             ];
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             GabbaiAssignment::insert($data);
         }
 
@@ -181,7 +181,7 @@ class GabbaiController extends Controller
                 'invoice_id' => $item->invoice_id,
                 'invoice_number' => $item->invoice->invoice_number ?? null,
                 'member_id' => $item->invoice->member->id ?? null,
-                'member_name' => ($item->invoice->member->first_name ?? '') . ' ' . ($item->invoice->member->last_name ?? ''),
+                'member_name' => ($item->invoice->member->first_name ?? '').' '.($item->invoice->member->last_name ?? ''),
                 'description' => $item->description,
                 'total' => $item->total,
                 'due_date' => optional($item->invoice->due_date)->toDateString(),

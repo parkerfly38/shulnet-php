@@ -17,20 +17,21 @@ trait HasRoles
                 if (is_null($value)) {
                     return [];
                 }
-                
+
                 $roleValues = json_decode($value, true) ?? [];
-                return array_map(fn($role) => UserRole::from($role), $roleValues);
+
+                return array_map(fn ($role) => UserRole::from($role), $roleValues);
             },
             set: function ($value) {
                 if (is_null($value) || empty($value)) {
                     return null;
                 }
-                
+
                 // Convert UserRole enums to their string values
                 $roleValues = array_map(function ($role) {
                     return $role instanceof UserRole ? $role->value : $role;
                 }, is_array($value) ? $value : [$value]);
-                
+
                 return json_encode(array_values(array_unique($roleValues)));
             }
         );
@@ -42,8 +43,8 @@ trait HasRoles
     public function hasRole(UserRole|string $role): bool
     {
         $roleValue = $role instanceof UserRole ? $role->value : $role;
-        $userRoles = array_map(fn($r) => $r->value, $this->roles ?? []);
-        
+        $userRoles = array_map(fn ($r) => $r->value, $this->roles ?? []);
+
         return in_array($roleValue, $userRoles);
     }
 
@@ -57,6 +58,7 @@ trait HasRoles
                 return true;
             }
         }
+
         return false;
     }
 
@@ -66,10 +68,11 @@ trait HasRoles
     public function hasAllRoles(array $roles): bool
     {
         foreach ($roles as $role) {
-            if (!$this->hasRole($role)) {
+            if (! $this->hasRole($role)) {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -80,11 +83,11 @@ trait HasRoles
     {
         $roleValue = $role instanceof UserRole ? $role->value : $role;
         $currentRoles = $this->roles ?? [];
-        $currentRoleValues = array_map(fn($r) => $r->value, $currentRoles);
-        
-        if (!in_array($roleValue, $currentRoleValues)) {
+        $currentRoleValues = array_map(fn ($r) => $r->value, $currentRoles);
+
+        if (! in_array($roleValue, $currentRoleValues)) {
             $currentRoleValues[] = $roleValue;
-            $this->roles = array_map(fn($r) => UserRole::from($r), $currentRoleValues);
+            $this->roles = array_map(fn ($r) => UserRole::from($r), $currentRoleValues);
             $this->save();
         }
     }
@@ -96,12 +99,12 @@ trait HasRoles
     {
         $roleValue = $role instanceof UserRole ? $role->value : $role;
         $currentRoles = $this->roles ?? [];
-        $currentRoleValues = array_map(fn($r) => $r->value, $currentRoles);
-        
-        $newRoleValues = array_filter($currentRoleValues, fn($r) => $r !== $roleValue);
-        
+        $currentRoleValues = array_map(fn ($r) => $r->value, $currentRoles);
+
+        $newRoleValues = array_filter($currentRoleValues, fn ($r) => $r !== $roleValue);
+
         if (count($newRoleValues) !== count($currentRoleValues)) {
-            $this->roles = empty($newRoleValues) ? null : array_map(fn($r) => UserRole::from($r), array_values($newRoleValues));
+            $this->roles = empty($newRoleValues) ? null : array_map(fn ($r) => UserRole::from($r), array_values($newRoleValues));
             $this->save();
         }
     }
@@ -114,8 +117,8 @@ trait HasRoles
         $roleValues = array_map(function ($role) {
             return $role instanceof UserRole ? $role->value : $role;
         }, $roles);
-        
-        $this->roles = empty($roleValues) ? null : array_map(fn($r) => UserRole::from($r), array_unique($roleValues));
+
+        $this->roles = empty($roleValues) ? null : array_map(fn ($r) => UserRole::from($r), array_unique($roleValues));
         $this->save();
     }
 
@@ -127,8 +130,8 @@ trait HasRoles
         if (empty($this->roles)) {
             return 'No roles assigned';
         }
-        
-        return implode(', ', array_map(fn($role) => $role->label(), $this->roles));
+
+        return implode(', ', array_map(fn ($role) => $role->label(), $this->roles));
     }
 
     /**
@@ -177,6 +180,7 @@ trait HasRoles
     public function scopeWithRole($query, UserRole|string $role)
     {
         $roleValue = $role instanceof UserRole ? $role->value : $role;
+
         return $query->whereJsonContains('roles', $roleValue);
     }
 

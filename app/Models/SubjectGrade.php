@@ -11,7 +11,7 @@ class SubjectGrade extends Model
         'subject_id',
         'letter_grade',
         'grade',
-        'remarks'
+        'remarks',
     ];
 
     public function subject()

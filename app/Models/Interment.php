@@ -68,7 +68,7 @@ class Interment extends Model
             $this->middle_name,
             $this->last_name,
         ]);
-        
+
         return implode(' ', $parts);
     }
 }

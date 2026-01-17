@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoiceMail;
 use App\Models\Deed;
 use App\Models\Gravesite;
-use App\Models\Member;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
-use App\Mail\InvoiceMail;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -30,10 +30,10 @@ class DeedController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('deed_number', 'like', "%{$search}%")
-                  ->orWhereHas('member', function ($q) use ($search) {
-                      $q->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('member', function ($q) use ($search) {
+                        $q->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -183,7 +183,7 @@ class DeedController extends Controller
     {
         $validated = $request->validate([
             'member_id' => 'required|exists:members,id',
-            'deed_number' => 'required|unique:deeds,deed_number,' . $deed->id,
+            'deed_number' => 'required|unique:deeds,deed_number,'.$deed->id,
             'purchase_date' => 'required|date',
             'purchase_price' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
@@ -290,7 +290,7 @@ class DeedController extends Controller
                     ->send(new InvoiceMail($invoice, $validated['recipient_name']));
                 $flashData['email_sent'] = true;
             } catch (\Exception $e) {
-                $flashData['email_error'] = 'Failed to send email: ' . $e->getMessage();
+                $flashData['email_error'] = 'Failed to send email: '.$e->getMessage();
             }
         }
 

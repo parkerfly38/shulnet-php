@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoiceMail;
 use App\Models\Invoice;
 use App\Models\Member;
-use App\Mail\InvoiceMail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Inertia\Inertia;
 
 class InvoiceController extends Controller
@@ -30,11 +29,11 @@ class InvoiceController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('invoice_number', 'like', "%{$search}%")
-                  ->orWhere('notes', 'like', "%{$search}%")
-                  ->orWhereHas('member', function ($q) use ($search) {
-                      $q->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('notes', 'like', "%{$search}%")
+                    ->orWhereHas('member', function ($q) use ($search) {
+                        $q->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -161,7 +160,7 @@ class InvoiceController extends Controller
         }
 
         return redirect()->route('invoices.index')
-            ->with('success', 'Invoice created successfully.' . ($request->boolean('send_email') ? ' PDF emailed to member.' : ''));
+            ->with('success', 'Invoice created successfully.'.($request->boolean('send_email') ? ' PDF emailed to member.' : ''));
     }
 
     /**
@@ -219,7 +218,7 @@ class InvoiceController extends Controller
 
         // Calculate next invoice date if recurring changed
         if ($validated['recurring'] ?? false) {
-            if (!$invoice->next_invoice_date || $request->get('recalculate_next_date')) {
+            if (! $invoice->next_invoice_date || $request->get('recalculate_next_date')) {
                 $invoiceDate = \Carbon\Carbon::parse($validated['invoice_date']);
                 $validated['next_invoice_date'] = $this->calculateNextDate(
                     $invoiceDate,
@@ -235,7 +234,7 @@ class InvoiceController extends Controller
 
         // Delete old items and create new ones
         $invoice->items()->delete();
-        
+
         $subtotal = 0;
         foreach ($validated['items'] as $index => $itemData) {
             $total = $itemData['quantity'] * $itemData['unit_price'];
@@ -255,7 +254,7 @@ class InvoiceController extends Controller
         }
 
         return redirect()->route('invoices.index')
-            ->with('success', 'Invoice updated successfully.' . ($request->boolean('send_email') ? ' PDF emailed to member.' : ''));
+            ->with('success', 'Invoice updated successfully.'.($request->boolean('send_email') ? ' PDF emailed to member.' : ''));
     }
 
     /**
@@ -274,13 +273,13 @@ class InvoiceController extends Controller
      */
     public function generateNext(Invoice $invoice)
     {
-        if (!$invoice->recurring) {
+        if (! $invoice->recurring) {
             return back()->with('error', 'This invoice is not set up for recurring.');
         }
 
         $newInvoice = $invoice->createNextRecurringInvoice();
 
-        if (!$newInvoice) {
+        if (! $newInvoice) {
             return back()->with('error', 'Could not generate next invoice. Check if recurring period has ended.');
         }
 
@@ -294,7 +293,7 @@ class InvoiceController extends Controller
     protected function calculateNextDate($fromDate, $interval, $count)
     {
         $date = \Carbon\Carbon::parse($fromDate);
-        
+
         switch ($interval) {
             case 'daily':
                 return $date->addDays($count);
@@ -303,12 +302,12 @@ class InvoiceController extends Controller
             case 'monthly':
                 return $date->addMonths($count);
             case 'yearly':
-                  return $date->addYears($count);
+                return $date->addYears($count);
             default:
                 return $date;
         }
     }
-        
+
     /**
      * Generate invoice PDF and email it to the member
      */
@@ -322,11 +321,11 @@ class InvoiceController extends Controller
         $pdf->setPaper('letter', 'portrait');
 
         // Save PDF to temporary file
-        $filename = 'invoice-' . $invoice->invoice_number . '.pdf';
-        $tempPath = storage_path('app/temp/' . $filename);
-        
+        $filename = 'invoice-'.$invoice->invoice_number.'.pdf';
+        $tempPath = storage_path('app/temp/'.$filename);
+
         // Ensure temp directory exists
-        if (!file_exists(storage_path('app/temp'))) {
+        if (! file_exists(storage_path('app/temp'))) {
             mkdir(storage_path('app/temp'), 0755, true);
         }
 
@@ -350,7 +349,7 @@ class InvoiceController extends Controller
     public function print(Invoice $invoice)
     {
         $invoice->load(['member', 'items']);
-        
+
         return view('invoices.print', [
             'invoice' => $invoice,
             'member' => $invoice->member,
@@ -361,8 +360,9 @@ class InvoiceController extends Controller
 
     /**
      * API: List all invoices with pagination
-     * 
+     *
      * @group Invoices
+     *
      * @authenticated
      */
     public function apiIndex(Request $request)
@@ -379,11 +379,11 @@ class InvoiceController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('invoice_number', 'like', "%{$search}%")
-                  ->orWhere('notes', 'like', "%{$search}%")
-                  ->orWhereHas('member', function ($q) use ($search) {
-                      $q->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('notes', 'like', "%{$search}%")
+                    ->orWhereHas('member', function ($q) use ($search) {
+                        $q->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -402,8 +402,9 @@ class InvoiceController extends Controller
 
     /**
      * API: Get a single invoice
-     * 
+     *
      * @group Invoices
+     *
      * @authenticated
      */
     public function apiShow(Invoice $invoice)
@@ -411,14 +412,15 @@ class InvoiceController extends Controller
         $invoice->load(['member', 'items', 'payments']);
 
         return response()->json([
-            'data' => $invoice
+            'data' => $invoice,
         ]);
     }
 
     /**
      * API: Create a new invoice
-     * 
+     *
      * @group Invoices
+     *
      * @authenticated
      */
     public function apiStore(Request $request)
@@ -476,14 +478,15 @@ class InvoiceController extends Controller
 
         return response()->json([
             'message' => 'Invoice created successfully',
-            'data' => $invoice->load(['member', 'items'])
+            'data' => $invoice->load(['member', 'items']),
         ], 201);
     }
 
     /**
      * API: Update an existing invoice
-     * 
+     *
      * @group Invoices
+     *
      * @authenticated
      */
     public function apiUpdate(Request $request, Invoice $invoice)
@@ -507,7 +510,7 @@ class InvoiceController extends Controller
 
         // Calculate next invoice date if recurring changed
         if (isset($validated['recurring']) && $validated['recurring']) {
-            if (!$invoice->next_invoice_date || $request->get('recalculate_next_date')) {
+            if (! $invoice->next_invoice_date || $request->get('recalculate_next_date')) {
                 $invoiceDate = \Carbon\Carbon::parse($validated['invoice_date'] ?? $invoice->invoice_date);
                 $validated['next_invoice_date'] = $this->calculateNextDate(
                     $invoiceDate,
@@ -515,7 +518,7 @@ class InvoiceController extends Controller
                     $validated['recurring_interval_count'] ?? $invoice->recurring_interval_count ?? 1
                 );
             }
-        } else if (isset($validated['recurring']) && !$validated['recurring']) {
+        } elseif (isset($validated['recurring']) && ! $validated['recurring']) {
             $validated['next_invoice_date'] = null;
         }
 
@@ -524,7 +527,7 @@ class InvoiceController extends Controller
         // Update items if provided
         if (isset($validated['items'])) {
             $invoice->items()->delete();
-            
+
             $subtotal = 0;
             foreach ($validated['items'] as $index => $itemData) {
                 $total = $itemData['quantity'] * $itemData['unit_price'];
@@ -546,14 +549,15 @@ class InvoiceController extends Controller
 
         return response()->json([
             'message' => 'Invoice updated successfully',
-            'data' => $invoice->fresh(['member', 'items'])
+            'data' => $invoice->fresh(['member', 'items']),
         ]);
     }
 
     /**
      * API: Delete an invoice
-     * 
+     *
      * @group Invoices
+     *
      * @authenticated
      */
     public function apiDestroy(Invoice $invoice)
@@ -562,7 +566,7 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return response()->json([
-            'message' => "Invoice '{$invoiceNumber}' deleted successfully"
+            'message' => "Invoice '{$invoiceNumber}' deleted successfully",
         ]);
     }
 }

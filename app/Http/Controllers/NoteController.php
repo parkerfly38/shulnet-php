@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
-use App\Models\Note;
 use App\Models\Member;
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,14 +24,14 @@ class NoteController extends Controller
         $query = Note::query()
             ->with(['member', 'user'])
             ->select([
-                'id', 'item_scope','name',
-                'deadline_date','completed_date',
-                'seen_date','note_text','added_by',
-                'label','visibility','priority',
-                'member_id','user_id',
-                'created_at','updated_at'
+                'id', 'item_scope', 'name',
+                'deadline_date', 'completed_date',
+                'seen_date', 'note_text', 'added_by',
+                'label', 'visibility', 'priority',
+                'member_id', 'user_id',
+                'created_at', 'updated_at',
             ])->orderBy('created_at', 'desc');
-        
+
         if ($search) {
             $query->where('name', 'like', "%$search%");
         }
@@ -62,8 +62,8 @@ class NoteController extends Controller
             'stats' => $stats,
             'filters' => [
                 'search' => $search,
-                'assigned' => $assigned
-            ]
+                'assigned' => $assigned,
+            ],
         ]);
     }
 
@@ -75,14 +75,14 @@ class NoteController extends Controller
         $members = Member::select('id', 'first_name', 'last_name', 'email')
             ->orderBy('first_name')
             ->get();
-        
+
         $users = User::select('id', 'name', 'email')
             ->orderBy('name')
             ->get();
 
         return Inertia::render('notes/create', [
             'members' => $members,
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -101,7 +101,7 @@ class NoteController extends Controller
             'visibility' => 'required|in:Member,Admin,Broadcast',
             'priority' => 'required|in:Low,Medium,High',
             'member_id' => 'nullable|exists:members,id',
-            'user_id' => 'nullable|exists:users,id'
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
         Note::create($validated);
@@ -116,14 +116,14 @@ class NoteController extends Controller
     public function show(Note $note)
     {
         $note->load(['member', 'user']);
-        
+
         // Mark as seen if assigned to current user and not already seen
-        if ($note->user_id === auth()->id() && !$note->seen_date) {
+        if ($note->user_id === auth()->id() && ! $note->seen_date) {
             $note->update(['seen_date' => now()]);
         }
-        
+
         return Inertia::render('notes/show', [
-            'note' => $note
+            'note' => $note,
         ]);
     }
 
@@ -133,11 +133,11 @@ class NoteController extends Controller
     public function edit(Note $note)
     {
         $note->load(['member', 'user']);
-        
+
         $members = Member::select('id', 'first_name', 'last_name', 'email')
             ->orderBy('first_name')
             ->get();
-        
+
         $users = User::select('id', 'name', 'email')
             ->orderBy('name')
             ->get();
@@ -145,7 +145,7 @@ class NoteController extends Controller
         return Inertia::render('notes/edit', [
             'note' => $note,
             'members' => $members,
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
@@ -165,7 +165,7 @@ class NoteController extends Controller
             'visibility' => 'required|in:Member,Admin,Broadcast',
             'priority' => 'required|in:Low,Medium,High',
             'member_id' => 'nullable|exists:members,id',
-            'user_id' => 'nullable|exists:users,id'
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
         // Convert ISO datetime strings to MySQL format
@@ -213,13 +213,13 @@ class NoteController extends Controller
      */
     public function downloadICS(Note $note)
     {
-        if (!$note->deadline_date) {
+        if (! $note->deadline_date) {
             return redirect()->back()
                 ->with('error', 'Note has no deadline to export.');
         }
 
         $deadline = \Carbon\Carbon::parse($note->deadline_date);
-        
+
         // Generate ICS content
         $ics = "BEGIN:VCALENDAR\r\n";
         $ics .= "VERSION:2.0\r\n";
@@ -227,26 +227,26 @@ class NoteController extends Controller
         $ics .= "CALSCALE:GREGORIAN\r\n";
         $ics .= "METHOD:PUBLISH\r\n";
         $ics .= "BEGIN:VEVENT\r\n";
-        $ics .= "UID:" . md5($note->id . $note->created_at) . "@shulnet\r\n";
-        $ics .= "DTSTAMP:" . now()->format('Ymd\THis\Z') . "\r\n";
-        $ics .= "DTSTART:" . $deadline->format('Ymd\THis\Z') . "\r\n";
-        $ics .= "DTEND:" . $deadline->addHour()->format('Ymd\THis\Z') . "\r\n";
-        $ics .= "SUMMARY:" . $this->escapeICSString($note->name) . "\r\n";
-        
+        $ics .= 'UID:'.md5($note->id.$note->created_at)."@shulnet\r\n";
+        $ics .= 'DTSTAMP:'.now()->format('Ymd\THis\Z')."\r\n";
+        $ics .= 'DTSTART:'.$deadline->format('Ymd\THis\Z')."\r\n";
+        $ics .= 'DTEND:'.$deadline->addHour()->format('Ymd\THis\Z')."\r\n";
+        $ics .= 'SUMMARY:'.$this->escapeICSString($note->name)."\r\n";
+
         if ($note->note_text) {
-            $ics .= "DESCRIPTION:" . $this->escapeICSString($note->note_text) . "\r\n";
+            $ics .= 'DESCRIPTION:'.$this->escapeICSString($note->note_text)."\r\n";
         }
-        
-        $ics .= "PRIORITY:" . ($note->priority === 'High' ? '1' : ($note->priority === 'Medium' ? '5' : '9')) . "\r\n";
+
+        $ics .= 'PRIORITY:'.($note->priority === 'High' ? '1' : ($note->priority === 'Medium' ? '5' : '9'))."\r\n";
         $ics .= "STATUS:CONFIRMED\r\n";
         $ics .= "END:VEVENT\r\n";
         $ics .= "END:VCALENDAR\r\n";
 
-        $filename = \Illuminate\Support\Str::slug($note->name) . '.ics';
+        $filename = \Illuminate\Support\Str::slug($note->name).'.ics';
 
         return response($ics, 200)
             ->header('Content-Type', 'text/calendar; charset=utf-8')
-            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
     }
 
     /**
@@ -258,6 +258,7 @@ class NoteController extends Controller
         $text = str_replace(',', '\\,', $text);
         $text = str_replace(';', '\\;', $text);
         $text = str_replace("\n", '\\n', $text);
+
         return $text;
     }
 }

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
+use App\Models\GabbaiAssignment;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
-use App\Models\Student;
-use App\Models\Yahrzeit;
-use App\Models\GabbaiAssignment;
-use App\Models\Event;
 use App\Models\Note;
+use App\Models\Student;
 use App\Models\User;
+use App\Models\Yahrzeit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -22,7 +22,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -59,7 +59,7 @@ class MemberDashboardController extends Controller
                             return [
                                 'id' => $classGrade->id,
                                 'class_name' => $classGrade->classDefinition->class_name ?? 'N/A',
-                                'teacher_name' => $classGrade->classDefinition->teacher ? ($classGrade->classDefinition->teacher->first_name . ' ' . $classGrade->classDefinition->teacher->last_name) : 'N/A',
+                                'teacher_name' => $classGrade->classDefinition->teacher ? ($classGrade->classDefinition->teacher->first_name.' '.$classGrade->classDefinition->teacher->last_name) : 'N/A',
                                 'grade' => $classGrade->grade,
                             ];
                         }),
@@ -70,32 +70,32 @@ class MemberDashboardController extends Controller
         // Get upcoming yahrzeits (next 60 days)
         $startDate = Carbon::today();
         $endDate = Carbon::today()->addDays(60);
-        
+
         $yahrzeits = $member->yahrzeits()
             ->get()
             ->filter(function ($yahrzeit) use ($startDate, $endDate) {
-                if (!$yahrzeit->date_of_death) {
+                if (! $yahrzeit->date_of_death) {
                     return false;
                 }
-                
+
                 // Calculate occurrence in current year based on date_of_death
                 $occurrence = Carbon::parse($yahrzeit->date_of_death);
                 $currentYearOccurrence = Carbon::createFromDate($startDate->year, $occurrence->month, $occurrence->day);
-                
+
                 if ($currentYearOccurrence->lt($startDate)) {
                     $currentYearOccurrence->addYear();
                 }
-                
+
                 return $currentYearOccurrence->between($startDate, $endDate);
             })
             ->map(function ($yahrzeit) {
                 $occurrence = Carbon::parse($yahrzeit->date_of_death);
                 $currentYearOccurrence = Carbon::createFromDate(Carbon::today()->year, $occurrence->month, $occurrence->day);
-                
+
                 if ($currentYearOccurrence->lt(Carbon::today())) {
                     $currentYearOccurrence->addYear();
                 }
-                
+
                 return [
                     'id' => $yahrzeit->id,
                     'name' => $yahrzeit->name,
@@ -159,7 +159,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -196,7 +196,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -261,7 +261,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -291,7 +291,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -316,12 +316,13 @@ class MemberDashboardController extends Controller
 
         return redirect()->route('member.profile')->with('success', 'Profile updated successfully!');
     }
+
     public function students(Request $request)
     {
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -333,7 +334,7 @@ class MemberDashboardController extends Controller
                     'classGrades.classDefinition.teacher',
                     'examGrades.exam',
                     'subjectGrades.subject',
-                    'attendances.classDefinition'
+                    'attendances.classDefinition',
                 ])
                 ->get()
                 ->map(function ($student) {
@@ -343,9 +344,9 @@ class MemberDashboardController extends Controller
                     $absentCount = $student->attendances->where('status', 'absent')->count();
                     $tardyCount = $student->attendances->where('status', 'tardy')->count();
                     $excusedCount = $student->attendances->where('status', 'excused')->count();
-                    
-                    $attendanceRate = $totalAttendances > 0 
-                        ? round(($presentCount / $totalAttendances) * 100, 1) 
+
+                    $attendanceRate = $totalAttendances > 0
+                        ? round(($presentCount / $totalAttendances) * 100, 1)
                         : null;
 
                     return [
@@ -363,7 +364,7 @@ class MemberDashboardController extends Controller
                                 'id' => $classGrade->id,
                                 'class_name' => $classGrade->classDefinition->class_name ?? 'N/A',
                                 'teacher_name' => $classGrade->classDefinition->teacher
-                                    ? ($classGrade->classDefinition->teacher->first_name . ' ' . $classGrade->classDefinition->teacher->last_name)
+                                    ? ($classGrade->classDefinition->teacher->first_name.' '.$classGrade->classDefinition->teacher->last_name)
                                     : 'N/A',
                                 'grade' => $classGrade->grade,
                                 'school_year' => $classGrade->classDefinition->school_year ?? null,
@@ -426,7 +427,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -456,7 +457,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -525,7 +526,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -585,7 +586,7 @@ class MemberDashboardController extends Controller
 
         // Get upcoming events that member can register for (where they haven't RSVP'd)
         $rsvpedEventIds = $member->rsvps()->pluck('event_id')->toArray();
-        
+
         $availableEvents = Event::with('ticketTypes')
             ->where('event_start', '>=', $now)
             ->where('registration_required', true)
@@ -593,12 +594,12 @@ class MemberDashboardController extends Controller
             ->whereNotIn('id', $rsvpedEventIds)
             ->where(function ($query) use ($now) {
                 $query->whereNull('registration_ends')
-                      ->orWhere('registration_ends', '>=', $now);
+                    ->orWhere('registration_ends', '>=', $now);
             })
             ->orderBy('event_start')
             ->get()
             ->map(function ($event) {
-                $ticketTypes = $event->ticketTypes->filter(fn($t) => $t->isAvailable())->map(function ($ticket) {
+                $ticketTypes = $event->ticketTypes->filter(fn ($t) => $t->isAvailable())->map(function ($ticket) {
                     return [
                         'id' => $ticket->id,
                         'name' => $ticket->name,
@@ -640,12 +641,12 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
         // Validate registration is allowed
-        if (!$event->registration_required || !$event->public) {
+        if (! $event->registration_required || ! $event->public) {
             return back()->with('error', 'Registration is not available for this event.');
         }
 
@@ -672,7 +673,7 @@ class MemberDashboardController extends Controller
         ];
 
         if ($event->allow_guests && $event->max_guests > 0) {
-            $rules['guests'] = 'required|integer|min:0|max:' . $event->max_guests;
+            $rules['guests'] = 'required|integer|min:0|max:'.$event->max_guests;
         }
 
         $validated = $request->validate($rules);
@@ -684,8 +685,8 @@ class MemberDashboardController extends Controller
 
         if ($validated['ticket_type_id']) {
             $ticketType = EventTicketType::find($validated['ticket_type_id']);
-            
-            if (!$ticketType || !$ticketType->isAvailable()) {
+
+            if (! $ticketType || ! $ticketType->isAvailable()) {
                 return back()->with('error', 'Selected ticket type is not available.');
             }
 
@@ -702,7 +703,7 @@ class MemberDashboardController extends Controller
         if ($totalAmount > 0) {
             $invoice = Invoice::create([
                 'member_id' => $member->id,
-                'invoice_number' => 'INV-' . strtoupper(uniqid()),
+                'invoice_number' => 'INV-'.strtoupper(uniqid()),
                 'invoice_date' => now(),
                 'due_date' => $event->event_start,
                 'status' => 'open',
@@ -710,13 +711,13 @@ class MemberDashboardController extends Controller
                 'tax_amount' => 0,
                 'total' => $totalAmount,
                 'amount_paid' => 0,
-                'notes' => 'Event registration: ' . $event->name,
+                'notes' => 'Event registration: '.$event->name,
             ]);
 
             // Create invoice item
             InvoiceItem::create([
                 'invoice_id' => $invoice->id,
-                'description' => $event->name . ($ticketType ? ' - ' . $ticketType->name : ''),
+                'description' => $event->name.($ticketType ? ' - '.$ticketType->name : ''),
                 'quantity' => $validated['quantity'],
                 'unit_price' => $ticketPrice,
                 'total' => $totalAmount,
@@ -728,7 +729,7 @@ class MemberDashboardController extends Controller
             'event_id' => $event->id,
             'event_ticket_type_id' => $validated['ticket_type_id'],
             'invoice_id' => $invoice?->id,
-            'name' => $member->first_name . ' ' . $member->last_name,
+            'name' => $member->first_name.' '.$member->last_name,
             'email' => $member->email,
             'phone' => $member->phone1,
             'guests' => $event->allow_guests ? ($validated['guests'] ?? 0) : 0,
@@ -750,7 +751,7 @@ class MemberDashboardController extends Controller
                 ->with('success', 'Registration successful! Please complete payment.');
         }
 
-        $message = 'Successfully registered for ' . $event->name . '!';
+        $message = 'Successfully registered for '.$event->name.'!';
         if ($invoice) {
             $message .= ' An invoice has been created for your registration.';
         }
@@ -763,7 +764,7 @@ class MemberDashboardController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             return redirect()->route('dashboard')->with('error', 'No member profile found.');
         }
 
@@ -778,16 +779,16 @@ class MemberDashboardController extends Controller
         // Get the default admin user
         $defaultAdmin = User::getDefaultAdmin();
 
-        if (!$defaultAdmin) {
+        if (! $defaultAdmin) {
             return back()->with('error', 'No default admin configured. Please contact support.');
         }
 
         // Create a note for the default admin
         Note::create([
             'name' => 'Yahrzeit Change Request',
-            'note_text' => "Member: {$member->first_name} {$member->last_name}\n" .
-                          "Yahrzeit: {$yahrzeit->name}" . ($yahrzeit->hebrew_name ? " ({$yahrzeit->hebrew_name})" : "") . "\n" .
-                          "Date of Death: {$yahrzeit->date_of_death}\n\n" .
+            'note_text' => "Member: {$member->first_name} {$member->last_name}\n".
+                          "Yahrzeit: {$yahrzeit->name}".($yahrzeit->hebrew_name ? " ({$yahrzeit->hebrew_name})" : '')."\n".
+                          "Date of Death: {$yahrzeit->date_of_death}\n\n".
                           "Requested Change:\n{$validated['message']}",
             'user_id' => $defaultAdmin->id,
             'member_id' => $member->id,

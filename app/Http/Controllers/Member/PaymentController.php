@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             abort(403, 'You must have a member profile to make payments.');
         }
 
@@ -63,7 +63,7 @@ class PaymentController extends Controller
         $user = $request->user();
         $member = $user->member;
 
-        if (!$member) {
+        if (! $member) {
             abort(403, 'You must have a member profile to make payments.');
         }
 
@@ -81,13 +81,13 @@ class PaymentController extends Controller
 
         // Validate payment amount
         $request->validate([
-            'amount' => 'required|numeric|min:0.01|max:' . $invoice->balance,
+            'amount' => 'required|numeric|min:0.01|max:'.$invoice->balance,
         ]);
 
         $paymentAmount = (float) $request->amount;
 
         $processor = $this->paymentService->getActiveProcessor();
-        
+
         // Prepare payment details based on processor
         $paymentDetails = [
             'invoice_id' => $invoice->id,
@@ -138,13 +138,13 @@ class PaymentController extends Controller
             // Update invoice amount_paid and status
             $newAmountPaid = $invoice->amount_paid + $paymentAmount;
             $newStatus = $newAmountPaid >= $invoice->total ? 'paid' : 'partial';
-            
+
             $invoice->update([
                 'amount_paid' => $newAmountPaid,
                 'status' => $newStatus,
             ]);
 
-            $message = $newStatus === 'paid' 
+            $message = $newStatus === 'paid'
                 ? 'Payment processed successfully! Invoice is now fully paid.'
                 : 'Partial payment processed successfully!';
 
@@ -161,7 +161,7 @@ class PaymentController extends Controller
                 'payment_details' => ['error' => $result['error']],
             ]);
 
-            return back()->with('error', 'Payment failed: ' . ($result['error'] ?? 'Unknown error'));
+            return back()->with('error', 'Payment failed: '.($result['error'] ?? 'Unknown error'));
         }
     }
 
@@ -175,7 +175,7 @@ class PaymentController extends Controller
         }
 
         \Stripe\Stripe::setApiKey(config('services.stripe.secret_key'));
-        
+
         $intent = \Stripe\SetupIntent::create();
 
         return response()->json([

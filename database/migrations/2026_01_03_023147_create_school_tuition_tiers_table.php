@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('sort_order')->default(0);
             $table->json('features')->nullable();
             $table->timestamps();
-            
+
             $table->index('slug');
             $table->index('is_active');
         });

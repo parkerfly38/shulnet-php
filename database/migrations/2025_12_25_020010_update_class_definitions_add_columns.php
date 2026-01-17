@@ -9,25 +9,25 @@ return new class extends Migration
     public function up()
     {
         Schema::table('class_definitions', function (Blueprint $table) {
-            if (!Schema::hasColumn('class_definitions', 'class_number')) {
+            if (! Schema::hasColumn('class_definitions', 'class_number')) {
                 $table->string('class_number')->nullable()->after('name');
             }
-            if (!Schema::hasColumn('class_definitions', 'capacity')) {
+            if (! Schema::hasColumn('class_definitions', 'capacity')) {
                 $table->integer('capacity')->nullable()->after('class_number');
             }
-            if (!Schema::hasColumn('class_definitions', 'teacher_id')) {
+            if (! Schema::hasColumn('class_definitions', 'teacher_id')) {
                 $table->foreignId('teacher_id')->nullable()->constrained('teachers')->nullOnDelete()->after('capacity');
             }
-            if (!Schema::hasColumn('class_definitions', 'start_date')) {
+            if (! Schema::hasColumn('class_definitions', 'start_date')) {
                 $table->date('start_date')->nullable()->after('teacher_id');
             }
-            if (!Schema::hasColumn('class_definitions', 'end_date')) {
+            if (! Schema::hasColumn('class_definitions', 'end_date')) {
                 $table->date('end_date')->nullable()->after('start_date');
             }
-            if (!Schema::hasColumn('class_definitions', 'location')) {
+            if (! Schema::hasColumn('class_definitions', 'location')) {
                 $table->string('location')->nullable()->after('end_date');
             }
-            if (!Schema::hasColumn('class_definitions', 'fee')) {
+            if (! Schema::hasColumn('class_definitions', 'fee')) {
                 $table->decimal('fee', 8, 2)->nullable()->after('location');
             }
         });

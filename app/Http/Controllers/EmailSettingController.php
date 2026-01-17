@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\EmailSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class EmailSettingController extends Controller
@@ -19,22 +19,22 @@ class EmailSettingController extends Controller
             'provider' => EmailSetting::get('email_provider', 'smtp'),
             'from_address' => EmailSetting::get('email_from_address', config('mail.from.address')),
             'from_name' => EmailSetting::get('email_from_name', config('mail.from.name')),
-            
+
             // SMTP
             'smtp_host' => EmailSetting::get('smtp_host'),
             'smtp_port' => EmailSetting::get('smtp_port', '587'),
             'smtp_username' => EmailSetting::get('smtp_username'),
             'smtp_password' => EmailSetting::get('smtp_password') ? '••••••••' : '',
             'smtp_encryption' => EmailSetting::get('smtp_encryption', 'tls'),
-            
+
             // Mailgun
             'mailgun_domain' => EmailSetting::get('mailgun_domain'),
             'mailgun_secret' => EmailSetting::get('mailgun_secret') ? '••••••••' : '',
             'mailgun_endpoint' => EmailSetting::get('mailgun_endpoint', 'api.mailgun.net'),
-            
+
             // SendGrid
             'sendgrid_api_key' => EmailSetting::get('sendgrid_api_key') ? '••••••••' : '',
-            
+
             // AWS SES
             'ses_key' => EmailSetting::get('ses_key') ? '••••••••' : '',
             'ses_secret' => EmailSetting::get('ses_secret') ? '••••••••' : '',
@@ -55,19 +55,19 @@ class EmailSettingController extends Controller
             'provider' => 'required|in:smtp,mailgun,sendgrid,ses,log',
             'from_address' => 'required|email',
             'from_name' => 'required|string',
-            
+
             'smtp_host' => 'nullable|string',
             'smtp_port' => 'nullable|integer',
             'smtp_username' => 'nullable|string',
             'smtp_password' => 'nullable|string',
             'smtp_encryption' => 'nullable|in:tls,ssl',
-            
+
             'mailgun_domain' => 'nullable|string',
             'mailgun_secret' => 'nullable|string',
             'mailgun_endpoint' => 'nullable|string',
-            
+
             'sendgrid_api_key' => 'nullable|string',
-            
+
             'ses_key' => 'nullable|string',
             'ses_secret' => 'nullable|string',
             'ses_region' => 'nullable|string',
@@ -78,7 +78,7 @@ class EmailSettingController extends Controller
             if (str_contains($value ?? '', '••••')) {
                 continue;
             }
-            
+
             if ($value !== null) {
                 EmailSetting::set($key, $value);
             }
@@ -109,7 +109,7 @@ class EmailSettingController extends Controller
 
             return back()->with('success', 'Test email sent successfully!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to send test email: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send test email: '.$e->getMessage());
         }
     }
 

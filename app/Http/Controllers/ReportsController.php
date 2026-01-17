@@ -21,30 +21,30 @@ class ReportsController extends Controller
     public function exportMembers(Request $request)
     {
         $filters = $request->only(['search', 'member_type']);
-        
+
         return Excel::download(
             new MembersExport($filters),
-            'members-' . now()->format('Y-m-d') . '.xlsx'
+            'members-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 
     public function exportInvoices(Request $request)
     {
         $filters = $request->only(['status', 'start_date', 'end_date']);
-        
+
         return Excel::download(
             new InvoicesExport($filters),
-            'invoices-' . now()->format('Y-m-d') . '.xlsx'
+            'invoices-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 
     public function exportStudents(Request $request)
     {
         $filters = $request->only(['class_id', 'grade_level']);
-        
+
         return Excel::download(
             new StudentsExport($filters),
-            'students-' . now()->format('Y-m-d') . '.xlsx'
+            'students-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 
@@ -57,7 +57,7 @@ class ReportsController extends Controller
 
         return Excel::download(
             new FinancialSummaryExport($validated['start_date'], $validated['end_date']),
-            'financial-summary-' . now()->format('Y-m-d') . '.xlsx'
+            'financial-summary-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 
@@ -68,7 +68,7 @@ class ReportsController extends Controller
 
         return Excel::download(
             new YahrzeitExport($startDate, $endDate),
-            'yahrzeit-' . now()->format('Y-m-d') . '.xlsx'
+            'yahrzeit-'.now()->format('Y-m-d').'.xlsx'
         );
     }
 }

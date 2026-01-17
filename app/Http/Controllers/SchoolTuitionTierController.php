@@ -15,7 +15,7 @@ class SchoolTuitionTierController extends Controller
     public function index()
     {
         $tiers = SchoolTuitionTier::ordered()->get();
-        
+
         $stats = [
             'total' => $tiers->count(),
             'active' => $tiers->where('is_active', true)->count(),
@@ -95,7 +95,7 @@ class SchoolTuitionTierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:school_tuition_tiers,slug,' . $schoolTuitionTier->id,
+            'slug' => 'nullable|string|max:255|unique:school_tuition_tiers,slug,'.$schoolTuitionTier->id,
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'billing_period' => 'required|in:annual,semester,monthly,custom',

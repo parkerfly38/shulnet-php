@@ -25,7 +25,7 @@ class Note extends Model
         'visibility',
         'priority',
         'member_id',
-        'user_id'
+        'user_id',
     ];
 
     /**

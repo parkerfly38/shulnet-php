@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Member;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class InvoiceSeeder extends Seeder
 {
@@ -20,6 +19,7 @@ class InvoiceSeeder extends Seeder
 
         if ($members->isEmpty()) {
             $this->command->warn('No members found. Skipping invoice seeding.');
+
             return;
         }
 

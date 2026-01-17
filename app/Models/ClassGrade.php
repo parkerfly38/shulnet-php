@@ -12,7 +12,7 @@ class ClassGrade extends Model
         'student_id',
         'letter_grade',
         'grade',
-        'remarks'
+        'remarks',
     ];
 
     public function classDefinition()

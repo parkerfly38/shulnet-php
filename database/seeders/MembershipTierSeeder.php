@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\MembershipTier;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MembershipTierSeeder extends Seeder
@@ -27,8 +26,8 @@ class MembershipTierSeeder extends Seeder
                     'High Holiday seating',
                     'Unlimited family members',
                     'Voting rights',
-                    'Committee participation'
-                ]
+                    'Committee participation',
+                ],
             ],
             [
                 'name' => 'Individual Membership',
@@ -43,8 +42,8 @@ class MembershipTierSeeder extends Seeder
                     'Access to all services',
                     'High Holiday seating',
                     'Voting rights',
-                    'Committee participation'
-                ]
+                    'Committee participation',
+                ],
             ],
             [
                 'name' => 'Student Membership',
@@ -59,8 +58,8 @@ class MembershipTierSeeder extends Seeder
                     'Access to all services',
                     'High Holiday seating',
                     'Young adult programming',
-                    'Valid student ID required'
-                ]
+                    'Valid student ID required',
+                ],
             ],
             [
                 'name' => 'Senior Membership',
@@ -74,8 +73,8 @@ class MembershipTierSeeder extends Seeder
                     'Access to all services',
                     'High Holiday seating',
                     'Voting rights',
-                    'Senior programming'
-                ]
+                    'Senior programming',
+                ],
             ],
             [
                 'name' => 'Free Membership',
@@ -87,8 +86,8 @@ class MembershipTierSeeder extends Seeder
                 'sort_order' => 5,
                 'features' => [
                     'Access to all services',
-                    'High Holiday seating'
-                ]
+                    'High Holiday seating',
+                ],
             ],
             [
                 'name' => 'Negotiated Membership',
@@ -101,8 +100,8 @@ class MembershipTierSeeder extends Seeder
                 'features' => [
                     'Access to all services',
                     'Custom terms',
-                    'Confidential arrangement'
-                ]
+                    'Confidential arrangement',
+                ],
             ],
             [
                 'name' => 'Lifetime Membership',
@@ -117,8 +116,8 @@ class MembershipTierSeeder extends Seeder
                     'Lifetime access',
                     'Legacy recognition',
                     'Priority seating',
-                    'Special honors'
-                ]
+                    'Special honors',
+                ],
             ],
         ];
 

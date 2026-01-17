@@ -19,7 +19,7 @@ class GravesiteFactory extends Factory
     {
         $status = fake()->randomElement(['available', 'reserved', 'occupied']);
         $gravesiteType = fake()->randomElement(['single', 'double', 'family', 'cremation']);
-        
+
         return [
             'cemetery_name' => fake()->randomElement(['Beth Israel Cemetery', 'Mount Zion Cemetery', 'Garden of Peace', null]),
             'section' => fake()->randomElement(['A', 'B', 'C', 'D', 'E', null]),
@@ -36,12 +36,12 @@ class GravesiteFactory extends Factory
             'reserved_date' => $status === 'reserved' ? fake()->dateTimeBetween('-2 years', 'now') : null,
             'reserved_by' => $status === 'reserved' ? fake()->name() : null,
             'deceased_name' => $status === 'occupied' ? fake()->name() : null,
-            'deceased_hebrew_name' => $status === 'occupied' ? fake()->optional()->firstName() . ' bat/ben ' . fake()->firstName() : null,
+            'deceased_hebrew_name' => $status === 'occupied' ? fake()->optional()->firstName().' bat/ben '.fake()->firstName() : null,
             'date_of_birth' => $status === 'occupied' ? fake()->dateTimeBetween('-100 years', '-50 years') : null,
             'date_of_death' => $status === 'occupied' ? fake()->dateTimeBetween('-20 years', 'now') : null,
             'burial_date' => $status === 'occupied' ? fake()->dateTimeBetween('-20 years', 'now') : null,
             'notes' => fake()->optional()->sentence(),
-            'gps_coordinates' => fake()->optional()->latitude() . ',' . fake()->longitude(),
+            'gps_coordinates' => fake()->optional()->latitude().','.fake()->longitude(),
             'perpetual_care' => fake()->boolean(70),
             'monument_inscription' => $status === 'occupied' ? fake()->optional()->sentence() : null,
         ];
@@ -100,7 +100,7 @@ class GravesiteFactory extends Factory
             'purchase_date' => fake()->dateTimeBetween('-20 years', '-1 year'),
             'purchase_price' => fake()->randomFloat(2, 2000, 15000),
             'deceased_name' => fake()->name(),
-            'deceased_hebrew_name' => fake()->firstName() . ' bat/ben ' . fake()->firstName(),
+            'deceased_hebrew_name' => fake()->firstName().' bat/ben '.fake()->firstName(),
             'date_of_birth' => fake()->dateTimeBetween('-100 years', '-50 years'),
             'date_of_death' => fake()->dateTimeBetween('-20 years', 'now'),
             'burial_date' => fake()->dateTimeBetween('-20 years', 'now'),

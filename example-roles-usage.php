@@ -2,7 +2,7 @@
 
 /**
  * Example usage of the User Roles System
- * 
+ *
  * This file demonstrates how to use the combinable roles system
  * that has been added to your Laravel application.
  */
@@ -17,14 +17,14 @@ use App\Models\User;
 $admin = User::factory()->create([
     'name' => 'John Admin',
     'email' => 'john@example.com',
-    'roles' => [UserRole::Admin]
+    'roles' => [UserRole::Admin],
 ]);
 
 // Create a user with multiple roles
 $teacherParent = User::factory()->create([
     'name' => 'Jane Teacher-Parent',
     'email' => 'jane@example.com',
-    'roles' => [UserRole::Teacher, UserRole::Parent]
+    'roles' => [UserRole::Teacher, UserRole::Parent],
 ]);
 
 // Managing roles
@@ -45,26 +45,26 @@ $user->setRoles([UserRole::Teacher, UserRole::Admin]);
 
 // Check if user has a specific role
 if ($user->hasRole(UserRole::Admin)) {
-    echo "User is an admin!";
+    echo 'User is an admin!';
 }
 
 // Check if user has any of the specified roles
 if ($user->hasAnyRole([UserRole::Teacher, UserRole::Admin])) {
-    echo "User is either a teacher or admin!";
+    echo 'User is either a teacher or admin!';
 }
 
 // Check if user has all of the specified roles
 if ($user->hasAllRoles([UserRole::Teacher, UserRole::Parent])) {
-    echo "User is both a teacher and parent!";
+    echo 'User is both a teacher and parent!';
 }
 
 // Convenience methods
 if ($user->isAdmin()) {
-    echo "User is an admin!";
+    echo 'User is an admin!';
 }
 
 if ($user->isTeacher()) {
-    echo "User is a teacher!";
+    echo 'User is a teacher!';
 }
 
 // Get role labels
@@ -100,7 +100,7 @@ $multiRoleUser = User::factory()
 // ---------------
 /*
 UserRole::Admin     - Administrator
-UserRole::Member    - Member  
+UserRole::Member    - Member
 UserRole::Teacher   - Teacher
 UserRole::Parent    - Parent
 UserRole::Student   - Student

@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
         $user = $request->user();
-        
+
         // Get unseen notifications count for current user
         $unseenNotifications = 0;
         if ($user) {
@@ -69,7 +69,7 @@ class HandleInertiaRequests extends Middleware
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : [],
+                    'roles' => $user->roles ? array_map(fn ($role) => $role->value, $user->roles) : [],
                     'is_admin' => $user->isAdmin(),
                     'is_teacher' => $user->isTeacher(),
                     'is_parent' => $user->isParent(),

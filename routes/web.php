@@ -1,31 +1,30 @@
 <?php
 
+use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeedController;
+use App\Http\Controllers\EmailCampaignController;
+use App\Http\Controllers\EmailSettingController;
+use App\Http\Controllers\EmailTemplateController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventTicketTypeController;
+use App\Http\Controllers\FormController;
+use App\Http\Controllers\GravesiteController;
+use App\Http\Controllers\IntermentController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\Member\MemberDashboardController;
+use App\Http\Controllers\Member\PaymentController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\MembershipTierController;
-use App\Http\Controllers\SchoolTuitionTierController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\YahrzeitController;
-use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\EventTicketTypeController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PdfTemplateController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GravesiteController;
-use App\Http\Controllers\DeedController;
-use App\Http\Controllers\IntermentController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\Admin\GabbaiController;
-use App\Http\Controllers\Member\MemberDashboardController;
-use App\Http\Controllers\Member\PaymentController;
 use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\EmailCampaignController;
-use App\Http\Controllers\EmailTemplateController;
-use App\Http\Controllers\EmailSettingController;
-use App\Http\Controllers\FormController;
+use App\Http\Controllers\SchoolTuitionTierController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\YahrzeitController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -38,7 +37,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Member portal routes
     Route::get('member/dashboard', [MemberDashboardController::class, 'index'])->name('member.dashboard');
     Route::get('member/invoices', [MemberDashboardController::class, 'invoices'])->name('member.invoices');
@@ -49,22 +48,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('member/students/{student}', [MemberDashboardController::class, 'updateStudent'])->name('member.students.update');
     Route::get('member/yahrzeits', [MemberDashboardController::class, 'yahrzeits'])->name('member.yahrzeits');
     Route::post('member/yahrzeits/request-change', [MemberDashboardController::class, 'requestYahrzeitChange'])->name('member.yahrzeits.request-change');
-    Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');    
+    Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');
     Route::post('member/events/{event}/register', [MemberDashboardController::class, 'registerForEvent'])->name('member.events.register');
-    
+
     // Payment routes
     Route::get('member/invoices/{id}/pay', [PaymentController::class, 'create'])->name('member.invoices.pay');
     Route::post('member/invoices/{id}/pay', [PaymentController::class, 'store'])->name('member.invoices.payment.store');
     Route::get('member/payment/setup-intent', [PaymentController::class, 'setupIntent'])->name('member.payment.setup-intent');
-    
+
     // Onboarding routes
     Route::post('onboarding/member', [DashboardController::class, 'onboardMember'])->name('onboarding.member');
     Route::post('onboarding/student', [DashboardController::class, 'onboardStudent'])->name('onboarding.student');
-    
+
     // Admin-only routes
     Route::middleware(['role:admin'])->group(function () {
         Route::get('admin/users', [UserController::class, 'index'])->name('admin.users');
-        
+
         // Member management routes
         Route::resource('admin/members', MemberController::class, [
             'names' => [
@@ -75,13 +74,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'members.edit',
                 'update' => 'members.update',
                 'destroy' => 'members.destroy',
-            ]
+            ],
         ]);
-        
+
         // Member import routes
         Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
         Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
-        
+
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
 
@@ -95,9 +94,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'campaigns.edit',
                 'update' => 'campaigns.update',
                 'destroy' => 'campaigns.destroy',
-            ]
+            ],
         ]);
-        
+
         // Campaign subscription routes
         Route::post('admin/campaigns/{campaign}/subscribe', [EmailCampaignController::class, 'subscribe'])->name('campaigns.subscribe');
         Route::post('admin/campaigns/{campaign}/bulk-subscribe', [EmailCampaignController::class, 'bulkSubscribe'])->name('campaigns.bulk-subscribe');
@@ -114,7 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'admin.templates.edit',
                 'update' => 'admin.templates.update',
                 'destroy' => 'admin.templates.destroy',
-            ]
+            ],
         ]);
 
         // Email settings routes
@@ -132,7 +131,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'admin.forms.edit',
                 'update' => 'admin.forms.update',
                 'destroy' => 'admin.forms.destroy',
-            ]
+            ],
         ]);
         Route::get('admin/forms/{form}/preview', [FormController::class, 'preview'])->name('admin.forms.preview');
         Route::get('admin/forms/{form}/submissions', [FormController::class, 'submissions'])->name('admin.forms.submissions');
@@ -145,9 +144,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'members.membership-periods.edit',
                 'update' => 'members.membership-periods.update',
                 'destroy' => 'members.membership-periods.destroy',
-            ]
+            ],
         ])->except(['index', 'show']);
-        
+
         // Yahrzeit management routes
         Route::resource('admin/yahrzeits', YahrzeitController::class, [
             'names' => [
@@ -158,18 +157,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'yahrzeits.edit',
                 'update' => 'yahrzeits.update',
                 'destroy' => 'yahrzeits.destroy',
-            ]
+            ],
         ]);
-        
+
         // Yahrzeit import routes
         Route::post('admin/yahrzeits/import', [YahrzeitController::class, 'import'])->name('yahrzeits.import');
         Route::get('admin/yahrzeits/template/download', [YahrzeitController::class, 'downloadTemplate'])->name('yahrzeits.template.download');
-        
+
         // Yahrzeit reminder routes
         Route::get('admin/yahrzeits/{yahrzeit}/prepare-reminder', [YahrzeitController::class, 'prepareReminder'])->name('yahrzeits.prepare-reminder');
         Route::post('admin/yahrzeits/{yahrzeit}/send-reminder', [YahrzeitController::class, 'sendReminder'])->name('yahrzeits.send-reminder');
         Route::post('admin/yahrzeits/{yahrzeit}/print-reminder', [YahrzeitController::class, 'printReminder'])->name('yahrzeits.print-reminder');
-        
+
         // Calendar management routes
         Route::resource('admin/calendars', CalendarController::class, [
             'names' => [
@@ -180,9 +179,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'calendars.edit',
                 'update' => 'calendars.update',
                 'destroy' => 'calendars.destroy',
-            ]
+            ],
         ]);
-        
+
         // Event management routes
         Route::resource('admin/events', EventController::class, [
             'names' => [
@@ -193,7 +192,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'events.edit',
                 'update' => 'events.update',
                 'destroy' => 'events.destroy',
-            ]
+            ],
         ]);
 
         // Event ticket type routes
@@ -205,7 +204,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'events.ticket-types.edit',
                 'update' => 'events.ticket-types.update',
                 'destroy' => 'events.ticket-types.destroy',
-            ]
+            ],
         ])->except(['show']);
 
         Route::resource('admin/notes', NoteController::class, [
@@ -217,7 +216,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'notes.edit',
                 'update' => 'notes.update',
                 'destroy' => 'notes.destroy',
-            ]
+            ],
         ]);
         Route::get('admin/notes/{note}/ics', [NoteController::class, 'downloadICS'])->name('notes.ics');
 
@@ -231,15 +230,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'invoices.edit',
                 'update' => 'invoices.update',
                 'destroy' => 'invoices.destroy',
-            ]
+            ],
         ]);
-        
+
         // Generate next recurring invoice
         Route::post('admin/invoices/{invoice}/generate-next', [InvoiceController::class, 'generateNext'])->name('invoices.generate-next');
-        
+
         // Print invoice
         Route::get('admin/invoices/{invoice}/print', [InvoiceController::class, 'print'])->name('invoices.print');
-        
+
         // Membership Tier management routes
         Route::resource('admin/membership-tiers', MembershipTierController::class, [
             'names' => [
@@ -250,9 +249,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'membership-tiers.edit',
                 'update' => 'membership-tiers.update',
                 'destroy' => 'membership-tiers.destroy',
-            ]
+            ],
         ]);
-        
+
         // School Tuition Tier management routes
         Route::resource('admin/school-tuition-tiers', SchoolTuitionTierController::class, [
             'names' => [
@@ -263,9 +262,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'school-tuition-tiers.edit',
                 'update' => 'school-tuition-tiers.update',
                 'destroy' => 'school-tuition-tiers.destroy',
-            ]
+            ],
         ]);
-        
+
         // PDF Template management routes
         Route::resource('admin/pdf-templates', PdfTemplateController::class, [
             'names' => [
@@ -276,13 +275,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'pdf-templates.edit',
                 'update' => 'pdf-templates.update',
                 'destroy' => 'pdf-templates.destroy',
-            ]
+            ],
         ]);
-        
+
         // PDF Template preview and generation
         Route::post('admin/pdf-templates/{pdfTemplate}/preview', [PdfTemplateController::class, 'preview'])->name('pdf-templates.preview');
         Route::post('admin/pdf-templates/{pdfTemplate}/generate', [PdfTemplateController::class, 'generate'])->name('pdf-templates.generate');
-        
+
         // Gravesite management routes
         Route::resource('admin/gravesites', GravesiteController::class, [
             'names' => [
@@ -293,9 +292,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'gravesites.edit',
                 'update' => 'gravesites.update',
                 'destroy' => 'gravesites.destroy',
-            ]
+            ],
         ]);
-        
+
         // Deed management routes
         Route::resource('admin/deeds', DeedController::class, [
             'names' => [
@@ -306,13 +305,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'deeds.edit',
                 'update' => 'deeds.update',
                 'destroy' => 'deeds.destroy',
-            ]
+            ],
         ]);
-        
+
         // Deed invoice routes
         Route::post('admin/deeds/{deed}/invoice', [DeedController::class, 'createInvoice'])->name('deeds.invoice.create');
         Route::get('admin/deeds/{deed}/invoice/{invoice}/print', [DeedController::class, 'printInvoice'])->name('deeds.invoice.print');
-        
+
         // Interment management routes
         Route::resource('admin/interments', IntermentController::class, [
             'names' => [
@@ -323,9 +322,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'edit' => 'interments.edit',
                 'update' => 'interments.update',
                 'destroy' => 'interments.destroy',
-            ]
+            ],
         ]);
-        
+
         // Settings routes
         Route::get('admin/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('admin/settings', [SettingController::class, 'update'])->name('settings.update');
@@ -374,98 +373,141 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'activeClasses' => \App\Models\ClassDefinition::with('teacher')->take(5)->get(),
             ]);
         })->name('admin.school.dashboard');
-        
-        Route::get('admin/school/class-definitions', function () { return Inertia::render('admin/school/class-definitions/index'); })->name('admin.school.class-definitions.index');
-        Route::get('admin/school/class-definitions/create', function () { 
+
+        Route::get('admin/school/class-definitions', function () {
+            return Inertia::render('admin/school/class-definitions/index');
+        })->name('admin.school.class-definitions.index');
+        Route::get('admin/school/class-definitions/create', function () {
             return Inertia::render('admin/school/class-definitions/create', [
-                'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->get()
-            ]); 
+                'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->get(),
+            ]);
         })->name('admin.school.class-definitions.create');
-        Route::get('admin/school/class-definitions/{id}', function ($id) { 
+        Route::get('admin/school/class-definitions/{id}', function ($id) {
             $model = \App\Models\ClassDefinition::with('teacher')->findOrFail($id);
-            return Inertia::render('admin/school/class-definitions/show', ['item' => $model]); 
+
+            return Inertia::render('admin/school/class-definitions/show', ['item' => $model]);
         })->name('admin.school.class-definitions.show');
-        Route::get('admin/school/class-definitions/{id}/edit', function ($id) { 
+        Route::get('admin/school/class-definitions/{id}/edit', function ($id) {
             $model = \App\Models\ClassDefinition::with('teacher')->findOrFail($id);
+
             return Inertia::render('admin/school/class-definitions/edit', [
                 'item' => $model,
-                'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->get()
-            ]); 
+                'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->get(),
+            ]);
         })->name('admin.school.class-definitions.edit');
-        Route::get('admin/school/class-grades', function () { return Inertia::render('admin/school/class-grades'); })->name('admin.school.class-grades');
-        
+        Route::get('admin/school/class-grades', function () {
+            return Inertia::render('admin/school/class-grades');
+        })->name('admin.school.class-grades');
+
         // Exams routes
-        Route::get('admin/school/exams', function () { return Inertia::render('admin/school/exams/index'); })->name('admin.school.exams.index');
-        Route::get('admin/school/exams/create', function () { return Inertia::render('admin/school/exams/create'); })->name('admin.school.exams.create');
-        Route::get('admin/school/exams/{id}', function ($id) { 
+        Route::get('admin/school/exams', function () {
+            return Inertia::render('admin/school/exams/index');
+        })->name('admin.school.exams.index');
+        Route::get('admin/school/exams/create', function () {
+            return Inertia::render('admin/school/exams/create');
+        })->name('admin.school.exams.create');
+        Route::get('admin/school/exams/{id}', function ($id) {
             $model = \App\Models\Exam::with('subject')->findOrFail($id);
-            return Inertia::render('admin/school/exams/show', ['item' => $model]); 
+
+            return Inertia::render('admin/school/exams/show', ['item' => $model]);
         })->name('admin.school.exams.show');
-        Route::get('admin/school/exams/{id}/edit', function ($id) { 
+        Route::get('admin/school/exams/{id}/edit', function ($id) {
             $model = \App\Models\Exam::with('subject')->findOrFail($id);
-            return Inertia::render('admin/school/exams/edit', ['item' => $model]); 
+
+            return Inertia::render('admin/school/exams/edit', ['item' => $model]);
         })->name('admin.school.exams.edit');
-        
-        Route::get('admin/school/exam-grades', function () { return Inertia::render('admin/school/exam-grades'); })->name('admin.school.exam-grades');
-        
+
+        Route::get('admin/school/exam-grades', function () {
+            return Inertia::render('admin/school/exam-grades');
+        })->name('admin.school.exam-grades');
+
         // Parents routes
-        Route::get('admin/school/parents', function () { return Inertia::render('admin/school/parents/index'); })->name('admin.school.parents.index');
-        Route::get('admin/school/parents/create', function () { return Inertia::render('admin/school/parents/create'); })->name('admin.school.parents.create');
-        Route::get('admin/school/parents/{id}', function ($id) { 
+        Route::get('admin/school/parents', function () {
+            return Inertia::render('admin/school/parents/index');
+        })->name('admin.school.parents.index');
+        Route::get('admin/school/parents/create', function () {
+            return Inertia::render('admin/school/parents/create');
+        })->name('admin.school.parents.create');
+        Route::get('admin/school/parents/{id}', function ($id) {
             $model = \App\Models\ParentModel::findOrFail($id);
-            return Inertia::render('admin/school/parents/show', ['item' => $model]); 
+
+            return Inertia::render('admin/school/parents/show', ['item' => $model]);
         })->name('admin.school.parents.show');
-        Route::get('admin/school/parents/{id}/edit', function ($id) { 
+        Route::get('admin/school/parents/{id}/edit', function ($id) {
             $model = \App\Models\ParentModel::findOrFail($id);
-            return Inertia::render('admin/school/parents/edit', ['item' => $model]); 
+
+            return Inertia::render('admin/school/parents/edit', ['item' => $model]);
         })->name('admin.school.parents.edit');
-        
+
         // Students routes
-        Route::get('admin/school/students', function () { return Inertia::render('admin/school/students/index'); })->name('admin.school.students.index');
-        Route::get('admin/school/students/create', function () { return Inertia::render('admin/school/students/create'); })->name('admin.school.students.create');
-        Route::get('admin/school/students/{id}', function ($id) { 
+        Route::get('admin/school/students', function () {
+            return Inertia::render('admin/school/students/index');
+        })->name('admin.school.students.index');
+        Route::get('admin/school/students/create', function () {
+            return Inertia::render('admin/school/students/create');
+        })->name('admin.school.students.create');
+        Route::get('admin/school/students/{id}', function ($id) {
             $model = \App\Models\Student::with('parent')->findOrFail($id);
-            return Inertia::render('admin/school/students/show', ['item' => $model]); 
+
+            return Inertia::render('admin/school/students/show', ['item' => $model]);
         })->name('admin.school.students.show');
-        Route::get('admin/school/students/{id}/edit', function ($id) { 
+        Route::get('admin/school/students/{id}/edit', function ($id) {
             $model = \App\Models\Student::with('parent')->findOrFail($id);
-            return Inertia::render('admin/school/students/edit', ['item' => $model]); 
+
+            return Inertia::render('admin/school/students/edit', ['item' => $model]);
         })->name('admin.school.students.edit');
-        
+
         // Attendance routes
-        Route::get('admin/school/attendance', function () { return Inertia::render('admin/school/attendance/index'); })->name('admin.school.attendance.index');
-        Route::get('admin/school/attendance/mark', function () { 
+        Route::get('admin/school/attendance', function () {
+            return Inertia::render('admin/school/attendance/index');
+        })->name('admin.school.attendance.index');
+        Route::get('admin/school/attendance/mark', function () {
             $students = \App\Models\Student::select('id', 'first_name', 'last_name')->orderBy('last_name')->get();
             $classes = \App\Models\ClassDefinition::with('teacher')->select('id', 'class_name', 'teacher_id')->get();
-            return Inertia::render('admin/school/attendance/mark', ['students' => $students, 'classes' => $classes]); 
+
+            return Inertia::render('admin/school/attendance/mark', ['students' => $students, 'classes' => $classes]);
         })->name('admin.school.attendance.mark');
-        
+
         // Subjects routes
-        Route::get('admin/school/subjects', function () { return Inertia::render('admin/school/subjects'); })->name('admin.school.subjects.index');
-        Route::get('admin/school/subjects/create', function () { return Inertia::render('admin/school/subjects/create'); })->name('admin.school.subjects.create');
-        Route::get('admin/school/subjects/{id}', function ($id) { 
+        Route::get('admin/school/subjects', function () {
+            return Inertia::render('admin/school/subjects');
+        })->name('admin.school.subjects.index');
+        Route::get('admin/school/subjects/create', function () {
+            return Inertia::render('admin/school/subjects/create');
+        })->name('admin.school.subjects.create');
+        Route::get('admin/school/subjects/{id}', function ($id) {
             $model = \App\Models\Subject::findOrFail($id);
-            return Inertia::render('admin/school/subjects/show', ['item' => $model]); 
+
+            return Inertia::render('admin/school/subjects/show', ['item' => $model]);
         })->name('admin.school.subjects.show');
-        Route::get('admin/school/subjects/{id}/edit', function ($id) { 
+        Route::get('admin/school/subjects/{id}/edit', function ($id) {
             $model = \App\Models\Subject::findOrFail($id);
-            return Inertia::render('admin/school/subjects/edit', ['item' => $model]); 
+
+            return Inertia::render('admin/school/subjects/edit', ['item' => $model]);
         })->name('admin.school.subjects.edit');
-        
-        Route::get('admin/school/subject-grades', function () { return Inertia::render('admin/school/subject-grades'); })->name('admin.school.subject-grades');
-        
+
+        Route::get('admin/school/subject-grades', function () {
+            return Inertia::render('admin/school/subject-grades');
+        })->name('admin.school.subject-grades');
+
         // Teachers routes
-        Route::get('admin/school/teachers', function () { return Inertia::render('admin/school/teachers/index'); })->name('admin.school.teachers.index');
-        Route::get('admin/school/teachers/create', function () { return Inertia::render('admin/school/teachers/create'); })->name('admin.school.teachers.create');
-        Route::get('admin/school/teachers/{id}', function ($id) { 
+        Route::get('admin/school/teachers', function () {
+            return Inertia::render('admin/school/teachers/index');
+        })->name('admin.school.teachers.index');
+        Route::get('admin/school/teachers/create', function () {
+            return Inertia::render('admin/school/teachers/create');
+        })->name('admin.school.teachers.create');
+        Route::get('admin/school/teachers/{id}', function ($id) {
             $model = \App\Models\Teacher::findOrFail($id);
-            return Inertia::render('admin/school/teachers/show', ['item' => $model]); 
+
+            return Inertia::render('admin/school/teachers/show', ['item' => $model]);
         })->name('admin.school.teachers.show');
-        Route::get('admin/school/teachers/{id}/edit', function ($id) { 
+        Route::get('admin/school/teachers/{id}/edit', function ($id) {
             $model = \App\Models\Teacher::findOrFail($id);
-            return Inertia::render('admin/school/teachers/edit', ['item' => $model]); 
+
+            return Inertia::render('admin/school/teachers/edit', ['item' => $model]);
         })->name('admin.school.teachers.edit');
-        
+
         // Mark all user notifications as seen
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');
     });
@@ -475,7 +517,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(function () {
     Route::put('users/{user}/roles', [UserController::class, 'updateRoles'])->name('api.admin.users.roles.update');
     Route::post('users/{user}/set-default-admin', [UserController::class, 'setDefaultAdmin'])->name('api.admin.users.set-default-admin');
-    
+
     // Member CRUD API endpoints
     Route::get('members', [MemberController::class, 'apiIndex'])->name('api.admin.members.index');
     Route::post('members', [MemberController::class, 'apiStore'])->name('api.admin.members.store');
@@ -483,10 +525,10 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(fu
     Route::put('members/{member}', [MemberController::class, 'apiUpdate'])->name('api.admin.members.update');
     Route::patch('members/{member}', [MemberController::class, 'apiUpdate'])->name('api.admin.members.patch');
     Route::delete('members/{member}', [MemberController::class, 'apiDestroy'])->name('api.admin.members.destroy');
-    
+
     // Member search API endpoint
     Route::get('members/search', [MemberController::class, 'search'])->name('api.admin.members.search');
-    
+
     // Invoice CRUD API endpoints
     Route::get('invoices', [InvoiceController::class, 'apiIndex'])->name('api.admin.invoices.index');
     Route::post('invoices', [InvoiceController::class, 'apiStore'])->name('api.admin.invoices.store');
@@ -494,7 +536,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(fu
     Route::put('invoices/{invoice}', [InvoiceController::class, 'apiUpdate'])->name('api.admin.invoices.update');
     Route::patch('invoices/{invoice}', [InvoiceController::class, 'apiUpdate'])->name('api.admin.invoices.patch');
     Route::delete('invoices/{invoice}', [InvoiceController::class, 'apiDestroy'])->name('api.admin.invoices.destroy');
-    
+
     // Yahrzeit search API endpoint
     Route::get('yahrzeits/search', [YahrzeitController::class, 'search'])->name('api.admin.yahrzeits.search');
 

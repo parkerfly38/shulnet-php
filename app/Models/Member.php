@@ -46,7 +46,7 @@ class Member extends Model
         'maftir',
         'anniversary_date',
         'parent_id',
-        'user_id'
+        'user_id',
     ];
 
     /**
@@ -55,8 +55,8 @@ class Member extends Model
     public function yahrzeits(): BelongsToMany
     {
         return $this->belongsToMany(Yahrzeit::class, 'member_yahrzeit')
-                    ->withPivot('relationship')
-                    ->withTimestamps();
+            ->withPivot('relationship')
+            ->withTimestamps();
     }
 
     /**
@@ -73,10 +73,10 @@ class Member extends Model
     public function activeMembershipPeriods(): HasMany
     {
         return $this->hasMany(MembershipPeriod::class)
-                    ->where(function ($query) {
-                        $query->whereNull('end_date')
-                              ->orWhere('end_date', '>=', now());
-                    });
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                    ->orWhere('end_date', '>=', now());
+            });
     }
 
     /**
@@ -85,11 +85,11 @@ class Member extends Model
     public function hasActiveMembership(): bool
     {
         return $this->membershipPeriods()
-                    ->where(function ($query) {
-                        $query->whereNull('end_date')
-                              ->orWhere('end_date', '>=', now());
-                    })
-                    ->exists();
+            ->where(function ($query) {
+                $query->whereNull('end_date')
+                    ->orWhere('end_date', '>=', now());
+            })
+            ->exists();
     }
 
     /**

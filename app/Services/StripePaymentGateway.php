@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use Stripe\Stripe;
+use Exception;
 use Stripe\PaymentIntent;
 use Stripe\Refund;
-use Exception;
+use Stripe\Stripe;
 
 class StripePaymentGateway implements PaymentGatewayInterface
 {
@@ -54,7 +54,7 @@ class StripePaymentGateway implements PaymentGatewayInterface
     {
         try {
             $refundData = ['payment_intent' => $transactionId];
-            
+
             if ($amount !== null) {
                 $refundData['amount'] = $amount * 100; // Convert to cents
             }

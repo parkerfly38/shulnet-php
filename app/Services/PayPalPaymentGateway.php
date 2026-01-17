@@ -2,21 +2,23 @@
 
 namespace App\Services;
 
+use Exception;
+use PaypalServerSdkLib\Authentication\ClientCredentialsAuthCredentialsBuilder;
+use PaypalServerSdkLib\Environment;
 use PaypalServerSdkLib\Logging\LoggingConfigurationBuilder;
 use PaypalServerSdkLib\Logging\RequestLoggingConfigurationBuilder;
 use PaypalServerSdkLib\Logging\ResponseLoggingConfigurationBuilder;
-use Psr\Log\LogLevel;
-use PaypalServerSdkLib\Environment;
-use PaypalServerSdkLib\Authentication\ClientCredentialsAuthCredentialsBuilder;
 use PaypalServerSdkLib\PaypalServerSdkClientBuilder;
-use Exception;
+use Psr\Log\LogLevel;
 
 class PayPalPaymentGateway implements PaymentGatewayInterface
 {
     private const PREFER_REPRESENTATION = 'return=representation';
-    
+
     protected $client;
+
     protected string $mode;
+
     protected string $currency;
 
     public function __construct()
@@ -65,26 +67,26 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
                 ],
             ];
 
-            if (!empty($paymentDetails['invoice_id'])) {
+            if (! empty($paymentDetails['invoice_id'])) {
                 $purchaseUnit['invoice_id'] = $paymentDetails['invoice_id'];
             }
 
-            if (!empty($paymentDetails['custom_id'])) {
+            if (! empty($paymentDetails['custom_id'])) {
                 $purchaseUnit['custom_id'] = $paymentDetails['custom_id'];
             }
 
-            if (!empty($paymentDetails['description'])) {
+            if (! empty($paymentDetails['description'])) {
                 $purchaseUnit['description'] = $paymentDetails['description'];
             }
 
-            if (!empty($paymentDetails['items']) && is_array($paymentDetails['items'])) {
+            if (! empty($paymentDetails['items']) && is_array($paymentDetails['items'])) {
                 $purchaseUnit['items'] = $paymentDetails['items'];
             }
 
             // Allow metadata/custom fields via soft_descriptor or custom_id where supported
             $body = [
                 'intent' => 'CAPTURE',
-                'purchase_units' => [ $purchaseUnit ],
+                'purchase_units' => [$purchaseUnit],
                 'application_context' => [
                     'brand_name' => config('app.name'),
                     'locale' => 'en-US',

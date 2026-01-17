@@ -16,7 +16,7 @@ class ExamGradeController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('grade', 'like', "%{$q}%")
-                  ->orWhere('remarks', 'like', "%{$q}%");
+                    ->orWhere('remarks', 'like', "%{$q}%");
             });
         }
 
@@ -32,6 +32,7 @@ class ExamGradeController extends Controller
     {
         $data = $request->validate(['exam_id' => 'required|integer', 'student_id' => 'required|integer', 'score' => 'nullable|integer', 'grade' => 'nullable|string']);
         $model = ExamGrade::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -40,6 +41,7 @@ class ExamGradeController extends Controller
         $model = ExamGrade::findOrFail($id);
         $data = $request->validate(['exam_id' => 'required|integer', 'student_id' => 'required|integer', 'score' => 'nullable|integer', 'grade' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -47,6 +49,7 @@ class ExamGradeController extends Controller
     {
         $model = ExamGrade::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

@@ -67,7 +67,7 @@ class Deed extends Model
     public function getTotalCapacityAttribute(): int
     {
         return $this->gravesites->sum(function ($gravesite) {
-            return match($gravesite->gravesite_type) {
+            return match ($gravesite->gravesite_type) {
                 'single', 'cremation' => 1,
                 'double' => 2,
                 'family' => 4,

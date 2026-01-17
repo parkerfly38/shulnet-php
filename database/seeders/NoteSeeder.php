@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Note;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class NoteSeeder extends Seeder
 {
@@ -25,7 +24,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Admin',
                 'label' => 'Financial',
                 'visibility' => 'Admin',
-                'priority' => 'Medium'
+                'priority' => 'Medium',
             ],
             [
                 'item_scope' => 'User',
@@ -37,7 +36,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Board President',
                 'label' => 'Meetings',
                 'visibility' => 'Member',
-                'priority' => 'High'
+                'priority' => 'High',
             ],
             [
                 'item_scope' => 'Member',
@@ -49,7 +48,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Secretary',
                 'label' => 'Contact Updates',
                 'visibility' => 'Admin',
-                'priority' => 'Low'
+                'priority' => 'Low',
             ],
             [
                 'item_scope' => 'Contact',
@@ -61,7 +60,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Membership Chair',
                 'label' => 'New Members',
                 'visibility' => 'Member',
-                'priority' => 'Medium'
+                'priority' => 'Medium',
             ],
             [
                 'item_scope' => 'User',
@@ -73,7 +72,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Events Committee',
                 'label' => 'Holiday Prep',
                 'visibility' => 'Member',
-                'priority' => 'High'
+                'priority' => 'High',
             ],
             [
                 'item_scope' => 'Member',
@@ -85,7 +84,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Treasurer',
                 'label' => 'Donations',
                 'visibility' => 'Admin',
-                'priority' => 'High'
+                'priority' => 'High',
             ],
             [
                 'item_scope' => 'Contact',
@@ -97,7 +96,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Facilities Manager',
                 'label' => 'Contracts',
                 'visibility' => 'Admin',
-                'priority' => 'Medium'
+                'priority' => 'Medium',
             ],
             [
                 'item_scope' => 'User',
@@ -109,7 +108,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Communications',
                 'label' => 'Website',
                 'visibility' => 'Member',
-                'priority' => 'Low'
+                'priority' => 'Low',
             ],
             [
                 'item_scope' => 'Member',
@@ -121,7 +120,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Youth Director',
                 'label' => 'Youth Programs',
                 'visibility' => 'Broadcast',
-                'priority' => 'Medium'
+                'priority' => 'Medium',
             ],
             [
                 'item_scope' => 'Contact',
@@ -133,7 +132,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'Security Committee',
                 'label' => 'Security',
                 'visibility' => 'Admin',
-                'priority' => 'Medium'
+                'priority' => 'Medium',
             ],
             [
                 'item_scope' => 'User',
@@ -145,7 +144,7 @@ class NoteSeeder extends Seeder
                 'added_by' => 'President',
                 'label' => 'Board Meetings',
                 'visibility' => 'Admin',
-                'priority' => 'High'
+                'priority' => 'High',
             ],
             [
                 'item_scope' => 'Member',
@@ -157,8 +156,8 @@ class NoteSeeder extends Seeder
                 'added_by' => 'IT Committee',
                 'label' => 'Technology',
                 'visibility' => 'Member',
-                'priority' => 'Low'
-            ]
+                'priority' => 'Low',
+            ],
         ];
 
         foreach ($notes as $noteData) {

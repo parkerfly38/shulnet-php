@@ -16,16 +16,18 @@ class ClassDefinitionController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('name', 'like', "%{$q}%")
-                  ->orWhere('description', 'like', "%{$q}%");
+                    ->orWhere('description', 'like', "%{$q}%");
             });
         }
 
         $pag = $query->paginate($perPage);
         // add teacher_name to each item for UI convenience
         $pag->getCollection()->transform(function ($item) {
-            $item->teacher_name = $item->teacher->first_name . ' ' . $item->teacher->last_name ?? $item->teacher_id;
+            $item->teacher_name = $item->teacher->first_name.' '.$item->teacher->last_name ?? $item->teacher_id;
+
             return $item;
         });
+
         return response()->json($pag);
     }
 
@@ -38,6 +40,7 @@ class ClassDefinitionController extends Controller
     {
         $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
         $model = ClassDefinition::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -46,6 +49,7 @@ class ClassDefinitionController extends Controller
         $model = ClassDefinition::findOrFail($id);
         $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -53,6 +57,7 @@ class ClassDefinitionController extends Controller
     {
         $model = ClassDefinition::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

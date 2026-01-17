@@ -4,13 +4,13 @@ namespace App\Exports;
 
 use App\Models\Student;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class StudentsExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class StudentsExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $filters;
 
@@ -23,11 +23,11 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping, WithS
     {
         $query = Student::with(['parent']);
 
-        if (!empty($this->filters['class_id'])) {
+        if (! empty($this->filters['class_id'])) {
             $query->where('class_id', $this->filters['class_id']);
         }
 
-        if (!empty($this->filters['grade_level'])) {
+        if (! empty($this->filters['grade_level'])) {
             $query->where('grade_level', $this->filters['grade_level']);
         }
 
@@ -72,7 +72,7 @@ class StudentsExport implements FromCollection, WithHeadings, WithMapping, WithS
             $student->grade_level,
             $student->email,
             $student->phone,
-            $student->parent ? $student->parent->first_name . ' ' . $student->parent->last_name : '',
+            $student->parent ? $student->parent->first_name.' '.$student->parent->last_name : '',
             $student->parent ? $student->parent->email : '',
             $student->address,
             $student->city,

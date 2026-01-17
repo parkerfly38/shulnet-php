@@ -16,7 +16,7 @@ class SubjectGradeController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('grade', 'like', "%{$q}%")
-                  ->orWhere('remarks', 'like', "%{$q}%");
+                    ->orWhere('remarks', 'like', "%{$q}%");
             });
         }
 
@@ -32,6 +32,7 @@ class SubjectGradeController extends Controller
     {
         $data = $request->validate(['subject_id' => 'required|integer', 'student_id' => 'required|integer', 'grade' => 'nullable|string']);
         $model = SubjectGrade::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -40,6 +41,7 @@ class SubjectGradeController extends Controller
         $model = SubjectGrade::findOrFail($id);
         $data = $request->validate(['subject_id' => 'required|integer', 'student_id' => 'required|integer', 'grade' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -47,6 +49,7 @@ class SubjectGradeController extends Controller
     {
         $model = SubjectGrade::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

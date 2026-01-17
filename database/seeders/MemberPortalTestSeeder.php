@@ -2,26 +2,26 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Member;
-use App\Models\ParentModel;
-use App\Models\Student;
-use App\Models\Invoice;
-use App\Models\InvoiceItem;
-use App\Models\Yahrzeit;
-use App\Models\GabbaiAssignment;
-use App\Models\Event;
+use App\Models\Attendance;
 use App\Models\Calendar;
 use App\Models\ClassDefinition;
 use App\Models\ClassGrade;
-use App\Models\Subject;
-use App\Models\SubjectGrade;
+use App\Models\Event;
 use App\Models\Exam;
 use App\Models\ExamGrade;
-use App\Models\Attendance;
-use Illuminate\Support\Facades\Hash;
+use App\Models\GabbaiAssignment;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\Member;
+use App\Models\ParentModel;
+use App\Models\Student;
+use App\Models\Subject;
+use App\Models\SubjectGrade;
+use App\Models\User;
+use App\Models\Yahrzeit;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class MemberPortalTestSeeder extends Seeder
 {
@@ -36,28 +36,28 @@ class MemberPortalTestSeeder extends Seeder
             // Delete associated data first
             if ($existingUser->member) {
                 $member = $existingUser->member;
-                
+
                 // Delete yahrzeits associations
                 $member->yahrzeits()->detach();
-                
+
                 // Delete assignments
                 GabbaiAssignment::where('member_id', $member->id)->delete();
-                
+
                 // Delete invoices
                 Invoice::where('member_id', $member->id)->delete();
-                
+
                 // Delete students if parent exists
                 if ($member->parent_id) {
                     Student::where('parent_id', $member->parent_id)->delete();
                     ParentModel::where('id', $member->parent_id)->delete();
                 }
-                
+
                 $member->delete();
             }
-            
+
             $existingUser->delete();
         }
-        
+
         // Create a test user
         $user = User::create([
             'name' => 'David Cohen',
@@ -215,14 +215,14 @@ class MemberPortalTestSeeder extends Seeder
         $member->yahrzeits()->attach($yahrzeit2->id, ['relationship' => 'Grandmother']);
 
         // ===== STUDENT ENROLLMENTS AND ACADEMIC DATA =====
-        
+
         // Get classes and subjects (assuming they exist from other seeders)
         $hebrewLevel1 = ClassDefinition::where('class_number', 'HEB-101')->first();
         $hebrewLevel2 = ClassDefinition::where('class_number', 'HEB-201')->first();
         $torahStudies = ClassDefinition::where('class_number', 'TOR-101')->first();
         $jewishHistory = ClassDefinition::where('class_number', 'HIS-201')->first();
         $holidaysClass = ClassDefinition::where('class_number', 'HOL-101')->first();
-        
+
         // Rachel Cohen (older child) - enrolled in multiple classes
         if ($hebrewLevel2) {
             $rachelHebrew = ClassGrade::create([
@@ -231,7 +231,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A-',
             ]);
         }
-        
+
         if ($torahStudies) {
             $rachelTorah = ClassGrade::create([
                 'student_id' => $student1->id,
@@ -239,7 +239,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'B+',
             ]);
         }
-        
+
         if ($jewishHistory) {
             $rachelHistory = ClassGrade::create([
                 'student_id' => $student1->id,
@@ -247,7 +247,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A',
             ]);
         }
-        
+
         // Jacob Cohen (younger child) - enrolled in beginner classes
         if ($hebrewLevel1) {
             $jacobHebrew = ClassGrade::create([
@@ -256,7 +256,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'B',
             ]);
         }
-        
+
         if ($holidaysClass) {
             $jacobHolidays = ClassGrade::create([
                 'student_id' => $student2->id,
@@ -264,13 +264,13 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A-',
             ]);
         }
-        
+
         // Add subject grades for Rachel
         $hebrewSubject = Subject::where('name', 'Hebrew Language')->first();
         $torahSubject = Subject::where('name', 'Torah')->first();
         $historySubject = Subject::where('name', 'Jewish History')->first();
         $prayerSubject = Subject::where('name', 'Prayer and Liturgy')->first();
-        
+
         if ($hebrewSubject) {
             SubjectGrade::create([
                 'student_id' => $student1->id,
@@ -278,7 +278,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A-',
             ]);
         }
-        
+
         if ($torahSubject) {
             SubjectGrade::create([
                 'student_id' => $student1->id,
@@ -286,7 +286,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'B+',
             ]);
         }
-        
+
         if ($historySubject) {
             SubjectGrade::create([
                 'student_id' => $student1->id,
@@ -294,7 +294,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A',
             ]);
         }
-        
+
         if ($prayerSubject) {
             SubjectGrade::create([
                 'student_id' => $student1->id,
@@ -302,7 +302,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A',
             ]);
         }
-        
+
         // Add subject grades for Jacob
         if ($hebrewSubject) {
             SubjectGrade::create([
@@ -311,7 +311,7 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'B',
             ]);
         }
-        
+
         $holidaysSubject = Subject::where('name', 'Holidays and Traditions')->first();
         if ($holidaysSubject) {
             SubjectGrade::create([
@@ -320,43 +320,43 @@ class MemberPortalTestSeeder extends Seeder
                 'grade' => 'A-',
             ]);
         }
-        
+
         // Add exam grades
         $midtermExam = Exam::where('name', 'LIKE', '%Midterm%')->first();
         $finalExam = Exam::where('name', 'LIKE', '%Final%')->first();
-        
+
         if ($midtermExam) {
             ExamGrade::create([
                 'student_id' => $student1->id,
                 'exam_id' => $midtermExam->id,
                 'grade' => '90',
             ]);
-            
+
             ExamGrade::create([
                 'student_id' => $student2->id,
                 'exam_id' => $midtermExam->id,
                 'grade' => '84',
             ]);
         }
-        
+
         if ($finalExam) {
             ExamGrade::create([
                 'student_id' => $student1->id,
                 'exam_id' => $finalExam->id,
                 'grade' => '93',
             ]);
-            
+
             ExamGrade::create([
                 'student_id' => $student2->id,
                 'exam_id' => $finalExam->id,
                 'grade' => '86',
             ]);
         }
-        
+
         // Add attendance records for Rachel (past 3 months)
         $classes = [$hebrewLevel2, $torahStudies, $jewishHistory];
         $statuses = ['present', 'present', 'present', 'present', 'present', 'tardy', 'present', 'present', 'absent', 'present'];
-        
+
         foreach ($classes as $class) {
             if ($class) {
                 for ($i = 0; $i < 30; $i++) {
@@ -371,10 +371,10 @@ class MemberPortalTestSeeder extends Seeder
                 }
             }
         }
-        
+
         // Add attendance records for Jacob (past 3 months)
         $jacobClasses = [$hebrewLevel1, $holidaysClass];
-        
+
         foreach ($jacobClasses as $class) {
             if ($class) {
                 for ($i = 0; $i < 30; $i++) {

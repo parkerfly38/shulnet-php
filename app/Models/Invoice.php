@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Carbon\Carbon;
 
 class Invoice extends Model
 {
@@ -121,7 +121,8 @@ class Invoice extends Model
     {
         $lastInvoice = self::orderBy('id', 'desc')->first();
         $number = $lastInvoice ? intval(substr($lastInvoice->invoice_number, 4)) + 1 : 1;
-        return 'INV-' . str_pad($number, 6, '0', STR_PAD_LEFT);
+
+        return 'INV-'.str_pad($number, 6, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -137,7 +138,7 @@ class Invoice extends Model
      */
     public function createNextRecurringInvoice(): ?Invoice
     {
-        if (!$this->recurring || !$this->next_invoice_date) {
+        if (! $this->recurring || ! $this->next_invoice_date) {
             return null;
         }
 
@@ -154,10 +155,10 @@ class Invoice extends Model
         $newInvoice->status = 'draft';
         $newInvoice->parent_invoice_id = $this->id;
         $newInvoice->last_invoice_date = null;
-        
+
         // Calculate next invoice date
         $newInvoice->next_invoice_date = $this->calculateNextDate($this->next_invoice_date);
-        
+
         $newInvoice->save();
 
         // Copy items
@@ -181,7 +182,7 @@ class Invoice extends Model
     protected function calculateNextDate(Carbon $fromDate): Carbon
     {
         $date = $fromDate->copy();
-        
+
         switch ($this->recurring_interval) {
             case 'daily':
                 return $date->addDays($this->recurring_interval_count);

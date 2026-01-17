@@ -39,7 +39,7 @@ class IntermentFactory extends Factory
                 'Cancer',
                 'Age-related',
             ]),
-            'funeral_home' => $this->faker->optional(0.7)->company . ' Funeral Home',
+            'funeral_home' => $this->faker->optional(0.7)->company.' Funeral Home',
             'rabbi_officiating' => $this->faker->optional(0.8)->name,
             'notes' => $this->faker->optional(0.2)->sentence,
         ];

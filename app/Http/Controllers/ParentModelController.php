@@ -16,8 +16,8 @@ class ParentModelController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('first_name', 'like', "%{$q}%")
-                  ->orWhere('last_name', 'like', "%{$q}%")
-                  ->orWhere('email', 'like', "%{$q}%");
+                    ->orWhere('last_name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%");
             });
         }
 
@@ -33,6 +33,7 @@ class ParentModelController extends Controller
     {
         $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
         $model = ParentModel::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -41,6 +42,7 @@ class ParentModelController extends Controller
         $model = ParentModel::findOrFail($id);
         $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -48,6 +50,7 @@ class ParentModelController extends Controller
     {
         $model = ParentModel::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

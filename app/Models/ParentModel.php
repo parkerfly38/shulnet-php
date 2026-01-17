@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class ParentModel extends Model
 {
     protected $table = 'parents';
+
     protected $fillable = [
         'last_name',
         'first_name',
         'date_of_birth',
         'address',
         'picture_url',
-        'email'
+        'email',
     ];
 
     public function students(): HasMany

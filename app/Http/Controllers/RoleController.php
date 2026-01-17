@@ -21,7 +21,7 @@ class RoleController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : [],
+                    'roles' => $user->roles ? array_map(fn ($role) => $role->value, $user->roles) : [],
                     'role_labels' => $user->role_labels,
                     'is_admin' => $user->isAdmin(),
                     'is_teacher' => $user->isTeacher(),
@@ -32,7 +32,7 @@ class RoleController extends Controller
 
         return response()->json([
             'users' => $users,
-            'available_roles' => UserRole::options()
+            'available_roles' => UserRole::options(),
         ]);
     }
 
@@ -43,10 +43,10 @@ class RoleController extends Controller
     {
         $request->validate([
             'roles' => 'required|array',
-            'roles.*' => 'in:' . implode(',', UserRole::values())
+            'roles.*' => 'in:'.implode(',', UserRole::values()),
         ]);
 
-        $roles = array_map(fn($role) => UserRole::from($role), $request->roles);
+        $roles = array_map(fn ($role) => UserRole::from($role), $request->roles);
         $user->setRoles($roles);
 
         return response()->json([
@@ -54,9 +54,9 @@ class RoleController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'roles' => array_map(fn($role) => $role->value, $user->roles),
-                'role_labels' => $user->role_labels
-            ]
+                'roles' => array_map(fn ($role) => $role->value, $user->roles),
+                'role_labels' => $user->role_labels,
+            ],
         ]);
     }
 
@@ -66,14 +66,14 @@ class RoleController extends Controller
     public function addRole(Request $request, User $user)
     {
         $request->validate([
-            'role' => 'required|in:' . implode(',', UserRole::values())
+            'role' => 'required|in:'.implode(',', UserRole::values()),
         ]);
 
         $role = UserRole::from($request->role);
-        
+
         if ($user->hasRole($role)) {
             return response()->json([
-                'message' => 'User already has this role'
+                'message' => 'User already has this role',
             ], 400);
         }
 
@@ -84,9 +84,9 @@ class RoleController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'roles' => array_map(fn($r) => $r->value, $user->roles),
-                'role_labels' => $user->role_labels
-            ]
+                'roles' => array_map(fn ($r) => $r->value, $user->roles),
+                'role_labels' => $user->role_labels,
+            ],
         ]);
     }
 
@@ -96,14 +96,14 @@ class RoleController extends Controller
     public function removeRole(Request $request, User $user)
     {
         $request->validate([
-            'role' => 'required|in:' . implode(',', UserRole::values())
+            'role' => 'required|in:'.implode(',', UserRole::values()),
         ]);
 
         $role = UserRole::from($request->role);
-        
-        if (!$user->hasRole($role)) {
+
+        if (! $user->hasRole($role)) {
             return response()->json([
-                'message' => 'User does not have this role'
+                'message' => 'User does not have this role',
             ], 400);
         }
 
@@ -114,9 +114,9 @@ class RoleController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-                'roles' => $user->roles ? array_map(fn($r) => $r->value, $user->roles) : [],
-                'role_labels' => $user->role_labels
-            ]
+                'roles' => $user->roles ? array_map(fn ($r) => $r->value, $user->roles) : [],
+                'role_labels' => $user->role_labels,
+            ],
         ]);
     }
 
@@ -126,7 +126,7 @@ class RoleController extends Controller
     public function getUsersByRole(Request $request)
     {
         $request->validate([
-            'role' => 'required|in:' . implode(',', UserRole::values())
+            'role' => 'required|in:'.implode(',', UserRole::values()),
         ]);
 
         $role = UserRole::from($request->role);
@@ -140,9 +140,9 @@ class RoleController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role_labels' => $user->role_labels
+                    'role_labels' => $user->role_labels,
                 ];
-            })
+            }),
         ]);
     }
 
@@ -152,15 +152,15 @@ class RoleController extends Controller
     public function checkAdminAccess(Request $request)
     {
         $user = $request->user();
-        
-        if (!$user) {
+
+        if (! $user) {
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
         return response()->json([
             'can_admin' => $user->isAdmin(),
             'can_teach' => $user->isTeacher(),
-            'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : []
+            'roles' => $user->roles ? array_map(fn ($role) => $role->value, $user->roles) : [],
         ]);
     }
 
@@ -182,7 +182,7 @@ class RoleController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -199,7 +199,7 @@ class RoleController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : [],
+                'roles' => $user->roles ? array_map(fn ($role) => $role->value, $user->roles) : [],
                 'role_labels' => $user->role_labels,
                 'is_admin' => $user->isAdmin(),
                 'is_teacher' => $user->isTeacher(),
@@ -217,7 +217,7 @@ class RoleController extends Controller
             'filters' => [
                 'search' => $search,
                 'role' => $roleFilter,
-            ]
+            ],
         ]);
     }
 }

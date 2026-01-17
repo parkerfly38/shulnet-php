@@ -4,13 +4,13 @@ namespace App\Exports;
 
 use App\Models\Member;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class MembersExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class MembersExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $filters;
 
@@ -23,7 +23,7 @@ class MembersExport implements FromCollection, WithHeadings, WithMapping, WithSt
     {
         $query = Member::query();
 
-        if (!empty($this->filters['search'])) {
+        if (! empty($this->filters['search'])) {
             $search = $this->filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
@@ -32,7 +32,7 @@ class MembersExport implements FromCollection, WithHeadings, WithMapping, WithSt
             });
         }
 
-        if (!empty($this->filters['member_type'])) {
+        if (! empty($this->filters['member_type'])) {
             $query->where('member_type', $this->filters['member_type']);
         }
 

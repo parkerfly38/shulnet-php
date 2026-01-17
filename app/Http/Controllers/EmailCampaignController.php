@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\EmailCampaign;
+use App\Models\EmailSetting;
 use App\Models\EmailTemplate;
 use App\Models\Member;
-use App\Models\EmailSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class EmailCampaignController extends Controller
@@ -21,11 +21,11 @@ class EmailCampaignController extends Controller
         $campaigns = EmailCampaign::withCount([
             'subscribers',
             'confirmedSubscribers',
-            'pendingSubscribers'
+            'pendingSubscribers',
         ])->latest()->get();
 
         return Inertia::render('campaigns/index', [
-            'campaigns' => $campaigns
+            'campaigns' => $campaigns,
         ]);
     }
 
@@ -66,7 +66,7 @@ class EmailCampaignController extends Controller
     {
         $campaign->load(['subscribers' => function ($query) {
             $query->withPivot('status', 'confirmed_at', 'unsubscribed_at')
-                  ->orderBy('campaign_subscriptions.created_at', 'desc');
+                ->orderBy('campaign_subscriptions.created_at', 'desc');
         }]);
 
         $templates = EmailTemplate::select('id', 'name', 'subject', 'content')->get();
@@ -83,7 +83,7 @@ class EmailCampaignController extends Controller
     public function edit(EmailCampaign $campaign)
     {
         return Inertia::render('campaigns/edit', [
-            'campaign' => $campaign
+            'campaign' => $campaign,
         ]);
     }
 
@@ -147,7 +147,7 @@ class EmailCampaignController extends Controller
         } else {
             // Double opt-in: send confirmation email
             $token = Str::random(64);
-            
+
             $campaign->subscribers()->attach($member->id, [
                 'status' => 'pending',
                 'confirmation_token' => $token,
@@ -196,7 +196,7 @@ class EmailCampaignController extends Controller
                 $subscribed++;
             } else {
                 $token = Str::random(64);
-                
+
                 $campaign->subscribers()->attach($memberId, [
                     'status' => 'pending',
                     'confirmation_token' => $token,
@@ -233,7 +233,7 @@ class EmailCampaignController extends Controller
             ->where('confirmation_token', $token)
             ->first();
 
-        if (!$subscription) {
+        if (! $subscription) {
             return redirect('/')->with('error', 'Invalid confirmation token.');
         }
 
@@ -248,7 +248,7 @@ class EmailCampaignController extends Controller
         $campaign = EmailCampaign::find($subscription->email_campaign_id);
 
         return view('campaigns.confirmed', [
-            'campaign' => $campaign
+            'campaign' => $campaign,
         ]);
     }
 
@@ -279,7 +279,7 @@ class EmailCampaignController extends Controller
     {
         // Configure mailer with stored settings
         EmailSetting::configureMailer();
-        
+
         $subscribers = $campaign->confirmedSubscribers()->get();
 
         if ($subscribers->isEmpty()) {
@@ -289,7 +289,7 @@ class EmailCampaignController extends Controller
         $sent = 0;
 
         foreach ($subscribers as $subscriber) {
-            if (!$subscriber->email) {
+            if (! $subscriber->email) {
                 continue;
             }
 
@@ -299,7 +299,7 @@ class EmailCampaignController extends Controller
                     'member' => $subscriber,
                     'unsubscribeUrl' => route('campaigns.unsubscribe.public', [
                         'campaign' => $campaign->id,
-                        'member' => $subscriber->id
+                        'member' => $subscriber->id,
                     ]),
                 ], function ($message) use ($subscriber, $campaign) {
                     $message->to($subscriber->email)
@@ -309,7 +309,7 @@ class EmailCampaignController extends Controller
                 $sent++;
             } catch (\Exception $e) {
                 // Log error but continue
-                \Log::error("Failed to send campaign to {$subscriber->email}: " . $e->getMessage());
+                \Log::error("Failed to send campaign to {$subscriber->email}: ".$e->getMessage());
             }
         }
 
@@ -330,8 +330,7 @@ class EmailCampaignController extends Controller
             ]);
 
         return view('campaigns.unsubscribed', [
-            'campaign' => $campaign
+            'campaign' => $campaign,
         ]);
     }
 }
-

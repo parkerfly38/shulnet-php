@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\PdfTemplate;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PdfTemplateSeeder extends Seeder
@@ -218,4 +217,3 @@ class PdfTemplateSeeder extends Seeder
         ]);
     }
 }
-

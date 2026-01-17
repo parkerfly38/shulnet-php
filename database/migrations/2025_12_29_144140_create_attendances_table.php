@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('status', ['present', 'absent', 'tardy', 'excused']);
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             $table->unique(['student_id', 'attendance_date', 'class_definition_id'], 'attendances_unique');
         });
     }

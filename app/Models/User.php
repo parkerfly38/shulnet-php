@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles, HasApiTokens;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -78,7 +78,7 @@ class User extends Authenticatable
      */
     public function setAsDefaultAdmin(): bool
     {
-        if (!$this->canBeDefaultAdmin()) {
+        if (! $this->canBeDefaultAdmin()) {
             return false;
         }
 

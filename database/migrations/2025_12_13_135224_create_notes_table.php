@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->enum('item_scope', ['User','Member','Contact']);
+            $table->enum('item_scope', ['User', 'Member', 'Contact']);
             $table->string('name');
             $table->dateTime('deadline_date')->nullable();
             $table->dateTime('completed_date')->nullable();
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->text('note_text')->nullable();
             $table->string('label')->nullable();
             $table->string('added_by')->nullable();
-            $table->enum('visibility',['Member','Admin','Broadcast']);
-            $table->enum('priority', ['Low','Medium','High']);
+            $table->enum('visibility', ['Member', 'Admin', 'Broadcast']);
+            $table->enum('priority', ['Low', 'Medium', 'High']);
         });
     }
 

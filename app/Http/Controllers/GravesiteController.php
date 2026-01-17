@@ -29,13 +29,13 @@ class GravesiteController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('plot_number', 'like', "%{$search}%")
-                  ->orWhere('section', 'like', "%{$search}%")
-                  ->orWhere('deceased_name', 'like', "%{$search}%")
-                  ->orWhere('reserved_by', 'like', "%{$search}%")
-                  ->orWhereHas('member', function ($q) use ($search) {
-                      $q->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('section', 'like', "%{$search}%")
+                    ->orWhere('deceased_name', 'like', "%{$search}%")
+                    ->orWhere('reserved_by', 'like', "%{$search}%")
+                    ->orWhereHas('member', function ($q) use ($search) {
+                        $q->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%");
+                    });
             });
         }
 

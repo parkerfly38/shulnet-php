@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('membership_type')->nullable(); // e.g., 'annual', 'lifetime', 'student'
             $table->text('notes')->nullable();
             $table->timestamps();
-            
+
             // Add index for queries
             $table->index(['member_id', 'begin_date']);
         });

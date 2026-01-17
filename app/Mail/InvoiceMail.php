@@ -5,9 +5,9 @@ namespace App\Mail;
 use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Queue\SerializesModels;
 
 class InvoiceMail extends Mailable
@@ -29,7 +29,7 @@ class InvoiceMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invoice ' . $this->invoice->invoice_number,
+            subject: 'Invoice '.$this->invoice->invoice_number,
         );
     }
 
@@ -55,13 +55,13 @@ class InvoiceMail extends Mailable
      */
     public function attachments(): array
     {
-        if (!$this->pdfPath) {
+        if (! $this->pdfPath) {
             return [];
         }
 
         return [
             Attachment::fromPath($this->pdfPath)
-                ->as('invoice-' . $this->invoice->invoice_number . '.pdf')
+                ->as('invoice-'.$this->invoice->invoice_number.'.pdf')
                 ->withMime('application/pdf'),
         ];
     }

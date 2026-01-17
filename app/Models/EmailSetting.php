@@ -19,6 +19,7 @@ class EmailSetting extends Model
     {
         return Cache::remember("email_setting_{$key}", 3600, function () use ($key, $default) {
             $setting = self::where('key', $key)->first();
+
             return $setting ? $setting->value : $default;
         });
     }

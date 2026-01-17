@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Yahrzeit extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'yahrzeit';
-    
+
     protected $fillable = [
         'name',
         'hebrew_name',
@@ -33,7 +33,7 @@ class Yahrzeit extends Model
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(Member::class, 'member_yahrzeit')
-                    ->withPivot('relationship')
-                    ->withTimestamps();
+            ->withPivot('relationship')
+            ->withTimestamps();
     }
 }

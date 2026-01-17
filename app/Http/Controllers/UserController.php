@@ -21,7 +21,7 @@ class UserController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -36,7 +36,7 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : [],
+                'roles' => $user->roles ? array_map(fn ($role) => $role->value, $user->roles) : [],
                 'role_labels' => $user->role_labels,
                 'is_admin' => $user->isAdmin(),
                 'is_teacher' => $user->isTeacher(),
@@ -70,10 +70,10 @@ class UserController extends Controller
     {
         $request->validate([
             'roles' => 'required|array',
-            'roles.*' => 'in:' . implode(',', UserRole::values())
+            'roles.*' => 'in:'.implode(',', UserRole::values()),
         ]);
 
-        $roles = array_map(fn($role) => UserRole::from($role), $request->roles);
+        $roles = array_map(fn ($role) => UserRole::from($role), $request->roles);
         $user->setRoles($roles);
         $user->save();
 
@@ -83,9 +83,9 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'roles' => $user->roles ? array_map(fn($role) => $role->value, $user->roles) : [],
+                'roles' => $user->roles ? array_map(fn ($role) => $role->value, $user->roles) : [],
                 'role_labels' => $user->role_labels,
-            ]
+            ],
         ]);
     }
 
@@ -95,7 +95,7 @@ class UserController extends Controller
     public function setDefaultAdmin(Request $request, User $user)
     {
         // Check if user can be default admin (must have admin role)
-        if (!$user->canBeDefaultAdmin()) {
+        if (! $user->canBeDefaultAdmin()) {
             return response()->json([
                 'message' => 'User must have admin role to be set as default admin.',
             ], 422);
@@ -111,7 +111,7 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'is_default_admin' => true,
-            ]
+            ],
         ]);
     }
 }

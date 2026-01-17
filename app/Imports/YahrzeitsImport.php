@@ -2,25 +2,28 @@
 
 namespace App\Imports;
 
-use App\Models\Yahrzeit;
 use App\Models\Member;
+use App\Models\Yahrzeit;
 use App\Services\HebrewCalendarService;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
-use Maatwebsite\Excel\Concerns\SkipsErrors;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Illuminate\Support\Facades\DB;
 
-class YahrzeitsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnError, SkipsOnFailure
+class YahrzeitsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
 {
     use SkipsErrors, SkipsFailures;
 
     protected $imported = 0;
+
     protected $updated = 0;
+
     protected $errors = [];
+
     protected $hebrewCalendar;
 
     public function __construct(HebrewCalendarService $hebrewCalendar)
@@ -63,7 +66,7 @@ class YahrzeitsImport implements ToModel, WithHeadingRow, WithValidation, SkipsO
             }
 
             // Handle member association if provided
-            if (!empty($row['member_email']) && !empty($row['relationship'])) {
+            if (! empty($row['member_email']) && ! empty($row['relationship'])) {
                 $member = Member::where('email', $row['member_email'])->first();
                 if ($member) {
                     // Check if relationship already exists
@@ -72,22 +75,24 @@ class YahrzeitsImport implements ToModel, WithHeadingRow, WithValidation, SkipsO
                         ->where('yahrzeit_id', $yahrzeit->id)
                         ->exists();
 
-                    if (!$exists) {
+                    if (! $exists) {
                         $yahrzeit->members()->attach($member->id, [
-                            'relationship' => $row['relationship']
+                            'relationship' => $row['relationship'],
                         ]);
                     }
                 }
             }
 
             DB::commit();
+
             return null;
         } catch (\Exception $e) {
             DB::rollBack();
             $this->errors[] = [
                 'row' => $row,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
+
             return null;
         }
     }
@@ -125,6 +130,7 @@ class YahrzeitsImport implements ToModel, WithHeadingRow, WithValidation, SkipsO
                 'errors' => $failure->errors(),
             ];
         }
+
         return array_merge($errors, $this->errors);
     }
 }

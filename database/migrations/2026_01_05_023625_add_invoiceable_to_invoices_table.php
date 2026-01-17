@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('invoiceable_type')->nullable()->after('member_id');
             $table->unsignedBigInteger('invoiceable_id')->nullable()->after('invoiceable_type');
             $table->index(['invoiceable_type', 'invoiceable_id']);
-            
+
             // Make member_id nullable since we can now invoice any model
             $table->foreignId('member_id')->nullable()->change();
         });

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\PdfTemplate;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class PdfTemplateController extends Controller
 {
@@ -17,8 +17,8 @@ class PdfTemplateController extends Controller
 
         if ($request->has('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('name', 'ilike', '%' . $request->search . '%')
-                  ->orWhere('description', 'ilike', '%' . $request->search . '%');
+                $q->where('name', 'ilike', '%'.$request->search.'%')
+                    ->orWhere('description', 'ilike', '%'.$request->search.'%');
             });
         }
 
@@ -83,7 +83,7 @@ class PdfTemplateController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:pdf_templates,slug,' . $pdfTemplate->id,
+            'slug' => 'required|string|max:255|unique:pdf_templates,slug,'.$pdfTemplate->id,
             'description' => 'nullable|string',
             'html_content' => 'required|string',
             'available_fields' => 'required|array',
@@ -110,7 +110,7 @@ class PdfTemplateController extends Controller
     public function preview(Request $request, PdfTemplate $pdfTemplate): Response
     {
         $fieldValues = $request->input('field_values', []);
-        
+
         // Replace placeholders with actual values
         $content = $pdfTemplate->renderWithFields($fieldValues);
 
@@ -124,19 +124,19 @@ class PdfTemplateController extends Controller
     public function generate(Request $request, PdfTemplate $pdfTemplate)
     {
         $fieldValues = $request->input('field_values', []);
-        
+
         // Replace placeholders with actual values
         $content = $pdfTemplate->renderWithFields($fieldValues);
 
         // Generate PDF using dompdf
         $pdf = Pdf::loadHTML($content);
-        
+
         // Set paper size and orientation
         $pdf->setPaper('letter', 'portrait');
-        
+
         // Generate filename from template slug
-        $filename = $pdfTemplate->slug . '-' . date('Y-m-d') . '.pdf';
-        
+        $filename = $pdfTemplate->slug.'-'.date('Y-m-d').'.pdf';
+
         // Return PDF for download
         return $pdf->download($filename);
     }

@@ -4,15 +4,16 @@ namespace App\Exports;
 
 use App\Models\Invoice;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class FinancialSummaryExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class FinancialSummaryExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $startDate;
+
     protected $endDate;
 
     public function __construct($startDate, $endDate)
@@ -49,7 +50,7 @@ class FinancialSummaryExport implements FromCollection, WithHeadings, WithMappin
     {
         $daysOld = now()->diffInDays($invoice->invoice_date);
         $agingCategory = 'Current';
-        
+
         if ($invoice->status !== 'paid' && $invoice->due_date && $invoice->due_date->isPast()) {
             $daysOverdue = now()->diffInDays($invoice->due_date);
             if ($daysOverdue <= 30) {
@@ -65,7 +66,7 @@ class FinancialSummaryExport implements FromCollection, WithHeadings, WithMappin
 
         return [
             $invoice->invoice_number,
-            $invoice->member ? $invoice->member->first_name . ' ' . $invoice->member->last_name : '',
+            $invoice->member ? $invoice->member->first_name.' '.$invoice->member->last_name : '',
             $invoice->invoice_date ? $invoice->invoice_date->format('Y-m-d') : '',
             $invoice->due_date ? $invoice->due_date->format('Y-m-d') : '',
             $invoice->status,

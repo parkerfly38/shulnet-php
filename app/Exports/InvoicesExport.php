@@ -4,13 +4,13 @@ namespace App\Exports;
 
 use App\Models\Invoice;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class InvoicesExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class InvoicesExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $filters;
 
@@ -23,15 +23,15 @@ class InvoicesExport implements FromCollection, WithHeadings, WithMapping, WithS
     {
         $query = Invoice::with('member');
 
-        if (!empty($this->filters['status'])) {
+        if (! empty($this->filters['status'])) {
             $query->where('status', $this->filters['status']);
         }
 
-        if (!empty($this->filters['start_date'])) {
+        if (! empty($this->filters['start_date'])) {
             $query->where('invoice_date', '>=', $this->filters['start_date']);
         }
 
-        if (!empty($this->filters['end_date'])) {
+        if (! empty($this->filters['end_date'])) {
             $query->where('invoice_date', '<=', $this->filters['end_date']);
         }
 
@@ -59,7 +59,7 @@ class InvoicesExport implements FromCollection, WithHeadings, WithMapping, WithS
     {
         return [
             $invoice->invoice_number,
-            $invoice->member ? $invoice->member->first_name . ' ' . $invoice->member->last_name : '',
+            $invoice->member ? $invoice->member->first_name.' '.$invoice->member->last_name : '',
             $invoice->invoice_date ? $invoice->invoice_date->format('Y-m-d') : '',
             $invoice->due_date ? $invoice->due_date->format('Y-m-d') : '',
             $invoice->status,

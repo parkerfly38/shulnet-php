@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\SchoolTuitionTier;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SchoolTuitionTierSeeder extends Seeder
@@ -27,7 +26,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'All course materials included',
                     'Extracurricular activities',
                     'After-school programs',
-                ]
+                ],
             ],
             [
                 'name' => 'Multi-Child Discount',
@@ -42,7 +41,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'All course materials included',
                     '20% discount per additional child',
                     'Extracurricular activities',
-                ]
+                ],
             ],
             [
                 'name' => 'Scholarship - Full',
@@ -57,7 +56,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'All course materials included',
                     'Financial aid approved',
                     'Extracurricular activities',
-                ]
+                ],
             ],
             [
                 'name' => 'Scholarship - Partial (50%)',
@@ -72,7 +71,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'All course materials included',
                     '50% financial aid',
                     'Extracurricular activities',
-                ]
+                ],
             ],
             [
                 'name' => 'Scholarship - Partial (25%)',
@@ -87,7 +86,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'All course materials included',
                     '25% financial aid',
                     'Extracurricular activities',
-                ]
+                ],
             ],
             [
                 'name' => 'Semester Payment',
@@ -101,7 +100,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'Half year access',
                     'All course materials included',
                     'Flexible payment schedule',
-                ]
+                ],
             ],
             [
                 'name' => 'Monthly Payment Plan',
@@ -115,7 +114,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'Spread payments over 10 months',
                     'All course materials included',
                     'No interest charges',
-                ]
+                ],
             ],
             [
                 'name' => 'Negotiated Tuition',
@@ -129,7 +128,7 @@ class SchoolTuitionTierSeeder extends Seeder
                     'Custom payment arrangement',
                     'Confidential agreement',
                     'Case-by-case basis',
-                ]
+                ],
             ],
         ];
 

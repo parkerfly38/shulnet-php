@@ -14,7 +14,7 @@ class EmailTemplateController extends Controller
     public function index()
     {
         $templates = EmailTemplate::latest()->get();
-        
+
         return Inertia::render('templates/index', [
             'templates' => $templates,
         ]);

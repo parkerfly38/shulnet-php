@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Exam;
-use App\Models\ClassGrade;
 
 class Subject extends Model
 {
@@ -14,7 +12,7 @@ class Subject extends Model
         'subject_code',
         'books',
         'class_id',
-        'teacher_id'
+        'teacher_id',
     ];
 
     public function exams(): HasMany

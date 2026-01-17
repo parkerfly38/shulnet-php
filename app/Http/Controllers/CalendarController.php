@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCalendarRequest;
-use App\Http\Requests\UpdateCalendarRequest;
 use App\Models\Calendar;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,7 +19,7 @@ class CalendarController extends Controller
         $query = Calendar::query()
             ->select([
                 'id', 'name', 'members_only', 'public',
-                'created_at', 'updated_at'
+                'created_at', 'updated_at',
             ])
             ->orderBy('name');
 
@@ -35,7 +33,7 @@ class CalendarController extends Controller
             'calendars' => $calendars,
             'filters' => [
                 'search' => $search,
-            ]
+            ],
         ]);
     }
 
@@ -70,7 +68,7 @@ class CalendarController extends Controller
     public function show(Calendar $calendar)
     {
         return Inertia::render('calendars/show', [
-            'calendar' => $calendar
+            'calendar' => $calendar,
         ]);
     }
 
@@ -80,7 +78,7 @@ class CalendarController extends Controller
     public function edit(Calendar $calendar)
     {
         return Inertia::render('calendars/edit', [
-            'calendar' => $calendar
+            'calendar' => $calendar,
         ]);
     }
 

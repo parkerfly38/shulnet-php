@@ -3,21 +3,22 @@
 namespace App\Imports;
 
 use App\Models\Member;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\SkipsOnError;
-use Maatwebsite\Excel\Concerns\SkipsErrors;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
-use Illuminate\Support\Facades\Log;
 
-class MembersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnError, SkipsOnFailure
+class MembersImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadingRow, WithValidation
 {
     use SkipsErrors, SkipsFailures;
 
     protected $imported = 0;
+
     protected $updated = 0;
+
     protected $errors = [];
 
     public function model(array $row)
@@ -45,11 +46,13 @@ class MembersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
                 'gender' => $row['gender'] ?? null,
             ]);
             $this->updated++;
+
             return null;
         }
 
         // Create new member
         $this->imported++;
+
         return new Member([
             'title' => $row['title'] ?? null,
             'first_name' => $row['first_name'],
@@ -99,6 +102,7 @@ class MembersImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnE
                 'errors' => $failure->errors(),
             ];
         }
+
         return $errors;
     }
 }

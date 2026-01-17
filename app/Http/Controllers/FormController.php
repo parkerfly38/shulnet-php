@@ -19,7 +19,7 @@ class FormController extends Controller
             ->get();
 
         return Inertia::render('forms/index', [
-            'forms' => $forms
+            'forms' => $forms,
         ]);
     }
 
@@ -65,7 +65,7 @@ class FormController extends Controller
         $form->loadCount('submissions');
 
         return Inertia::render('forms/show', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 
@@ -75,7 +75,7 @@ class FormController extends Controller
     public function edit(Form $form)
     {
         return Inertia::render('forms/edit', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 
@@ -122,7 +122,7 @@ class FormController extends Controller
     public function preview(Form $form)
     {
         return Inertia::render('forms/preview', [
-            'form' => $form
+            'form' => $form,
         ]);
     }
 
@@ -131,7 +131,7 @@ class FormController extends Controller
      */
     public function submit(Request $request, Form $form)
     {
-        if (!$form->is_active) {
+        if (! $form->is_active) {
             return back()->with('error', 'This form is not accepting submissions.');
         }
 
@@ -139,7 +139,7 @@ class FormController extends Controller
         $rules = [];
         foreach ($form->schema as $field) {
             $fieldRules = [];
-            
+
             if ($field['required'] ?? false) {
                 $fieldRules[] = 'required';
             } else {
@@ -162,13 +162,13 @@ class FormController extends Controller
                     break;
                 case 'select':
                     if (isset($field['options']) && is_array($field['options'])) {
-                        $fieldRules[] = 'in:' . implode(',', $field['options']);
+                        $fieldRules[] = 'in:'.implode(',', $field['options']);
                     }
                     break;
                 case 'multiselect':
                     $fieldRules[] = 'array';
                     if (isset($field['options']) && is_array($field['options'])) {
-                        $fieldRules[] = 'in:' . implode(',', $field['options']);
+                        $fieldRules[] = 'in:'.implode(',', $field['options']);
                     }
                     break;
             }
@@ -198,7 +198,7 @@ class FormController extends Controller
 
         return Inertia::render('forms/submissions', [
             'form' => $form,
-            'submissions' => $submissions
+            'submissions' => $submissions,
         ]);
     }
 }

@@ -4,15 +4,16 @@ namespace App\Exports;
 
 use App\Models\Yahrzeit;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class YahrzeitExport implements FromCollection, WithHeadings, WithMapping, WithStyles, ShouldAutoSize
+class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $startDate;
+
     protected $endDate;
 
     public function __construct($startDate = null, $endDate = null)
@@ -50,7 +51,7 @@ class YahrzeitExport implements FromCollection, WithHeadings, WithMapping, WithS
     public function map($yahrzeit): array
     {
         $memberNames = $yahrzeit->members->map(function ($member) {
-            return $member->first_name . ' ' . $member->last_name;
+            return $member->first_name.' '.$member->last_name;
         })->join(', ');
 
         return [

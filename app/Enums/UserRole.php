@@ -15,7 +15,7 @@ enum UserRole: string
      */
     public static function values(): array
     {
-        return array_map(fn($role) => $role->value, self::cases());
+        return array_map(fn ($role) => $role->value, self::cases());
     }
 
     /**
@@ -23,7 +23,7 @@ enum UserRole: string
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Admin => 'Administrator',
             self::Member => 'Member',
             self::Teacher => 'Teacher',
@@ -41,6 +41,7 @@ enum UserRole: string
         foreach (self::cases() as $role) {
             $options[$role->value] = $role->label();
         }
+
         return $options;
     }
 }

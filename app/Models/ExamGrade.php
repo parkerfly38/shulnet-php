@@ -12,7 +12,7 @@ class ExamGrade extends Model
         'letter_grade',
         'grade',
         'score',
-        'remarks'
+        'remarks',
     ];
 
     public function exam()
@@ -24,5 +24,4 @@ class ExamGrade extends Model
     {
         return $this->belongsTo(Student::class, 'student_id');
     }
-
 }

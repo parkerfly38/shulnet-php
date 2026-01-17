@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('yahrzeit_id')->constrained('yahrzeit')->onDelete('cascade');
             $table->string('relationship')->nullable(); // e.g., 'Father', 'Mother', 'Spouse', 'Child', etc.
             $table->timestamps();
-            
+
             $table->unique(['member_id', 'yahrzeit_id']);
         });
     }

@@ -36,7 +36,7 @@ class Event extends Model
         'all_day',
         'public',
         'location',
-        'calendar_id'
+        'calendar_id',
     ];
 
     public function calendar(): BelongsTo

@@ -15,7 +15,7 @@ class MembershipTierController extends Controller
     public function index()
     {
         $tiers = MembershipTier::ordered()->get();
-        
+
         $stats = [
             'total' => $tiers->count(),
             'active' => $tiers->where('is_active', true)->count(),
@@ -95,7 +95,7 @@ class MembershipTierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:membership_tiers,slug,' . $membershipTier->id,
+            'slug' => 'nullable|string|max:255|unique:membership_tiers,slug,'.$membershipTier->id,
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'billing_period' => 'required|in:annual,monthly,lifetime,custom',

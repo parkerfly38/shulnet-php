@@ -19,7 +19,7 @@ class MembershipPeriodFactory extends Factory
     {
         $beginDate = fake()->dateTimeBetween('-5 years', 'now');
         $hasEndDate = fake()->boolean(30); // 30% chance of having an end date
-        
+
         return [
             'member_id' => Member::factory(),
             'invoice_id' => null, // Optional - can be set when creating

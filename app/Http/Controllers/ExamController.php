@@ -16,7 +16,7 @@ class ExamController extends Controller
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('name', 'like', "%{$q}%")
-                  ->orWhere('description', 'like', "%{$q}%");
+                    ->orWhere('description', 'like', "%{$q}%");
             });
         }
 
@@ -32,6 +32,7 @@ class ExamController extends Controller
     {
         $data = $request->validate(['name' => 'required|string', 'date' => 'nullable|date', 'description' => 'nullable|string']);
         $model = Exam::create($data);
+
         return response()->json($model, 201);
     }
 
@@ -40,6 +41,7 @@ class ExamController extends Controller
         $model = Exam::findOrFail($id);
         $data = $request->validate(['name' => 'required|string', 'date' => 'nullable|date', 'description' => 'nullable|string']);
         $model->update($data);
+
         return response()->json($model);
     }
 
@@ -47,6 +49,7 @@ class ExamController extends Controller
     {
         $model = Exam::findOrFail($id);
         $model->delete();
+
         return response()->json(null, 204);
     }
 }

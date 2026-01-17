@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
-use App\Models\Yahrzeit;
 use App\Imports\YahrzeitsImport;
 use App\Mail\YahrzeitReminderMail;
+use App\Models\Member;
+use App\Models\Yahrzeit;
 use App\Services\HebrewCalendarService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class YahrzeitController extends Controller
 {
@@ -33,12 +32,12 @@ class YahrzeitController extends Controller
         $query = Yahrzeit::query()
             ->with(['members' => function ($query) {
                 $query->select(['members.id', 'first_name', 'last_name', 'hebrew_name'])
-                      ->withPivot('relationship');
+                    ->withPivot('relationship');
             }])
             ->select([
-                'id', 'name', 'hebrew_name', 'date_of_death', 
+                'id', 'name', 'hebrew_name', 'date_of_death',
                 'hebrew_day_of_death', 'hebrew_month_of_death', 'observance_type',
-                'notes', 'created_at', 'updated_at'
+                'notes', 'created_at', 'updated_at',
             ])
             ->orderBy('hebrew_month_of_death')
             ->orderBy('hebrew_day_of_death')
@@ -47,13 +46,13 @@ class YahrzeitController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('hebrew_name', 'like', "%{$search}%")
-                  ->orWhereHas('members', function ($memberQuery) use ($search) {
-                      $memberQuery->where('first_name', 'like', "%{$search}%")
-                                  ->orWhere('last_name', 'like', "%{$search}%")
-                                  ->orWhere('hebrew_name', 'like', "%{$search}%")
-                                  ->orWhere('member_yahrzeit.relationship', 'like', "%{$search}%");
-                  });
+                    ->orWhere('hebrew_name', 'like', "%{$search}%")
+                    ->orWhereHas('members', function ($memberQuery) use ($search) {
+                        $memberQuery->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('hebrew_name', 'like', "%{$search}%")
+                            ->orWhere('member_yahrzeit.relationship', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -63,7 +62,7 @@ class YahrzeitController extends Controller
             'yahrzeits' => $yahrzeits,
             'filters' => [
                 'search' => $search,
-            ]
+            ],
         ]);
     }
 
@@ -78,7 +77,7 @@ class YahrzeitController extends Controller
             ->get();
 
         return Inertia::render('yahrzeits/create', [
-            'members' => $members
+            'members' => $members,
         ]);
     }
 
@@ -100,7 +99,7 @@ class YahrzeitController extends Controller
 
         // Convert Gregorian date to Hebrew calendar
         $hebrewDate = $this->hebrewCalendar->gregorianToHebrew($validated['date_of_death']);
-        
+
         // Create the yahrzeit
         $yahrzeit = Yahrzeit::create([
             'name' => $validated['name'],
@@ -115,7 +114,7 @@ class YahrzeitController extends Controller
         // Attach members with their relationships
         foreach ($validated['members'] as $memberData) {
             $yahrzeit->members()->attach($memberData['member_id'], [
-                'relationship' => $memberData['relationship']
+                'relationship' => $memberData['relationship'],
             ]);
         }
 
@@ -130,11 +129,11 @@ class YahrzeitController extends Controller
     {
         $yahrzeit->load(['members' => function ($query) {
             $query->select(['members.id', 'first_name', 'last_name', 'hebrew_name'])
-                  ->withPivot('relationship');
+                ->withPivot('relationship');
         }]);
-        
+
         return Inertia::render('yahrzeits/show', [
-            'yahrzeit' => $yahrzeit
+            'yahrzeit' => $yahrzeit,
         ]);
     }
 
@@ -145,9 +144,9 @@ class YahrzeitController extends Controller
     {
         $yahrzeit->load(['members' => function ($query) {
             $query->select(['members.id', 'first_name', 'last_name', 'middle_name', 'hebrew_name'])
-                  ->withPivot('relationship');
+                ->withPivot('relationship');
         }]);
-        
+
         $members = Member::select('id', 'first_name', 'last_name', 'hebrew_name')
             ->orderBy('last_name')
             ->orderBy('first_name')
@@ -176,7 +175,7 @@ class YahrzeitController extends Controller
                 'observance_type' => $yahrzeit->observance_type,
                 'notes' => $yahrzeit->notes,
             ],
-            'members' => $members
+            'members' => $members,
         ]);
     }
 
@@ -198,7 +197,7 @@ class YahrzeitController extends Controller
 
         // Convert Gregorian date to Hebrew calendar
         $hebrewDate = $this->hebrewCalendar->gregorianToHebrew($validated['date_of_death']);
-        
+
         // Update the yahrzeit
         $yahrzeit->update([
             'name' => $validated['name'],
@@ -214,7 +213,7 @@ class YahrzeitController extends Controller
         $syncData = [];
         foreach ($validated['members'] as $memberData) {
             $syncData[$memberData['member_id']] = [
-                'relationship' => $memberData['relationship']
+                'relationship' => $memberData['relationship'],
             ];
         }
         $yahrzeit->members()->sync($syncData);
@@ -246,12 +245,12 @@ class YahrzeitController extends Controller
         $yahrzeits = Yahrzeit::query()
             ->with(['members' => function ($query) {
                 $query->select(['members.id', 'first_name', 'last_name', 'hebrew_name'])
-                      ->withPivot('relationship');
+                    ->withPivot('relationship');
             }])
             ->select(['id', 'name', 'hebrew_name', 'date_of_death'])
             ->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('hebrew_name', 'like', "%{$search}%");
+                    ->orWhere('hebrew_name', 'like', "%{$search}%");
             })
             ->orderBy('name')
             ->limit($limit)
@@ -284,7 +283,7 @@ class YahrzeitController extends Controller
                 'import_errors' => $errors,
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Import failed: ' . $e->getMessage());
+            return back()->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 
@@ -300,10 +299,10 @@ class YahrzeitController extends Controller
 
         $columns = ['name', 'hebrew_name', 'date_of_death', 'observance_type', 'notes', 'member_email', 'relationship'];
 
-        $callback = function() use ($columns) {
+        $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
-            
+
             // Add sample row
             fputcsv($file, [
                 'John Doe',
@@ -312,9 +311,9 @@ class YahrzeitController extends Controller
                 'standard',
                 'Optional notes about the deceased',
                 'member@example.com',
-                'Father'
+                'Father',
             ]);
-            
+
             fclose($file);
         };
 
@@ -327,7 +326,7 @@ class YahrzeitController extends Controller
     public function prepareReminder(Yahrzeit $yahrzeit)
     {
         $yahrzeit->load('members');
-        
+
         // Calculate Gregorian date for current Hebrew year
         $hebrewCalendarService = app(\App\Services\HebrewCalendarService::class);
         $gregorianDate = $hebrewCalendarService->getGregorianDateForCurrentYear(
@@ -361,9 +360,9 @@ class YahrzeitController extends Controller
                 )
             );
 
-            return back()->with('success', 'Yahrzeit reminder sent to ' . $validated['recipient_email']);
+            return back()->with('success', 'Yahrzeit reminder sent to '.$validated['recipient_email']);
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to send reminder: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send reminder: '.$e->getMessage());
         }
     }
 
@@ -378,7 +377,7 @@ class YahrzeitController extends Controller
         ]);
 
         $memberIds = json_decode($validated['member_ids'], true);
-        
+
         // Load the selected members
         $yahrzeit->load(['members' => function ($query) use ($memberIds) {
             $query->whereIn('members.id', $memberIds)->withPivot('relationship');

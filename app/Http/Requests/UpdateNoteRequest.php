@@ -12,6 +12,7 @@ class UpdateNoteRequest extends FormRequest
     public function authorize(): bool
     {
         $note = $this->route('note');
+
         return $this->user()->can('update', $note);
     }
 

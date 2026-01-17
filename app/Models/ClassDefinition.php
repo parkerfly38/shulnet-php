@@ -5,9 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Teacher;
-use App\Models\Subject;
-use App\Models\ClassGrade;
 
 class ClassDefinition extends Model
 {
@@ -19,10 +16,10 @@ class ClassDefinition extends Model
         'start_date',
         'end_date',
         'location',
-        'fee'
+        'fee',
     ];
 
-    public function teacher() : BelongsTo
+    public function teacher(): BelongsTo
     {
         return $this->belongsTo(Teacher::class, 'teacher_id');
     }
