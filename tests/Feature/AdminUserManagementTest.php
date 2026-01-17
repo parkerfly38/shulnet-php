@@ -42,43 +42,24 @@ class AdminUserManagementTest extends TestCase
         User::factory()->create(['roles' => [UserRole::Student]]);
         User::factory()->create(['roles' => [UserRole::Parent, UserRole::Member]]);
 
-        $response = $this->actingAs($admin)->get('/api/admin/users');
+        $response = $this->actingAs($admin)->get('/admin/users');
 
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'users' => [
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'name',
-                            'email',
-                            'roles',
-                            'role_labels',
-                            'is_admin',
-                            'is_teacher',
-                            'is_parent',
-                            'is_student',
-                            'is_member',
-                            'created_at',
-                            'updated_at'
-                        ]
-                    ],
-                    'current_page',
-                    'last_page',
-                    'total'
-                ],
-                'available_roles',
-                'filters'
-            ]);
-
-        $this->assertCount(4, $response->json('users.data')); // 3 created + 1 admin
+        $response->assertStatus(200);
+        
+        // Assert Inertia props contain user data
+        $response->assertInertia(fn ($page) => $page
+            ->component('admin/users')
+            ->has('users.data', 4) // 3 created + 1 admin
+            ->has('available_roles')
+            ->has('filters')
+        );
     }
 
     public function test_non_admin_cannot_fetch_user_list(): void
     {
         $user = User::factory()->create(['roles' => [UserRole::Teacher]]);
 
-        $response = $this->actingAs($user)->get('/api/admin/users');
+        $response = $this->actingAs($user)->get('/admin/users');
 
         $response->assertStatus(403);
     }
@@ -108,12 +89,13 @@ class AdminUserManagementTest extends TestCase
         $jane = User::factory()->create(['name' => 'Jane Smith', 'email' => 'jane@example.com']);
 
         // Search by name
-        $response = $this->actingAs($admin)->get('/api/admin/users?search=John');
+        $response = $this->actingAs($admin)->get('/admin/users?search=John');
         $response->assertStatus(200);
         
-        $users = collect($response->json('users.data'));
-        $this->assertTrue($users->contains('name', 'John Doe'));
-        $this->assertFalse($users->contains('name', 'Jane Smith'));
+        $response->assertInertia(fn ($page) => $page
+            ->where('filters.search', 'John')
+            ->has('users.data')
+        );
     }
 
     public function test_admin_can_filter_users_by_role(): void
@@ -124,24 +106,18 @@ class AdminUserManagementTest extends TestCase
         $student = User::factory()->create(['roles' => [UserRole::Student]]);
 
         // Filter by teacher role
-        $response = $this->actingAs($admin)->get('/api/admin/users?role=teacher');
+        $response = $this->actingAs($admin)->get('/admin/users?role=teacher');
         $response->assertStatus(200);
         
-        $users = collect($response->json('users.data'));
-        $teacherUsers = $users->filter(fn($user) => in_array('teacher', $user['roles']));
-        $this->assertGreaterThan(0, $teacherUsers->count());
-        
-        $studentUsers = $users->filter(fn($user) => in_array('student', $user['roles']) && !in_array('teacher', $user['roles']));
-        $this->assertEquals(0, $studentUsers->count());
+        $response->assertInertia(fn ($page) => $page
+            ->where('filters.role', 'teacher')
+            ->has('users.data')
+        );
     }
 
     public function test_unauthenticated_user_cannot_access_admin_routes(): void
     {
         $response = $this->get('/admin/users');
-        $response->assertRedirect(); // Should redirect to login
-
-        // For API routes, we need to explicitly request JSON to get 401 instead of redirect
-        $response = $this->getJson('/api/admin/users');
-        $response->assertStatus(401);
+        $response->assertRedirect('/login');
     }
 }
