@@ -330,6 +330,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::put('admin/settings', [SettingController::class, 'update'])->name('settings.update');
 
+        // API Tokens management
+        Route::get('admin/api-tokens', [\App\Http\Controllers\Api\TokenController::class, 'page'])->name('admin.api-tokens');
+
         // Reports routes
         Route::get('admin/reports', [ReportsController::class, 'index'])->name('reports.index');
         Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('reports.export.members');
@@ -469,12 +472,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // API routes for admin functionality
-Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(function () {
     Route::put('users/{user}/roles', [UserController::class, 'updateRoles'])->name('api.admin.users.roles.update');
     Route::post('users/{user}/set-default-admin', [UserController::class, 'setDefaultAdmin'])->name('api.admin.users.set-default-admin');
     
+    // Member CRUD API endpoints
+    Route::get('members', [MemberController::class, 'apiIndex'])->name('api.admin.members.index');
+    Route::post('members', [MemberController::class, 'apiStore'])->name('api.admin.members.store');
+    Route::get('members/{member}', [MemberController::class, 'apiShow'])->name('api.admin.members.show');
+    Route::put('members/{member}', [MemberController::class, 'apiUpdate'])->name('api.admin.members.update');
+    Route::patch('members/{member}', [MemberController::class, 'apiUpdate'])->name('api.admin.members.patch');
+    Route::delete('members/{member}', [MemberController::class, 'apiDestroy'])->name('api.admin.members.destroy');
+    
     // Member search API endpoint
     Route::get('members/search', [MemberController::class, 'search'])->name('api.admin.members.search');
+    
+    // Invoice CRUD API endpoints
+    Route::get('invoices', [InvoiceController::class, 'apiIndex'])->name('api.admin.invoices.index');
+    Route::post('invoices', [InvoiceController::class, 'apiStore'])->name('api.admin.invoices.store');
+    Route::get('invoices/{invoice}', [InvoiceController::class, 'apiShow'])->name('api.admin.invoices.show');
+    Route::put('invoices/{invoice}', [InvoiceController::class, 'apiUpdate'])->name('api.admin.invoices.update');
+    Route::patch('invoices/{invoice}', [InvoiceController::class, 'apiUpdate'])->name('api.admin.invoices.patch');
+    Route::delete('invoices/{invoice}', [InvoiceController::class, 'apiDestroy'])->name('api.admin.invoices.destroy');
     
     // Yahrzeit search API endpoint
     Route::get('yahrzeits/search', [YahrzeitController::class, 'search'])->name('api.admin.yahrzeits.search');
@@ -497,6 +516,14 @@ Route::middleware(['auth:web', 'role:admin'])->prefix('api/admin')->group(functi
     Route::apiResource('subjects', \App\Http\Controllers\SubjectController::class);
     Route::apiResource('subject-grades', \App\Http\Controllers\SubjectGradeController::class);
     Route::apiResource('teachers', \App\Http\Controllers\TeacherController::class);
+});
+
+// API Token management routes
+Route::post('api/tokens/create', [\App\Http\Controllers\Api\TokenController::class, 'create'])->name('api.tokens.create');
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api')->group(function () {
+    Route::get('tokens', [\App\Http\Controllers\Api\TokenController::class, 'index'])->name('api.tokens.index');
+    Route::delete('tokens/{tokenId}', [\App\Http\Controllers\Api\TokenController::class, 'destroy'])->name('api.tokens.destroy');
+    Route::delete('tokens', [\App\Http\Controllers\Api\TokenController::class, 'destroyAll'])->name('api.tokens.destroy-all');
 });
 
 // Public campaign routes (no auth required)

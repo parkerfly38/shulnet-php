@@ -364,4 +364,173 @@ class MemberController extends Controller
 
         return back()->with('success', 'User account created successfully for ' . $member->first_name . ' ' . $member->last_name);
     }
+
+    // ==================== API Methods ====================
+
+    /**
+     * API: Create a new member
+     * 
+     * @group Members
+     * @authenticated
+     */
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:members,email',
+            'phone1' => 'nullable|string|max:20',
+            'phone2' => 'nullable|string|max:20',
+            'address_line_1' => 'nullable|string|max:255',
+            'address_line_2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'zip' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'dob' => 'nullable|date',
+            'middle_name' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:100',
+            'gender' => 'nullable|in:male,female,other',
+            'aliyah' => 'nullable|boolean',
+            'bnaimitzvahdate' => 'nullable|date',
+            'chazanut' => 'nullable|boolean',
+            'tribe' => 'nullable|in:israel,kohein,levi',
+            'dvartorah' => 'nullable|boolean',
+            'deceased' => 'nullable|boolean',
+            'father_hebrew_name' => 'nullable|string|max:255',
+            'mother_hebrew_name' => 'nullable|string|max:255',
+            'hebrew_name' => 'nullable|string|max:255',
+            'brianbatorah' => 'nullable|boolean',
+            'maftir' => 'nullable|boolean',
+            'anniversary_date' => 'nullable|date',
+        ]);
+
+        $member = Member::create($validated);
+
+        return response()->json([
+            'message' => 'Member created successfully',
+            'data' => $member
+        ], 201);
+    }
+
+    /**
+     * API: Update an existing member
+     * 
+     * @group Members
+     * @authenticated
+     */
+    public function apiUpdate(Request $request, Member $member)
+    {
+        $validated = $request->validate([
+            'member_type' => ['sometimes', 'required', Rule::in(['member', 'contact', 'prospect', 'former'])],
+            'first_name' => 'sometimes|required|string|max:255',
+            'last_name' => 'sometimes|required|string|max:255',
+            'email' => ['sometimes', 'required', 'email', Rule::unique('members')->ignore($member->id)],
+            'phone1' => 'nullable|string|max:20',
+            'phone2' => 'nullable|string|max:20',
+            'address_line_1' => 'nullable|string|max:255',
+            'address_line_2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'zip' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:100',
+            'dob' => 'nullable|date',
+            'middle_name' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:100',
+            'gender' => 'nullable|in:male,female,other',
+            'aliyah' => 'nullable|boolean',
+            'bnaimitzvahdate' => 'nullable|date',
+            'chazanut' => 'nullable|boolean',
+            'tribe' => 'nullable|in:israel,kohein,levi',
+            'dvartorah' => 'nullable|boolean',
+            'deceased' => 'nullable|boolean',
+            'father_hebrew_name' => 'nullable|string|max:255',
+            'mother_hebrew_name' => 'nullable|string|max:255',
+            'hebrew_name' => 'nullable|string|max:255',
+            'brianbatorah' => 'nullable|boolean',
+            'maftir' => 'nullable|boolean',
+            'anniversary_date' => 'nullable|date',
+        ]);
+
+        $member->update($validated);
+
+        return response()->json([
+            'message' => 'Member updated successfully',
+            'data' => $member->fresh()
+        ]);
+    }
+
+    /**
+     * API: Delete a member
+     * 
+     * @group Members
+     * @authenticated
+     */
+    public function apiDestroy(Member $member)
+    {
+        $memberName = $member->first_name . ' ' . $member->last_name;
+        $member->delete();
+
+        return response()->json([
+            'message' => "Member '{$memberName}' deleted successfully"
+        ]);
+    }
+
+    /**
+     * API: Get a single member
+     * 
+     * @group Members
+     * @authenticated
+     */
+    public function apiShow(Member $member)
+    {
+        $member->load(['membershipPeriods' => function ($query) {
+            $query->with('invoice:id,invoice_number,invoice_date,total,status')
+                  ->orderBy('begin_date', 'desc');
+        }]);
+
+        return response()->json([
+            'data' => $member
+        ]);
+    }
+
+    /**
+     * API: List all members with pagination
+     * 
+     * @group Members
+     * @authenticated
+     */
+    public function apiIndex(Request $request)
+    {
+        $search = $request->get('search');
+        $memberType = $request->get('member_type');
+        $perPage = $request->get('per_page', 15);
+
+        $query = Member::query()
+            ->select([
+                'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1', 
+                'city', 'state', 'user_id', 'created_at', 'updated_at'
+            ])
+            ->orderBy('last_name')
+            ->orderBy('first_name');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhere('state', 'like', "%{$search}%");
+            });
+        }
+
+        if ($memberType) {
+            $query->where('member_type', $memberType);
+        }
+
+        $members = $query->paginate($perPage);
+
+        return response()->json($members);
+    }
 }

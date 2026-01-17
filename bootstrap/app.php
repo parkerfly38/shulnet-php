@@ -26,6 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
 
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+
         // Register role-based middleware
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,

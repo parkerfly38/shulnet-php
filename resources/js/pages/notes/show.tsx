@@ -36,7 +36,6 @@ export default function NoteShow({ note }: NoteShowProps) {
     const handleMarkComplete = () => {
         if (!note.completed_date) {
             router.put(`/admin/notes/${note.id}`, {
-                ...note,
                 completed_date: new Date().toISOString()
             });
         }

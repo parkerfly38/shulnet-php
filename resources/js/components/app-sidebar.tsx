@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -196,7 +196,13 @@ const systemNavItems: NavItem[] = [
         title: 'General Settings',
         href: '/admin/settings',
         icon: Settings,
-    },{
+    },
+    {
+        title: 'API Tokens',
+        href: '/admin/api-tokens',
+        icon: Key,
+    },
+    {
         title: 'Email Settings',
         href: '/admin/email-settings',
         icon: Mail,
