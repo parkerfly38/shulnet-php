@@ -1,16 +1,9 @@
-import AppLogoIcon from './app-logo-icon';
-
 export default function AppLogo() {
     return (
-        <>
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-white dark:bg-black">
-                <AppLogoIcon className="size-5" />
-            </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-tight font-semibold">
-                    ShulNET
-                </span>
-            </div>
-        </>
+        <img 
+            src="/shulnet-logo.png" 
+            alt="ShulNET Logo" 
+            className="w-64 h-auto"
+        />
     );
 }
