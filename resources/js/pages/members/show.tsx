@@ -314,6 +314,64 @@ export default function MembersShow({ member }: Readonly<Props>) {
                 </div>
               </div>
             )}
+
+            {/* Email Contact History */}
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                <Mail className="h-5 w-5 mr-2" />
+                Email Contact History
+              </h2>
+              
+              {member.email_records && member.email_records.length > 0 ? (
+                <div className="space-y-3">
+                  {member.email_records.map((email: any) => (
+                    <div 
+                      key={email.id} 
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm">
+                            {email.subject}
+                          </h3>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {formatDate(email.date_sent)}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs mt-3">
+                        <div>
+                          <span className="font-medium text-gray-500 dark:text-gray-400">From:</span>
+                          <span className="ml-1 text-gray-900 dark:text-gray-100">{email.from}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-500 dark:text-gray-400">To:</span>
+                          <span className="ml-1 text-gray-900 dark:text-gray-100">{email.to}</span>
+                        </div>
+                        {email.cc && (
+                          <div>
+                            <span className="font-medium text-gray-500 dark:text-gray-400">CC:</span>
+                            <span className="ml-1 text-gray-900 dark:text-gray-100">{email.cc}</span>
+                          </div>
+                        )}
+                        {email.conversation_id && (
+                          <div className="md:col-span-2">
+                            <span className="font-medium text-gray-500 dark:text-gray-400">Conversation ID:</span>
+                            <span className="ml-1 text-gray-900 dark:text-gray-100 font-mono text-xs">{email.conversation_id}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <Mail className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No email contact history recorded.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Sidebar */}

@@ -566,6 +566,15 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api')->group(function
     Route::get('tokens', [\App\Http\Controllers\Api\TokenController::class, 'index'])->name('api.tokens.index');
     Route::delete('tokens/{tokenId}', [\App\Http\Controllers\Api\TokenController::class, 'destroy'])->name('api.tokens.destroy');
     Route::delete('tokens', [\App\Http\Controllers\Api\TokenController::class, 'destroyAll'])->name('api.tokens.destroy-all');
+    
+    // Member API routes
+    Route::get('members/email/{email}', [MemberController::class, 'findByEmail'])->name('api.members.find-by-email');
+    
+    // Event API routes
+    Route::get('events/upcoming', [EventController::class, 'upcoming'])->name('api.events.upcoming');
+    
+    // Email record API routes
+    Route::post('emails/record', [\App\Http\Controllers\EmailRecordController::class, 'store'])->name('api.emails.record');
 });
 
 // Public campaign routes (no auth required)

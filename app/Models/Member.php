@@ -125,4 +125,12 @@ class Member extends Model
     {
         return $this->hasMany(EventRSVP::class);
     }
+
+    /**
+     * Get all email records for this member.
+     */
+    public function emailRecords(): HasMany
+    {
+        return $this->hasMany(EmailRecord::class);
+    }
 }

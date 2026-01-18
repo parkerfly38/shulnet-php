@@ -234,4 +234,29 @@ class EventController extends Controller
         return redirect('/admin/events')
             ->with('success', 'Event deleted successfully.');
     }
+
+    /**
+     * Get upcoming events within a date range.
+     */
+    public function upcoming(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        $query = Event::query()
+            ->with(['calendar'])
+            ->orderBy('event_start', 'asc');
+
+        if ($startDate) {
+            $query->where('event_start', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->where('event_start', '<=', $endDate);
+        }
+
+        $events = $query->get();
+
+        return response()->json($events);
+    }
 }

@@ -124,10 +124,15 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        $member->load(['membershipPeriods' => function ($query) {
-            $query->with('invoice:id,invoice_number,invoice_date,total,status')
-                ->orderBy('begin_date', 'desc');
-        }]);
+        $member->load([
+            'membershipPeriods' => function ($query) {
+                $query->with('invoice:id,invoice_number,invoice_date,total,status')
+                    ->orderBy('begin_date', 'desc');
+            },
+            'emailRecords' => function ($query) {
+                $query->orderBy('date_sent', 'desc')->limit(50);
+            }
+        ]);
 
         return Inertia::render('members/show', [
             'member' => $member,
@@ -538,5 +543,21 @@ class MemberController extends Controller
         $members = $query->paginate($perPage);
 
         return response()->json($members);
+    }
+
+    /**
+     * Find a member by email address.
+     */
+    public function findByEmail(string $email)
+    {
+        $member = Member::where('email', $email)->first();
+
+        if (!$member) {
+            return response()->json([
+                'message' => 'Member not found',
+            ], 404);
+        }
+
+        return response()->json($member);
     }
 }
