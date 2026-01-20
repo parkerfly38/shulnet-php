@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Onboarding - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html" class="active">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Member Onboarding Workflow</h1>
+      
+      <p>The member onboarding workflow is a streamlined, 4-step process for adding new members to your organization. This guided workflow ensures all necessary information is collected and membership invoices can be automatically generated.</p>
+
+      <div class="alert alert-info">
+        <strong>Quick Access:</strong> Start the member onboarding workflow from the Dashboard by clicking the "Onboard New Member" button.
+      </div>
+
+      <h2>When to Use Onboarding</h2>
+
+      <p>Use the member onboarding workflow when:</p>
+      <ul>
+        <li>Adding a new member to your organization</li>
+        <li>Converting a prospect or contact to a full member</li>
+        <li>You need to collect membership tier information and create an invoice</li>
+        <li>You want a guided, step-by-step process</li>
+      </ul>
+
+      <p>For quick edits to existing members, use the standard <a href="members.html">member management</a> interface instead.</p>
+
+      <h2>The Onboarding Process</h2>
+
+      <ol class="steps">
+        <li>
+          <h3>Step 1: Member Details</h3>
+          <p>Collect basic information about the new member:</p>
+          
+          <h4>Required Fields:</h4>
+          <ul>
+            <li><strong>Member Type:</strong> Member, Contact, Prospect, or Former Member</li>
+            <li><strong>First Name:</strong> Member's first name</li>
+            <li><strong>Last Name:</strong> Member's last name</li>
+            <li><strong>Email:</strong> Primary email address (must be unique)</li>
+          </ul>
+
+          <h4>Optional Fields:</h4>
+          <ul>
+            <li><strong>Title:</strong> Mr., Mrs., Dr., Rabbi, etc.</li>
+            <li><strong>Middle Name:</strong> Middle name or initial</li>
+            <li><strong>Phone Numbers:</strong> Primary and secondary phone</li>
+            <li><strong>Address:</strong> Full mailing address</li>
+            <li><strong>Date of Birth:</strong> For age-based tracking</li>
+          </ul>
+
+          <div class="alert alert-warning">
+            <strong>Email Addresses:</strong> Each member must have a unique email address in the system. If two family members share an email, consider creating a family account or using alternate emails.
+          </div>
+
+          <p><a href="#" class="btn btn-primary">Continue to Next Step →</a></p>
+        </li>
+
+        <li>
+          <h3>Step 2: Additional Details</h3>
+          <p>Collect Jewish/Hebrew information and additional details:</p>
+
+          <h4>Jewish Details:</h4>
+          <ul>
+            <li><strong>Hebrew Name:</strong> Member's Hebrew name</li>
+            <li><strong>Father's Hebrew Name:</strong> For Hebrew name format (ben/bat)</li>
+            <li><strong>Mother's Hebrew Name:</strong> For Hebrew name format</li>
+            <li><strong>Tribe:</strong> Kohein, Levi, or Israel</li>
+            <li><strong>B'nai Mitzvah Date:</strong> Date of Bar/Bat Mitzvah</li>
+            <li><strong>Anniversary Date:</strong> Wedding anniversary</li>
+          </ul>
+
+          <h4>Participation Preferences:</h4>
+          <ul>
+            <li><strong>Aliyah:</strong> Willing to receive aliyot to Torah</li>
+            <li><strong>Chazanut:</strong> Can lead prayers/services</li>
+            <li><strong>Dvar Torah:</strong> Willing to give Torah talks</li>
+            <li><strong>Maftir:</strong> Can read Haftarah</li>
+          </ul>
+
+          <div class="card">
+            <h4>Why Collect This Information?</h4>
+            <p>Hebrew names and participation preferences help with:</p>
+            <ul>
+              <li>Creating Mi Shebeirach lists</li>
+              <li>Planning services and assigning honors</li>
+              <li>Yahrzeit reminders and memorials</li>
+              <li>Hebrew calendar integration</li>
+            </ul>
+          </div>
+
+          <p><a href="#" class="btn btn-primary">Continue to Next Step →</a></p>
+        </li>
+
+        <li>
+          <h3>Step 3: Select Membership Tier</h3>
+          <p>Choose the appropriate membership tier and billing period:</p>
+
+          <h4>Available Membership Tiers:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Tier Name</th>
+                <th>Annual Cost</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Individual</td>
+                <td>$1,200</td>
+                <td>Single adult membership</td>
+              </tr>
+              <tr>
+                <td>Family</td>
+                <td>$2,400</td>
+                <td>Household membership (2+ adults)</td>
+              </tr>
+              <tr>
+                <td>Young Professional</td>
+                <td>$600</td>
+                <td>Ages 22-35, discounted rate</td>
+              </tr>
+              <tr>
+                <td>Senior</td>
+                <td>$800</td>
+                <td>Ages 65+, discounted rate</td>
+              </tr>
+              <tr>
+                <td>Student</td>
+                <td>$300</td>
+                <td>Full-time students with ID</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="alert alert-info">
+            <strong>Note:</strong> Actual tiers and pricing are configured by your administrator and may differ from the examples above.
+          </div>
+
+          <h4>Billing Period:</h4>
+          <p>Select how often the member will be billed:</p>
+          <ul>
+            <li><strong>Annual:</strong> One payment per year</li>
+            <li><strong>Semi-Annual:</strong> Two payments per year (50% each)</li>
+            <li><strong>Quarterly:</strong> Four payments per year (25% each)</li>
+            <li><strong>Monthly:</strong> Twelve payments per year (1/12 each)</li>
+            <li><strong>Custom:</strong> Enter a custom billing schedule</li>
+          </ul>
+
+          <p><a href="#" class="btn btn-primary">Continue to Next Step →</a></p>
+        </li>
+
+        <li>
+          <h3>Step 4: Review & Create Invoice</h3>
+          <p>Review all information and decide whether to create an invoice:</p>
+
+          <h4>Review Summary:</h4>
+          <p>Carefully review all entered information:</p>
+          <ul>
+            <li>Member personal details</li>
+            <li>Contact information</li>
+            <li>Hebrew/Jewish details</li>
+            <li>Selected membership tier and cost</li>
+            <li>Billing period and schedule</li>
+          </ul>
+
+          <h4>Invoice Options:</h4>
+          <div class="card">
+            <h4>Create Invoice Now</h4>
+            <p>Generate a membership invoice immediately:</p>
+            <ul>
+              <li>Set the invoice date (defaults to today)</li>
+              <li>Set the due date</li>
+              <li>Optionally email the invoice to the member</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4>Save Without Invoice</h4>
+            <p>Create the member record only:</p>
+            <ul>
+              <li>Member is added to the system</li>
+              <li>No invoice is generated</li>
+              <li>You can create an invoice later manually</li>
+            </ul>
+          </div>
+
+          <h4>Email Invoice</h4>
+          <p>If you choose to create an invoice, you can email it immediately:</p>
+          <ul>
+            <li>PDF invoice attached to email</li>
+            <li>Payment instructions included</li>
+            <li>Member receives payment link (if online payments enabled)</li>
+          </ul>
+
+          <div class="alert alert-success">
+            <strong>Success!</strong> After completing the workflow, the new member is added to your database with a complete profile and optional invoice.
+          </div>
+        </li>
+      </ol>
+
+      <h2>After Onboarding</h2>
+
+      <h3>Next Steps</h3>
+      <p>Once a member is onboarded, you can:</p>
+
+      <ul>
+        <li><strong>View Member Profile:</strong> Click "View Member" to see the complete profile</li>
+        <li><strong>Create User Account:</strong> Generate login credentials so the member can access the member portal</li>
+        <li><strong>Add Family Members:</strong> Link spouse and children to the member record</li>
+        <li><strong>Record Yahrzeits:</strong> Add yahrzeit observances for family members</li>
+        <li><strong>Track Payments:</strong> Record invoice payments as they're received</li>
+      </ul>
+
+      <h3>Creating User Accounts</h3>
+      <p>To give members access to the member portal:</p>
+      <ol>
+        <li>Navigate to the member's profile</li>
+        <li>Click "Create User Account"</li>
+        <li>A temporary password will be generated</li>
+        <li>Email the credentials to the member</li>
+        <li>Member will be prompted to change password on first login</li>
+      </ol>
+
+      <h2>Tips and Best Practices</h2>
+
+      <div class="card">
+        <h3>Data Accuracy</h3>
+        <ul>
+          <li>Double-check email addresses - they're used for all communication</li>
+          <li>Verify phone numbers are in a consistent format</li>
+          <li>Ensure addresses are complete for mailing physical items</li>
+          <li>Hebrew names should include proper spelling and transliteration</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Membership Tiers</h3>
+        <ul>
+          <li>Choose the tier that best matches the member's situation</li>
+          <li>Be consistent with tier assignments across similar members</li>
+          <li>Document any custom pricing in member notes</li>
+          <li>Review tier pricing annually with your board</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Invoice Timing</h3>
+        <ul>
+          <li>Send invoices immediately if the member is ready to pay</li>
+          <li>Skip invoice creation if you're pre-registering members</li>
+          <li>Set appropriate due dates based on your policies</li>
+          <li>Email invoices for faster delivery and tracking</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can I edit member information after onboarding?</h3>
+      <p>Yes! All member information can be edited at any time from the <a href="members.html">member management</a> interface. Navigate to Members, find the member, and click Edit.</p>
+
+      <h3>What if I make a mistake during onboarding?</h3>
+      <p>You can use the "Back" button to return to previous steps and correct errors. If you've already completed the workflow, edit the member record directly.</p>
+
+      <h3>Can I onboard multiple members at once?</h3>
+      <p>No, the onboarding workflow processes one member at a time. For bulk imports, use the <a href="members.html#import">member import</a> feature instead.</p>
+
+      <h3>What happens if the email address is already in use?</h3>
+      <p>The system will display an error. Each member must have a unique email address. Consider using alternate emails or family-specific addresses.</p>
+
+      <h3>Can I customize the membership tiers?</h3>
+      <p>Yes, administrators can add, edit, or remove membership tiers in the Settings section under Membership Tiers.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="members.html">Managing Members</a> - Full member management guide</li>
+        <li><a href="membership-periods.html">Membership Periods</a> - Track membership over time</li>
+        <li><a href="invoices.html">Managing Invoices</a> - Invoice creation and tracking</li>
+        <li><a href="student-onboarding.html">Student Onboarding</a> - Similar workflow for students</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

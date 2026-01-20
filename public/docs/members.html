@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managing Members - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html" class="active">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Managing Members</h1>
+      
+      <p>The member management system is the heart of ShulNET, providing comprehensive tools to maintain member records, track membership status, and manage all member-related information.</p>
+
+      <h2>Viewing Members</h2>
+
+      <h3>Member List</h3>
+      <p>Access the member directory from the admin menu → Members:</p>
+      <ul>
+        <li><strong>Search:</strong> Find members by name, email, city, or state</li>
+        <li><strong>Filter by Type:</strong> View members, contacts, prospects, or former members</li>
+        <li><strong>Sort:</strong> Click column headers to sort by name, email, location, etc.</li>
+        <li><strong>Pagination:</strong> Browse through large member lists (15, 30, or 50 per page)</li>
+      </ul>
+
+      <h3>Member Statistics</h3>
+      <p>The member list shows counts for each type:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Member Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-success">Member</span></td>
+            <td>Active, dues-paying members</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-primary">Contact</span></td>
+            <td>Community contacts, not formal members</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Prospect</span></td>
+            <td>Potential members, in discussion</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Former</span></td>
+            <td>Previous members who left</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Adding Members</h2>
+
+      <p>You have two options for adding members:</p>
+
+      <h3>Option 1: Quick Add</h3>
+      <ol>
+        <li>Navigate to Members → Add Member</li>
+        <li>Enter required information (name, email, type)</li>
+        <li>Add optional contact details</li>
+        <li>Save the record</li>
+      </ol>
+
+      <h3>Option 2: Onboarding Workflow</h3>
+      <p>For comprehensive member setup with automatic invoice generation:</p>
+      <ul>
+        <li>Use the <a href="member-onboarding.html">Member Onboarding Workflow</a></li>
+        <li>Includes membership tier selection</li>
+        <li>Generates invoices automatically</li>
+        <li>Guided 4-step process</li>
+      </ul>
+
+      <h2>Member Profile</h2>
+
+      <h3>Personal Information</h3>
+      <p>Each member profile contains:</p>
+      <ul>
+        <li>Full name (title, first, middle, last)</li>
+        <li>Contact information (email, phones, address)</li>
+        <li>Date of birth</li>
+        <li>Gender</li>
+        <li>Member type and status</li>
+      </ul>
+
+      <h3>Jewish Details</h3>
+      <ul>
+        <li>Hebrew name and parents' Hebrew names</li>
+        <li>Tribe (Kohein, Levi, Israel)</li>
+        <li>B'nai Mitzvah date</li>
+        <li>Anniversary date</li>
+        <li>Service participation preferences (Aliyah, Chazanut, Dvar Torah, Maftir)</li>
+      </ul>
+
+      <h3>Related Records</h3>
+      <p>From a member profile, you can access:</p>
+      <ul>
+        <li><strong>Membership Periods:</strong> History of membership dates and tiers</li>
+        <li><strong>Invoices:</strong> All billing records</li>
+        <li><strong>Yahrzeits:</strong> Memorial observances</li>
+        <li><strong>Family Members:</strong> Linked spouse and children</li>
+        <li><strong>Event RSVPs:</strong> Event registrations</li>
+        <li><strong>Email History:</strong> Contact record from Outlook integration</li>
+      </ul>
+
+      <h2>Editing Members</h2>
+
+      <ol>
+        <li>Find the member in the directory</li>
+        <li>Click on their name to view the profile</li>
+        <li>Click "Edit Member" button</li>
+        <li>Update any fields as needed</li>
+        <li>Click "Update Member" to save changes</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Tip:</strong> Changes are saved immediately and reflected across the system.
+      </div>
+
+      <h2>Creating User Accounts</h2>
+
+      <p>Give members access to the member portal:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Open Member Profile</h4>
+          <p>Navigate to the member's profile page.</p>
+        </li>
+
+        <li>
+          <h4>Click "Create User Account"</h4>
+          <p>Button appears if the member doesn't have a user account yet.</p>
+        </li>
+
+        <li>
+          <h4>Temporary Password Generated</h4>
+          <p>System creates account with temporary password.</p>
+        </li>
+
+        <li>
+          <h4>Email Credentials</h4>
+          <p>Send the login credentials to the member's email.</p>
+        </li>
+
+        <li>
+          <h4>Member First Login</h4>
+          <p>Member logs in and is prompted to change password.</p>
+        </li>
+      </ol>
+
+      <h3>User Account Access</h3>
+      <p>Once a member has a user account, they can:</p>
+      <ul>
+        <li>View and update their profile</li>
+        <li>See their invoices and payment history</li>
+        <li>Pay invoices online</li>
+        <li>View their children's student records</li>
+        <li>RSVP to events</li>
+        <li>View their yahrzeit records</li>
+      </ul>
+
+      <h2>Importing Members</h2>
+
+      <h3>Bulk Import Process</h3>
+      <ol class="steps">
+        <li>
+          <h4>Download Template</h4>
+          <p>Navigate to Members → Import → Download Template</p>
+        </li>
+
+        <li>
+          <h4>Fill in Spreadsheet</h4>
+          <p>Add member data to the Excel template:</p>
+          <ul>
+            <li>One row per member</li>
+            <li>Required columns: first name, last name, email, member type</li>
+            <li>Optional: all other member fields</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Upload File</h4>
+          <p>Click "Import Members" and upload your completed file.</p>
+        </li>
+
+        <li>
+          <h4>Review Preview</h4>
+          <p>System shows preview of members to be imported with any errors highlighted.</p>
+        </li>
+
+        <li>
+          <h4>Confirm Import</h4>
+          <p>Click "Import" to add all members. You'll see a success message with count.</p>
+        </li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Important:</strong> Each email address must be unique. Duplicate emails will be flagged during preview.
+      </div>
+
+      <h2>Exporting Members</h2>
+
+      <h3>Export to Excel</h3>
+      <ol>
+        <li>Navigate to the member list</li>
+        <li>Apply any filters (member type, search terms)</li>
+        <li>Click "Export" button</li>
+        <li>Choose Excel format</li>
+        <li>File downloads with all visible member data</li>
+      </ol>
+
+      <h3>Use Cases for Exports</h3>
+      <ul>
+        <li>Mailing labels for High Holiday tickets</li>
+        <li>Email lists for external newsletters</li>
+        <li>Membership directory publication</li>
+        <li>Board reports and statistics</li>
+        <li>Backup of member data</li>
+      </ul>
+
+      <h2>Member Types</h2>
+
+      <h3>Changing Member Type</h3>
+      <p>As member status changes, update their type:</p>
+
+      <div class="card">
+        <h4>Prospect → Member</h4>
+        <p>When someone joins:</p>
+        <ol>
+          <li>Edit the member record</li>
+          <li>Change type from "Prospect" to "Member"</li>
+          <li>Add membership period with tier</li>
+          <li>Generate membership invoice</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h4>Member → Former</h4>
+        <p>When someone leaves:</p>
+        <ol>
+          <li>Edit the member record</li>
+          <li>Change type to "Former Member"</li>
+          <li>End their current membership period</li>
+          <li>Add exit notes if desired</li>
+          <li>Optionally mark as deceased if applicable</li>
+        </ol>
+      </div>
+
+      <h2>Family Relationships</h2>
+
+      <h3>Linking Family Members</h3>
+      <p>Connect spouses and children:</p>
+      <ul>
+        <li><strong>Spouse:</strong> Create separate member records and note relationship</li>
+        <li><strong>Children:</strong> Use parent_id field to link children to parents</li>
+        <li><strong>Family Invoices:</strong> Bill can go to primary member</li>
+      </ul>
+
+      <h3>Household Management</h3>
+      <p>Best practices for families:</p>
+      <ul>
+        <li>Use shared email or separate emails per adult</li>
+        <li>Link all children to parent member records</li>
+        <li>Family membership tier covers household</li>
+        <li>One invoice for the family unit</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Data Quality</h3>
+        <ul>
+          <li>Always collect email addresses - essential for communication</li>
+          <li>Keep addresses current for mailings</li>
+          <li>Verify phone numbers at least annually</li>
+          <li>Ask members to update their own information via portal</li>
+          <li>Use consistent name formatting</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Privacy & Security</h3>
+        <ul>
+          <li>Only share member information with authorized staff</li>
+          <li>Don't publish full directories without consent</li>
+          <li>Be cautious with email exports (BCC when mass emailing)</li>
+          <li>Respect members who opt out of directory</li>
+          <li>Securely delete data for members who request it</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Organization</h3>
+        <ul>
+          <li>Review member list quarterly for accuracy</li>
+          <li>Archive or delete duplicate records</li>
+          <li>Update former members promptly</li>
+          <li>Use notes field for important context</li>
+          <li>Keep membership periods current</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can I delete a member?</h3>
+      <p>Yes, but consider changing to "Former Member" instead. Deleting removes all history. If you delete, associated records (invoices, yahrzeits) may be affected.</p>
+
+      <h3>What if two people share an email address?</h3>
+      <p>Each member needs a unique email. Use variations like john@example.com and john+shul@example.com, or create family email addresses.</p>
+
+      <h3>How do I handle deceased members?</h3>
+      <p>Check the "Deceased" field in their profile. They remain in the system for historical/yahrzeit purposes but are marked accordingly.</p>
+
+      <h3>Can members update their own information?</h3>
+      <p>Yes! Members with user accounts can update their profile through the member portal. Admins can see all changes in the activity log.</p>
+
+      <h3>What's the difference between member and contact?</h3>
+      <p>Members are dues-paying, formal members. Contacts are community members, donors, or friends of the synagogue who aren't formal members.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="member-onboarding.html">Member Onboarding</a> - Add members with full workflow</li>
+        <li><a href="membership-periods.html">Membership Periods</a> - Track membership over time</li>
+        <li><a href="invoices.html">Managing Invoices</a> - Billing members</li>
+        <li><a href="user-roles.html">User Roles</a> - Member portal access</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

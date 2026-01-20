@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managing Invoices - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html" class="active">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Managing Invoices</h1>
+      
+      <p>ShulNET's invoicing system helps you track all financial transactions with members and parents, from membership dues to tuition payments to event fees.</p>
+
+      <h2>Invoice Basics</h2>
+
+      <h3>What is an Invoice?</h3>
+      <p>An invoice is a billing document that:</p>
+      <ul>
+        <li>Records what is owed to your organization</li>
+        <li>Includes detailed line items with descriptions and amounts</li>
+        <li>Has a due date for payment</li>
+        <li>Tracks payment status (draft, open, paid, overdue, cancelled)</li>
+        <li>Can be emailed to members/parents as a PDF</li>
+      </ul>
+
+      <h3>Invoice Statuses</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Description</th>
+            <th>When to Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-primary">Draft</span></td>
+            <td>Not yet sent to recipient</td>
+            <td>While preparing invoice, not ready to send</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Open</span></td>
+            <td>Sent but not paid</td>
+            <td>Invoice has been sent and awaiting payment</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-success">Paid</span></td>
+            <td>Payment received</td>
+            <td>Full payment has been recorded</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Overdue</span></td>
+            <td>Past due date, unpaid</td>
+            <td>System automatically sets when past due</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Cancelled</span></td>
+            <td>Voided, no longer valid</td>
+            <td>Invoice was sent in error or no longer needed</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Creating Invoices</h2>
+
+      <h3>Manual Invoice Creation</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Invoices</h4>
+          <p>From the main menu, click on "Invoices" to view the invoice list.</p>
+        </li>
+
+        <li>
+          <h4>Click "Create Invoice"</h4>
+          <p>Click the "Create Invoice" button in the top right corner.</p>
+        </li>
+
+        <li>
+          <h4>Select Recipient</h4>
+          <p>Choose who the invoice is for:</p>
+          <ul>
+            <li><strong>Member:</strong> For membership dues, donations, etc.</li>
+            <li><strong>Parent:</strong> For school tuition, student fees</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Set Invoice Details</h4>
+          <ul>
+            <li><strong>Invoice Number:</strong> Auto-generated but can be customized</li>
+            <li><strong>Invoice Date:</strong> Date invoice was issued</li>
+            <li><strong>Due Date:</strong> When payment is expected</li>
+            <li><strong>Status:</strong> Usually "Draft" or "Open"</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Add Line Items</h4>
+          <p>Click "Add Item" to include charges:</p>
+          <ul>
+            <li><strong>Description:</strong> What the charge is for</li>
+            <li><strong>Quantity:</strong> How many (usually 1)</li>
+            <li><strong>Unit Price:</strong> Cost per unit</li>
+            <li><strong>Total:</strong> Automatically calculated</li>
+          </ul>
+          <p>Add multiple line items as needed. The invoice total updates automatically.</p>
+        </li>
+
+        <li>
+          <h4>Save and Send</h4>
+          <p>Click "Save" to create the invoice. You can then email it to the recipient.</p>
+        </li>
+      </ol>
+
+      <h3>Automatic Invoice Creation</h3>
+      <p>Invoices are automatically created during:</p>
+      <ul>
+        <li><strong>Member Onboarding:</strong> When adding a new member with membership tier</li>
+        <li><strong>Student Onboarding:</strong> When enrolling students with tuition selection</li>
+        <li><strong>Event Registration:</strong> When events have paid ticket types</li>
+      </ul>
+
+      <h2>Viewing Invoices</h2>
+
+      <h3>Invoice List View</h3>
+      <p>The main invoice list shows:</p>
+      <ul>
+        <li>Invoice number</li>
+        <li>Recipient (member or parent name)</li>
+        <li>Invoice date</li>
+        <li>Due date</li>
+        <li>Total amount</li>
+        <li>Amount paid</li>
+        <li>Balance remaining</li>
+        <li>Status</li>
+      </ul>
+
+      <h3>Filtering Invoices</h3>
+      <p>Use filters to find specific invoices:</p>
+      <ul>
+        <li><strong>Status:</strong> Filter by draft, open, paid, overdue, or cancelled</li>
+        <li><strong>Date Range:</strong> Show invoices within a specific period</li>
+        <li><strong>Recipient:</strong> Search by member or parent name</li>
+        <li><strong>Amount:</strong> Filter by invoice total or balance</li>
+      </ul>
+
+      <h3>Invoice Aging Report</h3>
+      <p>The dashboard shows invoice aging:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Age Bracket</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0-30 days</td>
+            <td>Recently issued or recently due</td>
+          </tr>
+          <tr>
+            <td>31-60 days</td>
+            <td>Moderately overdue</td>
+          </tr>
+          <tr>
+            <td>61-90 days</td>
+            <td>Significantly overdue</td>
+          </tr>
+          <tr>
+            <td>90+ days</td>
+            <td>Long overdue, may need follow-up</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Editing Invoices</h2>
+
+      <h3>When Can You Edit?</h3>
+      <p>Invoices can be edited when:</p>
+      <ul>
+        <li>Status is "Draft" (before sending)</li>
+        <li>You need to correct errors</li>
+        <li>Adding notes or adjustments</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Important:</strong> If an invoice has been sent and partially paid, be careful when editing. Changes could cause confusion with the recipient.
+      </div>
+
+      <h3>How to Edit</h3>
+      <ol>
+        <li>Click on the invoice to view details</li>
+        <li>Click the "Edit" button</li>
+        <li>Make your changes</li>
+        <li>Click "Update Invoice"</li>
+      </ol>
+
+      <h2>Emailing Invoices</h2>
+
+      <h3>Sending Invoices</h3>
+      <ol>
+        <li>Open the invoice you want to send</li>
+        <li>Click the "Email Invoice" button</li>
+        <li>Confirm the recipient email address</li>
+        <li>Optionally customize the email message</li>
+        <li>Click "Send"</li>
+      </ol>
+
+      <h3>What Gets Sent</h3>
+      <p>When you email an invoice, the recipient receives:</p>
+      <ul>
+        <li>Professional email with invoice details</li>
+        <li>PDF attachment of the invoice</li>
+        <li>Payment instructions</li>
+        <li>Link to pay online (if online payments enabled)</li>
+      </ul>
+
+      <h2>Printing Invoices</h2>
+
+      <h3>Print Single Invoice</h3>
+      <ol>
+        <li>Open the invoice</li>
+        <li>Click the "Print" button</li>
+        <li>A print-friendly version opens in a new window</li>
+        <li>Use your browser's print function (Ctrl/Cmd+P)</li>
+      </ol>
+
+      <h3>Batch Printing</h3>
+      <ol>
+        <li>From the invoice list, select multiple invoices using checkboxes</li>
+        <li>Click "Print Selected"</li>
+        <li>All selected invoices open in print format</li>
+        <li>Print all at once or individually</li>
+      </ol>
+
+      <h2>Recording Payments</h2>
+
+      <h3>Manual Payment Entry</h3>
+      <ol class="steps">
+        <li>
+          <h4>Open the Invoice</h4>
+          <p>Navigate to and click on the invoice to open details.</p>
+        </li>
+
+        <li>
+          <h4>Click "Record Payment"</h4>
+          <p>Find the "Record Payment" button on the invoice detail page.</p>
+        </li>
+
+        <li>
+          <h4>Enter Payment Details</h4>
+          <ul>
+            <li><strong>Amount:</strong> How much was paid</li>
+            <li><strong>Payment Date:</strong> When payment was received</li>
+            <li><strong>Payment Method:</strong> Check, cash, credit card, etc.</li>
+            <li><strong>Reference:</strong> Check number or transaction ID</li>
+            <li><strong>Notes:</strong> Any additional details</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Save Payment</h4>
+          <p>Click "Save" to record the payment. The invoice status and balance update automatically.</p>
+        </li>
+      </ol>
+
+      <h3>Partial Payments</h3>
+      <p>If someone pays less than the full amount:</p>
+      <ul>
+        <li>Enter the partial amount received</li>
+        <li>The balance reflects the remaining amount due</li>
+        <li>Status remains "Open" until paid in full</li>
+        <li>Record additional payments as they come in</li>
+      </ul>
+
+      <h3>Online Payments</h3>
+      <p>If online payments are enabled, members can:</p>
+      <ul>
+        <li>Click the payment link in the email</li>
+        <li>Enter credit card or bank account details</li>
+        <li>Submit payment securely</li>
+        <li>Payment is automatically recorded in the system</li>
+      </ul>
+
+      <h2>Invoice Reports</h2>
+
+      <h3>Available Reports</h3>
+
+      <div class="card">
+        <h4>Outstanding Invoices</h4>
+        <p>Lists all unpaid invoices with:</p>
+        <ul>
+          <li>Total outstanding balance</li>
+          <li>Breakdown by age bracket</li>
+          <li>Recipient details</li>
+          <li>Days overdue</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4>Payment History</h4>
+        <p>Shows all recorded payments:</p>
+        <ul>
+          <li>Payment date and amount</li>
+          <li>Payment method</li>
+          <li>Associated invoice</li>
+          <li>Payer information</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h4>Revenue Summary</h4>
+        <p>Financial overview including:</p>
+        <ul>
+          <li>Total invoiced amount</li>
+          <li>Total payments received</li>
+          <li>Outstanding balance</li>
+          <li>Breakdown by category (membership, tuition, events, etc.)</li>
+        </ul>
+      </div>
+
+      <h3>Exporting Reports</h3>
+      <p>Export invoice data for external analysis:</p>
+      <ol>
+        <li>Apply any desired filters</li>
+        <li>Click "Export"</li>
+        <li>Choose format (Excel/CSV)</li>
+        <li>File downloads with all visible data</li>
+      </ol>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Invoice Numbering</h3>
+        <ul>
+          <li>Use the auto-generated sequential numbers</li>
+          <li>Maintain consistent numbering for record-keeping</li>
+          <li>Never reuse invoice numbers</li>
+          <li>Consider adding year prefix (e.g., 2026-001)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Due Dates</h3>
+        <ul>
+          <li>Set realistic due dates (typically 30 days)</li>
+          <li>Be consistent across similar invoice types</li>
+          <li>Consider your organization's cash flow needs</li>
+          <li>Allow grace period before marking overdue</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Follow-Up</h3>
+        <ul>
+          <li>Send reminders for invoices approaching due date</li>
+          <li>Follow up on overdue invoices promptly but politely</li>
+          <li>Work with members facing financial difficulties</li>
+          <li>Document all payment plans in invoice notes</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Organization</h3>
+        <ul>
+          <li>Use clear, detailed descriptions for line items</li>
+          <li>Add notes to explain unusual charges or credits</li>
+          <li>Keep invoices in "Draft" status until ready to send</li>
+          <li>Archive old paid invoices to keep lists manageable</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can I delete an invoice?</h3>
+      <p>You can delete draft invoices. For sent invoices, use "Cancel" status instead to maintain financial records and audit trail.</p>
+
+      <h3>What if I need to refund someone?</h3>
+      <p>Create a credit invoice (negative amount) or record a negative payment to offset the original charge.</p>
+
+      <h3>How do I handle payment plans?</h3>
+      <p>Create multiple invoices with different due dates, or create one invoice and record partial payments as they come in.</p>
+
+      <h3>Can members view their invoices online?</h3>
+      <p>Yes! Members with user accounts can log into the member portal and view all their invoices, payment history, and outstanding balances.</p>
+
+      <h3>What payment methods are supported?</h3>
+      <p>The system tracks any payment method you choose: cash, check, credit card, ACH transfer, etc. Online payment processing requires additional setup.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="payments.html">Processing Payments</a> - Detailed payment recording</li>
+        <li><a href="reports.html">Financial Reports</a> - Generating financial reports</li>
+        <li><a href="member-onboarding.html">Member Onboarding</a> - Auto-generate membership invoices</li>
+        <li><a href="student-onboarding.html">Student Onboarding</a> - Auto-generate tuition invoices</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

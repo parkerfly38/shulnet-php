@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managing Events - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html" class="active">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Managing Events</h1>
+      
+      <p>ShulNET's event management system helps you organize synagogue activities, track RSVPs, sell tickets, and communicate with attendees.</p>
+
+      <h2>Event Basics</h2>
+
+      <h3>What is an Event?</h3>
+      <p>An event in ShulNET represents any scheduled activity or program, including:</p>
+      <ul>
+        <li>Shabbat services and holiday celebrations</li>
+        <li>Educational programs and classes</li>
+        <li>Social gatherings and fundraisers</li>
+        <li>Community meetings</li>
+        <li>Lifecycle events (weddings, bar/bat mitzvahs)</li>
+        <li>Special programs and speakers</li>
+      </ul>
+
+      <h2>Creating Events</h2>
+
+      <ol class="steps">
+        <li>
+          <h3>Navigate to Events</h3>
+          <p>From the admin menu, click "Events" then "Create Event".</p>
+        </li>
+
+        <li>
+          <h3>Basic Information</h3>
+          <h4>Required Fields:</h4>
+          <ul>
+            <li><strong>Event Name:</strong> Clear, descriptive title</li>
+            <li><strong>Calendar:</strong> Which calendar this event belongs to</li>
+            <li><strong>Start Date/Time:</strong> When the event begins</li>
+          </ul>
+
+          <h4>Optional Fields:</h4>
+          <ul>
+            <li><strong>End Date/Time:</strong> When the event ends</li>
+            <li><strong>All Day:</strong> Check for all-day events</li>
+            <li><strong>Description:</strong> Full details about the event</li>
+            <li><strong>Location:</strong> Where the event takes place</li>
+            <li><strong>Online URL:</strong> Link for virtual events</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Visibility Settings</h3>
+          <ul>
+            <li><strong>Public:</strong> Visible to non-members and guests</li>
+            <li><strong>Members Only:</strong> Requires login to view</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>RSVP Configuration</h3>
+          <p>If you want to track attendance:</p>
+          <ul>
+            <li><strong>Registration Required:</strong> Enable RSVP system</li>
+            <li><strong>Registration Opens:</strong> When RSVPs can start</li>
+            <li><strong>Registration Closes:</strong> RSVP deadline</li>
+            <li><strong>Max Attendees:</strong> Capacity limit</li>
+            <li><strong>Allow Guests:</strong> Can members bring guests?</li>
+            <li><strong>Max Guests Per RSVP:</strong> Guest limit</li>
+          </ul>
+        </li>
+
+        <li>
+          <h3>Ticket Types (Optional)</h3>
+          <p>For paid events, add ticket types:</p>
+          <ul>
+            <li><strong>Ticket Name:</strong> e.g., "Adult", "Child", "VIP"</li>
+            <li><strong>Price:</strong> Cost per ticket</li>
+            <li><strong>Quantity Available:</strong> How many to sell</li>
+            <li><strong>Description:</strong> What's included</li>
+          </ul>
+          <p>Click "Add Ticket Type" to create multiple options.</p>
+        </li>
+
+        <li>
+          <h3>Save Event</h3>
+          <p>Click "Create Event" to publish. The event is immediately visible based on your visibility settings.</p>
+        </li>
+      </ol>
+
+      <h2>Event Calendars</h2>
+
+      <h3>Using Calendars</h3>
+      <p>Calendars help organize events into categories:</p>
+      <ul>
+        <li><strong>Services:</strong> Shabbat and holiday services</li>
+        <li><strong>Education:</strong> Classes and learning programs</li>
+        <li><strong>Social:</strong> Community gatherings</li>
+        <li><strong>Fundraising:</strong> Donation events</li>
+        <li><strong>Admin:</strong> Board meetings and planning</li>
+      </ul>
+
+      <h3>Creating Calendars</h3>
+      <ol>
+        <li>Navigate to Calendars → Create Calendar</li>
+        <li>Enter calendar name and description</li>
+        <li>Set default visibility (public/members only)</li>
+        <li>Choose a color for visual identification</li>
+        <li>Save the calendar</li>
+      </ol>
+
+      <h3>Calendar Permissions</h3>
+      <p>Each calendar can have different visibility:</p>
+      <ul>
+        <li><strong>Public:</strong> Anyone can view events</li>
+        <li><strong>Members Only:</strong> Login required</li>
+        <li><strong>Admin Only:</strong> Staff use only</li>
+      </ul>
+
+      <h2>Managing RSVPs</h2>
+
+      <h3>Viewing RSVPs</h3>
+      <ol>
+        <li>Open the event details</li>
+        <li>Click "View RSVPs" tab</li>
+        <li>See list of attendees with:
+          <ul>
+            <li>Attendee name and email</li>
+            <li>Number of guests</li>
+            <li>RSVP date</li>
+            <li>Ticket types (if applicable)</li>
+            <li>Payment status</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Manually Adding RSVPs</h3>
+      <p>For phone or in-person registrations:</p>
+      <ol>
+        <li>Open event → RSVPs</li>
+        <li>Click "Add RSVP"</li>
+        <li>Select member or enter guest name</li>
+        <li>Choose ticket type</li>
+        <li>Set number of guests</li>
+        <li>Save RSVP</li>
+      </ol>
+
+      <h3>RSVP Reports</h3>
+      <p>Export RSVP lists for:</p>
+      <ul>
+        <li>Name tags and seating</li>
+        <li>Meal planning and catering</li>
+        <li>Attendance tracking</li>
+        <li>Follow-up communications</li>
+      </ul>
+
+      <h2>Ticket Sales</h2>
+
+      <h3>Setting Up Paid Events</h3>
+      <ol class="steps">
+        <li>
+          <h4>Create Event with Tickets</h4>
+          <p>Add ticket types with prices during event creation.</p>
+        </li>
+
+        <li>
+          <h4>Configure Payment</h4>
+          <p>Ensure online payment processing is enabled in settings.</p>
+        </li>
+
+        <li>
+          <h4>Publish Event</h4>
+          <p>Members can now purchase tickets when RSVPing.</p>
+        </li>
+
+        <li>
+          <h4>Track Sales</h4>
+          <p>Monitor ticket sales and revenue in event reports.</p>
+        </li>
+      </ol>
+
+      <h3>Ticket Types Examples</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Event Type</th>
+            <th>Ticket Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Gala Dinner</td>
+            <td>Adult ($75), Child ($35), Patron ($150)</td>
+          </tr>
+          <tr>
+            <td>Concert</td>
+            <td>General Admission ($25), Reserved Seating ($40)</td>
+          </tr>
+          <tr>
+            <td>Class Series</td>
+            <td>Member ($50), Non-Member ($75)</td>
+          </tr>
+          <tr>
+            <td>Family Program</td>
+            <td>Per Family ($20), Individual ($8)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Member Event Access</h2>
+
+      <h3>How Members RSVP</h3>
+      <p>Members can register through the member portal:</p>
+      <ol>
+        <li>Log into member portal</li>
+        <li>Navigate to "Events"</li>
+        <li>Browse upcoming events</li>
+        <li>Click "RSVP" on desired event</li>
+        <li>Select ticket type and guest count</li>
+        <li>Complete payment (if required)</li>
+        <li>Receive confirmation email</li>
+      </ol>
+
+      <h3>RSVP Confirmations</h3>
+      <p>After RSVPing, members receive:</p>
+      <ul>
+        <li>Confirmation email with event details</li>
+        <li>Ticket information (if applicable)</li>
+        <li>Calendar invite (.ics file)</li>
+        <li>Directions or virtual meeting link</li>
+      </ul>
+
+      <h2>Virtual Events</h2>
+
+      <h3>Online Event Setup</h3>
+      <p>For Zoom or other virtual events:</p>
+      <ol>
+        <li>Check "Online Event" when creating</li>
+        <li>Add meeting URL in "Online URL" field</li>
+        <li>Include password in description if needed</li>
+        <li>Members receive link upon RSVP</li>
+      </ol>
+
+      <h3>Hybrid Events</h3>
+      <p>For both in-person and virtual attendance:</p>
+      <ul>
+        <li>Create separate ticket types: "In-Person" and "Virtual"</li>
+        <li>Set location for in-person attendees</li>
+        <li>Add online URL for virtual attendees</li>
+        <li>Send different confirmations based on ticket type</li>
+      </ul>
+
+      <h2>Recurring Events</h2>
+
+      <h3>Creating Event Series</h3>
+      <p>For weekly or monthly events:</p>
+      <ol>
+        <li>Create the first event normally</li>
+        <li>Enable "Recurring Event"</li>
+        <li>Set recurrence pattern:
+          <ul>
+            <li>Daily, Weekly, Monthly, Yearly</li>
+            <li>Days of week (for weekly)</li>
+            <li>End date or number of occurrences</li>
+          </ul>
+        </li>
+        <li>System generates all event instances</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Each recurrence becomes a separate event that can be individually edited or cancelled.
+      </div>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Event Planning</h3>
+        <ul>
+          <li>Create events well in advance for better attendance</li>
+          <li>Include detailed descriptions with what to expect</li>
+          <li>Add location details, parking, accessibility info</li>
+          <li>Use clear, specific event names</li>
+          <li>Set realistic capacity limits</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Registration Management</h3>
+        <ul>
+          <li>Open registration early for popular events</li>
+          <li>Close registration before the event to finalize counts</li>
+          <li>Send reminder emails as event approaches</li>
+          <li>Have waitlist for sold-out events</li>
+          <li>Allow cancellations with appropriate notice</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Communication</h3>
+        <ul>
+          <li>Send confirmation emails immediately after RSVP</li>
+          <li>Remind attendees 1 week and 1 day before</li>
+          <li>Include all necessary details in confirmations</li>
+          <li>Follow up after events with thank you messages</li>
+          <li>Share photos or recaps with attendees</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can I limit RSVPs to members only?</h3>
+      <p>Yes, set the event visibility to "Members Only". Non-members won't see the event or be able to RSVP.</p>
+
+      <h3>What happens when an event reaches capacity?</h3>
+      <p>Once max attendees is reached, the RSVP button is replaced with "Event Full" message. You can manually add waitlist attendees if space opens.</p>
+
+      <h3>Can I cancel an event after people have RSVP'd?</h3>
+      <p>Yes. Update the event status to "Cancelled" and the system can send cancellation emails to all attendees with refund information if applicable.</p>
+
+      <h3>How do I handle free events vs. paid events?</h3>
+      <p>Free events: Just enable "Registration Required" without adding ticket types. Paid events: Add ticket types with prices.</p>
+
+      <h3>Can members bring guests?</h3>
+      <p>Yes if "Allow Guests" is enabled. Set "Max Guests" to control how many guests per RSVP (typically 1-5).</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="calendars.html">Managing Calendars</a> - Organizing events</li>
+        <li><a href="rsvps.html">RSVP Management</a> - Detailed RSVP guide</li>
+        <li><a href="email-campaigns.html">Email Campaigns</a> - Event announcements</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

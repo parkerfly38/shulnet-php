@@ -334,11 +334,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Reports routes
         Route::get('admin/reports', [ReportsController::class, 'index'])->name('reports.index');
+        Route::get('admin/reports/financial', function () {
+            return Inertia::render('admin/reports/financial');
+        })->name('reports.financial');
         Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('reports.export.members');
         Route::post('admin/reports/export/invoices', [ReportsController::class, 'exportInvoices'])->name('reports.export.invoices');
         Route::post('admin/reports/export/students', [ReportsController::class, 'exportStudents'])->name('reports.export.students');
         Route::post('admin/reports/export/financial-summary', [ReportsController::class, 'exportFinancialSummary'])->name('reports.export.financial-summary');
         Route::post('admin/reports/export/yahrzeit', [ReportsController::class, 'exportYahrzeit'])->name('reports.export.yahrzeit');
+        
+        // Financial Reports API
+        Route::get('admin/reports/income-summary', [ReportsController::class, 'getIncomeSummary'])->name('reports.income-summary');
+        Route::get('admin/reports/outstanding-balances', [ReportsController::class, 'getOutstandingBalances'])->name('reports.outstanding-balances');
+        Route::get('admin/reports/aging', [ReportsController::class, 'getAgingReport'])->name('reports.aging');
+        Route::get('admin/reports/event-revenue', [ReportsController::class, 'getEventRevenue'])->name('reports.event-revenue');
+        Route::get('admin/reports/revenue-by-source', [ReportsController::class, 'getRevenueBySource'])->name('reports.revenue-by-source');
+        Route::get('admin/reports/member-growth', [ReportsController::class, 'getMemberGrowth'])->name('reports.member-growth');
+        Route::get('admin/reports/tuition-revenue', [ReportsController::class, 'getTuitionRevenue'])->name('reports.tuition-revenue');
+        Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('reports.payment-methods');
+        Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('reports.budget-vs-actual');
 
         // Gabbai UI pages (Inertia)
         Route::get('admin/gabbai', function () {

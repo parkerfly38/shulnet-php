@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processing Payments - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html" class="active">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Processing Payments</h1>
+      
+      <p>ShulNET's payment system handles all financial transactions, from membership dues to event tickets. It supports multiple payment methods and integrates with popular payment processors.</p>
+
+      <h2>Payment Methods</h2>
+
+      <h3>Supported Payment Types</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <h3>Credit Card</h3>
+          <p>Visa, MasterCard, Amex, Discover</p>
+          <span class="badge badge-success">Online</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🏦</div>
+          <h3>Bank Transfer (ACH)</h3>
+          <p>Direct debit from checking/savings</p>
+          <span class="badge badge-success">Online</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3>Check</h3>
+          <p>Paper checks recorded manually</p>
+          <span class="badge badge-warning">Offline</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💵</div>
+          <h3>Cash</h3>
+          <p>Cash payments recorded manually</p>
+          <span class="badge badge-warning">Offline</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>PayPal</h3>
+          <p>PayPal account payments</p>
+          <span class="badge badge-success">Online</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📲</div>
+          <h3>Venmo/Zelle</h3>
+          <p>P2P payment apps (recorded manually)</p>
+          <span class="badge badge-warning">Offline</span>
+        </div>
+      </div>
+
+      <h2>Payment Processors</h2>
+
+      <h3>Integrated Gateways</h3>
+      <p>ShulNET integrates with major payment processors:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Processor</th>
+            <th>Transaction Fee</th>
+            <th>Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Stripe</strong></td>
+            <td>2.9% + $0.30</td>
+            <td>Credit cards, ACH, Apple Pay</td>
+          </tr>
+          <tr>
+            <td><strong>PayPal</strong></td>
+            <td>2.9% + $0.30</td>
+            <td>PayPal accounts, credit cards</td>
+          </tr>
+          <tr>
+            <td><strong>Authorize.Net</strong></td>
+            <td>2.9% + $0.30 + monthly fee</td>
+            <td>Traditional gateway, recurring billing</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-info">
+        <strong>Setup Required:</strong> Payment processors require API credentials. Contact your processor to obtain API keys and configure them in ShulNET settings.
+      </div>
+
+      <h2>Online Payments (Members)</h2>
+
+      <h3>How Members Pay Online</h3>
+      <ol class="steps">
+        <li>
+          <h4>View Invoice</h4>
+          <p>Member logs in and navigates to "My Invoices".</p>
+        </li>
+
+        <li>
+          <h4>Click "Pay Now"</h4>
+          <p>Opens secure payment form.</p>
+        </li>
+
+        <li>
+          <h4>Select Payment Method</h4>
+          <p>Choose credit card, bank account, or PayPal.</p>
+        </li>
+
+        <li>
+          <h4>Enter Payment Details</h4>
+          <p>Securely enter payment information (encrypted and PCI compliant).</p>
+        </li>
+
+        <li>
+          <h4>Review and Submit</h4>
+          <p>Confirm amount and click "Pay".</p>
+        </li>
+
+        <li>
+          <h4>Receive Confirmation</h4>
+          <p>Payment processes immediately, email receipt sent.</p>
+        </li>
+      </ol>
+
+      <h3>Payment Security</h3>
+      <ul>
+        <li><strong>SSL Encryption:</strong> All payment data transmitted over HTTPS</li>
+        <li><strong>PCI Compliance:</strong> Payment processors handle sensitive card data</li>
+        <li><strong>No Card Storage:</strong> ShulNET never stores full card numbers</li>
+        <li><strong>Tokenization:</strong> Card details tokenized for future use</li>
+        <li><strong>3D Secure:</strong> Additional verification for high-value transactions</li>
+      </ul>
+
+      <h2>Recording Manual Payments</h2>
+
+      <h3>Recording Check Payments</h3>
+      <ol class="steps">
+        <li>
+          <h4>Open Invoice</h4>
+          <p>Navigate to the member's invoice.</p>
+        </li>
+
+        <li>
+          <h4>Click "Record Payment"</h4>
+          <p>Opens payment entry form.</p>
+        </li>
+
+        <li>
+          <h4>Enter Payment Details</h4>
+          <ul>
+            <li>Payment method: Check</li>
+            <li>Check number</li>
+            <li>Amount received</li>
+            <li>Date received</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Add Notes (Optional)</h4>
+          <p>Include any special instructions or details.</p>
+        </li>
+
+        <li>
+          <h4>Save Payment</h4>
+          <p>Invoice balance updates immediately.</p>
+        </li>
+
+        <li>
+          <h4>Send Receipt</h4>
+          <p>Email payment receipt to member.</p>
+        </li>
+      </ol>
+
+      <h3>Recording Cash Payments</h3>
+      <p>Same process as checks, but select "Cash" as payment method. No check number required.</p>
+
+      <h3>Recording Wire Transfers</h3>
+      <ol>
+        <li>Record payment as "Bank Transfer"</li>
+        <li>Include transfer confirmation number in notes</li>
+        <li>Match against bank statement</li>
+        <li>Mark as reconciled</li>
+      </ol>
+
+      <h2>Partial Payments</h2>
+
+      <h3>Accepting Partial Payments</h3>
+      <p>Members can pay less than the full invoice amount:</p>
+
+      <ol>
+        <li>Member selects "Pay Custom Amount"</li>
+        <li>Enters amount they can pay now</li>
+        <li>Completes payment</li>
+        <li>Invoice shows remaining balance</li>
+        <li>Member can make additional payments later</li>
+      </ol>
+
+      <h3>Payment Plans</h3>
+      <p>Set up installment payment schedules:</p>
+
+      <div class="card">
+        <h4>Example: Annual Dues Payment Plan</h4>
+        <ul>
+          <li><strong>Total:</strong> $2,000</li>
+          <li><strong>Plan:</strong> 4 monthly payments of $500</li>
+          <li><strong>Setup:</strong> 
+            <ol>
+              <li>Create single invoice for $2,000</li>
+              <li>Set payment schedule (monthly on 1st)</li>
+              <li>System auto-charges or sends reminders</li>
+            </ol>
+          </li>
+        </ul>
+      </div>
+
+      <h3>Overpayments</h3>
+      <p>If member pays more than invoice amount:</p>
+      <ul>
+        <li>Invoice marked as paid in full</li>
+        <li>Excess applied as account credit</li>
+        <li>Credit automatically applied to next invoice</li>
+        <li>Or refund excess upon request</li>
+      </ul>
+
+      <h2>Payment Tracking</h2>
+
+      <h3>Viewing Payment History</h3>
+      <p>For any invoice, view complete payment history:</p>
+      <ul>
+        <li>Date and time of each payment</li>
+        <li>Payment method used</li>
+        <li>Amount paid</li>
+        <li>Transaction ID</li>
+        <li>Who recorded payment (if manual)</li>
+        <li>Receipt number</li>
+      </ul>
+
+      <h3>Payment Status</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-success">Paid</span></td>
+            <td>Payment completed and cleared</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Pending</span></td>
+            <td>Payment initiated but not yet cleared (ACH)</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-info">Partial</span></td>
+            <td>Some payment received, balance remains</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Refunded</span></td>
+            <td>Payment returned to payer</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-danger">Failed</span></td>
+            <td>Payment declined or bounced</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Refunds</h2>
+
+      <h3>Processing Refunds</h3>
+      <ol class="steps">
+        <li>
+          <h4>Open Payment Record</h4>
+          <p>Navigate to invoice and find payment to refund.</p>
+        </li>
+
+        <li>
+          <h4>Click "Refund"</h4>
+          <p>Opens refund form.</p>
+        </li>
+
+        <li>
+          <h4>Enter Refund Amount</h4>
+          <p>Full or partial refund amount.</p>
+        </li>
+
+        <li>
+          <h4>Select Refund Method</h4>
+          <ul>
+            <li>Original payment method (automatic for online payments)</li>
+            <li>Check</li>
+            <li>Account credit</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Add Reason</h4>
+          <p>Document why refund is being issued.</p>
+        </li>
+
+        <li>
+          <h4>Process Refund</h4>
+          <p>For online payments, refund processes through payment gateway.</p>
+        </li>
+
+        <li>
+          <h4>Confirmation</h4>
+          <p>Member receives refund notification email.</p>
+        </li>
+      </ol>
+
+      <h3>Refund Timeline</h3>
+      <ul>
+        <li><strong>Credit Cards:</strong> 5-10 business days</li>
+        <li><strong>ACH/Bank Transfer:</strong> 3-5 business days</li>
+        <li><strong>PayPal:</strong> Immediate to account</li>
+        <li><strong>Check:</strong> When issued and cashed</li>
+      </ul>
+
+      <h2>Failed Payments</h2>
+
+      <h3>Handling Declined Cards</h3>
+      <p>When online payment fails:</p>
+      <ol>
+        <li>Member sees error message with reason</li>
+        <li>Admin receives notification of failed payment</li>
+        <li>Invoice remains unpaid</li>
+        <li>Member can retry with different card or method</li>
+      </ol>
+
+      <h3>Bounced Checks</h3>
+      <ol>
+        <li>Record original check payment</li>
+        <li>When check bounces, click "Mark as Failed"</li>
+        <li>Invoice balance reverts to unpaid</li>
+        <li>Add NSF fee to invoice (if applicable)</li>
+        <li>Contact member for replacement payment</li>
+      </ol>
+
+      <h3>Failed ACH Transfers</h3>
+      <p>If ACH payment is rejected:</p>
+      <ul>
+        <li>Payment status changes to "Failed"</li>
+        <li>Member notified via email</li>
+        <li>Invoice marked unpaid</li>
+        <li>Member must update bank info or use different method</li>
+      </ul>
+
+      <h2>Recurring Payments</h2>
+
+      <h3>Setting Up Auto-Pay</h3>
+      <p>Members can authorize automatic payments:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Member Opts In</h4>
+          <p>From member portal, click "Set Up Auto-Pay".</p>
+        </li>
+
+        <li>
+          <h4>Select Payment Method</h4>
+          <p>Save credit card or bank account details securely.</p>
+        </li>
+
+        <li>
+          <h4>Choose Schedule</h4>
+          <ul>
+            <li>Pay all invoices automatically</li>
+            <li>Only specific invoice types (e.g., dues)</li>
+            <li>Custom schedule (monthly on 1st, etc.)</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Set Limits (Optional)</h4>
+          <p>Max amount per charge, notification thresholds.</p>
+        </li>
+
+        <li>
+          <h4>Confirm Authorization</h4>
+          <p>Member agrees to automatic billing terms.</p>
+        </li>
+      </ol>
+
+      <h3>Auto-Pay Benefits</h3>
+      <ul>
+        <li>Members never miss payments</li>
+        <li>Improved cash flow for synagogue</li>
+        <li>Reduced administrative work</li>
+        <li>Lower transaction costs (vs. manual processing)</li>
+        <li>Member convenience</li>
+      </ul>
+
+      <h2>Payment Receipts</h2>
+
+      <h3>Automatic Receipts</h3>
+      <p>After each payment, system automatically:</p>
+      <ul>
+        <li>Generates PDF receipt</li>
+        <li>Emails to member</li>
+        <li>Includes payment details and invoice info</li>
+        <li>Stores in member's account history</li>
+      </ul>
+
+      <h3>Receipt Information</h3>
+      <p>Receipts include:</p>
+      <ul>
+        <li>Receipt number (unique)</li>
+        <li>Date and time</li>
+        <li>Payer name and address</li>
+        <li>Amount paid</li>
+        <li>Payment method (last 4 digits if card)</li>
+        <li>Invoice number(s) paid</li>
+        <li>Tax-deductible information (if applicable)</li>
+        <li>Synagogue tax ID (EIN)</li>
+      </ul>
+
+      <h3>Year-End Tax Statements</h3>
+      <p>Generate annual giving statements:</p>
+      <ol>
+        <li>Navigate to Reports → Tax Statements</li>
+        <li>Select year (e.g., 2025)</li>
+        <li>Generate for all members or specific ones</li>
+        <li>Review for accuracy</li>
+        <li>Email or print and mail to members</li>
+      </ol>
+
+      <h2>Payment Reports</h2>
+
+      <h3>Daily Payment Summary</h3>
+      <p>View today's payment activity:</p>
+      <ul>
+        <li>Total payments received</li>
+        <li>Breakdown by payment method</li>
+        <li>Outstanding/pending payments</li>
+        <li>Failed payment attempts</li>
+      </ul>
+
+      <h3>Monthly Revenue Report</h3>
+      <p>Comprehensive monthly financial overview:</p>
+      <ul>
+        <li>Total revenue by category (dues, tuition, events, donations)</li>
+        <li>Payment method breakdown</li>
+        <li>Comparison to prior month/year</li>
+        <li>Outstanding balances</li>
+        <li>Refunds issued</li>
+      </ul>
+
+      <h3>Member Payment History</h3>
+      <p>Individual member payment records:</p>
+      <ul>
+        <li>All payments made over time</li>
+        <li>Average payment amount</li>
+        <li>Payment frequency</li>
+        <li>Preferred payment method</li>
+        <li>Late payment history</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Payment Processing</h3>
+        <ul>
+          <li>Process check deposits weekly to maintain accurate balances</li>
+          <li>Record manual payments same day received</li>
+          <li>Reconcile payment gateway daily</li>
+          <li>Send receipts within 24 hours of payment</li>
+          <li>Keep payment processor credentials secure</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Member Communication</h3>
+        <ul>
+          <li>Explain all payment options clearly</li>
+          <li>Promote auto-pay for convenience</li>
+          <li>Send payment confirmations immediately</li>
+          <li>Follow up on failed payments within 48 hours</li>
+          <li>Be understanding about financial difficulties</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Financial Management</h3>
+        <ul>
+          <li>Reconcile all payment accounts monthly</li>
+          <li>Track payment processor fees</li>
+          <li>Monitor for fraudulent transactions</li>
+          <li>Keep detailed records for audit purposes</li>
+          <li>Back up payment data regularly</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Security</h3>
+        <ul>
+          <li>Use strong passwords for payment gateway accounts</li>
+          <li>Enable two-factor authentication</li>
+          <li>Limit staff access to payment processing</li>
+          <li>Never email credit card numbers</li>
+          <li>Regularly update SSL certificates</li>
+          <li>Monitor for suspicious payment patterns</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>What payment methods should we accept?</h3>
+      <p>At minimum, credit cards and checks. Adding ACH/bank transfers reduces fees. PayPal is convenient for those who use it regularly.</p>
+
+      <h3>How do we handle members who can't pay in full?</h3>
+      <p>Work with them on payment plans. Split large invoices into smaller monthly payments. Consider scholarship assistance for those in true financial need.</p>
+
+      <h3>Are online payments secure?</h3>
+      <p>Yes. Payment data is encrypted and processed through PCI-compliant gateways. ShulNET never stores full credit card numbers.</p>
+
+      <h3>What if a member disputes a charge?</h3>
+      <p>Payment processor handles disputes (chargebacks). You'll be notified and can provide documentation. If member wins dispute, payment is reversed.</p>
+
+      <h3>Can we accept donations through the payment system?</h3>
+      <p>Yes! Create donation invoices or set up a dedicated donation form. Donations generate tax receipts automatically.</p>
+
+      <h3>How do we track which checks have been deposited?</h3>
+      <p>When recording check payment, mark it as "Deposited" after bank deposit. Match against bank statement during reconciliation.</p>
+
+      <h3>What are the fees for different payment methods?</h3>
+      <p>Credit cards: ~3%. ACH: $0.25-$1.00 flat. Checks/cash: no processing fees but require manual handling. Consider passing fees to payers for online payments.</p>
+
+      <h3>Can members save payment methods for future use?</h3>
+      <p>Yes, with their permission. Payment details are tokenized and stored securely with the payment processor, not in ShulNET.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="invoices.html">Managing Invoices</a> - Creating and managing invoices</li>
+        <li><a href="reports.html">Financial Reports</a> - Revenue and payment analytics</li>
+        <li><a href="member-onboarding.html">Member Onboarding</a> - Initial payment setup</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

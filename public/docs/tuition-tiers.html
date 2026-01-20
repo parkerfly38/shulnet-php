@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuition Tiers - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html" class="active">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Tuition Tiers</h1>
+      
+      <p>Tuition tiers define the pricing structure for Hebrew school enrollment. They allow you to set different rates based on grade level, number of students, and other factors.</p>
+
+      <h2>Understanding Tuition Tiers</h2>
+
+      <h3>What is a Tuition Tier?</h3>
+      <p>A tuition tier is a pricing level for Hebrew school tuition. Each tier contains:</p>
+      <ul>
+        <li><strong>Name:</strong> Descriptive name (e.g., "Elementary School", "High School")</li>
+        <li><strong>Description:</strong> Details about what this tier covers</li>
+        <li><strong>Base Price:</strong> Annual tuition amount per student</li>
+        <li><strong>Grade Range:</strong> Which grades this tier applies to (optional)</li>
+        <li><strong>Quantity Pricing:</strong> Discounts for multiple students</li>
+        <li><strong>Active Status:</strong> Whether this tier is currently available</li>
+      </ul>
+
+      <h3>Common Tier Examples</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier Name</th>
+            <th>Grade Range</th>
+            <th>Base Price</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kindergarten</td>
+            <td>K</td>
+            <td>$800/year</td>
+            <td>Introduction to Hebrew and Jewish concepts</td>
+          </tr>
+          <tr>
+            <td>Elementary</td>
+            <td>1-5</td>
+            <td>$1,200/year</td>
+            <td>Core Hebrew school curriculum</td>
+          </tr>
+          <tr>
+            <td>Bar/Bat Mitzvah Prep</td>
+            <td>6-7</td>
+            <td>$1,500/year</td>
+            <td>Intensive Torah and Hebrew study</td>
+          </tr>
+          <tr>
+            <td>High School</td>
+            <td>8-12</td>
+            <td>$1,000/year</td>
+            <td>Teen engagement and confirmation</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Creating Tuition Tiers</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Tuition Management</h4>
+          <p>Go to Settings → Tuition Tiers.</p>
+        </li>
+
+        <li>
+          <h4>Click "Create New Tier"</h4>
+          <p>Opens the tier creation form.</p>
+        </li>
+
+        <li>
+          <h4>Enter Basic Information</h4>
+          <ul>
+            <li>Name: Short, descriptive name</li>
+            <li>Description: Details about this tier</li>
+            <li>Base price: Annual tuition amount</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Set Grade Range (Optional)</h4>
+          <p>Specify which grades this tier applies to, or leave blank for manual selection.</p>
+        </li>
+
+        <li>
+          <h4>Configure Quantity Pricing</h4>
+          <p>Set up discounts for families with multiple students (see below).</p>
+        </li>
+
+        <li>
+          <h4>Set Active Status</h4>
+          <p>Mark as active to make available during student onboarding.</p>
+        </li>
+
+        <li>
+          <h4>Save Tier</h4>
+          <p>Tier is now available for student enrollment.</p>
+        </li>
+      </ol>
+
+      <h2>Quantity Pricing</h2>
+
+      <h3>What is Quantity Pricing?</h3>
+      <p>Quantity pricing allows you to offer discounts when families enroll multiple children. This encourages larger families to enroll all their children.</p>
+
+      <h3>How It Works</h3>
+      <p>Define pricing for different quantities:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Number of Students</th>
+            <th>Price Each</th>
+            <th>Total for Family</th>
+            <th>Savings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 student</td>
+            <td>$1,200</td>
+            <td>$1,200</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>2 students</td>
+            <td>$1,100</td>
+            <td>$2,200</td>
+            <td>$200 (8%)</td>
+          </tr>
+          <tr>
+            <td>3 students</td>
+            <td>$1,000</td>
+            <td>$3,000</td>
+            <td>$600 (17%)</td>
+          </tr>
+          <tr>
+            <td>4+ students</td>
+            <td>$900</td>
+            <td>$3,600+</td>
+            <td>$1,200+ (25%)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Configuring Quantity Pricing</h3>
+      <ol>
+        <li>When creating/editing a tier, scroll to "Quantity Pricing"</li>
+        <li>Click "Add Pricing Rule"</li>
+        <li>Enter:
+          <ul>
+            <li>Minimum quantity (e.g., 2)</li>
+            <li>Maximum quantity (e.g., 2, or blank for "and above")</li>
+            <li>Price per student at this quantity</li>
+          </ul>
+        </li>
+        <li>Add multiple rules for different quantity levels</li>
+        <li>Save tier</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Automatic Calculation:</strong> During student onboarding, ShulNET automatically calculates the total based on quantity pricing when multiple students are enrolled together.
+      </div>
+
+      <h2>Managing Existing Tiers</h2>
+
+      <h3>Viewing All Tiers</h3>
+      <p>Navigate to Settings → Tuition Tiers to see:</p>
+      <ul>
+        <li>List of all configured tiers</li>
+        <li>Active vs. inactive status</li>
+        <li>Base prices</li>
+        <li>Number of students enrolled in each tier</li>
+      </ul>
+
+      <h3>Editing Tiers</h3>
+      <ol>
+        <li>Click on a tier from the list</li>
+        <li>Click "Edit Tier"</li>
+        <li>Update any fields</li>
+        <li>Save changes</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Important:</strong> Changing a tier's price does NOT affect existing student enrollments or invoices. Price changes only apply to new enrollments going forward.
+      </div>
+
+      <h3>Deactivating Tiers</h3>
+      <p>To stop offering a tier without deleting it:</p>
+      <ol>
+        <li>Edit the tier</li>
+        <li>Uncheck "Active"</li>
+        <li>Save changes</li>
+      </ol>
+      <p>Inactive tiers:</p>
+      <ul>
+        <li>Don't appear in student onboarding workflow</li>
+        <li>Remain linked to existing student records</li>
+        <li>Can be reactivated later if needed</li>
+        <li>Preserve historical pricing information</li>
+      </ul>
+
+      <h3>Deleting Tiers</h3>
+      <p>Only delete tiers if:</p>
+      <ul>
+        <li>No students are enrolled in this tier</li>
+        <li>The tier was created by mistake</li>
+        <li>You're absolutely certain you won't need the historical data</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Caution:</strong> ShulNET prevents deletion of tiers with enrolled students. Deactivate instead of deleting.
+      </div>
+
+      <h2>Using Tiers During Enrollment</h2>
+
+      <h3>Student Onboarding Workflow</h3>
+      <p>When enrolling students via the <a href="student-onboarding.html">Student Onboarding Workflow</a>:</p>
+
+      <ol>
+        <li>Step 2: Select number of students to enroll</li>
+        <li>Step 3: Choose tuition tier
+          <ul>
+            <li>See list of active tiers</li>
+            <li>View pricing for each tier</li>
+            <li>Quantity pricing automatically applied</li>
+            <li>Total cost calculated in real-time</li>
+          </ul>
+        </li>
+        <li>Step 4: Invoice generated with tier pricing</li>
+      </ol>
+
+      <h3>Tier Selection Logic</h3>
+      <p>ShulNET helps parents choose the right tier:</p>
+      <ul>
+        <li>Shows all active tiers</li>
+        <li>Highlights recommended tier based on student grade (if grade ranges configured)</li>
+        <li>Displays quantity discount automatically</li>
+        <li>Shows total family cost</li>
+      </ul>
+
+      <h2>Pricing Strategies</h2>
+
+      <h3>Grade-Based Pricing</h3>
+      <div class="card">
+        <h4>When to Use:</h4>
+        <ul>
+          <li>Curriculum complexity varies by grade</li>
+          <li>Teacher compensation differs by level</li>
+          <li>Different hours/days per week for different grades</li>
+        </ul>
+        <h4>Example:</h4>
+        <ul>
+          <li>K-2: $800 (1 day/week)</li>
+          <li>3-5: $1,200 (2 days/week)</li>
+          <li>6-7: $1,500 (2 days + tutoring)</li>
+        </ul>
+      </div>
+
+      <h3>Flat Pricing</h3>
+      <div class="card">
+        <h4>When to Use:</h4>
+        <ul>
+          <li>Simplified billing</li>
+          <li>All students receive similar instruction time</li>
+          <li>Easier for parents to understand</li>
+        </ul>
+        <h4>Example:</h4>
+        <ul>
+          <li>All grades: $1,200/year</li>
+          <li>Family discounts only</li>
+        </ul>
+      </div>
+
+      <h3>Sibling Discounts</h3>
+      <div class="card">
+        <h4>Common Approaches:</h4>
+        <ul>
+          <li><strong>Percentage:</strong> 10% off per additional child</li>
+          <li><strong>Flat Amount:</strong> $100 off each additional child</li>
+          <li><strong>Tiered:</strong> Different rates for 2, 3, 4+ children</li>
+          <li><strong>Free Threshold:</strong> 4th child free</li>
+        </ul>
+      </div>
+
+      <h2>Financial Aid Integration</h2>
+
+      <h3>Handling Scholarships</h3>
+      <p>For families receiving financial aid:</p>
+      <ol>
+        <li>Enroll students using standard tier pricing</li>
+        <li>Generate invoice with full amount</li>
+        <li>Add line item for scholarship/discount</li>
+        <li>Reduce invoice total by aid amount</li>
+        <li>Keep tier pricing intact for record-keeping</li>
+      </ol>
+
+      <h3>Need-Based Pricing</h3>
+      <p>Some synagogues create special tiers:</p>
+      <ul>
+        <li>"Financial Aid - Elementary": Reduced rate tier</li>
+        <li>"Scholarship Student": Minimal or $0 tier</li>
+        <li>Mark as inactive/hidden so they're not publicly visible</li>
+        <li>Manually assign to qualifying families</li>
+      </ul>
+
+      <h2>Year-to-Year Changes</h2>
+
+      <h3>Increasing Tuition</h3>
+      <p>Best practices for annual price increases:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Create New Tiers</h4>
+          <p>Option 1: Create new tiers with "2026-2027" in the name, leaving old tiers for reference.</p>
+        </li>
+
+        <li>
+          <h4>Or Update Existing Tiers</h4>
+          <p>Option 2: Update prices in existing tiers. Document old prices in description field.</p>
+        </li>
+
+        <li>
+          <h4>Announce Changes</h4>
+          <p>Communicate price increases to families well in advance (60+ days).</p>
+        </li>
+
+        <li>
+          <h4>Grandfather Exception</h4>
+          <p>Consider keeping current students at old rate for one year as courtesy.</p>
+        </li>
+
+        <li>
+          <h4>New Enrollments</h4>
+          <p>New students use updated pricing immediately.</p>
+        </li>
+      </ol>
+
+      <h2>Reporting</h2>
+
+      <h3>Tuition Revenue Reports</h3>
+      <p>Analyze tuition by tier:</p>
+      <ul>
+        <li><strong>Revenue by Tier:</strong> Total tuition per tier</li>
+        <li><strong>Enrollment by Tier:</strong> Student count per tier</li>
+        <li><strong>Average Tuition:</strong> Mean tuition per student</li>
+        <li><strong>Quantity Discount Impact:</strong> Total discounts given for multiple students</li>
+      </ul>
+
+      <h3>Projected Revenue</h3>
+      <p>Estimate annual tuition income:</p>
+      <ol>
+        <li>Count active students in each tier</li>
+        <li>Multiply by tier base price</li>
+        <li>Apply quantity discounts</li>
+        <li>Sum total projected tuition revenue</li>
+      </ol>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Pricing Strategy</h3>
+        <ul>
+          <li>Survey other local synagogues for competitive pricing</li>
+          <li>Calculate actual cost per student (teacher salary, materials, space)</li>
+          <li>Price to cover costs plus margin for sustainability</li>
+          <li>Consider member vs. non-member pricing</li>
+          <li>Offer meaningful sibling discounts to encourage enrollment</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Communication</h3>
+        <ul>
+          <li>Clearly explain what's included in tuition (books, supplies, etc.)</li>
+          <li>Publish tuition rates on website for transparency</li>
+          <li>Announce changes with plenty of notice</li>
+          <li>Explain rationale for price increases</li>
+          <li>Highlight value: quality education, small class sizes, etc.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Administration</h3>
+        <ul>
+          <li>Review and update tiers annually</li>
+          <li>Don't delete old tiers - deactivate instead</li>
+          <li>Keep tier names clear and descriptive</li>
+          <li>Document what's included in tier descriptions</li>
+          <li>Test quantity pricing calculations before school year starts</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can I have different tiers for members vs. non-members?</h3>
+      <p>Yes! Create separate tiers like "Elementary (Member)" at $1,200 and "Elementary (Non-Member)" at $1,500. Select appropriate tier during enrollment.</p>
+
+      <h3>What if a student changes tiers mid-year?</h3>
+      <p>Edit the student's enrollment to change their tier. Update the invoice accordingly - either prorate the difference or apply at next billing cycle.</p>
+
+      <h3>How do I handle families who can't afford full tuition?</h3>
+      <p>Create a confidential scholarship tier or use invoice adjustments. Don't turn families away - work with them on payment plans.</p>
+
+      <h3>Can quantity pricing work across different tiers?</h3>
+      <p>Currently, quantity pricing applies within a single tier. For families with students in different tiers, you'd invoice each tier separately and potentially apply a manual family discount.</p>
+
+      <h3>Should I include books and supplies in tuition?</h3>
+      <p>This is a policy decision. Including them in tuition simplifies billing and ensures all students have materials. Separate fees give families more control but require additional invoices.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="student-onboarding.html">Student Onboarding</a> - Enrolling students with tiers</li>
+        <li><a href="students.html">Managing Students</a> - Student records</li>
+        <li><a href="invoices.html">Managing Invoices</a> - Billing families</li>
+        <li><a href="reports.html">Financial Reports</a> - Tuition revenue analysis</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yahrzeit Tracking - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html" class="active">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Yahrzeit Tracking</h1>
+      
+      <p>ShulNET's yahrzeit tracking system helps you maintain memorial observance records for your congregation with full Hebrew calendar integration.</p>
+
+      <div class="alert alert-info">
+        <strong>What is a Yahrzeit?</strong> Yahrzeit (Yiddish: "year time") is the anniversary of a death, observed annually according to the Hebrew calendar. It's a time for family to recite Kaddish and light a memorial candle.
+      </div>
+
+      <h2>Understanding Yahrzeit Records</h2>
+
+      <h3>What Information is Tracked?</h3>
+      <p>Each yahrzeit record contains:</p>
+      <ul>
+        <li><strong>Deceased's Name:</strong> Full name (can include Hebrew name)</li>
+        <li><strong>Relationship:</strong> How the deceased is related to the member</li>
+        <li><strong>Date of Death:</strong> Gregorian calendar date</li>
+        <li><strong>Hebrew Date:</strong> Automatically calculated from Gregorian date</li>
+        <li><strong>Hebrew Month:</strong> Month in Hebrew calendar</li>
+        <li><strong>Observance Type:</strong> Yahrzeit or Yizkor</li>
+        <li><strong>Notes:</strong> Additional information or special instructions</li>
+      </ul>
+
+      <h3>Observance Types</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>When Observed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Yahrzeit</td>
+            <td>Annual death anniversary</td>
+            <td>On the Hebrew date of death each year</td>
+          </tr>
+          <tr>
+            <td>Yizkor</td>
+            <td>Memorial prayer service</td>
+            <td>Four times yearly: Yom Kippur, Shemini Atzeret, Pesach, Shavuot</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Adding Yahrzeit Records</h2>
+
+      <h3>Method 1: From Member Profile</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Member</h4>
+          <p>Find and open the member's profile who is observing the yahrzeit.</p>
+        </li>
+
+        <li>
+          <h4>Click "Add Yahrzeit"</h4>
+          <p>In the Yahrzeits section of the member profile, click "Add Yahrzeit".</p>
+        </li>
+
+        <li>
+          <h4>Enter Deceased Information</h4>
+          <ul>
+            <li><strong>Name:</strong> Full name of the deceased</li>
+            <li><strong>Hebrew Name:</strong> Hebrew name (optional but recommended)</li>
+            <li><strong>Relationship:</strong> Select from dropdown (Parent, Spouse, Child, Sibling, etc.)</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Enter Date Information</h4>
+          <ul>
+            <li><strong>Date of Death:</strong> Gregorian calendar date</li>
+            <li>The system automatically calculates and displays the corresponding Hebrew date</li>
+            <li><strong>Observance Type:</strong> Choose Yahrzeit or Yizkor</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Add Notes (Optional)</h4>
+          <p>Include any special instructions, stories, or information about the deceased.</p>
+        </li>
+
+        <li>
+          <h4>Save</h4>
+          <p>Click "Save" to create the yahrzeit record.</p>
+        </li>
+      </ol>
+
+      <h3>Method 2: From Yahrzeit List</h3>
+      <ol>
+        <li>Navigate to Yahrzeits from the main menu</li>
+        <li>Click "Add Yahrzeit" button</li>
+        <li>Select the member who is observing</li>
+        <li>Complete the form as described above</li>
+        <li>Save the record</li>
+      </ol>
+
+      <h2>Hebrew Calendar Integration</h2>
+
+      <h3>Automatic Date Conversion</h3>
+      <p>When you enter a Gregorian date of death, ShulNET automatically:</p>
+      <ul>
+        <li>Calculates the Hebrew date equivalent</li>
+        <li>Determines the Hebrew month and day</li>
+        <li>Stores both dates for accurate tracking</li>
+        <li>Displays the Hebrew date in readable format</li>
+      </ul>
+
+      <div class="card">
+        <h4>Example</h4>
+        <p>If you enter: <strong>January 15, 2024</strong></p>
+        <p>System calculates: <strong>5 Shevat 5784</strong></p>
+        <p>Future observances will be on 5 Shevat each year, regardless of the Gregorian date.</p>
+      </div>
+
+      <h3>Hebrew Months</h3>
+      <p>The Hebrew calendar has 12 months (13 in leap years):</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Hebrew Month</th>
+            <th>Approximate Gregorian</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Tishrei</td><td>September-October</td></tr>
+          <tr><td>Cheshvan</td><td>October-November</td></tr>
+          <tr><td>Kislev</td><td>November-December</td></tr>
+          <tr><td>Tevet</td><td>December-January</td></tr>
+          <tr><td>Shevat</td><td>January-February</td></tr>
+          <tr><td>Adar (Adar I & II in leap years)</td><td>February-March</td></tr>
+          <tr><td>Nisan</td><td>March-April</td></tr>
+          <tr><td>Iyar</td><td>April-May</td></tr>
+          <tr><td>Sivan</td><td>May-June</td></tr>
+          <tr><td>Tammuz</td><td>June-July</td></tr>
+          <tr><td>Av</td><td>July-August</td></tr>
+          <tr><td>Elul</td><td>August-September</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Viewing Yahrzeit Lists</h2>
+
+      <h3>Main Yahrzeit List</h3>
+      <p>Access from the main menu → Yahrzeits to see all records showing:</p>
+      <ul>
+        <li>Deceased's name</li>
+        <li>Observing member's name</li>
+        <li>Relationship</li>
+        <li>Date of death (Gregorian)</li>
+        <li>Hebrew date</li>
+        <li>Hebrew month</li>
+        <li>Observance type</li>
+      </ul>
+
+      <h3>Filtering by Hebrew Month</h3>
+      <p>To see yahrzeits for a specific month:</p>
+      <ol>
+        <li>Use the "Hebrew Month" filter dropdown</li>
+        <li>Select the desired month</li>
+        <li>View all yahrzeits occurring in that month</li>
+      </ol>
+
+      <p>This is especially useful for:</p>
+      <ul>
+        <li>Creating monthly yahrzeit lists for newsletters</li>
+        <li>Planning memorial services</li>
+        <li>Sending reminder emails to families</li>
+      </ul>
+
+      <h3>Dashboard Display</h3>
+      <p>The admin dashboard shows yahrzeits for the current Hebrew month, making it easy to see upcoming observances at a glance.</p>
+
+      <h2>Member Portal Access</h2>
+
+      <p>Members with login accounts can view their yahrzeits through the member portal:</p>
+      <ol>
+        <li>Log into the member portal</li>
+        <li>Navigate to "Yahrzeits" section</li>
+        <li>View all their yahrzeit records</li>
+        <li>Request changes or additions (if enabled)</li>
+      </ol>
+
+      <h3>Requesting Changes</h3>
+      <p>If enabled by administrators, members can:</p>
+      <ul>
+        <li>Request to add new yahrzeit records</li>
+        <li>Request corrections to existing records</li>
+        <li>Submit requests for admin review and approval</li>
+      </ul>
+
+      <h2>Yahrzeit Reminders</h2>
+
+      <h3>Email Notifications</h3>
+      <p>If email reminders are configured, the system can:</p>
+      <ul>
+        <li>Send automatic reminders before yahrzeits</li>
+        <li>Email weekly/monthly yahrzeit lists</li>
+        <li>Notify members of upcoming observances</li>
+        <li>Include candle lighting times and prayers</li>
+      </ul>
+
+      <h3>Configuring Reminders</h3>
+      <p>Administrators can set:</p>
+      <ul>
+        <li>How many days before to send reminders</li>
+        <li>Which members receive reminders</li>
+        <li>Email template content</li>
+        <li>Frequency of batch reminder emails</li>
+      </ul>
+
+      <h2>Importing Yahrzeit Data</h2>
+
+      <h3>Bulk Import</h3>
+      <p>For migrating from another system or adding many records:</p>
+      <ol>
+        <li>Download the yahrzeit import template</li>
+        <li>Fill in the spreadsheet with yahrzeit data</li>
+        <li>Upload the file through the import function</li>
+        <li>Review and confirm the import</li>
+      </ol>
+
+      <h3>Required Fields for Import</h3>
+      <ul>
+        <li>Member identifier (email or member ID)</li>
+        <li>Deceased's name</li>
+        <li>Date of death</li>
+        <li>Relationship</li>
+      </ul>
+
+      <h2>Printing Yahrzeit Lists</h2>
+
+      <h3>Creating Printed Lists</h3>
+      <ol class="steps">
+        <li>
+          <h4>Filter Your List</h4>
+          <p>Apply filters for the desired date range or Hebrew month.</p>
+        </li>
+
+        <li>
+          <h4>Sort as Needed</h4>
+          <p>Sort by name, date, or Hebrew month as appropriate.</p>
+        </li>
+
+        <li>
+          <h4>Click Print</h4>
+          <p>Use the print function to generate a formatted list.</p>
+        </li>
+
+        <li>
+          <h4>Print or Save as PDF</h4>
+          <p>Print directly or save as PDF for email/distribution.</p>
+        </li>
+      </ol>
+
+      <h3>Common Uses</h3>
+      <ul>
+        <li><strong>Monthly Bulletins:</strong> Include in newsletters</li>
+        <li><strong>Synagogue Displays:</strong> Post in sanctuary or lobby</li>
+        <li><strong>Memorial Services:</strong> Reference during Yizkor</li>
+        <li><strong>Board Reports:</strong> Track memorial observances</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Data Accuracy</h3>
+        <ul>
+          <li>Always verify dates with family members</li>
+          <li>Include both English and Hebrew names when possible</li>
+          <li>Double-check Hebrew date calculations</li>
+          <li>Update records promptly when notified of errors</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Privacy Considerations</h3>
+        <ul>
+          <li>Be sensitive when publishing yahrzeit lists</li>
+          <li>Ask permission before sharing personal memorial information</li>
+          <li>Some families prefer private observances</li>
+          <li>Respect member preferences for publicity</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Organization</h3>
+        <ul>
+          <li>Review yahrzeit lists annually for accuracy</li>
+          <li>Archive records of very old yahrzeits if desired</li>
+          <li>Maintain separate Yizkor lists for major holidays</li>
+          <li>Keep detailed notes for complex situations</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Communication</h3>
+        <ul>
+          <li>Send timely reminders to observing families</li>
+          <li>Include meaningful content in reminder emails</li>
+          <li>Publish monthly yahrzeit lists in bulletins</li>
+          <li>Offer opportunities for memorial donations</li>
+        </ul>
+      </div>
+
+      <h2>Special Cases</h2>
+
+      <h3>Leap Years</h3>
+      <p>The Hebrew calendar adds a second month of Adar in leap years. The system automatically handles:</p>
+      <ul>
+        <li>Deaths in regular Adar observed in Adar II in leap years</li>
+        <li>Deaths in Adar I or Adar II properly categorized</li>
+        <li>Correct year-to-year calculations</li>
+      </ul>
+
+      <h3>Multiple Yahrzeits per Member</h3>
+      <p>Members can have unlimited yahrzeit records for:</p>
+      <ul>
+        <li>Multiple parents</li>
+        <li>Deceased spouse and previous spouse</li>
+        <li>Multiple children or siblings</li>
+        <li>Extended family members</li>
+      </ul>
+
+      <h3>Deceased Members</h3>
+      <p>When a member passes away:</p>
+      <ul>
+        <li>Mark the member record as "deceased"</li>
+        <li>Their yahrzeit can be added to surviving family members' records</li>
+        <li>Maintain the historical member record for archival purposes</li>
+      </ul>
+
+      <h2>Common Questions</h2>
+
+      <h3>What if I don't know the exact Hebrew date?</h3>
+      <p>Enter the Gregorian date of death, and the system will calculate the Hebrew date automatically. If you only know the Hebrew date, work backward from a Hebrew-Gregorian conversion chart or calculator.</p>
+
+      <h3>How do I handle a death on Erev Rosh Hashanah or other edge cases?</h3>
+      <p>Enter the date as accurately as possible. Add notes explaining any special circumstances. The system will use the entered date for annual calculations.</p>
+
+      <h3>Can members add their own yahrzeits?</h3>
+      <p>Members can request yahrzeit additions through the member portal. These requests go to administrators for review and approval before being added to the official records.</p>
+
+      <h3>What happens to yahrzeits when a member is deleted?</h3>
+      <p>Yahrzeit records are linked to members. If a member is deleted, their yahrzeits may also be removed. Consider archiving or reassigning yahrzeits before deleting members.</p>
+
+      <h3>How far in advance should yahrzeit reminders be sent?</h3>
+      <p>Common practice is 7-14 days before the observance, giving families time to arrange candles, attend services, or make donations. Your administrator can configure this timing.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="members.html">Managing Members</a> - Add yahrzeits from member profiles</li>
+        <li><a href="email-campaigns.html">Email Campaigns</a> - Send yahrzeit reminders</li>
+        <li><a href="member-portal.html">Member Portal</a> - Member yahrzeit access</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

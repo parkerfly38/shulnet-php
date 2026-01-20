@@ -7,12 +7,20 @@ use App\Exports\InvoicesExport;
 use App\Exports\MembersExport;
 use App\Exports\StudentsExport;
 use App\Exports\YahrzeitExport;
+use App\Services\FinancialReportService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsController extends Controller
 {
+    protected FinancialReportService $reportService;
+
+    public function __construct(FinancialReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     public function index()
     {
         return Inertia::render('admin/reports/index');
@@ -70,5 +78,182 @@ class ReportsController extends Controller
             new YahrzeitExport($startDate, $endDate),
             'yahrzeit-'.now()->format('Y-m-d').'.xlsx'
         );
+    }
+
+    /**
+     * API: Get income summary report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getIncomeSummary(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $report = $this->reportService->getIncomeSummary(
+            $validated['start_date'],
+            $validated['end_date']
+        );
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get outstanding balances report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getOutstandingBalances(Request $request)
+    {
+        $minBalance = $request->input('min_balance', 0);
+
+        $report = $this->reportService->getOutstandingBalances($minBalance);
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get aging report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getAgingReport()
+    {
+        $report = $this->reportService->getAgingReport();
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get revenue by source report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getRevenueBySource(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $report = $this->reportService->getRevenueBySource(
+            $validated['start_date'],
+            $validated['end_date']
+        );
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get member growth report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getMemberGrowth(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $report = $this->reportService->getMemberGrowth(
+            $validated['start_date'],
+            $validated['end_date']
+        );
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get tuition revenue report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getTuitionRevenue(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $report = $this->reportService->getTuitionRevenue($startDate, $endDate);
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get payment method analysis
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getPaymentMethodAnalysis(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $report = $this->reportService->getPaymentMethodAnalysis(
+            $validated['start_date'],
+            $validated['end_date']
+        );
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get event revenue report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getEventRevenue(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $report = $this->reportService->getEventRevenue(
+            $validated['start_date'],
+            $validated['end_date']
+        );
+
+        return response()->json($report);
+    }
+
+    /**
+     * API: Get budget vs actual report
+     *
+     * @group Financial Reports
+     * @authenticated
+     */
+    public function getBudgetVsActual(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'budget' => 'required|array',
+            'budget.membership_dues' => 'required|numeric|min:0',
+            'budget.tuition' => 'required|numeric|min:0',
+            'budget.event_revenue' => 'required|numeric|min:0',
+            'budget.donations' => 'required|numeric|min:0',
+            'budget.other_income' => 'required|numeric|min:0',
+        ]);
+
+        $report = $this->reportService->getBudgetVsActual(
+            $validated['budget'],
+            $validated['start_date'],
+            $validated['end_date']
+        );
+
+        return response()->json($report);
     }
 }

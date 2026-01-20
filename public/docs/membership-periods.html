@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership Periods - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html" class="active">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Membership Periods</h1>
+      
+      <p>Membership periods track a member's affiliation with the synagogue over time, including their membership tier, start and end dates, and associated dues.</p>
+
+      <h2>Understanding Membership Periods</h2>
+
+      <h3>What is a Membership Period?</h3>
+      <p>A membership period represents a specific timeframe during which a member has an active membership at a particular tier level. Key attributes include:</p>
+      <ul>
+        <li><strong>Member:</strong> The associated member record</li>
+        <li><strong>Membership Tier:</strong> The level of membership (Individual, Family, Young Professional, etc.)</li>
+        <li><strong>Start Date:</strong> When this membership period begins</li>
+        <li><strong>End Date:</strong> When it ends (can be null for ongoing)</li>
+        <li><strong>Status:</strong> Active, Expired, or Cancelled</li>
+      </ul>
+
+      <h3>Why Track Periods?</h3>
+      <p>Membership periods provide:</p>
+      <ul>
+        <li>Historical record of membership over time</li>
+        <li>Ability to track tier changes</li>
+        <li>Clear audit trail for billing</li>
+        <li>Support for membership renewals</li>
+        <li>Reporting on membership growth/retention</li>
+      </ul>
+
+      <h2>Membership Tiers</h2>
+
+      <p>Common membership tier types:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tier Name</th>
+            <th>Description</th>
+            <th>Typical Annual Dues</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Individual</td>
+            <td>Single person membership</td>
+            <td>$1,000 - $1,500</td>
+          </tr>
+          <tr>
+            <td>Family</td>
+            <td>Two adults and children under 18</td>
+            <td>$2,000 - $3,000</td>
+          </tr>
+          <tr>
+            <td>Young Professional</td>
+            <td>Reduced rate for ages 22-35</td>
+            <td>$500 - $800</td>
+          </tr>
+          <tr>
+            <td>Senior</td>
+            <td>Reduced rate for 65+</td>
+            <td>$800 - $1,200</td>
+          </tr>
+          <tr>
+            <td>Honorary</td>
+            <td>Complimentary membership</td>
+            <td>$0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Your synagogue's tier names and amounts may differ. These are examples only.
+      </div>
+
+      <h2>Creating Membership Periods</h2>
+
+      <h3>Manual Creation</h3>
+      <ol class="steps">
+        <li>
+          <h4>Open Member Profile</h4>
+          <p>Navigate to the member's detail page.</p>
+        </li>
+
+        <li>
+          <h4>Click "Add Membership Period"</h4>
+          <p>Located in the membership section.</p>
+        </li>
+
+        <li>
+          <h4>Select Membership Tier</h4>
+          <p>Choose from configured tiers.</p>
+        </li>
+
+        <li>
+          <h4>Set Start Date</h4>
+          <p>Typically beginning of membership year (e.g., July 1).</p>
+        </li>
+
+        <li>
+          <h4>Set End Date (Optional)</h4>
+          <p>Leave blank for ongoing membership or specify renewal date.</p>
+        </li>
+
+        <li>
+          <h4>Save Period</h4>
+          <p>Membership period is created and linked to member.</p>
+        </li>
+      </ol>
+
+      <h3>Automatic Creation via Onboarding</h3>
+      <p>When using the <a href="member-onboarding.html">Member Onboarding Workflow</a>:</p>
+      <ul>
+        <li>Membership period created automatically in Step 2</li>
+        <li>Tier selection integrated into workflow</li>
+        <li>Start date defaults to today</li>
+        <li>End date calculated based on membership year</li>
+      </ul>
+
+      <h2>Managing Membership Periods</h2>
+
+      <h3>Viewing Periods</h3>
+      <p>From a member's profile:</p>
+      <ol>
+        <li>Scroll to "Membership Periods" section</li>
+        <li>See list of all periods (current and historical)</li>
+        <li>Current period highlighted</li>
+        <li>Click any period to view details</li>
+      </ol>
+
+      <h3>Editing Periods</h3>
+      <ol>
+        <li>Click on the membership period</li>
+        <li>Click "Edit"</li>
+        <li>Update tier, dates, or status</li>
+        <li>Save changes</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Caution:</strong> Changing a membership period's tier may affect associated invoices. Review billing before making changes.
+      </div>
+
+      <h3>Ending Periods</h3>
+      <p>To mark a membership as ended:</p>
+      <ol>
+        <li>Open the membership period</li>
+        <li>Click "End Membership"</li>
+        <li>Enter end date (typically last day of current year)</li>
+        <li>Optionally add reason/notes</li>
+        <li>Save - status changes to "Expired"</li>
+      </ol>
+
+      <h2>Membership Renewals</h2>
+
+      <h3>Annual Renewal Process</h3>
+      <p>At the end of each membership year:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>End Current Period</h4>
+          <p>Set end date on existing membership period (e.g., June 30).</p>
+        </li>
+
+        <li>
+          <h4>Create New Period</h4>
+          <p>Add new membership period starting next day (e.g., July 1).</p>
+        </li>
+
+        <li>
+          <h4>Select Tier</h4>
+          <p>Member can stay at same tier or change.</p>
+        </li>
+
+        <li>
+          <h4>Generate Invoice</h4>
+          <p>Create annual dues invoice for new period.</p>
+        </li>
+
+        <li>
+          <h4>Send Renewal Notice</h4>
+          <p>Email member with invoice and thank you message.</p>
+        </li>
+      </ol>
+
+      <h3>Bulk Renewals</h3>
+      <p>For renewing many members at once:</p>
+      <ol>
+        <li>Navigate to Members → Bulk Renew</li>
+        <li>Filter members to renew (e.g., all with periods ending June 30)</li>
+        <li>Select renewal tier (can set default for all or vary by member)</li>
+        <li>Set new period dates</li>
+        <li>Choose whether to generate invoices</li>
+        <li>Execute bulk renewal</li>
+        <li>Review results and handle any errors</li>
+      </ol>
+
+      <h2>Tier Changes Mid-Year</h2>
+
+      <h3>Upgrading Membership</h3>
+      <p>If a member wants to upgrade (e.g., Individual → Family):</p>
+      <ol>
+        <li>End current membership period (set end date to today)</li>
+        <li>Create new period with higher tier starting tomorrow</li>
+        <li>Calculate prorated dues:
+          <ul>
+            <li>Credit remaining value of old tier</li>
+            <li>Charge prorated amount of new tier</li>
+            <li>Invoice for the difference</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Downgrading Membership</h3>
+      <p>If a member wants to downgrade:</p>
+      <ol>
+        <li>Typically wait until next renewal period</li>
+        <li>If immediate, end current period and start new one</li>
+        <li>Note: downgrade mid-year usually does not result in refund unless board approves</li>
+      </ol>
+
+      <h2>Membership Status</h2>
+
+      <h3>Status Types</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Description</th>
+            <th>When Applied</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-success">Active</span></td>
+            <td>Current, paid membership</td>
+            <td>Within start/end dates, dues paid</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Expired</span></td>
+            <td>Past end date</td>
+            <td>After end date passes</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Cancelled</span></td>
+            <td>Terminated early</td>
+            <td>Member leaves before period ends</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Automatic Status Updates</h3>
+      <p>ShulNET automatically:</p>
+      <ul>
+        <li>Marks periods as "Expired" when end date passes</li>
+        <li>Updates member's active status based on current period</li>
+        <li>Sends renewal reminders before expiration (if configured)</li>
+      </ul>
+
+      <h2>Reporting</h2>
+
+      <h3>Membership Reports</h3>
+      <p>Generate reports on membership periods:</p>
+      <ul>
+        <li><strong>Active Members:</strong> All members with active periods</li>
+        <li><strong>Expiring Soon:</strong> Periods ending in next 30/60/90 days</li>
+        <li><strong>Renewals Needed:</strong> Members who haven't renewed yet</li>
+        <li><strong>Tier Distribution:</strong> Count of members by tier</li>
+        <li><strong>Historical Trends:</strong> Membership growth over time</li>
+      </ul>
+
+      <h3>Financial Reports</h3>
+      <p>Membership periods tie into financial reporting:</p>
+      <ul>
+        <li>Dues revenue by tier</li>
+        <li>Projected annual income from memberships</li>
+        <li>Outstanding dues by period</li>
+        <li>Payment status across all active periods</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Data Management</h3>
+        <ul>
+          <li>Always end old period before creating new one</li>
+          <li>Don't delete periods - they're historical records</li>
+          <li>Use consistent start/end dates (e.g., July 1 - June 30)</li>
+          <li>Document tier changes in notes field</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Renewals</h3>
+        <ul>
+          <li>Send renewal notices 60 days before expiration</li>
+          <li>Follow up with non-renewers 30 days before</li>
+          <li>Generate invoices at time of renewal creation</li>
+          <li>Offer early renewal incentives (discounts, perks)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Communication</h3>
+        <ul>
+          <li>Thank members for renewing</li>
+          <li>Welcome new members personally</li>
+          <li>Reach out to non-renewals to understand why</li>
+          <li>Keep members informed about tier benefits</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can a member have multiple active periods?</h3>
+      <p>No, a member should only have one active period at a time. End the previous period before creating a new one.</p>
+
+      <h3>What happens if I change a tier's price?</h3>
+      <p>Existing membership periods retain their original tier definition. Price changes only affect new periods created after the change.</p>
+
+      <h3>Can I backdate a membership period?</h3>
+      <p>Yes, set the start date to any past date. This is useful when adding historical records or correcting mistakes.</p>
+
+      <h3>How do I handle lifetime memberships?</h3>
+      <p>Create a membership period with a start date but leave the end date blank. It will remain active indefinitely.</p>
+
+      <h3>What if someone pays for multiple years upfront?</h3>
+      <p>You can either create one long period (e.g., 3-year period) or create separate annual periods and generate all invoices at once, marking them paid.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="members.html">Managing Members</a> - Member records and profiles</li>
+        <li><a href="member-onboarding.html">Member Onboarding</a> - Creating periods during onboarding</li>
+        <li><a href="invoices.html">Managing Invoices</a> - Billing for membership</li>
+        <li><a href="reports.html">Financial Reports</a> - Membership analytics</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

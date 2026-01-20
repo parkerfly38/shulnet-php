@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event RSVPs - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html" class="active">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Event RSVPs</h1>
+      
+      <p>The RSVP system allows members to register for events, purchase tickets, and track attendance. It provides event organizers with accurate headcounts and attendance management.</p>
+
+      <h2>Understanding RSVPs</h2>
+
+      <h3>What is an RSVP?</h3>
+      <p>An RSVP (Répondez s'il vous plaît - "please respond") is a record of someone's intent to attend an event. Each RSVP contains:</p>
+      <ul>
+        <li><strong>Member:</strong> Who is registering</li>
+        <li><strong>Event:</strong> Which event they're attending</li>
+        <li><strong>Number of Guests:</strong> How many people total</li>
+        <li><strong>Guest Names:</strong> Optional list of attendees</li>
+        <li><strong>Response:</strong> Attending, Not Attending, Maybe</li>
+        <li><strong>Ticket Type:</strong> If event has ticketing</li>
+        <li><strong>Special Requests:</strong> Dietary needs, accessibility, etc.</li>
+        <li><strong>Status:</strong> Confirmed, Waitlist, Cancelled</li>
+      </ul>
+
+      <h3>RSVP vs. Tickets</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Simple RSVP</th>
+            <th>Ticketed Event</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Registration</td>
+            <td>Free, open to all</td>
+            <td>May require payment</td>
+          </tr>
+          <tr>
+            <td>Capacity</td>
+            <td>Optional limit</td>
+            <td>Usually has capacity</td>
+          </tr>
+          <tr>
+            <td>Payment</td>
+            <td>No payment needed</td>
+            <td>Payment collected upfront</td>
+          </tr>
+          <tr>
+            <td>Confirmation</td>
+            <td>Email confirmation</td>
+            <td>Ticket receipt/QR code</td>
+          </tr>
+          <tr>
+            <td>Use Cases</td>
+            <td>Onegs, classes, services</td>
+            <td>Galas, concerts, trips</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Enabling RSVPs for Events</h2>
+
+      <h3>During Event Creation</h3>
+      <ol class="steps">
+        <li>
+          <h4>Create Event</h4>
+          <p>Fill in event details (name, date, time, location).</p>
+        </li>
+
+        <li>
+          <h4>Enable RSVPs</h4>
+          <p>Check "Allow RSVPs" option.</p>
+        </li>
+
+        <li>
+          <h4>Set RSVP Settings</h4>
+          <ul>
+            <li><strong>RSVP Deadline:</strong> Last day to register</li>
+            <li><strong>Max Capacity:</strong> Maximum attendees (optional)</li>
+            <li><strong>Guest Policy:</strong> Allow members to bring guests</li>
+            <li><strong>Require Names:</strong> Collect names of all attendees</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Configure Questions (Optional)</h4>
+          <p>Add custom questions:</p>
+          <ul>
+            <li>Dietary restrictions</li>
+            <li>Accessibility needs</li>
+            <li>T-shirt size</li>
+            <li>Transportation needs</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Save Event</h4>
+          <p>RSVP button appears on event listing.</p>
+        </li>
+      </ol>
+
+      <h2>Member RSVP Process</h2>
+
+      <h3>How Members RSVP</h3>
+      <ol class="steps">
+        <li>
+          <h4>Browse Events</h4>
+          <p>Members view upcoming events in calendar or list view.</p>
+        </li>
+
+        <li>
+          <h4>Click "RSVP"</h4>
+          <p>Opens RSVP form for the event.</p>
+        </li>
+
+        <li>
+          <h4>Select Number of Guests</h4>
+          <p>Choose how many people are attending (self + guests).</p>
+        </li>
+
+        <li>
+          <h4>Enter Guest Names (If Required)</h4>
+          <p>List names of all attendees.</p>
+        </li>
+
+        <li>
+          <h4>Answer Custom Questions</h4>
+          <p>Fill in dietary needs, special requests, etc.</p>
+        </li>
+
+        <li>
+          <h4>Submit RSVP</h4>
+          <p>Receive confirmation email with event details.</p>
+        </li>
+      </ol>
+
+      <h3>RSVP Confirmation</h3>
+      <p>After submitting, members receive:</p>
+      <ul>
+        <li>Confirmation email with event details</li>
+        <li>Calendar invite (.ics file)</li>
+        <li>Their RSVP appears in "My Events"</li>
+        <li>Ability to modify or cancel RSVP</li>
+      </ul>
+
+      <h2>Managing RSVPs (Admin)</h2>
+
+      <h3>Viewing Event RSVPs</h3>
+      <ol>
+        <li>Navigate to Events</li>
+        <li>Click on an event</li>
+        <li>Click "View RSVPs" tab</li>
+        <li>See list of all registrations</li>
+      </ol>
+
+      <h3>RSVP List Information</h3>
+      <p>The RSVP list shows:</p>
+      <ul>
+        <li>Member name and email</li>
+        <li>Number of guests</li>
+        <li>Guest names (if collected)</li>
+        <li>RSVP date and time</li>
+        <li>Special requests</li>
+        <li>Attendance status</li>
+        <li>Payment status (for ticketed events)</li>
+      </ul>
+
+      <h3>Filtering RSVPs</h3>
+      <p>Filter the list by:</p>
+      <ul>
+        <li><strong>Status:</strong> Confirmed, Waitlist, Cancelled</li>
+        <li><strong>Response:</strong> Attending, Not Attending, Maybe</li>
+        <li><strong>Payment:</strong> Paid, Unpaid, Partial</li>
+        <li><strong>Date Range:</strong> RSVPs received in specific timeframe</li>
+      </ul>
+
+      <h3>Exporting RSVPs</h3>
+      <ol>
+        <li>Open event's RSVP list</li>
+        <li>Click "Export"</li>
+        <li>Choose format (Excel, CSV, PDF)</li>
+        <li>Download file</li>
+      </ol>
+
+      <p>Export uses:</p>
+      <ul>
+        <li>Name tags for events</li>
+        <li>Meal counts for caterers</li>
+        <li>Seating charts</li>
+        <li>Check-in lists</li>
+      </ul>
+
+      <h2>Ticketed Events</h2>
+
+      <h3>Creating Ticket Types</h3>
+      <p>For paid events, create multiple ticket tiers:</p>
+
+      <div class="card">
+        <h4>Example: Gala Tickets</h4>
+        <ul>
+          <li><strong>Early Bird:</strong> $75 (available until March 1)</li>
+          <li><strong>General Admission:</strong> $100 (March 2 - April 15)</li>
+          <li><strong>VIP:</strong> $250 (includes cocktail reception)</li>
+          <li><strong>Patron:</strong> $500 (reserved seating + recognition)</li>
+        </ul>
+      </div>
+
+      <h3>Ticket Configuration</h3>
+      <p>For each ticket type, set:</p>
+      <ul>
+        <li><strong>Name:</strong> Descriptive label</li>
+        <li><strong>Price:</strong> Cost per ticket</li>
+        <li><strong>Quantity Available:</strong> How many tickets of this type</li>
+        <li><strong>Sales Period:</strong> When this ticket type is available</li>
+        <li><strong>Description:</strong> What's included</li>
+        <li><strong>Member vs. Non-Member:</strong> Different pricing tiers</li>
+      </ul>
+
+      <h3>Payment Collection</h3>
+      <p>When members purchase tickets:</p>
+      <ol>
+        <li>Select ticket type and quantity</li>
+        <li>Add to cart</li>
+        <li>Proceed to checkout</li>
+        <li>Pay via credit card or other configured payment method</li>
+        <li>Receive ticket confirmation and receipt</li>
+      </ol>
+
+      <h2>Capacity Management</h2>
+
+      <h3>Setting Event Capacity</h3>
+      <p>Control event size:</p>
+      <ol>
+        <li>Edit event</li>
+        <li>Set "Maximum Capacity" (e.g., 150 people)</li>
+        <li>Choose what happens when full:
+          <ul>
+            <li><strong>Close RSVPs:</strong> No more registrations allowed</li>
+            <li><strong>Enable Waitlist:</strong> Accept additional RSVPs to waitlist</li>
+          </ul>
+        </li>
+        <li>Save event</li>
+      </ol>
+
+      <h3>Waitlist Management</h3>
+      <p>When event reaches capacity with waitlist enabled:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Member Joins Waitlist</h4>
+          <p>RSVP button changes to "Join Waitlist".</p>
+        </li>
+
+        <li>
+          <h4>Waitlist Confirmation</h4>
+          <p>Member receives email confirming waitlist position.</p>
+        </li>
+
+        <li>
+          <h4>Spot Opens Up</h4>
+          <p>When someone cancels, spot becomes available.</p>
+        </li>
+
+        <li>
+          <h4>Automatic Promotion</h4>
+          <p>Next person on waitlist automatically promoted (optional) or manually invited.</p>
+        </li>
+
+        <li>
+          <h4>Confirmation Required</h4>
+          <p>Promoted member must confirm within deadline or lose spot.</p>
+        </li>
+      </ol>
+
+      <h2>Check-In System</h2>
+
+      <h3>Day-of-Event Check-In</h3>
+      <p>Track who actually attended:</p>
+
+      <ol>
+        <li>Open event on day of</li>
+        <li>Click "Check-In Mode"</li>
+        <li>View RSVP list with check-in checkboxes</li>
+        <li>As people arrive, mark them as "Checked In"</li>
+        <li>See real-time attendance count</li>
+      </ol>
+
+      <h3>Mobile Check-In</h3>
+      <p>Use tablet or phone at entrance:</p>
+      <ul>
+        <li>Search by name</li>
+        <li>Scan QR code from ticket confirmation</li>
+        <li>Quick check-in with tap</li>
+        <li>Note late arrivals or no-shows</li>
+      </ul>
+
+      <h3>Attendance Reporting</h3>
+      <p>After event, generate reports showing:</p>
+      <ul>
+        <li>Total RSVPs vs. actual attendance</li>
+        <li>No-show rate</li>
+        <li>Walk-ups (attended without RSVP)</li>
+        <li>Member vs. guest breakdown</li>
+      </ul>
+
+      <h2>RSVP Modifications</h2>
+
+      <h3>Members Updating RSVPs</h3>
+      <p>Members can modify their own RSVPs:</p>
+
+      <ol>
+        <li>Navigate to "My Events"</li>
+        <li>Find the event</li>
+        <li>Click "Modify RSVP"</li>
+        <li>Change guest count or answers</li>
+        <li>Update RSVP</li>
+      </ol>
+
+      <h3>Cancellations</h3>
+      <p>Members can cancel RSVPs:</p>
+      <ol>
+        <li>Open their RSVP</li>
+        <li>Click "Cancel RSVP"</li>
+        <li>Confirm cancellation</li>
+        <li>Receive cancellation confirmation</li>
+        <li>Spot freed for others (or waitlist)</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Refund Policy:</strong> For ticketed events, configure automatic refund rules or require admin approval for refunds.
+      </div>
+
+      <h3>Admin Overrides</h3>
+      <p>Admins can manually:</p>
+      <ul>
+        <li>Create RSVPs on behalf of members</li>
+        <li>Modify any RSVP details</li>
+        <li>Cancel RSVPs</li>
+        <li>Move people from waitlist to confirmed</li>
+        <li>Add walk-up attendees</li>
+        <li>Override capacity limits</li>
+      </ul>
+
+      <h2>Communications</h2>
+
+      <h3>Automatic Emails</h3>
+      <p>System automatically sends emails for:</p>
+      <ul>
+        <li><strong>RSVP Confirmation:</strong> When member registers</li>
+        <li><strong>RSVP Modification:</strong> When changes are made</li>
+        <li><strong>Cancellation:</strong> When RSVP is cancelled</li>
+        <li><strong>Waitlist Confirmation:</strong> When added to waitlist</li>
+        <li><strong>Promotion:</strong> When moved from waitlist to confirmed</li>
+        <li><strong>Event Reminder:</strong> 24-48 hours before event</li>
+        <li><strong>Event Updates:</strong> If event details change</li>
+      </ul>
+
+      <h3>Custom Messaging</h3>
+      <p>Send targeted emails to:</p>
+      <ul>
+        <li>All attendees</li>
+        <li>Only confirmed attendees</li>
+        <li>Waitlist members</li>
+        <li>No-shows from similar past events</li>
+        <li>VIP ticket holders</li>
+      </ul>
+
+      <h2>Reporting & Analytics</h2>
+
+      <h3>RSVP Metrics</h3>
+      <p>Track important statistics:</p>
+      <ul>
+        <li><strong>Response Rate:</strong> Percentage of invitees who RSVP'd</li>
+        <li><strong>Attendance Rate:</strong> RSVPs vs. actual attendance</li>
+        <li><strong>Registration Timeline:</strong> When RSVPs came in</li>
+        <li><strong>Cancellation Rate:</strong> How many cancelled</li>
+        <li><strong>Guest Ratio:</strong> Members vs. guests</li>
+        <li><strong>Revenue (Ticketed):</strong> Ticket sales by type</li>
+      </ul>
+
+      <h3>Event Comparison</h3>
+      <p>Compare events to identify trends:</p>
+      <ul>
+        <li>Which event types attract most RSVPs</li>
+        <li>Optimal event timing and days</li>
+        <li>Member engagement patterns</li>
+        <li>Pricing impact on attendance</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>RSVP Settings</h3>
+        <ul>
+          <li>Set RSVP deadline 3-7 days before event for planning</li>
+          <li>Allow modifications up to 48 hours before event</li>
+          <li>Use waitlist for popular events to avoid disappointing members</li>
+          <li>Collect essential info only - long forms reduce completions</li>
+          <li>Make guest count clear (is member included in count?)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Communication</h3>
+        <ul>
+          <li>Send confirmation immediately after RSVP</li>
+          <li>Send reminder 2-3 days before event</li>
+          <li>Include clear event details in all emails</li>
+          <li>Provide easy cancellation option</li>
+          <li>Thank attendees after the event</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Capacity Planning</h3>
+        <ul>
+          <li>Set capacity 10-15% higher than venue max to account for no-shows</li>
+          <li>Review historical no-show rates for your events</li>
+          <li>Consider standing room or flexible seating</li>
+          <li>Have waitlist policy clearly stated</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Accessibility</h3>
+        <ul>
+          <li>Always ask about dietary restrictions and allergies</li>
+          <li>Collect accessibility needs early for planning</li>
+          <li>Provide event details (parking, entrance, seating)</li>
+          <li>Make RSVP process mobile-friendly</li>
+          <li>Offer phone or email RSVP alternative for those without web access</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can members RSVP for others?</h3>
+      <p>Members can include guests in their RSVP. To register on behalf of another member (e.g., elderly parent), admins can create an RSVP manually.</p>
+
+      <h3>What happens if someone RSVPs after the deadline?</h3>
+      <p>Admins can configure whether late RSVPs are: automatically rejected, automatically waitlisted, or require admin approval.</p>
+
+      <h3>Can I charge different prices for members vs. non-members?</h3>
+      <p>Yes! Create separate ticket types like "Member - General Admission" and "Non-Member - General Admission" with different prices.</p>
+
+      <h3>How do I handle couples - one RSVP or two?</h3>
+      <p>Typically one member RSVPs for the couple with guest count of 2. If you need separate dietary restrictions, collect that info in custom questions.</p>
+
+      <h3>What if event details change after people RSVP?</h3>
+      <p>Edit the event and check "Notify all attendees of changes". System sends update email to everyone who RSVP'd.</p>
+
+      <h3>Can I limit RSVPs to members only?</h3>
+      <p>Yes! Set event visibility to "Members Only" so only logged-in members can RSVP.</p>
+
+      <h3>How do I handle refunds for cancelled ticketed events?</h3>
+      <p>If you cancel an event, go to RSVP list and select "Refund All". Process refunds through your payment processor.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="events.html">Managing Events</a> - Creating and editing events</li>
+        <li><a href="calendars.html">Calendars</a> - Event categorization</li>
+        <li><a href="payments.html">Processing Payments</a> - Ticket payment handling</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

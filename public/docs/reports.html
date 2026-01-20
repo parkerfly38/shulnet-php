@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Reports - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html" class="active">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Financial Reports</h1>
+      
+      <p>ShulNET provides comprehensive financial reporting to help you understand revenue, member payments, and overall financial health. Access the interactive Financial Reports Dashboard from the main Reports page.</p>
+
+      <div class="card alert-info">
+        <h3>📊 Accessing Reports</h3>
+        <p>Navigate to <strong>Settings → Reports → Financial Reports Dashboard</strong> to view interactive financial analytics.</p>
+      </div>
+
+      <h2>Currently Available Reports</h2>
+
+      <h3>Core Financial Reports</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Income Summary</h3>
+          <p>Total revenue by category with date range filtering</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎟️</div>
+          <h3>Event Revenue</h3>
+          <p>Ticket sales, attendance metrics, and sell-through rates</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <h3>Outstanding Balances</h3>
+          <p>Accounts receivable sorted by member</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⏰</div>
+          <h3>Aging Report</h3>
+          <p>Invoices categorized by age (0-30, 31-60, 61-90, 90+ days)</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Revenue by Source</h3>
+          <p>Percentage breakdown by category</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Member Growth</h3>
+          <p>New members and retention metrics</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💵</div>
+          <h3>Tuition Revenue</h3>
+          <p>Tuition collected vs. projected</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <h3>Payment Methods</h3>
+          <p>Analysis by payment type</p>
+          <span class="badge-success">Available</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Budget vs. Actual</h3>
+          <p>Compare actual to budget</p>
+          <span class="badge-warning">API Ready</span>
+        </div>
+      </div>
+
+      <div class="card alert-warning">
+        <h3>Legend</h3>
+        <p><span class="badge-success">Available</span> - Fully functional in dashboard with UI</p>
+        <p><span class="badge-warning">API Ready</span> - Backend complete, dashboard UI coming soon</p>
+      </div>
+
+      <h2>Export Capabilities</h2>
+
+      <p>From the main Reports page, you can export data in Excel format:</p>
+      <ul>
+        <li><strong>Members Export</strong> - Full member directory with filters</li>
+        <li><strong>Invoices Export</strong> - Invoice data by status and date range</li>
+        <li><strong>Students Export</strong> - Hebrew school enrollment data</li>
+        <li><strong>Financial Summary</strong> - Revenue summary by date range</li>
+        <li><strong>Yahrzeit Export</strong> - Memorial dates and information</li>
+      </ul>
+
+      <h2>Income Summary Report</h2>
+
+      <h3>Accessing the Report</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Financial Reports</h4>
+          <p>From admin menu: <strong>Reports → Financial Reports Dashboard</strong></p>
+        </li>
+
+        <li>
+          <h4>Select Income Summary Tab</h4>
+          <p>The Income Summary tab is selected by default</p>
+        </li>
+
+        <li>
+          <h4>Set Date Range</h4>
+          <p>Choose start and end dates for the reporting period</p>
+        </li>
+
+        <li>
+          <h4>Generate Report</h4>
+          <p>Click "Generate Report" to load the data</p>
+        </li>
+
+        <li>
+          <h4>Review Results</h4>
+          <p>View summary cards and category breakdown with visual progress bars</p>
+        </li>
+      </ol>
+
+      <h3>Report Contents</h3>
+      <p>The Income Summary report displays:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>What's Included</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Membership Dues</td>
+            <td>All membership tier payments (identified by "membership" or "dues" in invoice items)</td>
+          </tr>
+          <tr>
+            <td>Tuition</td>
+            <td>Hebrew school tuition payments (identified by "tuition" or "hebrew school" in items)</td>
+          </tr>
+          <tr>
+            <td>Event Revenue</td>
+            <td>Ticket sales and event fees (identified by "event" or "ticket" in items)</td>
+          </tr>
+          <tr>
+            <td>Donations</td>
+            <td>General and designated donations (identified by "donation" or "contribution" in items)</td>
+          </tr>
+          <tr>
+            <td>Other Income</td>
+            <td>Miscellaneous fees and revenue not categorized above</td>
+          </tr>
+          <tr>
+            <td><strong>Total Revenue</strong></td>
+            <td><strong>Sum of all categories for the selected date range</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card">
+        <h4>Summary Cards Display</h4>
+        <ul>
+          <li><strong>Total Revenue</strong> - Aggregate income for the period</li>
+          <li><strong>Transactions</strong> - Number of completed payments</li>
+          <li><strong>Average Payment</strong> - Mean transaction value</li>
+        </ul>
+      </div>
+
+      <h3>Category Breakdown</h3>
+      <p>Below the summary cards, you'll see a visual breakdown with:</p>
+      <ul>
+        <li>Each revenue category listed</li>
+        <li>Dollar amount for each category</li>
+        <li>Percentage of total revenue</li>
+        <li>Progress bar visualization showing relative proportion</li>
+      </ul>
+
+      <h2>Outstanding Balances Report</h2>
+
+      <h3>Accessing the Report</h3>
+      <p>The Outstanding Balances report shows all members with unpaid invoices:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Financial Reports</h4>
+          <p>From admin menu: <strong>Reports → Financial Reports Dashboard</strong></p>
+        </li>
+
+        <li>
+          <h4>Select Outstanding Balances Tab</h4>
+          <p>Click the "Outstanding" tab</p>
+        </li>
+
+        <li>
+          <h4>Review Data</h4>
+          <p>Report loads automatically, showing current outstanding balances</p>
+        </li>
+      </ol>
+
+      <h3>Report Details</h3>
+      <p>The report displays two summary cards:</p>
+      <ul>
+        <li><strong>Total Outstanding</strong> - Sum of all unpaid balances across all members</li>
+        <li><strong>Members with Balance</strong> - Count of members who owe money, plus average balance per member</li>
+      </ul>
+
+      <h3>Member Table</h3>
+      <p>For each member with an outstanding balance, the table shows:</p>
+      <ul>
+        <li><strong>Member Name</strong> - Full name of the member</li>
+        <li><strong>Email</strong> - Contact email address</li>
+        <li><strong>Invoices</strong> - Number of unpaid invoices</li>
+        <li><strong>Total Owed</strong> - Sum of all outstanding balances</li>
+        <li><strong>Oldest Invoice</strong> - Date of the earliest unpaid invoice</li>
+      </ul>
+
+      <p>Members are sorted by total owed (highest to lowest), making it easy to prioritize collection efforts.</p>
+
+      <h3>Using the Data</h3>
+      <p>From the outstanding balances report, you can:</p>
+      <ul>
+        <li>Identify which members need payment reminders</li>
+        <li>Prioritize collection efforts by amount owed</li>
+        <li>Monitor trends in accounts receivable</li>
+        <li>Generate lists for board financial reviews</li>
+      </ul>
+
+      <h2>Event Revenue Report</h2>
+
+      <h3>Overview</h3>
+      <p>The Event Revenue report provides comprehensive analytics on ticketed events, including revenue, attendance, and sell-through rates.</p>
+
+      <h3>Accessing the Report</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Financial Reports</h4>
+          <p>From admin menu: <strong>Reports → Financial Reports Dashboard</strong></p>
+        </li>
+
+        <li>
+          <h4>Select Event Revenue Tab</h4>
+          <p>Click the "Event Revenue" tab in the dashboard</p>
+        </li>
+
+        <li>
+          <h4>Set Date Range</h4>
+          <p>Use the date range selector to choose your reporting period</p>
+        </li>
+
+        <li>
+          <h4>Generate Report</h4>
+          <p>Click "Generate Report" to load event data for the selected period</p>
+        </li>
+      </ol>
+
+      <h3>Report Metrics</h3>
+
+      <h4>Summary Cards</h4>
+      <ul>
+        <li><strong>Total Revenue</strong> - All ticket sales revenue for the period</li>
+        <li><strong>Total Events</strong> - Number of events with ticket sales, including average revenue per event</li>
+        <li><strong>Total Attendees</strong> - Sum of all attendees across all events</li>
+        <li><strong>Avg Ticket Price</strong> - Average revenue per attendee</li>
+      </ul>
+
+      <h4>Revenue by Event Table</h4>
+      <p>For each event, the report shows:</p>
+      <ul>
+        <li><strong>Event Name</strong> - Event title</li>
+        <li><strong>Date</strong> - Event date</li>
+        <li><strong>Revenue</strong> - Total ticket sales revenue</li>
+        <li><strong>Attendees</strong> - Total confirmed/paid registrations</li>
+        <li><strong>Capacity</strong> - Maximum event capacity (if set)</li>
+        <li><strong>Sell-Through Rate</strong> - Percentage of capacity filled (highlighted in green when ≥90%, blue when ≥70%)</li>
+        <li><strong>Avg Price</strong> - Average ticket price for this event</li>
+      </ul>
+
+      <h4>Revenue by Ticket Type Table</h4>
+      <p>Aggregates ticket sales across all events by ticket type:</p>
+      <ul>
+        <li><strong>Ticket Type</strong> - Name of ticket tier (e.g., General Admission, Member, Early Bird)</li>
+        <li><strong>Quantity Sold</strong> - Total tickets sold of this type</li>
+        <li><strong>Total Revenue</strong> - Combined revenue from this ticket type</li>
+        <li><strong>Average Price</strong> - Average price per ticket of this type</li>
+      </ul>
+
+      <h3>Using the Data</h3>
+      <p>From the event revenue report, you can:</p>
+      <ul>
+        <li>Identify which events generate the most revenue</li>
+        <li>Monitor sell-through rates to optimize event capacity and marketing</li>
+        <li>Compare ticket pricing effectiveness across different ticket tiers</li>
+        <li>Track attendance trends over time</li>
+        <li>Plan future events based on revenue and attendance patterns</li>
+      </ul>
+
+      <h2>Aging Report</h2>
+
+      <h3>Accessing the Report</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Financial Reports</h4>
+          <p>From admin menu: <strong>Reports → Financial Reports Dashboard</strong></p>
+        </li>
+
+        <li>
+          <h4>Select Aging Tab</h4>
+          <p>Click the "Aging" tab</p>
+        </li>
+
+        <li>
+          <h4>Review Aging Buckets</h4>
+          <p>Report loads automatically with current aging data</p>
+        </li>
+      </ol>
+
+      <h3>Aging Buckets Explained</h3>
+      <p>The aging report categorizes unpaid invoices into four buckets based on how many days past the due date:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Age Bucket</th>
+            <th>Meaning</th>
+            <th>Visual Indicator</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Current (0-30 days)</td>
+            <td>Recently sent or recently due, payment expected soon</td>
+            <td>White card (normal priority)</td>
+          </tr>
+          <tr>
+            <td>31-60 days</td>
+            <td>Overdue, needs attention</td>
+            <td>Orange card (moderate priority)</td>
+          </tr>
+          <tr>
+            <td>61-90 days</td>
+            <td>Significantly overdue, requires action</td>
+            <td>Red card (high priority)</td>
+          </tr>
+          <tr>
+            <td>90+ days</td>
+            <td>Very old, may need board intervention</td>
+            <td>Dark red card (urgent)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Dashboard Display</h3>
+      <p>The aging dashboard shows four color-coded cards, each displaying:</p>
+      <ul>
+        <li><strong>Total Amount</strong> - Sum of all invoices in that aging bucket</li>
+        <li><strong>Invoice Count</strong> - Number of invoices in that bucket</li>
+      </ul>
+
+      <p>Below the cards, you'll see the <strong>Total Outstanding</strong> sum across all aging buckets.</p>
+
+      <h3>Using the Aging Report</h3>
+      <p>Best practices for using aging data:</p>
+      <ul>
+        <li><strong>Review monthly</strong> to identify problems early</li>
+        <li><strong>0-30 days</strong> - No immediate action needed, monitor</li>
+        <li><strong>31-60 days</strong> - Send friendly payment reminder emails</li>
+        <li><strong>61-90 days</strong> - Personal outreach, offer payment plans if needed</li>
+        <li><strong>90+ days</strong> - Board discussion, consider collection procedures or write-off</li>
+        <li><strong>Track trends</strong> - Compare month-to-month to see if collection is improving</li>
+      </ul>
+
+      <h2>Payment Methods Report</h2>
+
+      <h3>Overview</h3>
+      <p>The Payment Methods report analyzes how members are paying invoices, showing transaction counts, revenue distribution, and average transaction values by payment type.</p>
+
+      <h3>Accessing the Report</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Financial Reports</h4>
+          <p>From admin menu: <strong>Reports → Financial Reports Dashboard</strong></p>
+        </li>
+
+        <li>
+          <h4>Select Payment Methods Tab</h4>
+          <p>Click the "Payment Methods" tab in the dashboard</p>
+        </li>
+
+        <li>
+          <h4>Set Date Range</h4>
+          <p>Use the date range selector to choose your reporting period</p>
+        </li>
+
+        <li>
+          <h4>Generate Report</h4>
+          <p>Click "Generate Report" to load payment data for the selected period</p>
+        </li>
+      </ol>
+
+      <h3>Report Metrics</h3>
+
+      <h4>Summary Cards</h4>
+      <ul>
+        <li><strong>Total Revenue</strong> - All completed payments for the period</li>
+        <li><strong>Total Transactions</strong> - Number of completed payment transactions</li>
+        <li><strong>Average Transaction</strong> - Mean payment amount across all methods</li>
+      </ul>
+
+      <h4>Payment Methods Breakdown Table</h4>
+      <p>For each payment method, the report shows:</p>
+      <ul>
+        <li><strong>Payment Method</strong> - Type (Credit Card, Check, ACH, Cash, etc.)</li>
+        <li><strong>Transactions</strong> - Number of payments made with this method</li>
+        <li><strong>% of Transactions</strong> - Percentage of total transaction count with visual bar</li>
+        <li><strong>Total Revenue</strong> - Sum of all payments made with this method</li>
+        <li><strong>% of Revenue</strong> - Percentage of total revenue with visual bar</li>
+        <li><strong>Avg Transaction</strong> - Average payment amount for this method</li>
+      </ul>
+
+      <h3>Using the Data</h3>
+      <p>From the payment methods report, you can:</p>
+      <ul>
+        <li>Identify which payment methods members prefer</li>
+        <li>Understand transaction fee costs (credit cards typically have higher fees)</li>
+        <li>Optimize payment processing based on method popularity</li>
+        <li>Plan for payment gateway integrations or improvements</li>
+        <li>Track trends in digital vs. traditional payment adoption</li>
+        <li>Compare average transaction sizes across different payment types</li>
+      </ul>
+
+      <div class="card">
+        <h4>Example Insights</h4>
+        <ul>
+          <li>If credit cards represent 70% of revenue but only 40% of transactions, members are using cards for larger purchases</li>
+          <li>High check usage may indicate opportunities to encourage online payment adoption</li>
+          <li>ACH/bank transfers typically have lower processing fees than credit cards</li>
+          <li>Cash payments require manual recording - low usage is generally preferred for efficiency</li>
+        </ul>
+      </div>
+
+      <h2>API-Ready Reports</h2>
+
+      <p>The following reports have backend APIs complete and can be accessed programmatically. Dashboard UI will be added in future updates:</p>
+
+      <h3>Budget vs. Actual</h3>
+      <p><strong>API Endpoint:</strong> <code>POST /admin/reports/budget-vs-actual</code></p>
+      <p>Compares actual revenue to budgeted amounts by category, showing variances and percentages.</p>
+
+      <h2>Data Export Options</h2>
+
+      <p>From the main Reports page (<strong>Admin → Reports</strong>), you can export various data sets to Excel:</p>
+
+      <h3>Available Exports</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Export</th>
+            <th>What's Included</th>
+            <th>Filter Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Members Export</td>
+            <td>Full member directory with contact information</td>
+            <td>Search, member type</td>
+          </tr>
+          <tr>
+            <td>Invoices Export</td>
+            <td>Invoice data with amounts and status</td>
+            <td>Status, date range</td>
+          </tr>
+          <tr>
+            <td>Students Export</td>
+            <td>Hebrew school enrollment</td>
+            <td>Class, grade level</td>
+          </tr>
+          <tr>
+            <td>Financial Summary</td>
+            <td>Revenue summary by category</td>
+            <td>Date range (required)</td>
+          </tr>
+          <tr>
+            <td>Yahrzeit Export</td>
+            <td>Memorial dates and deceased information</td>
+            <td>Date range (optional)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>How to Export</h3>
+      <ol class="steps">
+        <li>Navigate to <strong>Admin → Reports</strong></li>
+        <li>Find the export section you need</li>
+        <li>Set any optional filters</li>
+        <li>Click the "Export" button</li>
+        <li>File will download automatically in Excel format (.xlsx)</li>
+      </ol>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Regular Review Schedule</h3>
+        <ul>
+          <li><strong>Weekly:</strong> Check outstanding balances for new issues</li>
+          <li><strong>Monthly:</strong> Run income summary, outstanding balances, and aging reports</li>
+          <li><strong>Quarterly:</strong> Review trends, compare to budget, analyze growth</li>
+          <li><strong>Annually:</strong> Year-end summary, prepare tax information</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Data Accuracy</h3>
+        <ul>
+          <li>Ensure all payments are recorded promptly (same-day or next-day)</li>
+          <li>Review report data for anomalies before sharing with board</li>
+          <li>Keep member contact information current</li>
+          <li>Verify invoice categorization (membership, tuition, events, etc.)</li>
+          <li>Document any special circumstances affecting the data</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Board Communication</h3>
+        <ul>
+          <li>Present key metrics in simple, visual formats</li>
+          <li>Highlight significant variances and trends</li>
+          <li>Provide context for unusual data points</li>
+          <li>Include recommendations with reports</li>
+          <li>Archive reports for historical reference</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Security & Privacy</h3>
+        <ul>
+          <li>Only Admin users can access financial reports</li>
+          <li>Don't include member names in widely shared reports</li>
+          <li>Mark financial reports as confidential</li>
+          <li>Use secure methods to share sensitive data</li>
+          <li>Be mindful of data retention and privacy policies</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>How often should we run financial reports?</h3>
+      <p>At minimum, monthly for income summary and outstanding balances. Weekly review of the aging report is ideal for proactive collection management.</p>
+
+      <h3>What reports should we share with the board?</h3>
+      <p>Monthly: Income summary, outstanding balances summary. Quarterly: Trends and comparisons. Annually: Year-end summary. Avoid sharing individual member details unless necessary.</p>
+
+      <h3>Can we track expenses in ShulNET?</h3>
+      <p>ShulNET focuses on revenue tracking (invoices and payments). For comprehensive accounting including expenses, integrate with QuickBooks or similar accounting software.</p>
+
+      <h3>How are categories determined in the Income Summary?</h3>
+      <p>The system categorizes revenue based on keywords in invoice item descriptions: "membership" or "dues" → Membership Dues, "tuition" or "hebrew school" → Tuition, "event" or "ticket" → Events, "donation" or "contribution" → Donations, everything else → Other Income.</p>
+
+      <h3>What's a healthy accounts receivable percentage?</h3>
+      <p>Aim for less than 10% of annual revenue outstanding at any time. Higher percentages may indicate collection issues that need attention.</p>
+
+      <h3>How do I access the API endpoints?</h3>
+      <p>API endpoints are for programmatic access and future dashboard features. Currently, use the Financial Reports Dashboard for interactive reports and the Reports page for data exports.</p>
+
+      <h3>Can I customize the aging buckets?</h3>
+      <p>Currently, aging buckets are fixed at 0-30, 31-60, 61-90, and 90+ days. This follows standard accounting practices for accounts receivable aging.</p>
+
+      <h2>Future Enhancements</h2>
+
+      <p>The following features are planned for future releases:</p>
+
+      <ul>
+        <li><strong>Dashboard Visualizations</strong> - Charts and graphs for Revenue by Source, Member Growth, and Payment Methods</li>
+        <li><strong>Scheduled Report Delivery</strong> - Automatic email delivery of reports on a recurring schedule</li>
+        <li><strong>PDF Export</strong> - Export dashboard reports as formatted PDF documents</li>
+        <li><strong>Custom Date Presets</strong> - Quick access to "This Month," "Last Quarter," "Year to Date" filters</li>
+        <li><strong>Event Revenue Reports</strong> - Dedicated reporting for event ticket sales and attendance</li>
+        <li><strong>Tax Statement Generator</strong> - Automated year-end giving statements for members</li>
+        <li><strong>Report Builder</strong> - Create custom reports with drag-and-drop interface</li>
+      </ul>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="invoices.html">Managing Invoices</a> - Creating and managing invoices</li>
+        <li><a href="payments.html">Processing Payments</a> - Recording and processing payments</li>
+        <li><a href="members.html">Managing Members</a> - Member data that appears in reports</li>
+        <li><a href="students.html">Managing Students</a> - Student enrollment for tuition reports</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

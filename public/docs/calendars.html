@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendars - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html" class="active">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Calendars</h1>
+      
+      <p>ShulNET's calendar system allows you to organize events into different calendars for better categorization and visibility control. Multiple calendars help members find events relevant to them.</p>
+
+      <h2>Understanding Calendars</h2>
+
+      <h3>What is a Calendar?</h3>
+      <p>A calendar is a container for related events. Each calendar has:</p>
+      <ul>
+        <li><strong>Name:</strong> Descriptive title (e.g., "Services", "Social Events")</li>
+        <li><strong>Description:</strong> Purpose and scope of the calendar</li>
+        <li><strong>Color:</strong> Visual identifier in calendar views</li>
+        <li><strong>Visibility:</strong> Public or private access</li>
+        <li><strong>Status:</strong> Active or archived</li>
+      </ul>
+
+      <h3>Why Use Multiple Calendars?</h3>
+      <ul>
+        <li>Organize events by category or audience</li>
+        <li>Allow members to subscribe to specific calendars</li>
+        <li>Control visibility for different user groups</li>
+        <li>Color-code events for quick recognition</li>
+        <li>Filter calendar views by category</li>
+        <li>Export specific calendars to external systems</li>
+      </ul>
+
+      <h2>Default Calendar Categories</h2>
+
+      <p>Common calendar types for synagogues:</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🕍</div>
+          <h3>Services</h3>
+          <p>Shabbat services, weekday minyan, holiday services</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Hebrew School</h3>
+          <p>Class schedules, school holidays, parent events</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎉</div>
+          <h3>Social Events</h3>
+          <p>Onegs, dinners, community gatherings</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <h3>Education</h3>
+          <p>Adult education, Torah study, lectures</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎭</div>
+          <h3>Cultural</h3>
+          <p>Concerts, film screenings, art exhibits</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🤝</div>
+          <h3>Fundraising</h3>
+          <p>Galas, auctions, campaigns</p>
+        </div>
+      </div>
+
+      <h2>Creating Calendars</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Calendars</h4>
+          <p>From admin menu, select Events → Calendars.</p>
+        </li>
+
+        <li>
+          <h4>Click "Create Calendar"</h4>
+          <p>Opens calendar creation form.</p>
+        </li>
+
+        <li>
+          <h4>Enter Calendar Details</h4>
+          <ul>
+            <li><strong>Name:</strong> Clear, concise title</li>
+            <li><strong>Description:</strong> Explain what events go here</li>
+            <li><strong>Color:</strong> Choose a distinct color for visual identification</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Set Visibility</h4>
+          <p>Choose who can view this calendar:</p>
+          <ul>
+            <li><strong>Public:</strong> Visible to everyone, including non-members</li>
+            <li><strong>Members Only:</strong> Requires login to view</li>
+            <li><strong>Private:</strong> Admin and specific users only</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Save Calendar</h4>
+          <p>Calendar is created and ready for events.</p>
+        </li>
+      </ol>
+
+      <h2>Managing Calendars</h2>
+
+      <h3>Viewing All Calendars</h3>
+      <p>Navigate to Events → Calendars to see:</p>
+      <ul>
+        <li>List of all calendars</li>
+        <li>Event counts per calendar</li>
+        <li>Active vs. archived status</li>
+        <li>Visibility settings</li>
+        <li>Color codes</li>
+      </ul>
+
+      <h3>Editing Calendars</h3>
+      <ol>
+        <li>Click on a calendar from the list</li>
+        <li>Click "Edit Calendar"</li>
+        <li>Update name, description, color, or visibility</li>
+        <li>Save changes</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Changing calendar visibility affects all events within it. Events in a private calendar are automatically hidden from public view.
+      </div>
+
+      <h3>Archiving Calendars</h3>
+      <p>To hide a calendar without deleting it:</p>
+      <ol>
+        <li>Edit the calendar</li>
+        <li>Change status to "Archived"</li>
+        <li>Save changes</li>
+      </ol>
+
+      <p>Archived calendars:</p>
+      <ul>
+        <li>Don't appear in public calendar views</li>
+        <li>Events remain in the system</li>
+        <li>Can be reactivated later</li>
+        <li>Preserve historical event data</li>
+      </ul>
+
+      <h3>Deleting Calendars</h3>
+      <div class="alert alert-warning">
+        <strong>Caution:</strong> Deleting a calendar may affect associated events. ShulNET prevents deletion of calendars with events. Move or delete events first.
+      </div>
+
+      <h2>Assigning Events to Calendars</h2>
+
+      <h3>During Event Creation</h3>
+      <p>When creating a new event:</p>
+      <ol>
+        <li>Fill in event details</li>
+        <li>Select calendar from dropdown</li>
+        <li>Event inherits calendar's color and visibility</li>
+        <li>Save event</li>
+      </ol>
+
+      <h3>Moving Events Between Calendars</h3>
+      <ol>
+        <li>Open the event</li>
+        <li>Click "Edit Event"</li>
+        <li>Change calendar selection</li>
+        <li>Save - event moves to new calendar</li>
+      </ol>
+
+      <h2>Calendar Views</h2>
+
+      <h3>Month View</h3>
+      <p>Traditional calendar grid showing:</p>
+      <ul>
+        <li>Events color-coded by calendar</li>
+        <li>Multiple events per day</li>
+        <li>Quick overview of the month</li>
+        <li>Click any date to see details</li>
+      </ul>
+
+      <h3>Week View</h3>
+      <p>Detailed weekly schedule:</p>
+      <ul>
+        <li>Hourly time slots</li>
+        <li>Event duration visualization</li>
+        <li>Better for dense schedules</li>
+        <li>See timing conflicts</li>
+      </ul>
+
+      <h3>List View</h3>
+      <p>Chronological event listing:</p>
+      <ul>
+        <li>All upcoming events in order</li>
+        <li>Full event details visible</li>
+        <li>Easy to scan and search</li>
+        <li>Mobile-friendly</li>
+      </ul>
+
+      <h3>Agenda View</h3>
+      <p>Condensed upcoming events:</p>
+      <ul>
+        <li>Next 30 days of events</li>
+        <li>Grouped by date</li>
+        <li>Quick reference</li>
+      </ul>
+
+      <h2>Filtering Calendars</h2>
+
+      <h3>Calendar Toggle</h3>
+      <p>Users can show/hide specific calendars:</p>
+      <ol>
+        <li>Open calendar view</li>
+        <li>Click "Calendars" filter</li>
+        <li>Check/uncheck calendars to show/hide</li>
+        <li>View updates immediately</li>
+      </ol>
+
+      <h3>Use Cases for Filtering</h3>
+      <ul>
+        <li><strong>Parents:</strong> Show only Hebrew School calendar</li>
+        <li><strong>Service Leaders:</strong> Show only Services calendar</li>
+        <li><strong>Event Planning:</strong> Hide recurring events, show special events</li>
+        <li><strong>Print:</strong> Filter to specific calendar before printing</li>
+      </ul>
+
+      <h2>Calendar Subscriptions</h2>
+
+      <h3>iCal/Webcal Export</h3>
+      <p>Allow members to subscribe to calendars in their personal calendar apps:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Generate Calendar URL</h4>
+          <p>Each calendar has a unique subscription URL.</p>
+        </li>
+
+        <li>
+          <h4>Share with Members</h4>
+          <p>Provide webcal:// URL via email or website.</p>
+        </li>
+
+        <li>
+          <h4>Members Subscribe</h4>
+          <p>Add URL to Google Calendar, Apple Calendar, Outlook, etc.</p>
+        </li>
+
+        <li>
+          <h4>Automatic Sync</h4>
+          <p>Events update automatically when changes are made.</p>
+        </li>
+      </ol>
+
+      <h3>Supported Calendar Apps</h3>
+      <ul>
+        <li>Google Calendar</li>
+        <li>Apple Calendar (macOS, iOS)</li>
+        <li>Microsoft Outlook</li>
+        <li>Mozilla Thunderbird</li>
+        <li>Any iCal-compatible application</li>
+      </ul>
+
+      <h2>Calendar Permissions</h2>
+
+      <h3>Public Calendars</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>User Type</th>
+            <th>View Events</th>
+            <th>RSVP</th>
+            <th>Create Events</th>
+            <th>Edit Calendar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Public/Guest</td>
+            <td>✅ Yes</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Member</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Admin</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Members-Only Calendars</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>User Type</th>
+            <th>View Events</th>
+            <th>RSVP</th>
+            <th>Create Events</th>
+            <th>Edit Calendar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Public/Guest</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Member</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Admin</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+            <td>✅ Yes</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Calendar Organization</h3>
+        <ul>
+          <li>Create calendars based on audience (who cares about these events?)</li>
+          <li>Use 5-8 calendars max - too many becomes confusing</li>
+          <li>Choose distinct colors that are easy to distinguish</li>
+          <li>Give calendars clear, descriptive names</li>
+          <li>Review and consolidate calendars annually</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Visibility Settings</h3>
+        <ul>
+          <li>Default to public for community events</li>
+          <li>Use members-only for member perks and exclusive events</li>
+          <li>Use private for internal planning calendars</li>
+          <li>Consider privacy when posting personal events (Bar/Bat Mitzvahs)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Calendar Naming</h3>
+        <ul>
+          <li>Use nouns: "Services" not "Service Schedule"</li>
+          <li>Keep names short for mobile display</li>
+          <li>Be specific: "Adult Education" vs. just "Education"</li>
+          <li>Avoid dates in calendar names (use event names instead)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Maintenance</h3>
+        <ul>
+          <li>Archive old seasonal calendars (e.g., "High Holidays 2025")</li>
+          <li>Don't delete calendars with historical events</li>
+          <li>Update calendar descriptions if purpose changes</li>
+          <li>Test calendar subscriptions periodically</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can an event be in multiple calendars?</h3>
+      <p>No, each event belongs to exactly one calendar. If an event fits multiple categories, choose the primary one or consider if you need to simplify your calendar structure.</p>
+
+      <h3>What happens if I delete a calendar with events?</h3>
+      <p>ShulNET prevents deletion of calendars containing events. You must first move all events to another calendar or delete them individually.</p>
+
+      <h3>Can I change a calendar's color?</h3>
+      <p>Yes, edit the calendar and choose a new color. All events in that calendar will immediately display with the new color.</p>
+
+      <h3>How do members subscribe to a calendar?</h3>
+      <p>Each calendar has a subscription URL (webcal://...). Members copy this URL and paste it into their calendar application's "Subscribe to Calendar" feature.</p>
+
+      <h3>Do subscription updates happen in real-time?</h3>
+      <p>No, subscribed calendars sync on a schedule set by the calendar application (usually hourly or daily). Changes appear within 24 hours.</p>
+
+      <h3>Can I have seasonal calendars?</h3>
+      <p>Yes! Create calendars like "High Holidays 2026" or "Summer Programs 2026". Archive them after the season ends to keep them for historical reference.</p>
+
+      <h3>What's the difference between archiving and deleting?</h3>
+      <p>Archiving hides a calendar from active views but preserves all data. Deleting permanently removes the calendar. Always archive unless you're certain you'll never need the calendar again.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="events.html">Managing Events</a> - Creating and managing events</li>
+        <li><a href="rsvps.html">Event RSVPs</a> - Handling event registrations</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

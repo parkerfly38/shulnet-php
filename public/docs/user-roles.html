@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Roles & Permissions - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html" class="active">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>User Roles & Permissions</h1>
+      
+      <p>ShulNET uses a role-based access control system to ensure users only have access to features appropriate for their responsibilities. Understanding these roles helps maintain security and proper data management.</p>
+
+      <h2>Available User Roles</h2>
+
+      <p>Users can have multiple roles simultaneously. For example, a user can be both a Teacher and a Parent, or a Member and a Teacher.</p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <h3>Admin</h3>
+          <p>Full system access with all administrative privileges</p>
+          <span class="badge badge-primary">Highest Access</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">👤</div>
+          <h3>Member</h3>
+          <p>Access to personal member portal and information</p>
+          <span class="badge badge-success">Member Access</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🍎</div>
+          <h3>Teacher</h3>
+          <p>Teaching privileges for Hebrew school classes</p>
+          <span class="badge badge-warning">Teaching Access</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">👨‍👩‍👧</div>
+          <h3>Parent</h3>
+          <p>Parent/guardian access to student information</p>
+          <span class="badge badge-info">Parent Access</span>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎓</div>
+          <h3>Student</h3>
+          <p>Student access to their own records</p>
+          <span class="badge">Student Access</span>
+        </div>
+      </div>
+
+      <h2>Role Permissions</h2>
+
+      <h3>Admin Role</h3>
+      <p>Administrators have complete access to all system features:</p>
+
+      <h4>Full Access To:</h4>
+      <ul>
+        <li><strong>User Management:</strong> Create, edit, delete user accounts and assign roles</li>
+        <li><strong>Member Management:</strong> Full CRUD operations on all member records</li>
+        <li><strong>Student Management:</strong> Manage all student and parent records</li>
+        <li><strong>Financial Management:</strong> Create invoices, record payments, view all financial data</li>
+        <li><strong>Event Management:</strong> Create and manage all calendars and events</li>
+        <li><strong>Yahrzeit Management:</strong> Add, edit, delete yahrzeit records</li>
+        <li><strong>Email Campaigns:</strong> Create and send email campaigns</li>
+        <li><strong>Forms:</strong> Create custom forms and view submissions</li>
+        <li><strong>Cemetery Management:</strong> Manage deeds, plots, and interments</li>
+        <li><strong>System Settings:</strong> Configure membership tiers, tuition rates, payment methods, etc.</li>
+        <li><strong>Reports:</strong> Access all financial and administrative reports</li>
+        <li><strong>API Access:</strong> Generate and manage API tokens</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Important:</strong> Admin access should be limited to trusted individuals. Admins can modify any data and access sensitive financial information.
+      </div>
+
+      <h3>Teacher Role</h3>
+      <p>Teachers have access to manage their classes and students:</p>
+
+      <h4>Can Access:</h4>
+      <ul>
+        <li><strong>Class Management:</strong> View and manage assigned classes</li>
+        <li><strong>Student Records:</strong> View students in their classes</li>
+        <li><strong>Attendance:</strong> Take and update attendance for their classes</li>
+        <li><strong>Grades:</strong> Record and update grades for their students</li>
+        <li><strong>Assignments:</strong> Create and manage assignments</li>
+        <li><strong>Progress Reports:</strong> Generate report cards for their classes</li>
+        <li><strong>Parent Communication:</strong> Email parents of students in their classes</li>
+      </ul>
+
+      <h4>Cannot Access:</h4>
+      <ul>
+        <li>Classes they don't teach</li>
+        <li>Financial information</li>
+        <li>System settings</li>
+        <li>User management</li>
+        <li>Other teachers' classes or materials</li>
+      </ul>
+
+      <div class="card">
+        <h4>Common Teacher + Role Combinations:</h4>
+        <ul>
+          <li><strong>Teacher + Parent:</strong> Teaching while having enrolled children</li>
+          <li><strong>Teacher + Member:</strong> Member who teaches classes</li>
+          <li><strong>Teacher + Admin:</strong> School director with teaching duties</li>
+        </ul>
+      </div>
+
+      <h3>Parent Role</h3>
+      <p>Parents have access to their children's information:</p>
+
+      <h4>Can Access:</h4>
+      <ul>
+        <li><strong>Student Information:</strong> View all enrolled children's records</li>
+        <li><strong>Attendance:</strong> View their children's attendance history</li>
+        <li><strong>Grades:</strong> View report cards and grades</li>
+        <li><strong>Class Schedules:</strong> See class assignments and schedules</li>
+        <li><strong>Tuition:</strong> View tuition invoices and make payments</li>
+        <li><strong>School Updates:</strong> Receive communications from teachers</li>
+        <li><strong>Student Updates:</strong> Update emergency contacts and medical information</li>
+      </ul>
+
+      <h4>Cannot Access:</h4>
+      <ul>
+        <li>Other families' student information</li>
+        <li>Grade changes or attendance modifications</li>
+        <li>Administrative features</li>
+        <li>Teacher-only materials</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Parent role is automatically linked to specific student records, so parents only see their own children.
+      </div>
+
+      <h3>Member Role</h3>
+      <p>Members have access to their personal information through the member portal:</p>
+
+      <h4>Can Access:</h4>
+      <ul>
+        <li><strong>Personal Dashboard:</strong> View their overview and statistics</li>
+        <li><strong>Profile:</strong> View and update their contact information</li>
+        <li><strong>Invoices:</strong> View their invoices and payment history</li>
+        <li><strong>Payments:</strong> Pay invoices online (if enabled)</li>
+        <li><strong>Students:</strong> View their children's information and update details</li>
+        <li><strong>Yahrzeits:</strong> View their yahrzeit records and request changes</li>
+        <li><strong>Events:</strong> View public events and RSVP</li>
+      </ul>
+
+      <h4>Cannot Access:</h4>
+      <ul>
+        <li>Other members' information</li>
+        <li>Administrative functions</li>
+        <li>Financial reports</li>
+        <li>System settings</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Privacy:</strong> Members can only view their own information and public event/calendar data.
+      </div>
+
+      <h3>Student Role</h3>
+      <p>Students have access to their own academic information:</p>
+
+      <h4>Can Access:</h4>
+      <ul>
+        <li><strong>Personal Dashboard:</strong> View their own academic overview</li>
+        <li><strong>Class Schedule:</strong> See their class assignments</li>
+        <li><strong>Grades:</strong> View their own grades and progress</li>
+        <li><strong>Attendance:</strong> See their attendance record</li>
+        <li><strong>Assignments:</strong> View homework and assignments</li>
+        <li><strong>Class Materials:</strong> Access teacher-provided resources</li>
+      </ul>
+
+      <h4>Cannot Access:</h4>
+      <ul>
+        <li>Other students' information</li>
+        <li>Grade modifications</li>
+        <li>Financial information</li>
+        <li>Administrative features</li>
+      </ul>
+
+      <div class="card">
+        <h4>Typical Usage:</h4>
+        <ul>
+          <li>Teen students checking their grades</li>
+          <li>High school students accessing class materials</li>
+          <li>Students viewing their own progress</li>
+        </ul>
+      </div>
+
+      <h2>Multiple Roles</h2>
+
+      <p>ShulNET supports users having multiple roles simultaneously. This is particularly useful for:</p>
+
+      <div class="card">
+        <h3>Common Multi-Role Scenarios</h3>
+        <ul>
+          <li><strong>Member + Parent:</strong> A member with enrolled children</li>
+          <li><strong>Member + Teacher:</strong> A member who teaches Hebrew school</li>
+          <li><strong>Teacher + Parent:</strong> A teacher with their own children enrolled</li>
+          <li><strong>Admin + Member:</strong> Administrator who is also a member</li>
+          <li><strong>Admin + Teacher + Parent:</strong> School director who teaches and has children enrolled</li>
+        </ul>
+      </div>
+
+      <div class="alert alert-success">
+        <strong>Flexible Access:</strong> When a user has multiple roles, they get the combined permissions of all their roles. The interface adapts to show relevant features for each role.
+      </div>
+
+      <h2>Permission Comparison Table</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Admin</th>
+            <th>Member</th>
+            <th>Teacher</th>
+            <th>Parent</th>
+            <th>Student</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>User Management</td>
+            <td>✅ Full</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Member Management</td>
+            <td>✅ Full</td>
+            <td>🔒 Own Only</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Student Management</td>
+            <td>✅ Full</td>
+            <td>❌ No</td>
+            <td>📚 Own Classes</td>
+            <td>👨‍👩‍👧 Own Children</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Class Management</td>
+            <td>✅ Full</td>
+            <td>❌ No</td>
+            <td>✅ Own Classes</td>
+            <td>👁️ View</td>
+            <td>👁️ View Own</td>
+          </tr>
+          <tr>
+            <td>Attendance</td>
+            <td>✅ Full</td>
+            <td>❌ No</td>
+            <td>✅ Take/Update</td>
+            <td>👁️ View Own</td>
+            <td>👁️ View Own</td>
+          </tr>
+          <tr>
+            <td>Grades</td>
+            <td>✅ Full</td>
+            <td>❌ No</td>
+            <td>✅ Record/Update</td>
+            <td>👁️ View Own</td>
+            <td>👁️ View Own</td>
+          </tr>
+          <tr>
+            <td>Invoices</td>
+            <td>✅ Full</td>
+            <td>🔒 View Own</td>
+            <td>❌ No</td>
+            <td>💳 View/Pay</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Payments</td>
+            <td>✅ Full</td>
+            <td>💳 Pay Own</td>
+            <td>❌ No</td>
+            <td>💳 Pay Own</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Events</td>
+            <td>✅ Full</td>
+            <td>👁️ View/RSVP</td>
+            <td>👁️ View/RSVP</td>
+            <td>👁️ View/RSVP</td>
+            <td>👁️ View</td>
+          </tr>
+          <tr>
+            <td>Yahrzeits</td>
+            <td>✅ Full</td>
+            <td>👁️ View Own</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>Email Campaigns</td>
+            <td>✅ Full</td>
+            <td>📧 Receive</td>
+            <td>📧 Receive</td>
+            <td>📧 Receive</td>
+            <td>📧 Receive</td>
+          </tr>
+          <tr>
+            <td>Reports</td>
+            <td>✅ All</td>
+            <td>❌ No</td>
+            <td>📊 Class Only</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+          <tr>
+            <td>System Settings</td>
+            <td>✅ Full</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+            <td>❌ No</td>
+          </tr>
+        </tbody>
+      </table>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Managing User Roles</h2>
+
+      <h3>Assigning Roles (Admin Only)</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Users</h4>
+          <p>From the admin menu, click "Users" to see all user accounts.</p>
+        </li>
+
+        <li>
+          <h4>Select User</h4>
+          <p>Find the user whose role you want to change.</p>
+        </li>
+
+        <li>
+          <h4>Edit Roles</h4>
+          <p>Click "Edit Roles" button.</p>
+        </li>
+
+        <li>
+          <h4>Select Role(s)</h4>
+          <p>Check the boxes for roles you want to assign. You can select multiple roles.</p>
+          <ul>
+            <li>Admin</li>
+            <li>Member</li>
+            <li>Teacher</li>
+            <li>Parent</li>
+            <li>Student</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Save Changes</h4>
+          <p>Click "Save" to update the user's roles.</p>
+        </li>
+      </ol>
+
+        <li>
+          <h4>Edit Role</h4>
+          <p>Click "Edit" and select the new role from the dropdown.</p>
+        </li>
+
+        <li>
+          <h4>Save Changes</h4>
+          <p>Click "Save" to apply the new role. Changes take effect immediately on next login.</p>
+        </li>
+      </ol>
+
+      <h3>Creating User Accounts</h3>
+      <p>User accounts can be created in two ways:</p>
+
+      <div class="card">
+        <h4>From Member Records</h4>
+        <ol>
+          <li>Open a member's profile</li>
+          <li>Click "Create User Account"</li>
+          <li>System generates temporary password</li>
+          <li>User automatically assigned "Member" role</li>
+          <li>Additional roles can be added after creation</li>
+          <li>Email credentials to the member</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h4>Direct User Creation (Admin)</h4>
+        <ol>
+          <li>Navigate to Users → Add User</li>
+          <li>Enter name and email</li>
+          <li>Select initial role(s)</li>
+          <li>Generate password</li>
+          <li>Save and send credentials</li>
+        </ol>
+      </div>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Security Guidelines</h3>
+        <ul>
+          <li>Limit the number of Admin role assignments to essential staff only</li>
+          <li>Regularly review user roles and remove unnecessary access</li>
+          <li>Deactivate accounts for staff who leave</li>
+          <li>Require strong passwords for all users</li>
+          <li>Enable two-factor authentication for Admin users</li>
+          <li>Review parent/student role assignments when families leave</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Role Assignment</h3>
+        <ul>
+          <li>Assign the minimum necessary roles for each user's responsibilities</li>
+          <li>Document why users have elevated permissions (especially Admin)</li>
+          <li>Review roles quarterly or when responsibilities change</li>
+          <li>Use Member role for all congregation members</li>
+          <li>Automatically assign Parent role when linking to student records</li>
+          <li>Consider Teacher + Parent for teachers with enrolled children</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Training</h3>
+        <ul>
+          <li>Train teachers on their classroom management features</li>
+          <li>Provide member portal guides to new members</li>
+          <li>Show parents how to view their children's information</li>
+          <li>Document role-specific procedures</li>
+          <li>Have admins mentor new staff members</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can a user have multiple roles?</h3>
+      <p>Yes! Users can have multiple roles simultaneously. For example, a teacher who is also a parent can have both Teacher and Parent roles. The system combines permissions from all assigned roles.</p>
+
+      <h3>Can I customize role permissions?</h3>
+      <p>The five standard roles (Admin, Member, Teacher, Parent, Student) have defined permissions in the system. Contact your system administrator or developer for custom permission requirements.</p>
+
+      <h3>What happens when I change someone's roles?</h3>
+      <p>Permission changes take effect immediately. The user will see different menu options and access levels on their next page load or login.</p>
+
+      <h3>How do I remove someone's access?</h3>
+      <p>Admins can delete user accounts or remove all roles. Deleting is permanent; removing roles while keeping the account maintains it for potential future use.</p>
+
+      <h3>Can members see other members' information?</h3>
+      <p>No. Members can only view their own profile, invoices, and yahrzeits. Parents can view their own children's student information. Teachers can view students in their assigned classes. Only Admin role can view all information.</p>
+
+      <h3>How does the Parent role get assigned?</h3>
+      <p>The Parent role should be assigned when creating or editing a user account for someone who has enrolled children. Parents are linked to specific student records to control which children they can view.</p>
+
+      <h3>Do students need user accounts?</h3>
+      <p>It's optional. Younger students typically don't need accounts; parents access their information. Older students (teens) can have accounts with the Student role to view their own grades and assignments.</p>
+
+      <h3>Who can create invoices?</h3>
+      <p>Both Admin and Office roles can create and manage invoices. Members can only view their own invoices.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="getting-started.html">Getting Started</a> - Learn about logging in and navigation</li>
+        <li><a href="members.html">Managing Members</a> - Creating member user accounts</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

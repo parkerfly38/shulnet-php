@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managing Students - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html" class="active">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Managing Students</h1>
+      
+      <p>The student management system handles Hebrew school enrollment, class assignments, attendance tracking, grades, and tuition billing.</p>
+
+      <h2>Viewing Students</h2>
+
+      <h3>Student Directory</h3>
+      <p>Access the student directory from the admin menu → Students:</p>
+      <ul>
+        <li><strong>Search:</strong> Find students by name or parent name</li>
+        <li><strong>Filter by Class:</strong> View students in specific grades or classes</li>
+        <li><strong>Filter by Status:</strong> Active, graduated, withdrawn</li>
+        <li><strong>Sort:</strong> By name, grade, enrollment date</li>
+      </ul>
+
+      <h3>Student Information</h3>
+      <p>Each student record contains:</p>
+      <ul>
+        <li>Full name and date of birth</li>
+        <li>Grade level</li>
+        <li>Parent/guardian information (linked to member records)</li>
+        <li>Emergency contacts</li>
+        <li>Medical information and allergies</li>
+        <li>Class assignments</li>
+        <li>Attendance history</li>
+        <li>Grades and exam results</li>
+      </ul>
+
+      <h2>Adding Students</h2>
+
+      <h3>Option 1: Quick Add</h3>
+      <ol>
+        <li>Navigate to Students → Add Student</li>
+        <li>Enter student name and date of birth</li>
+        <li>Select or create parent member</li>
+        <li>Add grade level and optional class assignment</li>
+        <li>Save the record</li>
+      </ol>
+
+      <h3>Option 2: Onboarding Workflow</h3>
+      <p>For comprehensive enrollment with automatic tuition billing:</p>
+      <ul>
+        <li>Use the <a href="student-onboarding.html">Student Onboarding Workflow</a></li>
+        <li>Guided 4-step process</li>
+        <li>Automatic parent linking</li>
+        <li>Tuition tier selection</li>
+        <li>Invoice generation</li>
+      </ul>
+
+      <h2>Student Profile</h2>
+
+      <h3>Basic Information Tab</h3>
+      <ul>
+        <li>Name (first, middle, last, Hebrew name)</li>
+        <li>Date of birth</li>
+        <li>Gender</li>
+        <li>Grade level</li>
+        <li>Enrollment date</li>
+        <li>Status (active, graduated, withdrawn)</li>
+      </ul>
+
+      <h3>Parent/Guardian Tab</h3>
+      <ul>
+        <li>Linked parent member(s)</li>
+        <li>Primary contact designation</li>
+        <li>Emergency contacts</li>
+        <li>Pickup authorization list</li>
+      </ul>
+
+      <h3>Medical Information Tab</h3>
+      <ul>
+        <li>Allergies</li>
+        <li>Medications</li>
+        <li>Medical conditions</li>
+        <li>Doctor information</li>
+        <li>Insurance details</li>
+      </ul>
+
+      <h3>Academic Tab</h3>
+      <ul>
+        <li>Current class assignments</li>
+        <li>Previous classes (history)</li>
+        <li>Attendance records</li>
+        <li>Grades and exam scores</li>
+        <li>Progress notes</li>
+      </ul>
+
+      <h2>Class Assignments</h2>
+
+      <h3>Assigning Students to Classes</h3>
+      <ol>
+        <li>Open the student profile</li>
+        <li>Click "Academic" tab</li>
+        <li>Click "Assign to Class"</li>
+        <li>Select class definition from dropdown</li>
+        <li>Specify enrollment date</li>
+        <li>Save assignment</li>
+      </ol>
+
+      <h3>Bulk Assignment</h3>
+      <p>Assign multiple students to a class at once:</p>
+      <ol>
+        <li>Navigate to the Class Definition</li>
+        <li>Click "Add Students"</li>
+        <li>Select students from the list</li>
+        <li>Click "Enroll Selected Students"</li>
+      </ol>
+
+      <h2>Attendance Tracking</h2>
+
+      <h3>Recording Attendance</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Class</h4>
+          <p>Go to Classes → Select the class.</p>
+        </li>
+
+        <li>
+          <h4>Click "Take Attendance"</h4>
+          <p>Opens attendance form for today's date.</p>
+        </li>
+
+        <li>
+          <h4>Mark Each Student</h4>
+          <p>Options: Present, Absent, Tardy, Excused</p>
+        </li>
+
+        <li>
+          <h4>Add Notes</h4>
+          <p>Optional notes for absences or issues.</p>
+        </li>
+
+        <li>
+          <h4>Submit</h4>
+          <p>Attendance is saved and visible to parents.</p>
+        </li>
+      </ol>
+
+      <h3>Viewing Attendance Reports</h3>
+      <ul>
+        <li><strong>Individual Student:</strong> View attendance history in student profile</li>
+        <li><strong>Class Report:</strong> See all students' attendance for a date range</li>
+        <li><strong>Export:</strong> Download attendance data to Excel</li>
+      </ul>
+
+      <h2>Grades & Assessments</h2>
+
+      <h3>Recording Grades</h3>
+      <ol>
+        <li>Navigate to student profile → Academic tab</li>
+        <li>Click "Add Grade"</li>
+        <li>Select assignment or exam</li>
+        <li>Enter score and total possible points</li>
+        <li>Add comments if needed</li>
+        <li>Save grade</li>
+      </ol>
+
+      <h3>Progress Reports</h3>
+      <p>Generate report cards:</p>
+      <ol>
+        <li>Navigate to Classes → Select class</li>
+        <li>Click "Generate Report Cards"</li>
+        <li>Select grading period</li>
+        <li>Review and approve grades</li>
+        <li>Email reports to parents or print</li>
+      </ol>
+
+      <h2>Tuition Management</h2>
+
+      <h3>Student Tuition Records</h3>
+      <p>Each student has tuition tracking:</p>
+      <ul>
+        <li>Tuition tier assignment</li>
+        <li>Amount per student</li>
+        <li>Sibling discounts (if applicable)</li>
+        <li>Payment status</li>
+        <li>Linked invoices</li>
+      </ul>
+
+      <h3>Viewing Tuition Invoices</h3>
+      <p>From student profile:</p>
+      <ol>
+        <li>Click "Financial" tab</li>
+        <li>View all invoices for this student</li>
+        <li>See payment history</li>
+        <li>Check outstanding balances</li>
+      </ol>
+
+      <h2>Parent Communication</h2>
+
+      <h3>Parent Portal Access</h3>
+      <p>Parents can view their children's information through the member portal:</p>
+      <ul>
+        <li>Class schedules</li>
+        <li>Attendance records</li>
+        <li>Grades and progress</li>
+        <li>Tuition invoices</li>
+        <li>School announcements</li>
+      </ul>
+
+      <h3>Sending Messages</h3>
+      <p>Contact parents directly:</p>
+      <ol>
+        <li>Open student profile</li>
+        <li>Click "Email Parents"</li>
+        <li>Compose message</li>
+        <li>Send to one or both parents</li>
+      </ol>
+
+      <h2>Withdrawing Students</h2>
+
+      <h3>Withdrawal Process</h3>
+      <ol class="steps">
+        <li>
+          <h4>Open Student Record</h4>
+          <p>Navigate to the student's profile.</p>
+        </li>
+
+        <li>
+          <h4>Click "Withdraw Student"</h4>
+          <p>Button in student actions menu.</p>
+        </li>
+
+        <li>
+          <h4>Enter Withdrawal Date</h4>
+          <p>Specify last day of attendance.</p>
+        </li>
+
+        <li>
+          <h4>Select Reason</h4>
+          <p>Options: Graduated, Moved, Transferred, Family decision, etc.</p>
+        </li>
+
+        <li>
+          <h4>Add Notes</h4>
+          <p>Optional context about the withdrawal.</p>
+        </li>
+
+        <li>
+          <h4>Process Tuition</h4>
+          <p>Decide on refunds or prorating final invoice.</p>
+        </li>
+
+        <li>
+          <h4>Confirm Withdrawal</h4>
+          <p>Student marked as withdrawn, removed from active class roster.</p>
+        </li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Withdrawn students remain in the database for historical purposes but are filtered from active lists.
+      </div>
+
+      <h2>Importing Students</h2>
+
+      <h3>Bulk Import Process</h3>
+      <ol>
+        <li>Download student import template</li>
+        <li>Fill in student information:
+          <ul>
+            <li>Student first/last name</li>
+            <li>Date of birth</li>
+            <li>Grade level</li>
+            <li>Parent email (to link to existing member)</li>
+          </ul>
+        </li>
+        <li>Upload completed template</li>
+        <li>Review preview and fix any errors</li>
+        <li>Confirm import</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Important:</strong> Students must be linked to existing parent members. Make sure parent emails match member records exactly.
+      </div>
+
+      <h2>Exporting Student Data</h2>
+
+      <h3>Export Options</h3>
+      <ul>
+        <li><strong>Student List:</strong> Names, grades, contact info</li>
+        <li><strong>Attendance Report:</strong> Attendance records for date range</li>
+        <li><strong>Grade Report:</strong> All grades for a class or student</li>
+        <li><strong>Medical Info:</strong> Allergies and medical needs (restricted access)</li>
+        <li><strong>Emergency Contacts:</strong> For field trips or emergencies</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h3>Data Accuracy</h3>
+        <ul>
+          <li>Verify parent contact information at enrollment</li>
+          <li>Update medical information annually</li>
+          <li>Keep emergency contacts current</li>
+          <li>Confirm correct grade level placements</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Privacy & Safety</h3>
+        <ul>
+          <li>Restrict access to medical information</li>
+          <li>Verify pickup authorization carefully</li>
+          <li>Keep student data confidential</li>
+          <li>Follow FERPA guidelines for educational records</li>
+          <li>Shred printed rosters after use</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Organization</h3>
+        <ul>
+          <li>Assign students to classes before school year starts</li>
+          <li>Take attendance consistently</li>
+          <li>Record grades promptly</li>
+          <li>Archive withdrawn students rather than deleting</li>
+          <li>Review class rosters at beginning of each term</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can one student have multiple parents?</h3>
+      <p>Yes! Link the student to both parent member records. Designate one as primary contact for billing purposes.</p>
+
+      <h3>What if a student changes grades mid-year?</h3>
+      <p>Update the grade level in their profile. You can also move them to a different class if needed.</p>
+
+      <h3>How do I handle sibling discounts?</h3>
+      <p>Sibling discounts are typically applied at the tuition tier level. See <a href="tuition-tiers.html">Tuition Tiers</a> for details.</p>
+
+      <h3>Can parents see their child's grades?</h3>
+      <p>Yes, if you enable grade visibility in settings. Parents with portal access can view their children's grades and attendance.</p>
+
+      <h3>What happens to a student's records after graduation?</h3>
+      <p>Students marked as "Graduated" remain in the system but are filtered from active lists. Their records are preserved for alumni purposes.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="student-onboarding.html">Student Onboarding</a> - Add students with full workflow</li>
+        <li><a href="tuition-tiers.html">Tuition Tiers</a> - Configure tuition pricing</li>
+        <li><a href="invoices.html">Managing Invoices</a> - Billing families</li>
+        <li><a href="members.html">Managing Members</a> - Parent accounts</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Download, FileSpreadsheet } from 'lucide-react';
+import { Download, FileSpreadsheet, DollarSign } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -81,7 +81,28 @@ export default function ReportsIndex() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Reports & Exports" />
 
-            <div className="space-y-6">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                    {/* Financial Reports Link */}
+                    <Card className="border-primary">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <DollarSign className="h-5 w-5 text-primary" />
+                                <CardTitle>Financial Reports Dashboard</CardTitle>
+                            </div>
+                            <CardDescription>
+                                View comprehensive financial analytics including income summary, outstanding balances, aging reports, and revenue analysis
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button
+                                onClick={() => router.visit('/admin/reports/financial')}
+                                className="w-full md:w-auto"
+                            >
+                                View Financial Reports
+                            </Button>
+                        </CardContent>
+                    </Card>
+
                     {/* Members Export */}
                     <Card>
                         <CardHeader>

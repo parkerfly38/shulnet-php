@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Onboarding - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html" class="active">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Student Onboarding Workflow</h1>
+      
+      <p>The student onboarding workflow is a comprehensive 4-step process for enrolling new students in your Hebrew school or religious education program. This workflow handles student registration, parent assignment, tuition selection, and invoice generation.</p>
+
+      <div class="alert alert-info">
+        <strong>Quick Access:</strong> Start the student onboarding workflow from the Dashboard by clicking the "Onboard New Student" button.
+      </div>
+
+      <h2>When to Use Student Onboarding</h2>
+
+      <p>Use the student onboarding workflow when:</p>
+      <ul>
+        <li>Enrolling new students for the school year</li>
+        <li>Re-enrolling returning students</li>
+        <li>Adding multiple children from the same family</li>
+        <li>You need to generate tuition invoices automatically</li>
+        <li>Converting a member's children to enrolled students</li>
+      </ul>
+
+      <h2>The Onboarding Process</h2>
+
+      <ol class="steps">
+        <li>
+          <h3>Step 1: Student Details</h3>
+          <p>Add one or more students with their information:</p>
+          
+          <h4>Required Fields (per student):</h4>
+          <ul>
+            <li><strong>First Name:</strong> Student's first name</li>
+            <li><strong>Last Name:</strong> Student's last name</li>
+            <li><strong>Date of Birth:</strong> For age/grade calculations</li>
+            <li><strong>Grade Level:</strong> Current grade or class level</li>
+          </ul>
+
+          <h4>Optional Fields:</h4>
+          <ul>
+            <li><strong>Middle Name:</strong> Full legal name</li>
+            <li><strong>Hebrew Name:</strong> For Hebrew school records</li>
+            <li><strong>Gender:</strong> For class assignments</li>
+            <li><strong>Special Needs:</strong> Learning accommodations or medical conditions</li>
+            <li><strong>Allergies:</strong> Food or environmental allergies</li>
+            <li><strong>Emergency Contact:</strong> Besides parents</li>
+          </ul>
+
+          <h4>Adding Multiple Students:</h4>
+          <p>Click "Add Another Student" to enroll siblings simultaneously. This is especially useful for:</p>
+          <ul>
+            <li>Families with multiple children</li>
+            <li>Applying multi-child discounts</li>
+            <li>Keeping family records together</li>
+          </ul>
+
+          <div class="alert alert-success">
+            <strong>Tip:</strong> Enrolling multiple students at once automatically qualifies them for multi-child tuition discounts!
+          </div>
+
+          <p><a href="#" class="btn btn-primary">Continue to Next Step →</a></p>
+        </li>
+
+        <li>
+          <h3>Step 2: Parent/Guardian Selection</h3>
+          <p>Link students to their parent or guardian records. You have three options:</p>
+
+          <h4>Option 1: Select Existing Parent</h4>
+          <div class="card">
+            <p>Choose from parents already in the system:</p>
+            <ul>
+              <li>Search by parent name</li>
+              <li>View parent contact information</li>
+              <li>Link all students to the same parent</li>
+            </ul>
+          </div>
+
+          <h4>Option 2: Convert Member to Parent</h4>
+          <div class="card">
+            <p>If the parent is already a member but not yet a parent record:</p>
+            <ul>
+              <li>Search for the member</li>
+              <li>System automatically creates a parent record from member data</li>
+              <li>Maintains link between member and parent records</li>
+              <li>Inherits contact information, address, etc.</li>
+            </ul>
+          </div>
+
+          <h4>Option 3: Create New Parent</h4>
+          <div class="card">
+            <p>Add a brand new parent/guardian:</p>
+            <ul>
+              <li>Enter parent's name and contact information</li>
+              <li>Add address and phone numbers</li>
+              <li>Set email for invoices and communication</li>
+              <li>Optionally create a user account for portal access</li>
+            </ul>
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Important:</strong> Each student must be linked to at least one parent/guardian for billing and emergency contact purposes.
+          </div>
+
+          <p><a href="#" class="btn btn-primary">Continue to Next Step →</a></p>
+        </li>
+
+        <li>
+          <h3>Step 3: Tuition Tier Selection</h3>
+          <p>Choose the appropriate tuition tier based on number of students and family circumstances:</p>
+
+          <h4>Available Tuition Tiers:</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Tier Name</th>
+                <th>Annual Cost</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Full Tuition</td>
+                <td>$5,000</td>
+                <td>Standard rate per student</td>
+              </tr>
+              <tr>
+                <td>Multi-Child Discount</td>
+                <td>$4,000</td>
+                <td>Per student when enrolling 2+ children</td>
+              </tr>
+              <tr>
+                <td>Full Scholarship</td>
+                <td>$0</td>
+                <td>100% scholarship (requires approval)</td>
+              </tr>
+              <tr>
+                <td>50% Scholarship</td>
+                <td>$2,500</td>
+                <td>Half tuition rate</td>
+              </tr>
+              <tr>
+                <td>25% Scholarship</td>
+                <td>$3,750</td>
+                <td>Quarter discount</td>
+              </tr>
+              <tr>
+                <td>Semester Payment Plan</td>
+                <td>$2,750 × 2</td>
+                <td>Split into two payments</td>
+              </tr>
+              <tr>
+                <td>Monthly Payment Plan</td>
+                <td>$500 × 10</td>
+                <td>Ten monthly payments</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="alert alert-info">
+            <strong>Note:</strong> Actual tiers and pricing are configured by your administrator and may differ from the examples above.
+          </div>
+
+          <h4>Quantity-Based Pricing:</h4>
+          <p>When you enroll multiple students, the system shows:</p>
+          <ul>
+            <li>Per-student cost</li>
+            <li>Number of students</li>
+            <li>Total annual tuition</li>
+            <li>Multi-child discounts automatically highlighted</li>
+          </ul>
+
+          <div class="card">
+            <h4>Example Calculation</h4>
+            <p>Enrolling 3 children with Multi-Child Discount:</p>
+            <ul>
+              <li>$4,000 per student × 3 students = $12,000 total</li>
+              <li>Savings: $1,000 per child vs. full tuition</li>
+              <li>Total family savings: $3,000</li>
+            </ul>
+          </div>
+
+          <p><a href="#" class="btn btn-primary">Continue to Next Step →</a></p>
+        </li>
+
+        <li>
+          <h3>Step 4: Review & Create Invoice</h3>
+          <p>Review all information and decide whether to create a tuition invoice:</p>
+
+          <h4>Review Summary:</h4>
+          <p>Carefully review:</p>
+          <ul>
+            <li>All student names and information</li>
+            <li>Parent/guardian assignment</li>
+            <li>Contact details</li>
+            <li>Selected tuition tier</li>
+            <li>Total tuition amount</li>
+            <li>Number of students enrolled</li>
+          </ul>
+
+          <h4>Invoice Options:</h4>
+          <div class="card">
+            <h4>Create Invoice Now</h4>
+            <p>Generate a tuition invoice immediately:</p>
+            <ul>
+              <li>Set the invoice date (defaults to today)</li>
+              <li>Set the due date (e.g., first day of school)</li>
+              <li>Invoice includes line item for each student</li>
+              <li>Optionally email the invoice to parents</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h4>Save Without Invoice</h4>
+            <p>Create student records only:</p>
+            <ul>
+              <li>Students are enrolled in the system</li>
+              <li>No invoice is generated yet</li>
+              <li>Create invoice later from parent or student records</li>
+            </ul>
+          </div>
+
+          <h4>Email Invoice</h4>
+          <p>When creating an invoice, you can email it immediately:</p>
+          <ul>
+            <li>PDF invoice attached to email</li>
+            <li>Payment instructions included</li>
+            <li>Parent receives payment link (if online payments enabled)</li>
+            <li>Can send to parent's email or alternate contact</li>
+          </ul>
+
+          <div class="alert alert-success">
+            <strong>Success!</strong> After completing the workflow, students are enrolled with complete records and optional tuition invoice.
+          </div>
+        </li>
+      </ol>
+
+      <h2>After Onboarding</h2>
+
+      <h3>Next Steps</h3>
+      <p>Once students are onboarded, you can:</p>
+
+      <ul>
+        <li><strong>View Student Profiles:</strong> Access complete student records</li>
+        <li><strong>Assign to Classes:</strong> Place students in appropriate classes/grades</li>
+        <li><strong>Track Attendance:</strong> Record daily or weekly attendance</li>
+        <li><strong>Enter Grades:</strong> Record exam scores and class grades</li>
+        <li><strong>Manage Tuition:</strong> Track payments against invoices</li>
+        <li><strong>Communication:</strong> Send emails or forms to parents</li>
+      </ul>
+
+      <h3>Parent Portal Access</h3>
+      <p>To give parents access to view their children's information:</p>
+      <ol>
+        <li>Navigate to the parent's record</li>
+        <li>Click "Create User Account"</li>
+        <li>A temporary password will be generated</li>
+        <li>Email the credentials to the parent</li>
+        <li>Parents can then log in to view:
+          <ul>
+            <li>Student grades and attendance</li>
+            <li>Outstanding tuition invoices</li>
+            <li>School calendar and events</li>
+            <li>Update student information</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h2>Tips and Best Practices</h2>
+
+      <div class="card">
+        <h3>Data Accuracy</h3>
+        <ul>
+          <li>Verify birthdays - they affect age-based class assignments</li>
+          <li>Collect accurate allergy and medical information</li>
+          <li>Keep emergency contacts up to date</li>
+          <li>Hebrew names should be properly transliterated</li>
+          <li>Update records when family situations change</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Tuition Selection</h3>
+        <ul>
+          <li>Apply discounts consistently across similar families</li>
+          <li>Document scholarship approvals in notes</li>
+          <li>Explain payment plan options to families</li>
+          <li>Consider financial hardship cases sensitively</li>
+          <li>Review tuition pricing annually</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Family Organization</h3>
+        <ul>
+          <li>Link all siblings to the same parent record</li>
+          <li>Use consistent last names for searching</li>
+          <li>Note blended families or custody arrangements</li>
+          <li>Keep both parents' contact info when applicable</li>
+          <li>Document special pickup/dropoff instructions</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Invoice Timing</h3>
+        <ul>
+          <li>Send tuition invoices before the school year starts</li>
+          <li>Set due dates aligned with payment expectations</li>
+          <li>Offer early payment discounts if applicable</li>
+          <li>Communicate payment plan schedules clearly</li>
+          <li>Follow up on overdue tuition professionally</li>
+        </ul>
+      </div>
+
+      <h2>Common Questions</h2>
+
+      <h3>Can I enroll students without generating an invoice?</h3>
+      <p>Yes! You can save student records and create invoices later. This is useful for early registration before tuition is finalized.</p>
+
+      <h3>What if parents are divorced or separated?</h3>
+      <p>You can create separate parent records for each guardian and link students to both. Set the billing parent appropriately for invoice generation.</p>
+
+      <h3>Can I change the tuition tier after enrollment?</h3>
+      <p>Yes, edit the student record and update the tuition tier. If an invoice already exists, you may need to cancel it and create a new one with the correct amount.</p>
+
+      <h3>How do scholarship approvals work?</h3>
+      <p>Select the appropriate scholarship tier during enrollment. Add notes documenting the approval process. Your organization's policies determine who can approve scholarships.</p>
+
+      <h3>Can I bulk import students?</h3>
+      <p>Yes! Use the student import feature for bulk enrollment. Download the template, fill in student data, and upload. This is faster for enrolling many students at once.</p>
+
+      <h3>What happens if I make a mistake during onboarding?</h3>
+      <p>Use the "Back" button to return to previous steps. After completing the workflow, edit student records directly from the student management interface.</p>
+
+      <h2>Related Documentation</h2>
+
+      <ul>
+        <li><a href="students.html">Managing Students</a> - Full student management guide</li>
+        <li><a href="tuition-tiers.html">Tuition Tiers</a> - Understanding pricing options</li>
+        <li><a href="invoices.html">Managing Invoices</a> - Invoice creation and tracking</li>
+        <li><a href="member-onboarding.html">Member Onboarding</a> - Similar workflow for members</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>
