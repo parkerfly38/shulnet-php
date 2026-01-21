@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Access - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="forms.html">Forms & Submissions</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html" class="active">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>API Access</h1>
+      
+      <p>ShulNET 2.0 provides a comprehensive REST API for programmatic access to all system functionality. Use the API to integrate with external systems, build custom dashboards, automate reporting, or create mobile applications.</p>
+
+      <div class="card alert-info">
+        <h3>🔗 Interactive API Documentation</h3>
+        <p>For complete endpoint documentation with interactive testing, visit <strong><a href="/docs/api" target="_blank" rel="noopener noreferrer">/docs/api</a></strong></p>
+      </div>
+
+      <h2>Getting Started with the API</h2>
+
+      <h3>Step 1: Create an API Token</h3>
+      <ol class="steps">
+        <li>
+          <h4>Navigate to API Tokens</h4>
+          <p>From the admin menu, go to <strong>System → API Tokens</strong></p>
+        </li>
+
+        <li>
+          <h4>Create a New Token</h4>
+          <p>Click the "Create Token" button and provide the following information:</p>
+          <ul>
+            <li><strong>Token Name</strong> - A descriptive name for your integration (e.g., "Financial Reporting Script", "Mobile App", "CRM Integration")</li>
+            <li><strong>Email</strong> - Your admin email address</li>
+            <li><strong>Password</strong> - Your account password for verification</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Copy Your Token</h4>
+          <div class="card alert-warning">
+            <p><strong>⚠️ Important:</strong> The API token is displayed only once for security reasons. Copy it immediately and store it in a secure location. If you lose the token, you'll need to create a new one.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Step 2: Make Your First API Request</h3>
+
+      <p>All API requests require authentication using a Bearer token in the Authorization header.</p>
+
+      <h4>Authentication Header Format</h4>
+      <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm" style="background: #f5f5f5; padding: 12px; border-radius: 4px; margin: 12px 0; overflow-x: auto;">
+Authorization: Bearer YOUR_TOKEN_HERE
+      </div>
+
+      <h4>Example: Fetch Member List</h4>
+      <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm" style="background: #f5f5f5; padding: 12px; border-radius: 4px; margin: 12px 0; overflow-x: auto;">
+curl -X GET "https://your-domain.com/api/admin/members" \<br>
+&nbsp;&nbsp;-H "Authorization: Bearer YOUR_TOKEN_HERE" \<br>
+&nbsp;&nbsp;-H "Accept: application/json"
+      </div>
+
+      <h4>Example: Generate Income Summary Report</h4>
+      <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm" style="background: #f5f5f5; padding: 12px; border-radius: 4px; margin: 12px 0; overflow-x: auto;">
+curl -X GET "https://your-domain.com/admin/reports/income-summary?start_date=2026-01-01&end_date=2026-01-31" \<br>
+&nbsp;&nbsp;-H "Authorization: Bearer YOUR_TOKEN_HERE" \<br>
+&nbsp;&nbsp;-H "Accept: application/json"
+      </div>
+
+      <h4>Example Response</h4>
+      <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm" style="background: #f5f5f5; padding: 12px; border-radius: 4px; margin: 12px 0; overflow-x: auto;">
+{<br>
+&nbsp;&nbsp;"start_date": "2026-01-01",<br>
+&nbsp;&nbsp;"end_date": "2026-01-31",<br>
+&nbsp;&nbsp;"total_revenue": 45250.00,<br>
+&nbsp;&nbsp;"payment_count": 127,<br>
+&nbsp;&nbsp;"categories": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"membership_dues": 28500.00,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"tuition": 12000.00,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"event_revenue": 3250.00,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"donations": 1200.00,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"other_income": 300.00<br>
+&nbsp;&nbsp;}<br>
+}
+      </div>
+
+      <h2>Available API Endpoints</h2>
+
+      <p>The API provides access to all major system functionality. Visit <strong><a href="/docs/api" target="_blank" rel="noopener noreferrer">/docs/api</a></strong> for the complete list of endpoints.</p>
+
+      <h3>Core Resources</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th>Description</th>
+            <th>Base Endpoint</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Members</strong></td>
+            <td>Member profiles, contact information, and membership data</td>
+            <td><code>/api/admin/members</code></td>
+          </tr>
+          <tr>
+            <td><strong>Students</strong></td>
+            <td>Hebrew school student enrollment and records</td>
+            <td><code>/api/admin/students</code></td>
+          </tr>
+          <tr>
+            <td><strong>Invoices</strong></td>
+            <td>Invoice creation, retrieval, and management</td>
+            <td><code>/api/admin/invoices</code></td>
+          </tr>
+          <tr>
+            <td><strong>Payments</strong></td>
+            <td>Payment processing and history</td>
+            <td><code>/api/admin/payments</code></td>
+          </tr>
+          <tr>
+            <td><strong>Events</strong></td>
+            <td>Event management and RSVP tracking</td>
+            <td><code>/api/admin/events</code></td>
+          </tr>
+          <tr>
+            <td><strong>Reports</strong></td>
+            <td>Financial reports and analytics</td>
+            <td><code>/admin/reports/*</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Financial Reports Endpoints</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Report</th>
+            <th>Method</th>
+            <th>Endpoint</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Income Summary</td>
+            <td>GET</td>
+            <td><code>/admin/reports/income-summary</code></td>
+          </tr>
+          <tr>
+            <td>Event Revenue</td>
+            <td>GET</td>
+            <td><code>/admin/reports/event-revenue</code></td>
+          </tr>
+          <tr>
+            <td>Outstanding Balances</td>
+            <td>GET</td>
+            <td><code>/admin/reports/outstanding-balances</code></td>
+          </tr>
+          <tr>
+            <td>Aging Report</td>
+            <td>GET</td>
+            <td><code>/admin/reports/aging</code></td>
+          </tr>
+          <tr>
+            <td>Revenue by Source</td>
+            <td>GET</td>
+            <td><code>/admin/reports/revenue-by-source</code></td>
+          </tr>
+          <tr>
+            <td>Member Growth</td>
+            <td>GET</td>
+            <td><code>/admin/reports/member-growth</code></td>
+          </tr>
+          <tr>
+            <td>Tuition Revenue</td>
+            <td>GET</td>
+            <td><code>/admin/reports/tuition-revenue</code></td>
+          </tr>
+          <tr>
+            <td>Payment Methods</td>
+            <td>GET</td>
+            <td><code>/admin/reports/payment-methods</code></td>
+          </tr>
+          <tr>
+            <td>Budget vs. Actual</td>
+            <td>POST</td>
+            <td><code>/admin/reports/budget-vs-actual</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Security Best Practices</h2>
+
+      <div class="card alert-warning">
+        <h3>🔒 Keep Your Tokens Secure</h3>
+        <p>API tokens provide full admin access to your system. Treat them like passwords and follow these security practices:</p>
+      </div>
+
+      <ul>
+        <li><strong>Never commit tokens to version control</strong> - Use .gitignore to exclude configuration files containing tokens</li>
+        <li><strong>Store tokens as environment variables</strong> - Keep them separate from your codebase</li>
+        <li><strong>Rotate tokens periodically</strong> - Create new tokens and delete old ones every 90 days</li>
+        <li><strong>Delete unused tokens immediately</strong> - Remove tokens for discontinued integrations</li>
+        <li><strong>Use separate tokens for different integrations</strong> - This makes it easier to revoke access when needed</li>
+        <li><strong>Monitor token usage</strong> - Check the "Last used" timestamp in the API Tokens page</li>
+        <li><strong>Use HTTPS only</strong> - Never send tokens over unencrypted connections</li>
+        <li><strong>Implement rate limiting</strong> - Be respectful of server resources in your integrations</li>
+      </ul>
+
+      <h2>Managing API Tokens</h2>
+
+      <h3>Viewing Active Tokens</h3>
+      <p>Navigate to <strong>System → API Tokens</strong> to view all active tokens. Each token displays:</p>
+      <ul>
+        <li><strong>Token Name</strong> - The descriptive name you provided</li>
+        <li><strong>Created Date</strong> - When the token was generated</li>
+        <li><strong>Last Used</strong> - The most recent API request timestamp</li>
+      </ul>
+
+      <h3>Revoking Tokens</h3>
+      <p>To revoke a token (permanently disable API access):</p>
+      <ol>
+        <li>Go to <strong>System → API Tokens</strong></li>
+        <li>Find the token you want to revoke</li>
+        <li>Click the trash icon next to the token</li>
+        <li>Confirm the deletion</li>
+      </ol>
+
+      <div class="card alert-info">
+        <p><strong>Note:</strong> Revoking a token is immediate and cannot be undone. Any applications using that token will immediately lose access.</p>
+      </div>
+
+      <h2>Common Use Cases</h2>
+
+      <h3>1. Automated Financial Reporting</h3>
+      <p>Schedule scripts to fetch financial reports and send them to stakeholders:</p>
+      <ul>
+        <li>Daily email with outstanding balances</li>
+        <li>Monthly income summary for board meetings</li>
+        <li>Weekly aging report for collections team</li>
+      </ul>
+
+      <h3>2. CRM Integration</h3>
+      <p>Sync member data with external CRM systems:</p>
+      <ul>
+        <li>Export member contact information</li>
+        <li>Track membership renewals</li>
+        <li>Monitor donation history</li>
+      </ul>
+
+      <h3>3. Custom Dashboards</h3>
+      <p>Build executive dashboards with real-time data:</p>
+      <ul>
+        <li>Display KPIs on office monitors</li>
+        <li>Create mobile apps for board members</li>
+        <li>Integrate with business intelligence tools</li>
+      </ul>
+
+      <h3>4. Accounting System Integration</h3>
+      <p>Sync financial data with QuickBooks or similar:</p>
+      <ul>
+        <li>Export invoice data</li>
+        <li>Import payment confirmations</li>
+        <li>Reconcile accounts automatically</li>
+      </ul>
+
+      <h2>Rate Limits</h2>
+
+      <p>To ensure system stability and fair usage, API requests are subject to rate limiting:</p>
+      <ul>
+        <li><strong>Standard Rate:</strong> 1000 requests per hour per token</li>
+        <li><strong>Burst Allowance:</strong> 100 requests per minute</li>
+      </ul>
+
+      <p>If you exceed these limits, you'll receive a <code>429 Too Many Requests</code> response. Wait for the rate limit window to reset before making additional requests.</p>
+
+      <div class="card">
+        <h4>Response Headers</h4>
+        <p>Rate limit information is included in response headers:</p>
+        <ul>
+          <li><code>X-RateLimit-Limit</code> - Maximum requests per window</li>
+          <li><code>X-RateLimit-Remaining</code> - Remaining requests in current window</li>
+          <li><code>X-RateLimit-Reset</code> - Time when the rate limit resets (Unix timestamp)</li>
+        </ul>
+      </div>
+
+      <h2>Error Handling</h2>
+
+      <p>The API uses standard HTTP status codes and returns detailed error messages in JSON format.</p>
+
+      <h3>Common Status Codes</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Status Code</th>
+            <th>Meaning</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>200 OK</code></td>
+            <td>Request succeeded</td>
+            <td>Process the response data</td>
+          </tr>
+          <tr>
+            <td><code>401 Unauthorized</code></td>
+            <td>Invalid or missing token</td>
+            <td>Check your Authorization header</td>
+          </tr>
+          <tr>
+            <td><code>403 Forbidden</code></td>
+            <td>Token lacks required permissions</td>
+            <td>Ensure you're using an admin token</td>
+          </tr>
+          <tr>
+            <td><code>404 Not Found</code></td>
+            <td>Resource doesn't exist</td>
+            <td>Verify the endpoint URL and resource ID</td>
+          </tr>
+          <tr>
+            <td><code>422 Unprocessable Entity</code></td>
+            <td>Validation error</td>
+            <td>Check the error message for details</td>
+          </tr>
+          <tr>
+            <td><code>429 Too Many Requests</code></td>
+            <td>Rate limit exceeded</td>
+            <td>Wait and retry after the reset time</td>
+          </tr>
+          <tr>
+            <td><code>500 Internal Server Error</code></td>
+            <td>Server error</td>
+            <td>Contact support if the issue persists</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Error Response Format</h3>
+      <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm" style="background: #f5f5f5; padding: 12px; border-radius: 4px; margin: 12px 0; overflow-x: auto;">
+{<br>
+&nbsp;&nbsp;"message": "Validation error",<br>
+&nbsp;&nbsp;"errors": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"email": ["The email field is required."],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"amount": ["The amount must be greater than 0."]<br>
+&nbsp;&nbsp;}<br>
+}
+      </div>
+
+      <h2>Support and Resources</h2>
+
+      <div class="card">
+        <h3>📚 Additional Resources</h3>
+        <ul>
+          <li><strong><a href="/docs/api" target="_blank" rel="noopener noreferrer">Interactive API Documentation</a></strong> - Complete endpoint reference with live testing</li>
+          <li><strong><a href="reports.html">Financial Reports Guide</a></strong> - Details on using report endpoints</li>
+          <li><strong><a href="members.html">Member Management Guide</a></strong> - Understanding member data structure</li>
+        </ul>
+      </div>
+
+      <div class="card alert-info">
+        <h3>Need Help?</h3>
+        <p>If you encounter issues or have questions about API integration:</p>
+        <ul>
+          <li>Check the interactive API documentation at <a href="/docs/api" target="_blank" rel="noopener noreferrer">/docs/api</a></li>
+          <li>Review the error message and status code</li>
+          <li>Verify your token is active in System → API Tokens</li>
+          <li>Contact your system administrator for assistance</li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
