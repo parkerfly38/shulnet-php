@@ -477,7 +477,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('admin.school.attendance.index');
         Route::get('admin/school/attendance/mark', function () {
             $students = \App\Models\Student::select('id', 'first_name', 'last_name')->orderBy('last_name')->get();
-            $classes = \App\Models\ClassDefinition::with('teacher')->select('id', 'class_name', 'teacher_id')->get();
+            $classes = \App\Models\ClassDefinition::with('teacher')->select('id', 'name', 'teacher_id')->get();
 
             return Inertia::render('admin/school/attendance/mark', ['students' => $students, 'classes' => $classes]);
         })->name('admin.school.attendance.mark');

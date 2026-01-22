@@ -70,7 +70,7 @@ export default function Welcome({
                                     <span>
                                         Read the
                                         <a
-                                            href="https://laravel.com/docs"
+                                            href="/docs/index.html"
                                             target="_blank"
                                             className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
                                         >
@@ -99,13 +99,13 @@ export default function Welcome({
                                         </span>
                                     </span>
                                     <span>
-                                        Watch video tutorials at
+                                        View the source code on
                                         <a
-                                            href="https://laracasts.com"
+                                            href="https://github.com/briankresge/shulnet-php"
                                             target="_blank"
                                             className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
                                         >
-                                            <span>Laracasts</span>
+                                            <span>GitHub</span>
                                             <svg
                                                 width={10}
                                                 height={11}
@@ -122,17 +122,6 @@ export default function Welcome({
                                             </svg>
                                         </a>
                                     </span>
-                                </li>
-                            </ul>
-                            <ul className="flex gap-3 text-sm leading-normal">
-                                <li>
-                                    <a
-                                        href="https://cloud.laravel.com"
-                                        target="_blank"
-                                        className="inline-block rounded-sm border border-black bg-[#1b1b18] px-5 py-1.5 text-sm leading-normal text-white hover:border-black hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:border-white dark:hover:bg-white"
-                                    >
-                                        Deploy now
-                                    </a>
                                 </li>
                             </ul>
                         </div>

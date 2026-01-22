@@ -19,7 +19,7 @@ interface Attendance {
     };
     class_definition?: {
         id: number;
-        class_name: string;
+        name: string;
     };
     attendance_date: string;
     status: 'present' | 'absent' | 'tardy' | 'excused';
@@ -154,7 +154,7 @@ export default function AttendanceIndex() {
                                                     </Link>
                                                 </td>
                                                 <td className="px-4 py-2">
-                                                    {attendance.class_definition?.class_name || '—'}
+                                                    {attendance.class_definition?.name || '—'}
                                                 </td>
                                                 <td className="px-4 py-2">
                                                     <span className={getStatusBadgeClass(attendance.status)}>

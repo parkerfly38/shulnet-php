@@ -19,7 +19,7 @@ interface Student {
 
 interface ClassDefinition {
     id: number;
-    class_name: string;
+    name: string;
     teacher?: {
         first_name: string;
         last_name: string;
@@ -160,7 +160,7 @@ export default function MarkAttendance({ students, classes }: Props) {
                                     <option value="">General Attendance</option>
                                     {classes.map(cls => (
                                         <option key={cls.id} value={cls.id}>
-                                            {cls.class_name}
+                                            {cls.name}
                                             {cls.teacher && ` - ${cls.teacher.first_name} ${cls.teacher.last_name}`}
                                         </option>
                                     ))}

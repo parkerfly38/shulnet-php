@@ -58,7 +58,7 @@ class MemberDashboardController extends Controller
                         'classes' => $student->classGrades->map(function ($classGrade) {
                             return [
                                 'id' => $classGrade->id,
-                                'class_name' => $classGrade->classDefinition->class_name ?? 'N/A',
+                                'class_name' => $classGrade->classDefinition->name ?? 'N/A',
                                 'teacher_name' => $classGrade->classDefinition->teacher ? ($classGrade->classDefinition->teacher->first_name.' '.$classGrade->classDefinition->teacher->last_name) : 'N/A',
                                 'grade' => $classGrade->grade,
                             ];
@@ -362,7 +362,7 @@ class MemberDashboardController extends Controller
                         'classes' => $student->classGrades->map(function ($classGrade) {
                             return [
                                 'id' => $classGrade->id,
-                                'class_name' => $classGrade->classDefinition->class_name ?? 'N/A',
+                                'class_name' => $classGrade->classDefinition->name ?? 'N/A',
                                 'teacher_name' => $classGrade->classDefinition->teacher
                                     ? ($classGrade->classDefinition->teacher->first_name.' '.$classGrade->classDefinition->teacher->last_name)
                                     : 'N/A',
@@ -403,7 +403,7 @@ class MemberDashboardController extends Controller
                                     'id' => $attendance->id,
                                     'date' => $attendance->attendance_date,
                                     'status' => $attendance->status,
-                                    'class_name' => $attendance->classDefinition->class_name ?? 'N/A',
+                                    'class_name' => $attendance->classDefinition->name ?? 'N/A',
                                     'notes' => $attendance->notes,
                                 ];
                             }),
