@@ -48,7 +48,7 @@ export default function CreateForm() {
                             <Eye className="w-4 h-4 mr-2" />
                             {showPreview ? 'Hide' : 'Show'} Preview
                         </Button>
-                        <Button onClick={handleSubmit} disabled={processing || data.schema.length === 0}>
+                        <Button type="submit" disabled={processing || data.schema.length === 0}>
                             <Save className="w-4 h-4 mr-2" />
                             Create Form
                         </Button>
