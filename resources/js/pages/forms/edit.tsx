@@ -61,7 +61,7 @@ export default function EditForm({ form }: Readonly<Props>) {
                             <Eye className="w-4 h-4 mr-2" />
                             {showPreview ? 'Hide' : 'Show'} Preview
                         </Button>
-                        <Button type="submit" disabled={processing || data.schema.length === 0}>
+                        <Button type="button" onClick={handleSubmit} disabled={processing || data.schema.length === 0}>
                             <Save className="w-4 h-4 mr-2" />
                             Save Changes
                         </Button>
