@@ -101,7 +101,7 @@ export default function Welcome({
                                     <span>
                                         View the source code on
                                         <a
-                                            href="https://github.com/briankresge/shulnet-php"
+                                            href="https://github.com/parkerfly38/shulnet-php"
                                             target="_blank"
                                             className="ml-1 inline-flex items-center space-x-1 font-medium text-[#f53003] underline underline-offset-4 dark:text-[#FF4433]"
                                         >
