@@ -64,27 +64,27 @@ export default function FormBuilder({ value, onChange }: FormBuilderProps) {
             <div>
                 <h3 className="text-lg font-medium mb-3">Add Field</h3>
                 <div className="flex gap-2 flex-wrap">
-                    <Button variant="outline" size="sm" onClick={() => addField('text')}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addField('text')}>
                         <Plus className="w-4 h-4 mr-2" />
                         Text
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => addField('textarea')}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addField('textarea')}>
                         <Plus className="w-4 h-4 mr-2" />
                         Textarea
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => addField('date')}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addField('date')}>
                         <Plus className="w-4 h-4 mr-2" />
                         Date
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => addField('boolean')}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addField('boolean')}>
                         <Plus className="w-4 h-4 mr-2" />
                         Yes/No
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => addField('select')}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addField('select')}>
                         <Plus className="w-4 h-4 mr-2" />
                         Select
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => addField('multiselect')}>
+                    <Button type="button" variant="outline" size="sm" onClick={() => addField('multiselect')}>
                         <Plus className="w-4 h-4 mr-2" />
                         Multi-Select
                     </Button>
@@ -111,6 +111,7 @@ export default function FormBuilder({ value, onChange }: FormBuilderProps) {
                                     </div>
                                     <div className="flex gap-1">
                                         <Button
+                                            type="button"
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => moveField(index, 'up')}
@@ -119,6 +120,7 @@ export default function FormBuilder({ value, onChange }: FormBuilderProps) {
                                             <MoveUp className="w-4 h-4" />
                                         </Button>
                                         <Button
+                                            type="button"
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => moveField(index, 'down')}
@@ -127,6 +129,7 @@ export default function FormBuilder({ value, onChange }: FormBuilderProps) {
                                             <MoveDown className="w-4 h-4" />
                                         </Button>
                                         <Button
+                                            type="button"
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => setEditingField(editingField === field.id ? null : field.id)}
@@ -134,6 +137,7 @@ export default function FormBuilder({ value, onChange }: FormBuilderProps) {
                                             {editingField === field.id ? 'Done' : 'Edit'}
                                         </Button>
                                         <Button
+                                            type="button"
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => deleteField(field.id)}
