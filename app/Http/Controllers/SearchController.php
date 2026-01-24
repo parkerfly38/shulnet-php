@@ -93,7 +93,7 @@ class SearchController extends Controller
                 'name' => trim("{$parent->first_name} {$parent->last_name}"),
                 'email' => $parent->email,
                 'phone' => $parent->phone,
-                'url' => route('school.parents.show', $parent->id),
+                'url' => route('admin.school.parents.show', $parent->id),
             ];
         });
 
