@@ -74,6 +74,12 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const { auth } = page.props;
     const getInitials = useInitials();
     const avatarUrl = auth.user.avatar || (auth.user.email ? getGravatarUrlSync(auth.user.email, 200) : undefined);
+
+    const handleSearchClick = () => {
+        // Trigger the global search by dispatching a custom event
+        window.dispatchEvent(new CustomEvent('open-search'));
+    };
+
     return (
         <>
             <div className="border-b border-sidebar-border/80">
@@ -192,13 +198,30 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
                     <div className="ml-auto flex items-center space-x-2">
                         <div className="relative flex items-center space-x-1">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="group h-9 w-9 cursor-pointer"
-                            >
-                                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
-                            </Button>
+                            <TooltipProvider delayDuration={0}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="group h-9 w-9 cursor-pointer"
+                                            onClick={handleSearchClick}
+                                        >
+                                            <Search className="!size-5 opacity-80 group-hover:opacity-100" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p className="flex items-center gap-1">
+                                            Search
+                                            <kbd className="pointer-events-none ml-1 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                                                <span className="text-xs">
+                                                    ⌘K
+                                                </span>
+                                            </kbd>
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             <div className="hidden lg:flex">
                                 {rightNavItems.map((item) => (
                                     <TooltipProvider
@@ -256,6 +279,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
                 </div>
             </div>
+
             {breadcrumbs.length > 1 && (
                 <div className="flex w-full border-b border-sidebar-border/70">
                     <div className="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">

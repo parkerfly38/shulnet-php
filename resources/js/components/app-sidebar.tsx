@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -233,6 +233,10 @@ export function AppSidebar() {
     const isAdmin = user?.is_admin || false;
     const isMember = user?.is_member || false;
 
+    const handleSearchClick = () => {
+        window.dispatchEvent(new CustomEvent('open-search'));
+    };
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -242,6 +246,26 @@ export function AppSidebar() {
                             <AppLogo />
                         </SidebarMenuButton>
                     </SidebarMenuItem>
+                    {isAdmin && (
+                        <SidebarMenuItem>
+                            <SidebarMenuButton
+                                onClick={handleSearchClick}
+                                tooltip={{
+                                    children: (
+                                        <div className="flex items-center gap-2">
+                                            Search
+                                            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                                                <span className="text-xs">⌘K</span>
+                                            </kbd>
+                                        </div>
+                                    ),
+                                }}
+                            >
+                                <Search />
+                                <span>Search</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    )}
                 </SidebarMenu>
             </SidebarHeader>
 

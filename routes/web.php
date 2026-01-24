@@ -22,6 +22,7 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PdfTemplateController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SchoolTuitionTierController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YahrzeitController;
@@ -59,6 +60,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Onboarding routes
     Route::post('onboarding/member', [DashboardController::class, 'onboardMember'])->name('onboarding.member');
     Route::post('onboarding/student', [DashboardController::class, 'onboardStudent'])->name('onboarding.student');
+
+    // Global search (admin only)
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('api/search', [SearchController::class, 'globalSearch'])->name('search.global');
+    });
 
     // Admin-only routes
     Route::middleware(['role:admin'])->group(function () {

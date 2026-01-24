@@ -158,7 +158,7 @@ function md5(str: string): string {
 
     const x: number[] = [];
     let i: number;
-    let len = str.length;
+    const len = str.length;
 
     for (i = 0; i < len; i += 1) {
         x[i >> 2] |= str.charCodeAt(i) << ((i % 4) << 3);
