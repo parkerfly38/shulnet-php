@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CampaignEmail;
 use App\Models\EmailCampaign;
 use App\Models\EmailSetting;
 use App\Models\EmailTemplate;
@@ -45,8 +46,6 @@ class EmailCampaignController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'subject' => 'required|string|max:255',
-            'content' => 'required|string',
             'opt_in_type' => 'required|in:single,double',
             'is_active' => 'boolean',
             'confirmation_subject' => 'nullable|string|max:255',
@@ -69,10 +68,16 @@ class EmailCampaignController extends Controller
                 ->orderBy('campaign_subscriptions.created_at', 'desc');
         }]);
 
+        // Load campaign emails
+        $campaignEmails = $campaign->campaignEmails()
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $templates = EmailTemplate::select('id', 'name', 'subject', 'content')->get();
 
         return Inertia::render('campaigns/show', [
             'campaign' => $campaign,
+            'campaignEmails' => $campaignEmails,
             'templates' => $templates,
         ]);
     }
@@ -95,8 +100,6 @@ class EmailCampaignController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'subject' => 'required|string|max:255',
-            'content' => 'required|string',
             'opt_in_type' => 'required|in:single,double',
             'is_active' => 'boolean',
             'confirmation_subject' => 'nullable|string|max:255',
@@ -280,6 +283,13 @@ class EmailCampaignController extends Controller
         // Configure mailer with stored settings
         EmailSetting::configureMailer();
 
+        // Get pending campaign emails
+        $pendingEmails = $campaign->campaignEmails()->where('status', 'pending')->get();
+
+        if ($pendingEmails->isEmpty()) {
+            return back()->with('error', 'No pending emails to send.');
+        }
+
         $subscribers = $campaign->confirmedSubscribers()->get();
 
         if ($subscribers->isEmpty()) {
@@ -288,32 +298,40 @@ class EmailCampaignController extends Controller
 
         $sent = 0;
 
-        foreach ($subscribers as $subscriber) {
-            if (! $subscriber->email) {
-                continue;
+        // Send each pending email to all subscribers
+        foreach ($pendingEmails as $campaignEmail) {
+            foreach ($subscribers as $subscriber) {
+                if (! $subscriber->email) {
+                    continue;
+                }
+
+                try {
+                    Mail::send('emails.campaign', [
+                        'campaign' => $campaign,
+                        'campaignEmail' => $campaignEmail,
+                        'member' => $subscriber,
+                        'content' => $campaignEmail->content,
+                        'unsubscribeUrl' => route('campaigns.unsubscribe.public', [
+                            'campaign' => $campaign->id,
+                            'member' => $subscriber->id,
+                        ]),
+                    ], function ($message) use ($subscriber, $campaignEmail) {
+                        $message->to($subscriber->email)
+                            ->subject($campaignEmail->subject);
+                    });
+
+                    $sent++;
+                } catch (\Exception $e) {
+                    // Log error but continue
+                    \Log::error("Failed to send campaign email {$campaignEmail->id} to {$subscriber->email}: ".$e->getMessage());
+                }
             }
 
-            try {
-                Mail::send('emails.campaign', [
-                    'campaign' => $campaign,
-                    'member' => $subscriber,
-                    'unsubscribeUrl' => route('campaigns.unsubscribe.public', [
-                        'campaign' => $campaign->id,
-                        'member' => $subscriber->id,
-                    ]),
-                ], function ($message) use ($subscriber, $campaign) {
-                    $message->to($subscriber->email)
-                        ->subject($campaign->subject);
-                });
-
-                $sent++;
-            } catch (\Exception $e) {
-                // Log error but continue
-                \Log::error("Failed to send campaign to {$subscriber->email}: ".$e->getMessage());
-            }
+            // Mark campaign email as sent
+            $campaignEmail->markAsSent();
         }
 
-        return back()->with('success', "Campaign sent to {$sent} subscribers.");
+        return back()->with('success', "Sent {$pendingEmails->count()} campaign email(s) to {$sent} total recipients.");
     }
 
     /**
@@ -332,5 +350,108 @@ class EmailCampaignController extends Controller
         return view('campaigns.unsubscribed', [
             'campaign' => $campaign,
         ]);
+    }
+
+    /**
+     * Show form to create a new campaign email
+     */
+    public function createEmail(EmailCampaign $campaign)
+    {
+        $templates = EmailTemplate::select('id', 'name', 'subject', 'content')->get();
+
+        return Inertia::render('campaigns/emails/create', [
+            'campaign' => $campaign,
+            'templates' => $templates,
+        ]);
+    }
+
+    /**
+     * Store a new campaign email
+     */
+    public function storeEmail(Request $request, EmailCampaign $campaign)
+    {
+        $validated = $request->validate([
+            'subject' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $campaign->campaignEmails()->create([
+            'subject' => $validated['subject'],
+            'content' => $validated['content'],
+            'status' => 'pending',
+        ]);
+
+        return redirect("/admin/campaigns/{$campaign->id}")
+            ->with('success', 'Campaign email created successfully.');
+    }
+
+    /**
+     * Show form to edit a campaign email
+     */
+    public function editEmail(EmailCampaign $campaign, CampaignEmail $email)
+    {
+        // Ensure the email belongs to this campaign
+        if ($email->campaign_id !== $campaign->id) {
+            abort(404);
+        }
+
+        // Only allow editing pending emails
+        if ($email->status !== 'pending') {
+            return back()->with('error', 'Cannot edit an email that has already been sent.');
+        }
+
+        $templates = EmailTemplate::select('id', 'name', 'subject', 'content')->get();
+
+        return Inertia::render('campaigns/emails/edit', [
+            'campaign' => $campaign,
+            'campaignEmail' => $email,
+            'templates' => $templates,
+        ]);
+    }
+
+    /**
+     * Update a campaign email
+     */
+    public function updateEmail(Request $request, EmailCampaign $campaign, CampaignEmail $email)
+    {
+        // Ensure the email belongs to this campaign
+        if ($email->campaign_id !== $campaign->id) {
+            abort(404);
+        }
+
+        // Only allow updating pending emails
+        if ($email->status !== 'pending') {
+            return back()->with('error', 'Cannot update an email that has already been sent.');
+        }
+
+        $validated = $request->validate([
+            'subject' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $email->update($validated);
+
+        return redirect("/admin/campaigns/{$campaign->id}")
+            ->with('success', 'Campaign email updated successfully.');
+    }
+
+    /**
+     * Delete a campaign email
+     */
+    public function destroyEmail(EmailCampaign $campaign, CampaignEmail $email)
+    {
+        // Ensure the email belongs to this campaign
+        if ($email->campaign_id !== $campaign->id) {
+            abort(404);
+        }
+
+        // Only allow deleting pending emails
+        if ($email->status !== 'pending') {
+            return back()->with('error', 'Cannot delete an email that has already been sent.');
+        }
+
+        $email->delete();
+
+        return back()->with('success', 'Campaign email deleted successfully.');
     }
 }

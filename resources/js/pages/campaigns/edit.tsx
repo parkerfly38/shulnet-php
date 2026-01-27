@@ -19,8 +19,6 @@ interface EmailCampaign {
   id: number;
   name: string;
   description: string | null;
-  subject: string;
-  content: string;
   opt_in_type: 'single' | 'double';
   is_active: boolean;
   confirmation_subject: string | null;
@@ -35,8 +33,6 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
   const [formData, setFormData] = useState({
     name: campaign.name,
     description: campaign.description || '',
-    subject: campaign.subject,
-    content: campaign.content,
     opt_in_type: campaign.opt_in_type,
     is_active: campaign.is_active,
     confirmation_subject: campaign.confirmation_subject || '',
@@ -145,37 +141,6 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
               >
                 {formData.is_active ? 'Active' : 'Inactive'}
               </Toggle>
-            </div>
-          </div>
-
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4">Email Content</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="subject">Email Subject *</Label>
-                <Input
-                  id="subject"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="content">Email Body *</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  rows={10}
-                  required
-                  placeholder="Enter your email content here. You can use HTML formatting."
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  HTML formatting is supported. Use {'{member_name}'} to personalize.
-                </p>
-              </div>
             </div>
           </div>
 
