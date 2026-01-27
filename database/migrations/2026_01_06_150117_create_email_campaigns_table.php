@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('subject');
-            $table->longText('content');
             $table->enum('opt_in_type', ['single', 'double'])->default('double');
             $table->boolean('is_active')->default(true);
             $table->string('confirmation_subject')->nullable();

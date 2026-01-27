@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EmailCampaign extends Model
 {
@@ -46,5 +47,29 @@ class EmailCampaign extends Model
     public function pendingSubscribers(): BelongsToMany
     {
         return $this->subscribers()->wherePivot('status', 'pending');
+    }
+
+    /**
+     * Get all campaign emails
+     */
+    public function campaignEmails(): HasMany
+    {
+        return $this->hasMany(CampaignEmail::class, 'campaign_id');
+    }
+
+    /**
+     * Get pending campaign emails
+     */
+    public function pendingEmails(): HasMany
+    {
+        return $this->hasMany(CampaignEmail::class, 'campaign_id')->where('status', 'pending');
+    }
+
+    /**
+     * Get sent campaign emails
+     */
+    public function sentEmails(): HasMany
+    {
+        return $this->hasMany(CampaignEmail::class, 'campaign_id')->where('status', 'sent');
     }
 }

@@ -109,6 +109,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/campaigns/{campaign}/unsubscribe', [EmailCampaignController::class, 'unsubscribe'])->name('campaigns.unsubscribe');
         Route::post('admin/campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
 
+        // Campaign email routes
+        Route::get('admin/campaigns/{campaign}/emails/create', [EmailCampaignController::class, 'createEmail'])->name('campaigns.emails.create');
+        Route::post('admin/campaigns/{campaign}/emails', [EmailCampaignController::class, 'storeEmail'])->name('campaigns.emails.store');
+        Route::get('admin/campaigns/{campaign}/emails/{email}/edit', [EmailCampaignController::class, 'editEmail'])->name('campaigns.emails.edit');
+        Route::put('admin/campaigns/{campaign}/emails/{email}', [EmailCampaignController::class, 'updateEmail'])->name('campaigns.emails.update');
+        Route::delete('admin/campaigns/{campaign}/emails/{email}', [EmailCampaignController::class, 'destroyEmail'])->name('campaigns.emails.destroy');
+
         // Email template management routes
         Route::resource('admin/templates', EmailTemplateController::class, [
             'names' => [

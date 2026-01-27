@@ -41,8 +41,6 @@ interface EmailCampaign {
   id: number;
   name: string;
   description: string | null;
-  subject: string;
-  content: string;
   opt_in_type: 'single' | 'double';
   is_active: boolean;
   subscribers: Member[];
@@ -55,19 +53,28 @@ interface EmailTemplate {
   content: string;
 }
 
+interface CampaignEmail {
+  id: number;
+  campaign_id: number;
+  subject: string;
+  content: string;
+  status: 'pending' | 'sent';
+  sent_at: string | null;
+  created_at: string;
+}
+
 interface Props {
   campaign: EmailCampaign;
+  campaignEmails: CampaignEmail[];
   templates: EmailTemplate[];
 }
 
-export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
+export default function CampaignShow({ campaign, campaignEmails, templates }: Readonly<Props>) {
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [isEditingEmail, setIsEditingEmail] = useState(false);
-  const [emailSubject, setEmailSubject] = useState(campaign.subject);
-  const [emailContent, setEmailContent] = useState(campaign.content);
   const [isCopied, setIsCopied] = useState(false);
 
   const breadcrumbs: BreadcrumbItem[] = [
@@ -162,8 +169,6 @@ export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
 
   const handleSaveEmail = () => {
     router.put(`/admin/campaigns/${campaign.id}`, {
-      subject: emailSubject,
-      content: emailContent,
     }, {
       onSuccess: () => {
         setIsEditingEmail(false);
@@ -172,16 +177,12 @@ export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
   };
 
   const handleCancelEdit = () => {
-    setEmailSubject(campaign.subject);
-    setEmailContent(campaign.content);
     setIsEditingEmail(false);
   };
 
   const handleLoadTemplate = (templateId: number) => {
     const template = templates.find(t => t.id === templateId);
     if (template) {
-      setEmailSubject(template.subject.replace('{campaign_name}', campaign.name));
-      setEmailContent(template.content);
       setShowTemplateDialog(false);
     }
   };
@@ -239,63 +240,77 @@ export default function CampaignShow({ campaign, templates }: Readonly<Props>) {
 
         <div className="border rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Email Content</h2>
-            <div className="flex gap-2">
-              {isEditingEmail ? (
-                <>
-                  <Button variant="outline" size="sm" onClick={() => setShowTemplateDialog(true)}>
-                    <FileText className="w-4 h-4 mr-2" />
-                    Load Template
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleCancelEdit}>
-                    <X className="w-4 h-4 mr-2" />
-                    Cancel
-                  </Button>
-                  <Button size="sm" onClick={handleSaveEmail}>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save
-                  </Button>
-                </>
-              ) : (
-                <Button variant="outline" size="sm" onClick={() => setIsEditingEmail(true)}>
-                  <Edit2 className="w-4 h-4 mr-2" />
-                  Edit
-                </Button>
-              )}
-            </div>
+            <h2 className="text-lg font-semibold">Campaign Emails</h2>
+            <Button variant="outline" size="sm" onClick={() => router.visit(`/admin/campaigns/${campaign.id}/emails/create`)}>
+              Create Email
+            </Button>
           </div>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="subject" className="text-sm text-gray-500">Subject</Label>
-              {isEditingEmail ? (
-                <Input
-                  id="subject"
-                  value={emailSubject}
-                  onChange={(e) => setEmailSubject(e.target.value)}
-                  className="mt-1"
-                />
-              ) : (
-                <p className="font-medium mt-1">{campaign.subject}</p>
-              )}
+          
+          {campaignEmails.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <p>No campaign emails yet. Create one to get started.</p>
             </div>
-            <div>
-              <Label htmlFor="content" className="text-sm text-gray-500">Body</Label>
-              {isEditingEmail ? (
-                <RichTextEditor
-                  value={emailContent}
-                  onChange={setEmailContent}
-                  className="mt-1 min-h-[300px]"
-                />
-              ) : (
-                <div className="mt-1 p-3 bg-gray-50 dark:bg-gray-800 rounded border">
-                  <div
-                    className="prose dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: campaign.content }}
-                  />
-                </div>
-              )}
+          ) : (
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Sent</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                  {campaignEmails.map((email) => (
+                    <tr key={email.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <td className="px-6 py-4">
+                        <div className="font-medium">{email.subject}</div>
+                        <div className="text-sm text-gray-500 line-clamp-1">
+                          {email.content.replace(/<[^>]*>/g, ' ').substring(0, 100)}...
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge variant={email.status === 'sent' ? 'default' : 'secondary'}>
+                          {email.status}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {new Date(email.created_at).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {email.sent_at ? new Date(email.sent_at).toLocaleDateString() : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="flex gap-2 justify-end">
+                          {email.status === 'pending' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => router.visit(`/admin/campaigns/${campaign.id}/emails/${email.id}/edit`)}
+                            >
+                              Edit
+                            </Button>
+                          )}
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              // View email content in modal or new page
+                              alert('View functionality coming soon');
+                            }}
+                          >
+                            View
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="border rounded-lg p-6">
