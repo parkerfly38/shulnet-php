@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -214,6 +214,25 @@ const systemNavItems: NavItem[] = [
     },
 ];
 
+const contentNavItems: NavItem[] = [
+    {
+        groupTitle: 'Content Management',
+        title: 'Pages',
+        href: '/admin/html-pages',
+        icon: FileText,
+    },
+    {
+        title: 'Templates',
+        href: '/admin/html-templates',
+        icon: Layout,
+    },
+    {
+        title: 'Assets',
+        href: '/admin/html-assets',
+        icon: Image,
+    },
+];
+
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',    
@@ -288,6 +307,9 @@ export function AppSidebar() {
 
                         {/* Cemetery Management Section */}
                         <NavMain items={cemeteryNavItems} />
+                        
+                        {/* Content Management Section */}
+                        <NavMain items={contentNavItems} />
                         
                         {/* System Section */}
                         <NavMain items={systemNavItems} />
