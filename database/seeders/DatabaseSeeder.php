@@ -46,6 +46,7 @@ class DatabaseSeeder extends Seeder
             CemeterySeeder::class,
             SettingSeeder::class,
             InvoiceSeeder::class,
+            EmailTemplateSeeder::class,
 
             // School Management Seeders
             SchoolTuitionTierSeeder::class,

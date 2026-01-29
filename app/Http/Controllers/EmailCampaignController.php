@@ -75,10 +75,24 @@ class EmailCampaignController extends Controller
 
         $templates = EmailTemplate::select('id', 'name', 'subject', 'content')->get();
 
+        // Get members not already subscribed or only unsubscribed
+        $subscribedMemberIds = $campaign->subscribers()
+            ->wherePivot('status', '!=', 'unsubscribed')
+            ->pluck('members.id');
+
+        $availableMembers = Member::whereNotIn('id', $subscribedMemberIds)
+            ->whereNotNull('email')
+            ->where('email', '!=', '')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->select('id', 'first_name', 'last_name', 'email')
+            ->get();
+
         return Inertia::render('campaigns/show', [
             'campaign' => $campaign,
             'campaignEmails' => $campaignEmails,
             'templates' => $templates,
+            'availableMembers' => $availableMembers,
         ]);
     }
 
@@ -129,10 +143,29 @@ class EmailCampaignController extends Controller
     public function subscribe(Request $request, EmailCampaign $campaign)
     {
         $validated = $request->validate([
-            'member_id' => 'required|exists:members,id',
+            'member_id' => 'nullable|exists:members,id',
+            'email' => 'required_without:member_id|email',
+            'first_name' => 'required_without:member_id|string|max:255',
+            'last_name' => 'required_without:member_id|string|max:255',
         ]);
 
-        $member = Member::findOrFail($validated['member_id']);
+        // If member_id provided, use existing member
+        if (!empty($validated['member_id'])) {
+            $member = Member::findOrFail($validated['member_id']);
+        } else {
+            // Check if member with this email already exists
+            $member = Member::where('email', $validated['email'])->first();
+            
+            if (!$member) {
+                // Create new minimal contact record
+                $member = Member::create([
+                    'email' => $validated['email'],
+                    'first_name' => $validated['first_name'],
+                    'last_name' => $validated['last_name'],
+                    'member_type' => 'contact',
+                ]);
+            }
+        }
 
         // Check if already subscribed
         if ($campaign->subscribers()->where('member_id', $member->id)->exists()) {

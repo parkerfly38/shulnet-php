@@ -63,19 +63,32 @@ interface CampaignEmail {
   created_at: string;
 }
 
+interface AvailableMember {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 interface Props {
   campaign: EmailCampaign;
   campaignEmails: CampaignEmail[];
   templates: EmailTemplate[];
+  availableMembers: AvailableMember[];
 }
 
-export default function CampaignShow({ campaign, campaignEmails, templates }: Readonly<Props>) {
+export default function CampaignShow({ campaign, campaignEmails, templates, availableMembers }: Readonly<Props>) {
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [subscribeTab, setSubscribeTab] = useState<'existing' | 'new'>('existing');
+  const [newSubscriber, setNewSubscriber] = useState({ email: '', first_name: '', last_name: '' });
+  const [viewingEmail, setViewingEmail] = useState<CampaignEmail | null>(null);
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -159,6 +172,39 @@ export default function CampaignShow({ campaign, campaignEmails, templates }: Re
         member_id: memberId,
       });
     }
+  };
+
+  const handleAddSubscriber = () => {
+    if (subscribeTab === 'existing' && !selectedMember) {
+      return;
+    }
+    
+    if (subscribeTab === 'new' && (!newSubscriber.email || !newSubscriber.first_name || !newSubscriber.last_name)) {
+      return;
+    }
+
+    setIsSubscribing(true);
+    
+    const data = subscribeTab === 'existing'
+      ? { member_id: selectedMember }
+      : newSubscriber;
+    
+    router.post(
+      `/admin/campaigns/${campaign.id}/subscribe`,
+      data,
+      {
+        onSuccess: () => {
+          setShowSubscribeDialog(false);
+          setSelectedMember(null);
+          setSearchTerm('');
+          setNewSubscriber({ email: '', first_name: '', last_name: '' });
+          setSubscribeTab('existing');
+        },
+        onFinish: () => {
+          setIsSubscribing(false);
+        },
+      }
+    );
   };
 
   const handleSend = () => {
@@ -296,10 +342,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates }: Re
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => {
-                              // View email content in modal or new page
-                              alert('View functionality coming soon');
-                            }}
+                            onClick={() => setViewingEmail(email)}
                           >
                             View
                           </Button>
@@ -435,23 +478,144 @@ export default function CampaignShow({ campaign, campaignEmails, templates }: Re
       </div>
 
       <Dialog open={showSubscribeDialog} onOpenChange={setShowSubscribeDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Add Subscriber</DialogTitle>
             <DialogDescription>
-              Select a member to subscribe to this campaign.
+              Add a member or new contact to this campaign.
               {campaign.opt_in_type === 'double' && ' A confirmation email will be sent.'}
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-gray-500 mb-2">
-              Note: You would typically integrate with your members list here.
-              For now, please use the bulk subscribe feature or contact support.
-            </p>
+          
+          <div className="flex border-b">
+            <button
+              className={`px-4 py-2 font-medium transition-colors ${
+                subscribeTab === 'existing'
+                  ? 'border-b-2 border-primary text-primary'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+              onClick={() => setSubscribeTab('existing')}
+            >
+              Existing Member
+            </button>
+            <button
+              className={`px-4 py-2 font-medium transition-colors ${
+                subscribeTab === 'new'
+                  ? 'border-b-2 border-primary text-primary'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+              onClick={() => setSubscribeTab('new')}
+            >
+              New Contact
+            </button>
           </div>
+
+          {subscribeTab === 'existing' ? (
+            <div className="py-4 space-y-4">
+              <div>
+                <Label htmlFor="search">Search Members</Label>
+                <Input
+                  id="search"
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              
+              {availableMembers.length === 0 ? (
+                <p className="text-center text-gray-500 py-4">
+                  All members with email addresses are already subscribed to this campaign.
+                </p>
+              ) : (
+                <div className="border rounded-lg max-h-96 overflow-y-auto">
+                  <div className="space-y-1 p-2">
+                    {availableMembers
+                      .filter((member) => {
+                        if (!searchTerm) return true;
+                        const search = searchTerm.toLowerCase();
+                        return (
+                          member.first_name.toLowerCase().includes(search) ||
+                          member.last_name.toLowerCase().includes(search) ||
+                          member.email.toLowerCase().includes(search)
+                        );
+                      })
+                      .map((member) => (
+                        <div
+                          key={member.id}
+                          className={`p-3 rounded-md cursor-pointer transition-colors ${
+                            selectedMember === member.id
+                              ? 'bg-primary text-primary-foreground'
+                              : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                          }`}
+                          onClick={() => setSelectedMember(member.id)}
+                        >
+                          <div className="font-medium">
+                            {member.first_name} {member.last_name}
+                          </div>
+                          <div className="text-sm opacity-80">{member.email}</div>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="py-4 space-y-4">
+              <div>
+                <Label htmlFor="new-email">Email Address *</Label>
+                <Input
+                  id="new-email"
+                  type="email"
+                  placeholder="subscriber@example.com"
+                  value={newSubscriber.email}
+                  onChange={(e) => setNewSubscriber({ ...newSubscriber, email: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="new-first-name">First Name *</Label>
+                  <Input
+                    id="new-first-name"
+                    placeholder="John"
+                    value={newSubscriber.first_name}
+                    onChange={(e) => setNewSubscriber({ ...newSubscriber, first_name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="new-last-name">Last Name *</Label>
+                  <Input
+                    id="new-last-name"
+                    placeholder="Doe"
+                    value={newSubscriber.last_name}
+                    onChange={(e) => setNewSubscriber({ ...newSubscriber, last_name: e.target.value })}
+                  />
+                </div>
+              </div>
+              <p className="text-sm text-gray-500">
+                This will create a minimal contact record in your member database.
+              </p>
+            </div>
+          )}
+
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSubscribeDialog(false)}>
-              Close
+            <Button variant="outline" onClick={() => {
+              setShowSubscribeDialog(false);
+              setSelectedMember(null);
+              setSearchTerm('');
+              setNewSubscriber({ email: '', first_name: '', last_name: '' });
+              setSubscribeTab('existing');
+            }}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleAddSubscriber} 
+              disabled={
+                isSubscribing || 
+                (subscribeTab === 'existing' && !selectedMember) ||
+                (subscribeTab === 'new' && (!newSubscriber.email || !newSubscriber.first_name || !newSubscriber.last_name))
+              }
+            >
+              {isSubscribing ? 'Adding...' : 'Add Subscriber'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -489,6 +653,57 @@ export default function CampaignShow({ campaign, campaignEmails, templates }: Re
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowTemplateDialog(false)}>
               Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Email Dialog */}
+      <Dialog open={!!viewingEmail} onOpenChange={() => setViewingEmail(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Email Preview</DialogTitle>
+            <DialogDescription>
+              {viewingEmail?.subject}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <Label className="text-sm font-medium">Subject</Label>
+              <p className="text-sm mt-1">{viewingEmail?.subject}</p>
+            </div>
+            
+            <div>
+              <Label className="text-sm font-medium">Status</Label>
+              <div className="mt-1">
+                <Badge variant={viewingEmail?.status === 'sent' ? 'default' : 'secondary'}>
+                  {viewingEmail?.status}
+                </Badge>
+              </div>
+            </div>
+            
+            {viewingEmail?.sent_at && (
+              <div>
+                <Label className="text-sm font-medium">Sent At</Label>
+                <p className="text-sm mt-1">
+                  {new Date(viewingEmail.sent_at).toLocaleString()}
+                </p>
+              </div>
+            )}
+            
+            <div>
+              <Label className="text-sm font-medium">Email Content</Label>
+              <div 
+                className="mt-2 border rounded-lg p-4 bg-white"
+                dangerouslySetInnerHTML={{ __html: viewingEmail?.content || '' }}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setViewingEmail(null)}>
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -146,6 +146,15 @@ class SettingSeeder extends Seeder
                 'type' => 'textarea',
                 'description' => 'Default footer text for PDF documents',
             ],
+
+            // Content Management Settings
+            [
+                'key' => 'asset_storage_provider',
+                'value' => 'local',
+                'group' => 'content',
+                'type' => 'select',
+                'description' => 'Storage provider for HTML page assets (local, cloudflare, s3, azure)',
+            ],
         ];
 
         foreach ($settings as $setting) {

@@ -104,6 +104,13 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                         { value: 'ssl', label: 'SSL' },
                         { value: 'none', label: 'None' },
                     ];
+                } else if (setting.key === 'asset_storage_provider') {
+                    options = [
+                        { value: 'local', label: 'Local Server' },
+                        { value: 'cloudflare', label: 'CloudFlare R2' },
+                        { value: 's3', label: 'Amazon S3' },
+                        { value: 'azure', label: 'Azure Blob Storage' },
+                    ];
                 }
 
                 return (
