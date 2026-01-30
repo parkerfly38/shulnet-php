@@ -155,6 +155,41 @@ class SettingSeeder extends Seeder
                 'type' => 'select',
                 'description' => 'Storage provider for HTML page assets (local, cloudflare, s3, azure)',
             ],
+            [
+                'key' => 'html_publish_destination',
+                'value' => 'local',
+                'group' => 'content',
+                'type' => 'select',
+                'description' => 'Where to publish HTML pages (local, s3, azure, zip)',
+            ],
+            [
+                'key' => 'html_publish_s3_bucket',
+                'value' => '',
+                'group' => 'content',
+                'type' => 'text',
+                'description' => 'S3 bucket name for HTML publishing',
+            ],
+            [
+                'key' => 'html_publish_s3_path',
+                'value' => '',
+                'group' => 'content',
+                'type' => 'text',
+                'description' => 'S3 path prefix for HTML files (optional)',
+            ],
+            [
+                'key' => 'html_publish_azure_container',
+                'value' => '',
+                'group' => 'content',
+                'type' => 'text',
+                'description' => 'Azure Storage container name for HTML publishing',
+            ],
+            [
+                'key' => 'html_publish_azure_path',
+                'value' => '',
+                'group' => 'content',
+                'type' => 'text',
+                'description' => 'Azure Storage path prefix for HTML files (optional)',
+            ],
         ];
 
         foreach ($settings as $setting) {

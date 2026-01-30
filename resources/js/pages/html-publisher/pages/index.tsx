@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { type BreadcrumbItem } from '@/types';
-import { Edit, Eye, FileText, Globe, Trash2 } from 'lucide-react';
+import { Edit, Eye, FileText, Globe, Trash2, Download } from 'lucide-react';
 
 interface HtmlTemplate {
   id: number;
@@ -51,24 +51,35 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
       <div className="flex h-full flex-1 flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">HTML Pages</h1>
-          <Link href="/admin/html-pages/create">
-            <Button>
-              <FileText className="mr-2 h-4 w-4" />
-              Create Page
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                window.location.href = '/admin/html-pages/export-all';
+              }}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Export All as ZIP
             </Button>
-          </Link>
+            <Link href="/admin/html-pages/create">
+              <Button>
+                <FileText className="mr-2 h-4 w-4" />
+                Create Page
+              </Button>
+            </Link>
+          </div>
         </div>
 
-        <div className="border rounded-lg overflow-hidden">
+        <div className="border rounded-lg overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Slug</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Template</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">Slug</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell">Template</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">In Navigation</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Published</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell">In Navigation</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell">Published</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -82,9 +93,17 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
               ) : (
                 pages.map((page) => (
                   <tr key={page.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <td className="px-6 py-4 whitespace-nowrap font-medium">{page.title}</td>
-                    <td className="px-6 py-4 whitespace-nowrap font-mono text-sm">{page.slug}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{page.template?.name || '—'}</td>
+                    <td className="px-6 py-4 font-medium">
+                      <Link 
+                        href={`/admin/html-pages/${page.id}`}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 block"
+                      >
+                        {page.title}
+                      </Link>
+                      <div className="md:hidden text-xs text-gray-500 font-mono mt-1">/{page.slug}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap font-mono text-sm hidden md:table-cell">{page.slug}</td>
+                    <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">{page.template?.name || '—'}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Badge
                         variant={
@@ -98,17 +117,29 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                         {page.status}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{page.show_in_nav ? 'Yes' : 'No'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap hidden xl:table-cell">{page.show_in_nav ? 'Yes' : 'No'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap hidden xl:table-cell">
                       {page.published_at
                         ? new Date(page.published_at).toLocaleDateString()
                         : '—'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex justify-end gap-1">
+                        <Link href={`/admin/html-pages/${page.id}`}>
+                          <Button variant="ghost" size="sm" title="View Details">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Link href={`/admin/html-pages/${page.id}/edit`}>
+                          <Button variant="ghost" size="sm" title="Edit Page">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <Button
                           variant="ghost"
                           size="sm"
+                          className="hidden sm:inline-flex"
+                          title="Preview in new tab"
                           asChild
                         >
                           <a
@@ -116,18 +147,14 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <Eye className="h-4 w-4" />
+                            <Globe className="h-4 w-4" />
                           </a>
                         </Button>
-                        <Link href={`/admin/html-pages/${page.id}/edit`}>
-                          <Button variant="ghost" size="sm">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </Link>
                         {page.status !== 'published' && (
                           <Button
                             variant="ghost"
                             size="sm"
+                            title="Publish Page"
                             onClick={() => handlePublish(page.id)}
                           >
                             <Globe className="h-4 w-4" />
@@ -136,6 +163,7 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                         <Button
                           variant="ghost"
                           size="sm"
+                          title="Delete Page"
                           onClick={() => handleDelete(page.id)}
                         >
                           <Trash2 className="h-4 w-4" />
