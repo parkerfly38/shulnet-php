@@ -92,6 +92,12 @@ The Team</p>',
 <p>Best regards,<br>
 The Team</p>',
             ],
+            [
+                'name' => 'Weekly Newsletter',
+                'description' => 'Professional newsletter template with sections for news, events, and schedules',
+                'subject' => 'This Week\'s Newsletter',
+                'content' => file_get_contents(storage_path('app/weekly-newsletter-template.html')),
+            ],
         ];
 
         foreach ($templates as $template) {

@@ -34,8 +34,6 @@ export default function CampaignCreate() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    subject: '',
-    content: '',
     opt_in_type: 'double' as 'single' | 'double',
     is_active: true,
     confirmation_subject: '',
@@ -125,37 +123,6 @@ export default function CampaignCreate() {
               >
                 {formData.is_active ? 'Active' : 'Inactive'}
               </Toggle>
-            </div>
-          </div>
-
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4">Email Content</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="subject">Email Subject *</Label>
-                <Input
-                  id="subject"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="content">Email Body *</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  rows={10}
-                  required
-                  placeholder="Enter your email content here. You can use HTML formatting."
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  HTML formatting is supported. Use {'{member_name}'} to personalize.
-                </p>
-              </div>
             </div>
           </div>
 

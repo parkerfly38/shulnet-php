@@ -29,7 +29,6 @@ interface EmailCampaign {
   id: number;
   name: string;
   description: string | null;
-  subject: string;
   opt_in_type: 'single' | 'double';
   is_active: boolean;
   subscribers_count: number;
@@ -49,8 +48,7 @@ export default function CampaignIndex({ campaigns }: Readonly<Props>) {
   const [selectedCampaign, setSelectedCampaign] = useState<EmailCampaign | null>(null);
 
   const filteredCampaigns = campaigns.filter((campaign) =>
-    campaign.name.toLowerCase().includes(search.toLowerCase()) ||
-    campaign.subject.toLowerCase().includes(search.toLowerCase())
+    campaign.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const handleDelete = () => {
@@ -102,7 +100,6 @@ export default function CampaignIndex({ campaigns }: Readonly<Props>) {
             <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Opt-in Type</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subscribers</th>
@@ -127,7 +124,6 @@ export default function CampaignIndex({ campaigns }: Readonly<Props>) {
                         {campaign.name}
                       </Link>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{campaign.subject}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Badge variant={campaign.opt_in_type === 'double' ? 'default' : 'secondary'}>
                         {campaign.opt_in_type === 'double' ? 'Double Opt-in' : 'Single Opt-in'}

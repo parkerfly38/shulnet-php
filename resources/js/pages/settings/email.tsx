@@ -8,6 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { type BreadcrumbItem } from '@/types';
 import { useState } from 'react';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 type EmailProvider = 'smtp' | 'mailgun' | 'sendgrid' | 'ses' | 'log';
 
@@ -36,6 +44,9 @@ interface Props {
 export default function EmailSettingsPage({ settings }: Readonly<Props>) {
     const [testEmail, setTestEmail] = useState('');
     const [isTesting, setIsTesting] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [dialogType, setDialogType] = useState<'success' | 'error'>('success');
 
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -63,7 +74,9 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
 
     const handleTestEmail = async () => {
         if (!testEmail) {
-            alert('Please enter an email address');
+            setDialogType('error');
+            setDialogMessage('Please enter an email address');
+            setDialogOpen(true);
             return;
         }
 
@@ -73,6 +86,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
                 },
                 body: JSON.stringify({ email: testEmail }),
@@ -80,13 +94,22 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
 
             const result = await response.json();
             if (result.success) {
-                alert('Test email sent successfully');
+                setDialogType('success');
+                setDialogMessage(result.message || 'Test email sent successfully');
             } else {
-                alert(result.message || 'Failed to send test email');
+                setDialogType('error');
+                setDialogMessage(result.message || 'Failed to send test email');
             }
+            setDialogOpen(true);
         } catch (error) {
             console.error('Failed to send test email:', error);
-            alert('Failed to send test email');
+            setDialogType('error');
+            setDialogMessage(
+                error instanceof Error 
+                    ? `Failed to send test email: ${error.message}`
+                    : 'Failed to send test email. Please check your email configuration.'
+            );
+            setDialogOpen(true);
         } finally {
             setIsTesting(false);
         }
@@ -420,6 +443,29 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                     </form>
                 </div>
             </div>
+
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            {dialogType === 'success' ? (
+                                <CheckCircle2 className="h-5 w-5 text-green-600" />
+                            ) : (
+                                <AlertCircle className="h-5 w-5 text-red-600" />
+                            )}
+                            {dialogType === 'success' ? 'Success' : 'Error'}
+                        </DialogTitle>
+                        <DialogDescription className="pt-2">
+                            {dialogMessage}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex justify-end">
+                        <Button onClick={() => setDialogOpen(false)}>
+                            Close
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

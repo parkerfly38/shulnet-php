@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('email_campaigns', function (Blueprint $table) {
+        Schema::create('html_templates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->enum('opt_in_type', ['single', 'double'])->default('double');
-            $table->boolean('is_active')->default(true);
-            $table->string('confirmation_subject')->nullable();
-            $table->longText('confirmation_content')->nullable();
+            $table->longText('header')->nullable();
+            $table->longText('footer')->nullable();
+            $table->longText('navigation')->nullable();
+            $table->text('css')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('email_campaigns');
+        Schema::dropIfExists('html_templates');
     }
 };

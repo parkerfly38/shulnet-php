@@ -11,6 +11,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTicketTypeController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\GravesiteController;
+use App\Http\Controllers\HtmlAssetController;
+use App\Http\Controllers\HtmlPageController;
+use App\Http\Controllers\HtmlTemplateController;
 use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Member\MemberDashboardController;
@@ -109,6 +112,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/campaigns/{campaign}/unsubscribe', [EmailCampaignController::class, 'unsubscribe'])->name('campaigns.unsubscribe');
         Route::post('admin/campaigns/{campaign}/send', [EmailCampaignController::class, 'send'])->name('campaigns.send');
 
+        // Campaign email routes
+        Route::get('admin/campaigns/{campaign}/emails/create', [EmailCampaignController::class, 'createEmail'])->name('campaigns.emails.create');
+        Route::post('admin/campaigns/{campaign}/emails', [EmailCampaignController::class, 'storeEmail'])->name('campaigns.emails.store');
+        Route::get('admin/campaigns/{campaign}/emails/{email}/edit', [EmailCampaignController::class, 'editEmail'])->name('campaigns.emails.edit');
+        Route::put('admin/campaigns/{campaign}/emails/{email}', [EmailCampaignController::class, 'updateEmail'])->name('campaigns.emails.update');
+        Route::delete('admin/campaigns/{campaign}/emails/{email}', [EmailCampaignController::class, 'destroyEmail'])->name('campaigns.emails.destroy');
+
         // Email template management routes
         Route::resource('admin/templates', EmailTemplateController::class, [
             'names' => [
@@ -141,6 +151,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
         Route::get('admin/forms/{form}/preview', [FormController::class, 'preview'])->name('admin.forms.preview');
         Route::get('admin/forms/{form}/submissions', [FormController::class, 'submissions'])->name('admin.forms.submissions');
+
+        // HTML Publisher routes
+        Route::get('admin/html-pages/export-all', [HtmlPageController::class, 'exportAll'])->name('html-pages.export-all');
+        Route::resource('admin/html-pages', HtmlPageController::class)->names('html-pages');
+        Route::post('admin/html-pages/{htmlPage}/publish', [HtmlPageController::class, 'publish'])->name('html-pages.publish');
+        Route::get('admin/html-pages/{htmlPage}/preview', [HtmlPageController::class, 'preview'])->name('html-pages.preview');
+        
+        Route::resource('admin/html-assets', HtmlAssetController::class)->only(['index', 'store', 'update', 'destroy'])->names('html-assets');
+        
+        Route::resource('admin/html-templates', HtmlTemplateController::class)->names('html-templates');
 
         // Membership period management routes (nested under members)
         Route::resource('admin/members.membership-periods', MembershipPeriodController::class, [

@@ -49,6 +49,15 @@ This is a replacement for the previous open source solution based on Zenbership.
 - **Print functionality** for invoices (index and edit pages)
 - **Email invoices** with PDF attachments
 
+### Content Management (HTML Publisher)
+- **HTML Page Management** - Create and publish web pages with rich text editor
+- **Template System** - Reusable templates with headers, footers, and custom CSS
+- **Asset Library** - Upload and manage images and files with metadata
+- **Multi-Storage Support** - Local, S3, CloudFlare R2, or Azure Blob storage
+- **SEO Optimization** - Meta descriptions, keywords, and custom slugs
+- **Publishing Workflow** - Draft and published states with scheduling
+- **Navigation Management** - Control which pages appear in site navigation
+
 ### Dashboard
 - Members joined trend analysis (line chart)
 - Current Hebrew month yahrzeits
@@ -126,6 +135,7 @@ This is a replacement for the previous open source solution based on Zenbership.
    - Membership tiers (Individual, Family, Student, Senior, etc.)
    - School tuition tiers (Full Tuition, Discounts, Scholarships, Payment Plans)
    - Sample members and parents (for testing)
+   - HTML templates, pages, and assets (for content management demo)
 
 8. **Build assets**
    ```bash
@@ -183,6 +193,9 @@ app/
 │   ├── ParentModel.php
 │   ├── MembershipTier.php
 │   ├── SchoolTuitionTier.php
+│   ├── HtmlPage.php
+│   ├── HtmlTemplate.php
+│   ├── HtmlAsset.php
 │   ├── Invoice.php
 │   └── ...
 ├── Policies/         # Authorization policies
@@ -197,7 +210,11 @@ resources/
 │   ├── components/   # React components
 │   │   └── ui/       # shadcn/ui components
 │   ├── layouts/      # Layout components
-│   ├── pages/        # Inertia pages
+│   ├── ├── html-publisher/
+│   │   │   ├── pages/
+│   │   │   ├── templates/
+│   │   │   └── assets/
+│   │   pages/        # Inertia pages
 │   │   ├── dashboard.tsx
 │   │   ├── members/
 │   │   ├── invoices/
@@ -205,7 +222,8 @@ resources/
 │   │       ├── membership-tiers/
 │   │       └── school-tuition-tiers/
 │   └── types/        # TypeScript definitions
-└── views/            # Blade templates
+└── ├── SchoolTuitionTierSeeder.php
+    └── HtmlContentlade templates
     └── emails/       # Email templates
 
 database/
@@ -290,6 +308,47 @@ Comprehensive invoicing features:
 - Email delivery with PDF attachments
 - Polymorphic relationships (invoiceable to Members or Parents)
 
+### Content Management System
+
+The HTML Publisher provides a complete content management system for creating and publishing web pages:
+
+**Page Management:**
+- Rich text editor with full formatting capabilities
+- SEO-friendly URLs with customizable slugs
+- Meta descriptions and keywords for search optimization
+- Draft and published states with publication scheduling
+- Navigation menu integration (show/hide pages)
+- Sort order control for menu placement
+- Per-page header/footer overrides
+
+**Template System:**
+- Create reusable templates with headers and footers
+- Custom CSS per template
+- Template inheritance - pages can use templates or standalone content
+- Track template usage across pages
+- Visual template preview
+
+**Asset Library:**
+- Upload images and files with drag-and-drop support
+- Automatic image dimension detection
+- Alt text for accessibility
+- Multiple storage provider support:
+  - Local storage (default)
+  - Amazon S3
+  - CloudFlare R2
+  - Azure Blob Storage
+- Asset metadata tracking (file size, MIME type, dimensions)
+- Copy-to-clipboard for easy insertion into pages
+
+**Use Cases:**
+- Public-facing website pages
+- Community newsletters and announcements
+- Event landing pages
+- Educational content and resources
+- Board meeting minutes and documents
+
+Access the HTML Publisher at `/admin/html-pages` in the application.
+
 ## Configuration
 
 ### Database
@@ -326,6 +385,31 @@ MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
+
+### Asset Storage
+
+Configure asset storage for the HTML Publisher in `.env`:
+
+```env
+# Local Storage (default)
+FILESYSTEM_DISK=public
+
+# Amazon S3
+AWS_ACCESS_KEY_ID=your-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=your-bucket-name
+
+# CloudFlare R2
+# Use S3-compatible configuration with R2 endpoint
+
+# Azure Blob Storage
+AZURE_STORAGE_NAME=your-storage-account
+AZURE_STORAGE_KEY=your-storage-key
+AZURE_STORAGE_CONTAINER=your-container-name
+```
+
+Set the active storage provider in Settings (`/admin/settings`) under "Asset Storage Provider".
 
 ## Testing
 

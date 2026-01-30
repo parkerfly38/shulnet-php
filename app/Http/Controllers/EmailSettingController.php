@@ -16,9 +16,9 @@ class EmailSettingController extends Controller
     public function index()
     {
         $settings = [
-            'provider' => EmailSetting::get('email_provider', 'smtp'),
-            'from_address' => EmailSetting::get('email_from_address', config('mail.from.address')),
-            'from_name' => EmailSetting::get('email_from_name', config('mail.from.name')),
+            'provider' => EmailSetting::get('provider', 'smtp'),
+            'from_address' => EmailSetting::get('from_address', config('mail.from.address')),
+            'from_name' => EmailSetting::get('from_name', config('mail.from.name')),
 
             // SMTP
             'smtp_host' => EmailSetting::get('smtp_host'),
@@ -95,71 +95,34 @@ class EmailSettingController extends Controller
      */
     public function test(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
+        try {
+            $validated = $request->validate([
+                'email' => 'required|email',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email address: ' . implode(', ', $e->validator->errors()->all()),
+            ], 422);
+        }
 
         try {
-            $this->configureMailer();
+            EmailSetting::configureMailer();
 
             Mail::raw('This is a test email from your application.', function ($message) use ($request) {
                 $message->to($request->email)
                     ->subject('Test Email');
             });
 
-            return back()->with('success', 'Test email sent successfully!');
+            return response()->json([
+                'success' => true,
+                'message' => 'Test email sent successfully!',
+            ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Failed to send test email: '.$e->getMessage());
-        }
-    }
-
-    /**
-     * Configure mailer with current settings
-     */
-    private function configureMailer()
-    {
-        $provider = EmailSetting::get('email_provider', 'smtp');
-
-        Config::set('mail.from.address', EmailSetting::get('email_from_address'));
-        Config::set('mail.from.name', EmailSetting::get('email_from_name'));
-        Config::set('mail.default', $provider);
-
-        switch ($provider) {
-            case 'smtp':
-                Config::set('mail.mailers.smtp', [
-                    'transport' => 'smtp',
-                    'host' => EmailSetting::get('smtp_host'),
-                    'port' => EmailSetting::get('smtp_port', 587),
-                    'encryption' => EmailSetting::get('smtp_encryption', 'tls'),
-                    'username' => EmailSetting::get('smtp_username'),
-                    'password' => EmailSetting::get('smtp_password'),
-                ]);
-                break;
-
-            case 'mailgun':
-                Config::set('services.mailgun', [
-                    'domain' => EmailSetting::get('mailgun_domain'),
-                    'secret' => EmailSetting::get('mailgun_secret'),
-                    'endpoint' => EmailSetting::get('mailgun_endpoint', 'api.mailgun.net'),
-                ]);
-                break;
-
-            case 'sendgrid':
-                Config::set('services.sendgrid', [
-                    'api_key' => EmailSetting::get('sendgrid_api_key'),
-                ]);
-                Config::set('mail.mailers.sendgrid', [
-                    'transport' => 'sendgrid',
-                ]);
-                break;
-
-            case 'ses':
-                Config::set('services.ses', [
-                    'key' => EmailSetting::get('ses_key'),
-                    'secret' => EmailSetting::get('ses_secret'),
-                    'region' => EmailSetting::get('ses_region', 'us-east-1'),
-                ]);
-                break;
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send test email: '.$e->getMessage(),
+            ], 500);
         }
     }
 }
