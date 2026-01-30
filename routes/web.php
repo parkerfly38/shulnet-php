@@ -153,6 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/forms/{form}/submissions', [FormController::class, 'submissions'])->name('admin.forms.submissions');
 
         // HTML Publisher routes
+        Route::get('admin/html-pages/export-all', [HtmlPageController::class, 'exportAll'])->name('html-pages.export-all');
         Route::resource('admin/html-pages', HtmlPageController::class)->names('html-pages');
         Route::post('admin/html-pages/{htmlPage}/publish', [HtmlPageController::class, 'publish'])->name('html-pages.publish');
         Route::get('admin/html-pages/{htmlPage}/preview', [HtmlPageController::class, 'preview'])->name('html-pages.preview');

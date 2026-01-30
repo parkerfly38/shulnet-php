@@ -111,6 +111,13 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                         { value: 's3', label: 'Amazon S3' },
                         { value: 'azure', label: 'Azure Blob Storage' },
                     ];
+                } else if (setting.key === 'html_publish_destination') {
+                    options = [
+                        { value: 'local', label: 'Local Server (public/published)' },
+                        { value: 's3', label: 'Amazon S3 Static Website' },
+                        { value: 'azure', label: 'Azure Static Website' },
+                        { value: 'zip', label: 'Download as ZIP' },
+                    ];
                 }
 
                 return (

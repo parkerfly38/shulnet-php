@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { type BreadcrumbItem } from '@/types';
-import { Edit, Eye, FileText, Globe, Trash2 } from 'lucide-react';
+import { Edit, Eye, FileText, Globe, Trash2, Download } from 'lucide-react';
 
 interface HtmlTemplate {
   id: number;
@@ -51,12 +51,23 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
       <div className="flex h-full flex-1 flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">HTML Pages</h1>
-          <Link href="/admin/html-pages/create">
-            <Button>
-              <FileText className="mr-2 h-4 w-4" />
-              Create Page
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                window.location.href = '/admin/html-pages/export-all';
+              }}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Export All as ZIP
             </Button>
-          </Link>
+            <Link href="/admin/html-pages/create">
+              <Button>
+                <FileText className="mr-2 h-4 w-4" />
+                Create Page
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="border rounded-lg overflow-hidden">
