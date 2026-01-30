@@ -57,6 +57,9 @@ class DatabaseSeeder extends Seeder
             ClassDefinitionSeeder::class,
             ExamSeeder::class,
 
+            // Content Management Seeders
+            HtmlContentSeeder::class,
+
             // Member Portal Test Data
             MemberPortalTestSeeder::class,
         ]);

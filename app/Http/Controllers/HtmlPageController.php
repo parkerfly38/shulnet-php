@@ -56,6 +56,13 @@ class HtmlPageController extends Controller
             ->with('success', 'Page created successfully.');
     }
 
+    public function show(HtmlPage $htmlPage)
+    {
+        return Inertia::render('html-publisher/pages/show', [
+            'page' => $htmlPage->load('template'),
+        ]);
+    }
+
     public function edit(HtmlPage $htmlPage)
     {
         $templates = HtmlTemplate::select('id', 'name')->get();

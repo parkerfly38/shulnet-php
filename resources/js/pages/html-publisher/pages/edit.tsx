@@ -111,14 +111,14 @@ export default function HtmlPageForm({ page, templates }: Readonly<Props>) {
                 <div>
                   <Label htmlFor="template">Template</Label>
                   <Select
-                    value={data.template_id?.toString() || ''}
+                    value={data.template_id?.toString() || ' '}
                     onValueChange={(value) => setData('template_id', value ? parseInt(value) : null)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="No template" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No template</SelectItem>
+                      <SelectItem value=" ">No template</SelectItem>
                       {templates.map((template) => (
                         <SelectItem key={template.id} value={template.id.toString()}>
                           {template.name}
@@ -182,10 +182,23 @@ export default function HtmlPageForm({ page, templates }: Readonly<Props>) {
 
                 <TabsContent value="content" className="space-y-2">
                   <Label>Page Content</Label>
-                  <RichTextEditor
-                    value={data.content}
-                    onChange={(value) => setData('content', value)}
-                  />
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div>
+                      <RichTextEditor
+                        value={data.content}
+                        onChange={(value) => setData('content', value)}
+                      />
+                    </div>
+                    <div>
+                      <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-900 min-h-[400px]">
+                        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">PREVIEW</p>
+                        <div 
+                          className="prose prose-sm max-w-none dark:prose-invert bg-white dark:bg-black p-4 rounded"
+                          dangerouslySetInnerHTML={{ __html: data.content || '<p class="text-gray-400 italic">Start typing to see preview...</p>' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="header" className="space-y-2">
