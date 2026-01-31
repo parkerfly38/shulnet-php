@@ -1,0 +1,1180 @@
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+<html>
+  <head>
+    <!-- Compiled with Bootstrap Email version: 1.8.0 --><meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\">
+    <meta name=\"x-apple-disable-message-reformatting\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+    <meta name=\"format-detection\" content=\"telephone=no, date=no, address=no, email=no\">
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">
+    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
+    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
+    <style>
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmScUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTCUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmTwUF3w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQcV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmQlV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRCV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Go9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G49hLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GQ9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gc9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gk9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2Gw9tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2G89tLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: italic; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4B0qyriQwlOrhSvowK_l5-eTxCVx0ZbwLvKH2GE9pLmp0v5yA-xXPqCzLvPee1XYk_XSf-FmRrV13w.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 300; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrgCcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 400; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr3icqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 500; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDr7CcqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 600; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrACAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 700; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrOSAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 800; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrXiAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPd3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPZ3HOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPT3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPQ3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPe3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPb3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPY3EOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Merriweather\'; font-style: normal; font-weight: 900; font-stretch: normal; font-display: swap; src: url(\'https://fonts.gstatic.com/s/merriweather/v33/u-4D0qyriQwlOrhSvowK_l5UcA6zuSYEqOzpPW3FOZJ5eX1WtLaQwmYiScCmDxhtNOKl8yDrdyAqEw.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Oswald\'; font-style: normal; font-weight: 200; font-display: swap; src: url(\'https://fonts.gstatic.com/s/oswald/v57/TK3_WkUHHAIjg75cFRf3bXL8LICs13FvgUE.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Oswald\'; font-style: normal; font-weight: 300; font-display: swap; src: url(\'https://fonts.gstatic.com/s/oswald/v57/TK3_WkUHHAIjg75cFRf3bXL8LICs169vgUE.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Oswald\'; font-style: normal; font-weight: 400; font-display: swap; src: url(\'https://fonts.gstatic.com/s/oswald/v57/TK3_WkUHHAIjg75cFRf3bXL8LICs1_FvgUE.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Oswald\'; font-style: normal; font-weight: 500; font-display: swap; src: url(\'https://fonts.gstatic.com/s/oswald/v57/TK3_WkUHHAIjg75cFRf3bXL8LICs18NvgUE.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Oswald\'; font-style: normal; font-weight: 600; font-display: swap; src: url(\'https://fonts.gstatic.com/s/oswald/v57/TK3_WkUHHAIjg75cFRf3bXL8LICs1y9ogUE.ttf\') format(\'truetype\');
+      }
+      @font-face {
+      font-family: \'Oswald\'; font-style: normal; font-weight: 700; font-display: swap; src: url(\'https://fonts.gstatic.com/s/oswald/v57/TK3_WkUHHAIjg75cFRf3bXL8LICs1xZogUE.ttf\') format(\'truetype\');
+      }
+    </style>          <style type=\"text/css\">
+      body,table,td{font-family:Helvetica,Arial,sans-serif !important}.ExternalClass{width:100%}.ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div{line-height:150%}a{text-decoration:none}*{color:inherit}a[x-apple-data-detectors],u+#body a,#MessageViewBody a{color:inherit;text-decoration:none;font-size:inherit;font-family:inherit;font-weight:inherit;line-height:inherit}img{-ms-interpolation-mode:bicubic}table:not([class^=s-]){font-family:Helvetica,Arial,sans-serif;mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;border-collapse:collapse}table:not([class^=s-]) td{border-spacing:0px;border-collapse:collapse}@media screen and (max-width: 600px){.row-responsive.row{margin-right:0 !important}td.col-lg-3{display:block;width:100% !important;padding-left:0 !important;padding-right:0 !important}td.col-lg-4{display:block;width:100% !important;padding-left:0 !important;padding-right:0 !important}td.col-lg-6{display:block;width:100% !important;padding-left:0 !important;padding-right:0 !important}td.col-lg-9{display:block;width:100% !important;padding-left:0 !important;padding-right:0 !important}td.col-lg-12{display:block;width:100% !important;padding-left:0 !important;padding-right:0 !important}.w-full,.w-full>tbody>tr>td{width:100% !important}.pl-3:not(table),.pl-3:not(.btn)>tbody>tr>td,.pl-3.btn td a,.px-3:not(table),.px-3:not(.btn)>tbody>tr>td,.px-3.btn td a{padding-left:12px !important}*[class*=s-lg-]>tbody>tr>td{font-size:0 !important;line-height:0 !important;height:0 !important}.s-2>tbody>tr>td{font-size:8px !important;line-height:8px !important;height:8px !important}.s-3>tbody>tr>td{font-size:12px !important;line-height:12px !important;height:12px !important}.s-4>tbody>tr>td{font-size:16px !important;line-height:16px !important;height:16px !important}.s-5>tbody>tr>td{font-size:20px !important;line-height:20px !important;height:20px !important}.s-10>tbody>tr>td{font-size:40px !important;line-height:40px !important;height:40px !important}}
+    </style>
+  </head>
+  <body class=\"bg-light\" style=\"outline: 0; width: 100%; min-width: 100%; height: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; font-family: \'Merriweather\',serif; line-height: 24px; font-weight: normal; font-size: 16px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; color: #000000; margin: 0; padding: 0; border-width: 0;\" bgcolor=\"#F7FAFC\">
+    <table class=\"bg-light body\" valign=\"top\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"outline: 0; width: 100%; min-width: 100%; height: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; font-family: Helvetica, Arial, sans-serif; line-height: 24px; font-weight: normal; font-size: 16px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; color: #000000; margin: 0; padding: 0; border-width: 0;\" bgcolor=\"#F7FAFC\">
+      <tbody>
+        <tr>
+          <td valign=\"top\" style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\" bgcolor=\"#F7FAFC\">
+            <table class=\"container\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+              <tbody>
+                <tr>
+                  <td align=\"center\" style=\"line-height: 24px; font-size: 16px; margin: 0; padding: 0 16px;\">
+                    <!--[if (gte mso 9)|(IE)]>
+                      <table align=\"center\" role=\"presentation\">
+                        <tbody>
+                          <tr>
+                            <td width=\"600\">
+                    <![endif]-->
+                    <table align=\"center\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%; max-width: 600px; margin: 0 auto;\">
+                      <tbody>
+                        <tr>
+                          <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                            <table class=\"s-10 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                              <tbody>
+                                <tr>
+                                  <td style=\"line-height: 40px; font-size: 40px; width: 100%; height: 40px; margin: 0;\" align=\"left\" width=\"100%\" height=\"40\">
+                                    &#160;
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <table class=\"card\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-radius: 6px; border-collapse: separate !important; width: 100%; overflow: hidden; border: 1px solid #E2E8F0;\" bgcolor=\"#FFFFFF\">
+                              <tbody>
+                                <tr>
+                                  <td style=\"line-height: 24px; font-size: 16px; width: 100%; margin: 0;\" align=\"left\" bgcolor=\"#FFFFFF\">
+                                    <table class=\"card-body ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%; margin: 0 auto;\">
+                                      <tbody>
+                                        <tr>
+                                          <td style=\"line-height: 24px; font-size: 16px; width: 100%; margin: 0; padding: 20px;\" align=\"left\">
+                                            <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                    <div class=\"\">
+                                                      <img src=\"https://www.cbisrael.org/wp-content/uploads/2024/02/cbi_logo_transparent.png\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; border-style: none; border-width: 0;\">
+                                                    </div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                    <h1 class=\"h3\" style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Congregation Beth Israel</h1>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                    <h5 class=\"text-teal-700\" style=\"color: #13795B; padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 20px; line-height: 24px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">#WeeklyEmail</h5>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"hr\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; border-top-width: 3px !important; border-top-color: black !important; border-top-style: solid !important; height: 1px; width: 100%; margin: 0;\" align=\"left\">
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <h1 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 36px; line-height: 43.2px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Features</h1>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-6\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 50%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                              <img class=\"img-fluid\" alt=\"Image Main\" src=\"https://tlr.stripocdn.email/content/guids/CABINET_b2f92f418f885c0a93c275dcde95e8d0/images/88501610958324210.png\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; max-width: 100%; width: 100%; border-style: none; border-width: 0;\" width=\"100%\">
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"text-xs\" style=\"line-height: 14.4px; font-size: 12px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">News Clippings</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">A New Newsletter for The People</h3>
+                                                    </td>
+                                                    <td class=\"col-6\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 50%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                              <img class=\"img-fluid\" alt=\"Image Main 2\" src=\"https://tlr.stripocdn.email/content/guids/CABINET_b2f92f418f885c0a93c275dcde95e8d0/images/54091610958302056.png\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; max-width: 100%; width: 100%; border-style: none; border-width: 0;\" width=\"100%\">
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"text-xs\" style=\"line-height: 14.4px; font-size: 12px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Brains</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Stop Eating Brains, They\'re Not Kosher</h3>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-6\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 50%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                              <img class=\"img-fluid\" alt=\"Image Main\" src=\"https://tlr.stripocdn.email/content/guids/CABINET_b2f92f418f885c0a93c275dcde95e8d0/images/6271610960487021.png\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; max-width: 100%; width: 100%; border-style: none; border-width: 0;\" width=\"100%\">
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"text-xs\" style=\"line-height: 14.4px; font-size: 12px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Utterly Meaningless</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">You are Reading This on a Device</h3>
+                                                    </td>
+                                                    <td class=\"col-6\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 50%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"ax-center\" role=\"presentation\" align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 0 auto;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; margin: 0;\" align=\"left\">
+                                                              <img class=\"img-fluid\" alt=\"Image Main 2\" src=\"https://tlr.stripocdn.email/content/guids/CABINET_b2f92f418f885c0a93c275dcde95e8d0/images/3261610960491915.png\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; max-width: 100%; width: 100%; border-style: none; border-width: 0;\" width=\"100%\">
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"text-xs\" style=\"line-height: 14.4px; font-size: 12px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Food</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">I Only Pretend to Like Kugel</h3>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"hr\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; border-top-width: 3px !important; border-top-color: black !important; border-top-style: solid !important; height: 1px; width: 100%; margin: 0;\" align=\"left\">
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <h1 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 36px; line-height: 43.2px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Things of Interest</h1>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row  row-responsive\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-lg-3 border-right\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 25%; border-right-width: 3px !important; border-right-color: black !important; border-right-style: solid !important; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <img class=\"img-fluid\" alt=\"Image 1\" src=\"https://tlr.stripocdn.email/content/guids/CABINET_b2f92f418f885c0a93c275dcde95e8d0/images/47781610958604741.jpg\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; max-width: 100%; width: 100%; border-style: none; border-width: 0;\" width=\"100%\">
+                                                    </td>
+                                                    <td class=\"col-lg-9 pl-3\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 75%; padding-left: 12px; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Headline 1</h3>
+                                                      <p style=\"line-height: 24px; font-size: 16px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Lorem ipsum dolet smells like teen spirit, eats all the glue, etc.</p>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row  row-responsive\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-lg-3 border-right\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 25%; border-right-width: 3px !important; border-right-color: black !important; border-right-style: solid !important; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <img class=\"img-fluid\" alt=\"Image 2\" src=\"https://tlr.stripocdn.email/content/guids/CABINET_b2f92f418f885c0a93c275dcde95e8d0/images/47781610958604741.jpg\" style=\"height: auto; line-height: 100%; outline: none; text-decoration: none; display: block; max-width: 100%; width: 100%; border-style: none; border-width: 0;\" width=\"100%\">
+                                                    </td>
+                                                    <td class=\"col-lg-9 pl-3\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 75%; padding-left: 12px; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Headline 2</h3>
+                                                      <p style=\"line-height: 24px; font-size: 16px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Under the bridge black hole sun no rain come as you are where is my mind been caught stealing</p>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"hr\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; border-top-width: 3px !important; border-top-color: black !important; border-top-style: solid !important; height: 1px; width: 100%; margin: 0;\" align=\"left\">
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row  row-responsive\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-lg-6\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 50%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Service Schedule</h3>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"\" style=\"line-height: 24px; font-size: 16px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Saturday - 10am - Shabbat Service<br>
+                                                        Sunday - 9am - Weekly Shacharit Minyan<br>
+                                                        Monday &amp; Thursday - 5:30pm Weekly Mincha/Maariv Minyan<br>
+                                                        Friday - 5:30pm - Mincha / Kabbalat Shabbat / Shabbat Maariv</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"\" style=\"line-height: 24px; font-size: 16px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Please arrive between 9:45 and 10:15am on Saturdays, as our security committee would like to attend services, too. Wet noodle floggings will ensue.</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"\" style=\"line-height: 24px; font-size: 16px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">Childcare is available.</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td class=\"col-lg-6\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 50%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <h3 style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 28px; line-height: 33.6px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">Kiddush Sponsor</h3>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                      <p class=\"\" style=\"line-height: 24px; font-size: 16px; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">This week is sponsored by Alowicious P. Snarlbutt in memory of Angry Corpulent Mohammed</p>
+                                                      <table class=\"s-2 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;\" align=\"left\" width=\"100%\" height=\"8\">
+                                                              &#160;
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"hr\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; border-top-width: 3px !important; border-top-color: black !important; border-top-style: solid !important; height: 1px; width: 100%; margin: 0;\" align=\"left\">
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"space-y-3\">
+                                              <h1 class=\"\" style=\"padding-top: 0; padding-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 36px; line-height: 43.2px; font-family: \'Oswald\',sans-serif; margin: 0;\" align=\"left\">About Congregation Beth Israel
+                                              </h1>
+                                              <table class=\"s-3 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td style=\"line-height: 12px; font-size: 12px; width: 100%; height: 12px; margin: 0;\" align=\"left\" width=\"100%\" height=\"12\">
+                                                      &#160;
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                              <p class=\"text-gray-700\" style=\"line-height: 24px; font-size: 16px; color: #4A5568; width: 100%; font-family: \'Merriweather\',serif; margin: 0;\" align=\"left\">
+                                                We are a vibrant egalitarian and progressive Jewish community.  We welcome Jews from all backgrounds, their partners, families, and those seeking to live Jewishly.  We encourage active participation in synagogue life by each member according to their individual interests and abilities.  We empower our members to live joyful and meaningful lives through prayer, learning, community friendships, and the Jewish imperative of Tikkun Olam&#8212;repair of the world.
+                                              </p>
+                                            </div>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"hr\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 24px; font-size: 16px; border-top-width: 3px !important; border-top-color: black !important; border-top-style: solid !important; height: 1px; width: 100%; margin: 0;\" align=\"left\">
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-5 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 20px; font-size: 20px; width: 100%; height: 20px; margin: 0;\" align=\"left\" width=\"100%\" height=\"20\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row  row-responsive\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-lg-4 mr-2\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 33.333333%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"btn btn-primary\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-radius: 6px; border-collapse: separate !important;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; border-radius: 6px; margin: 0;\" align=\"center\" bgcolor=\"#0D6EFD\">
+                                                              <a href=\"https://www.facebook.com/congregation.israel.9\" style=\"color: #FFFFFF; font-size: 16px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 6px; line-height: 20px; display: block; font-weight: normal; white-space: nowrap; background-color: #0D6EFD; padding: 8px 12px; border: 1px solid #0D6EFD;\">Follow us on Facebook!</a>
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td class=\"col-lg-4 mr-2\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 33.333333%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"btn btn-danger\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-radius: 6px; border-collapse: separate !important;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; border-radius: 6px; margin: 0;\" align=\"center\" bgcolor=\"#DC3545\">
+                                                              <a href=\"https://www.youtube.com/@chevrutacbi3753\" style=\"color: #FFFFFF; font-size: 16px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 6px; line-height: 20px; display: block; font-weight: normal; white-space: nowrap; background-color: #DC3545; padding: 8px 12px; border: 1px solid #DC3545;\">Stream us on YouTube!</a>
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td class=\"col-lg-4\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 33.333333%; margin: 0;\" align=\"left\" valign=\"top\">
+                                                      <table class=\"btn btn-secondary\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-radius: 6px; border-collapse: separate !important;\">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td style=\"line-height: 24px; font-size: 16px; border-radius: 6px; margin: 0;\" align=\"center\" bgcolor=\"#718096\">
+                                                              <a href=\"https://www.cbisrael.org\" style=\"color: #FFFFFF; font-size: 16px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 6px; line-height: 20px; display: block; font-weight: normal; white-space: nowrap; background-color: #718096; padding: 8px 12px; border: 1px solid #718096;\">Visit us on the web</a>
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                            <div class=\"row  row-responsive\" style=\"margin-right: -24px;\">
+                                              <table class=\"\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"table-layout: fixed; width: 100%;\" width=\"100%\">
+                                                <tbody>
+                                                  <tr>
+                                                    <td class=\"col-lg-12 ax-center\" align=\"center\" style=\"line-height: 24px; font-size: 16px; min-height: 1px; font-weight: normal; padding-right: 24px; width: 100%; margin: 0;\" valign=\"top\">
+                                                      144 York Street, Bangor, ME 04496<br>
+                                                      207-945-3433<br>
+                                                      <a href=\"https://members.cbisrael.org/\" style=\"color: #0d6efd;\">Unsubscribe</a>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <table class=\"s-4 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                                              <tbody>
+                                                <tr>
+                                                  <td style=\"line-height: 16px; font-size: 16px; width: 100%; height: 16px; margin: 0;\" align=\"left\" width=\"100%\" height=\"16\">
+                                                    &#160;
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <table class=\"s-10 w-full\" role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\" width=\"100%\">
+                              <tbody>
+                                <tr>
+                                  <td style=\"line-height: 40px; font-size: 40px; width: 100%; height: 40px; margin: 0;\" align=\"left\" width=\"100%\" height=\"40\">
+                                    &#160;
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <!--[if (gte mso 9)|(IE)]>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+                    <![endif]-->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
+
