@@ -122,6 +122,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ],
         ]);
 
+        // Committee member management
+        Route::post('admin/committees/{committee}/members', [CommitteeController::class, 'attachMember'])->name('committees.members.attach');
+        Route::delete('admin/committees/{committee}/members/{member}', [CommitteeController::class, 'detachMember'])->name('committees.members.detach');
+
+        // Board member management
+        Route::post('admin/boards/{board}/members', [BoardController::class, 'attachMember'])->name('boards.members.attach');
+        Route::delete('admin/boards/{board}/members/{member}', [BoardController::class, 'detachMember'])->name('boards.members.detach');
+
         // Meeting management routes (for both committees and boards)
         Route::prefix('admin/meetings/{type}/{id}')->group(function () {
             Route::get('/', [MeetingController::class, 'index'])->name('meetings.index');

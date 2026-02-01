@@ -105,4 +105,40 @@ class BoardController extends Controller
         return redirect()->route('boards.index')
             ->with('success', 'Board deleted successfully.');
     }
+
+    /**
+     * Attach a member to the board with term details.
+     */
+    public function attachMember(Request $request, Board $board)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'title' => 'nullable|string|max:255',
+            'term_start_date' => 'required|date',
+            'term_end_date' => 'nullable|date|after_or_equal:term_start_date',
+        ]);
+
+        // Check if member is already attached
+        if ($board->members()->where('member_id', $validated['member_id'])->exists()) {
+            return back()->withErrors(['member_id' => 'This member is already on this board.']);
+        }
+
+        $board->members()->attach($validated['member_id'], [
+            'title' => $validated['title'] ?? null,
+            'term_start_date' => $validated['term_start_date'],
+            'term_end_date' => $validated['term_end_date'] ?? null,
+        ]);
+
+        return back()->with('success', 'Member added to board successfully.');
+    }
+
+    /**
+     * Detach a member from the board.
+     */
+    public function detachMember(Board $board, Member $member)
+    {
+        $board->members()->detach($member->id);
+
+        return back()->with('success', 'Member removed from board.');
+    }
 }

@@ -105,4 +105,40 @@ class CommitteeController extends Controller
         return redirect()->route('committees.index')
             ->with('success', 'Committee deleted successfully.');
     }
+
+    /**
+     * Attach a member to the committee with term details.
+     */
+    public function attachMember(Request $request, Committee $committee)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'title' => 'nullable|string|max:255',
+            'term_start_date' => 'required|date',
+            'term_end_date' => 'nullable|date|after_or_equal:term_start_date',
+        ]);
+
+        // Check if member is already attached
+        if ($committee->members()->where('member_id', $validated['member_id'])->exists()) {
+            return back()->withErrors(['member_id' => 'This member is already on this committee.']);
+        }
+
+        $committee->members()->attach($validated['member_id'], [
+            'title' => $validated['title'] ?? null,
+            'term_start_date' => $validated['term_start_date'],
+            'term_end_date' => $validated['term_end_date'] ?? null,
+        ]);
+
+        return back()->with('success', 'Member added to committee successfully.');
+    }
+
+    /**
+     * Detach a member from the committee.
+     */
+    public function detachMember(Committee $committee, Member $member)
+    {
+        $committee->members()->detach($member->id);
+
+        return back()->with('success', 'Member removed from committee.');
+    }
 }
