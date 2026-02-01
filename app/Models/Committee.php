@@ -43,4 +43,13 @@ class Committee extends Model
         return $this->morphMany(Meeting::class, 'meetable')
             ->orderBy('meeting_date', 'desc');
     }
+
+    /**
+     * Get all reports for this committee.
+     */
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable')
+            ->orderBy('report_date', 'desc');
+    }
 }

@@ -34,6 +34,16 @@ This is a replacement for the previous open source solution based on Zenbership.
 - Ticket type management
 - Event policies and permissions
 
+### Committee and Board Management
+- **Committee Management** - Create and manage synagogue committees
+- **Board Management** - Track board of directors and governance
+- **Member Terms** - Assign members to committees/boards with titles and term dates
+- **Meeting Management** - Schedule meetings with agendas, Zoom links, and email invitations
+- **Meeting Minutes** - Attach minutes to meetings after they occur
+- **Reports** - Create and publish committee and board reports with date and content
+- **Member Portal** - Members can view their committees/boards, upcoming meetings, and reports
+- **Leadership Dashboard** - Executive overview with metrics, upcoming meetings, term expirations, and monthly reports
+
 ### Yahrzeit Tracking
 - Hebrew calendar integration
 - Yahrzeit date management
@@ -135,6 +145,7 @@ This is a replacement for the previous open source solution based on Zenbership.
    - Membership tiers (Individual, Family, Student, Senior, etc.)
    - School tuition tiers (Full Tuition, Discounts, Scholarships, Payment Plans)
    - Sample members and parents (for testing)
+   - Sample committees and boards with members
    - HTML templates, pages, and assets (for content management demo)
 
 8. **Build assets**
@@ -184,13 +195,20 @@ app/
 ├── Enums/            # Enum definitions (UserRole)
 ├── Http/
 │   ├── Controllers/  # Application controllers
+│   │   ├── Member/   # Member-facing controllers
 │   ├── Middleware/   # Custom middleware
 │   └── Requests/     # Form requests
-├── Mail/             # Mailable classes (InvoiceMail)
+├── Mail/             # Mailable classes
+│   ├── InvoiceMail.php
+│   └── MeetingInvitationMail.php
 ├── Models/           # Eloquent models
 │   ├── Member.php
 │   ├── Student.php
 │   ├── ParentModel.php
+│   ├── Committee.php
+│   ├── Board.php
+│   ├── Meeting.php
+│   ├── Report.php
 │   ├── MembershipTier.php
 │   ├── SchoolTuitionTier.php
 │   ├── HtmlPage.php
@@ -218,13 +236,22 @@ resources/
 │   │   ├── dashboard.tsx
 │   │   ├── members/
 │   │   ├── invoices/
+│   │   ├── member/   # Member-facing pages
+│   │   │   ├── committees/
+│   │   │   └── boards/
 │   │   └── admin/
+│   │       ├── committees/
+│   │       ├── boards/
+│   │       ├── meetings/
+│   │       ├── reports/
+│   │       ├── leadership/
 │   │       ├── membership-tiers/
 │   │       └── school-tuition-tiers/
 │   └── types/        # TypeScript definitions
-└── ├── SchoolTuitionTierSeeder.php
-    └── HtmlContentlade templates
+└── views/            # Blade templates
     └── emails/       # Email templates
+        ├── invoice.blade.php
+        └── meeting-invitation.blade.php
 
 database/
 ├── factories/        # Model factories
@@ -348,6 +375,62 @@ The HTML Publisher provides a complete content management system for creating an
 - Board meeting minutes and documents
 
 Access the HTML Publisher at `/admin/html-pages` in the application.
+
+### Committee and Board Management
+
+The system provides comprehensive tools for managing synagogue committees and the board of directors:
+
+**Committee and Board Structure:**
+- Create and manage multiple committees (e.g., Ritual, Education, Social Action)
+- Track board of directors with descriptions and responsibilities
+- Add members to committees/boards with specific titles and term dates
+- Term tracking with start and end dates for accountability
+- Active member counts and roster management
+
+**Meeting Management:**
+- Schedule meetings with date, time, and agenda
+- Add virtual meeting links (Zoom, Teams, etc.)
+- Email automatic meeting invitations to all committee/board members
+- Attach minutes after meetings for record-keeping
+- Track upcoming and past meetings
+- View meeting history with searchable records
+
+**Reports System:**
+- Create committee and board reports with title, date, and rich content
+- Publish monthly reports and activity summaries
+- Track report history for transparency
+- View all reports by committee or board
+
+**Member Portal:**
+- Members can view "My Committees" and "My Boards"
+- Access to upcoming meeting schedules
+- View other committee/board members with contact information
+- Read published reports and minutes
+- Stay informed about committee activities
+
+**Leadership Dashboard:**
+- Executive overview at `/admin/leadership`
+- Real-time statistics:
+  - Total committees and boards with member counts
+  - Upcoming meetings in next 30 days
+  - Terms expiring in next 60 days
+- Upcoming and recent meeting lists
+- Term expiration tracking with color-coded urgency:
+  - Red: Terms ending within 14 days
+  - Yellow: Terms ending within 30 days
+  - Gray: Terms ending within 60 days
+- Monthly report summaries
+- Quick access to committee and board management
+
+**Use Cases:**
+- Board of Directors governance
+- Committee roster management
+- Meeting coordination and documentation
+- Term rotation tracking
+- Organizational transparency
+- Member engagement and participation
+
+Access committee management at `/admin/committees` and board management at `/admin/boards`.
 
 ## Configuration
 

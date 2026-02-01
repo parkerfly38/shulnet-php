@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Edit, ArrowLeft, User, CalendarDays, Plus, Trash2 } from 'lucide-react';
+import { Edit, ArrowLeft, User, CalendarDays, Plus, Trash2, FileText } from 'lucide-react';
 import { type BreadcrumbItem, type BoardMembership } from '@/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -101,6 +101,12 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
               <Button variant="outline">
                 <CalendarDays className="mr-2 h-4 w-4" />
                 Meetings
+              </Button>
+            </Link>
+            <Link href={`/admin/reports/board/${board.id}`}>
+              <Button variant="outline">
+                <FileText className="mr-2 h-4 w-4" />
+                Reports
               </Button>
             </Link>
             <Link href={`/admin/boards/${board.id}/edit`}>

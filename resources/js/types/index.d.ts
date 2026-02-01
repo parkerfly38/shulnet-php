@@ -166,6 +166,18 @@ export interface Meeting {
     meetable?: Committee | Board;
 }
 
+export interface Report {
+    id: number;
+    reportable_type: string;
+    reportable_id: number;
+    title: string;
+    report_date: string;
+    content: string;
+    created_at: string;
+    updated_at: string;
+    reportable?: Committee | Board;
+}
+
 export interface EmailRecord {
     id: number;
     member_id: number;

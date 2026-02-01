@@ -18,10 +18,14 @@ use App\Http\Controllers\HtmlPageController;
 use App\Http\Controllers\HtmlTemplateController;
 use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LeadershipDashboardController;
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Member\PaymentController;
+use App\Http\Controllers\Member\CommitteeController as MemberCommitteeController;
+use App\Http\Controllers\Member\BoardController as MemberBoardController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\NoteController;
@@ -57,6 +61,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('member/yahrzeits/request-change', [MemberDashboardController::class, 'requestYahrzeitChange'])->name('member.yahrzeits.request-change');
     Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');
     Route::post('member/events/{event}/register', [MemberDashboardController::class, 'registerForEvent'])->name('member.events.register');
+
+    // Member committees and boards
+    Route::get('member/committees', [MemberCommitteeController::class, 'index'])->name('member.committees.index');
+    Route::get('member/committees/{committee}', [MemberCommitteeController::class, 'show'])->name('member.committees.show');
+    Route::get('member/boards', [MemberBoardController::class, 'index'])->name('member.boards.index');
+    Route::get('member/boards/{board}', [MemberBoardController::class, 'show'])->name('member.boards.show');
 
     // Payment routes
     Route::get('member/invoices/{id}/pay', [PaymentController::class, 'create'])->name('member.invoices.pay');
@@ -95,6 +105,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
+
+        // Leadership dashboard
+        Route::get('admin/leadership', [LeadershipDashboardController::class, 'index'])->name('leadership.dashboard');
 
         // Committee management routes
         Route::resource('admin/committees', CommitteeController::class, [
@@ -140,6 +153,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
             Route::delete('/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
             Route::post('/{meeting}/send-invitations', [MeetingController::class, 'sendInvitations'])->name('meetings.send-invitations');
+        });
+
+        // Report management routes (for both committees and boards)
+        Route::prefix('admin/reports/{type}/{id}')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/create', [ReportController::class, 'create'])->name('reports.create');
+            Route::post('/', [ReportController::class, 'store'])->name('reports.store');
+            Route::get('/{report}', [ReportController::class, 'show'])->name('reports.show');
+            Route::get('/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
+            Route::put('/{report}', [ReportController::class, 'update'])->name('reports.update');
+            Route::delete('/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
         });
 
         // 
