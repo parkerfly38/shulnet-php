@@ -133,4 +133,50 @@ class Member extends Model
     {
         return $this->hasMany(EmailRecord::class);
     }
+
+    /**
+     * Get committees this member belongs to.
+     */
+    public function committees(): BelongsToMany
+    {
+        return $this->belongsToMany(Committee::class, 'committee_member')
+            ->withPivot('title', 'term_start_date', 'term_end_date')
+            ->withTimestamps()
+            ->orderByPivot('term_start_date', 'desc');
+    }
+
+    /**
+     * Get active committee memberships (end date in future or null).
+     */
+    public function activeCommittees(): BelongsToMany
+    {
+        return $this->committees()
+            ->where(function ($query) {
+                $query->whereNull('committee_member.term_end_date')
+                    ->orWhere('committee_member.term_end_date', '>=', now()->toDateString());
+            });
+    }
+
+    /**
+     * Get boards this member belongs to.
+     */
+    public function boards(): BelongsToMany
+    {
+        return $this->belongsToMany(Board::class, 'board_member')
+            ->withPivot('title', 'term_start_date', 'term_end_date')
+            ->withTimestamps()
+            ->orderByPivot('term_start_date', 'desc');
+    }
+
+    /**
+     * Get active board memberships (end date in future or null).
+     */
+    public function activeBoards(): BelongsToMany
+    {
+        return $this->boards()
+            ->where(function ($query) {
+                $query->whereNull('board_member.term_end_date')
+                    ->orWhere('board_member.term_end_date', '>=', now()->toDateString());
+            });
+    }
 }

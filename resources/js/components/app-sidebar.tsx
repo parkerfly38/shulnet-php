@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2 } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -114,6 +114,20 @@ const adminNavItems: NavItem[] = [
         title: 'Gabbai Dashboard',
         href: '/admin/gabbai',
         icon: UserCheck,
+    },
+];
+
+const leadershipNavItems: NavItem[] = [
+    {
+        groupTitle: 'Leadership Management',
+        title: 'Committees',
+        href: '/admin/committees',
+        icon: Users2,
+    },
+    {
+        title: 'Boards',
+        href: '/admin/boards',
+        icon: Briefcase,
     },
 ];
 
@@ -301,6 +315,9 @@ export function AppSidebar() {
                         <NavMain items={mainNavItems} />
                         {/* Admin Section */}
                         <NavMain items={adminNavItems} />
+
+                        {/* Leadership Management Section */}
+                        <NavMain items={leadershipNavItems} />
 
                         {/* School Management Section */}
                         <NavMain items={schoolNavItems} />

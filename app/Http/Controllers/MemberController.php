@@ -131,6 +131,12 @@ class MemberController extends Controller
             },
             'emailRecords' => function ($query) {
                 $query->orderBy('date_sent', 'desc')->limit(50);
+            },
+            'committees' => function ($query) {
+                $query->orderByPivot('term_start_date', 'desc');
+            },
+            'boards' => function ($query) {
+                $query->orderByPivot('term_start_date', 'desc');
             }
         ]);
 

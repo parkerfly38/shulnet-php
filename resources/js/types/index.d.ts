@@ -79,6 +79,9 @@ export interface Member {
     maftir?: boolean;
     anniversary_date?: string;
     membership_periods?: MembershipPeriod[];
+    committees?: CommitteeMembership[];
+    boards?: BoardMembership[];
+    email_records?: EmailRecord[];
     created_at: string;
     updated_at: string;
     user_id?: number;
@@ -99,6 +102,81 @@ export interface MembershipPeriod {
         total: string;
         status: string;
     };
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Committee {
+    id: number;
+    name: string;
+    description?: string;
+    created_at: string;
+    updated_at: string;
+    pivot?: CommitteeMemberPivot;
+}
+
+export interface Board {
+    id: number;
+    name: string;
+    description?: string;
+    created_at: string;
+    updated_at: string;
+    pivot?: BoardMemberPivot;
+}
+
+export interface CommitteeMemberPivot {
+    committee_id: number;
+    member_id: number;
+    title?: string;
+    term_start_date: string;
+    term_end_date?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface BoardMemberPivot {
+    board_id: number;
+    member_id: number;
+    title?: string;
+    term_start_date: string;
+    term_end_date?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CommitteeMembership extends Member {
+    pivot: CommitteeMemberPivot;
+}
+
+export interface BoardMembership extends Member {
+    pivot: BoardMemberPivot;
+}
+
+export interface Meeting {
+    id: number;
+    meetable_type: string;
+    meetable_id: number;
+    title: string;
+    agenda?: string;
+    meeting_date: string;
+    meeting_link?: string;
+    minutes?: string;
+    created_at: string;
+    updated_at: string;
+    meetable?: Committee | Board;
+}
+
+export interface EmailRecord {
+    id: number;
+    member_id: number;
+    subject: string;
+    from: string;
+    to: string;
+    cc?: string;
+    bcc?: string;
+    date_sent: string;
+    conversation_id?: string;
+    message_id?: string;
     created_at: string;
     updated_at: string;
 }

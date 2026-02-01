@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard } from 'lucide-react';
+import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
 
 interface Props {
@@ -544,6 +544,146 @@ export default function MembersShow({ member }: Readonly<Props>) {
                   Add First Period
                 </Button>
               </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Committee Memberships Section */}
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
+              <User className="h-5 w-5 mr-2" />
+              Committee Memberships
+            </h2>
+          </div>
+
+          {member.committees && member.committees.length > 0 ? (
+            <div className="space-y-4">
+              {member.committees.map((committee) => {
+                const isActive = !committee.pivot?.term_end_date || new Date(committee.pivot.term_end_date) >= new Date();
+                
+                return (
+                  <div 
+                    key={committee.id} 
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                            {committee.name}
+                          </h3>
+                          <Badge variant={isActive ? "default" : "secondary"}>
+                            {isActive ? 'Active' : 'Expired'}
+                          </Badge>
+                        </div>
+                        
+                        {committee.pivot?.title && (
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            <span className="font-medium">Position:</span> {committee.pivot.title}
+                          </div>
+                        )}
+
+                        {committee.description && (
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            {committee.description}
+                          </div>
+                        )}
+                        
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term Start</dt>
+                            <dd className="text-gray-900 dark:text-gray-100">
+                              {committee.pivot?.term_start_date ? formatDate(committee.pivot.term_start_date) : 'N/A'}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term End</dt>
+                            <dd className="text-gray-900 dark:text-gray-100">
+                              {committee.pivot?.term_end_date ? formatDate(committee.pivot.term_end_date) : 'Ongoing'}
+                            </dd>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <User className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>No committee memberships recorded.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Board Memberships Section */}
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
+              <User className="h-5 w-5 mr-2" />
+              Board Memberships
+            </h2>
+          </div>
+
+          {member.boards && member.boards.length > 0 ? (
+            <div className="space-y-4">
+              {member.boards.map((board) => {
+                const isActive = !board.pivot?.term_end_date || new Date(board.pivot.term_end_date) >= new Date();
+                
+                return (
+                  <div 
+                    key={board.id} 
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                            {board.name}
+                          </h3>
+                          <Badge variant={isActive ? "default" : "secondary"}>
+                            {isActive ? 'Active' : 'Expired'}
+                          </Badge>
+                        </div>
+                        
+                        {board.pivot?.title && (
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            <span className="font-medium">Position:</span> {board.pivot.title}
+                          </div>
+                        )}
+
+                        {board.description && (
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            {board.description}
+                          </div>
+                        )}
+                        
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term Start</dt>
+                            <dd className="text-gray-900 dark:text-gray-100">
+                              {board.pivot?.term_start_date ? formatDate(board.pivot.term_start_date) : 'N/A'}
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term End</dt>
+                            <dd className="text-gray-900 dark:text-gray-100">
+                              {board.pivot?.term_end_date ? formatDate(board.pivot.term_end_date) : 'Ongoing'}
+                            </dd>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <User className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <p>No board memberships recorded.</p>
             </div>
           )}
         </div>

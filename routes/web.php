@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeedController;
 use App\Http\Controllers\EmailCampaignController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Member\PaymentController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\MembershipTierController;
@@ -93,6 +96,45 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
 
+        // Committee management routes
+        Route::resource('admin/committees', CommitteeController::class, [
+            'names' => [
+                'index' => 'committees.index',
+                'create' => 'committees.create',
+                'store' => 'committees.store',
+                'show' => 'committees.show',
+                'edit' => 'committees.edit',
+                'update' => 'committees.update',
+                'destroy' => 'committees.destroy',
+            ],
+        ]);
+
+        // Board management routes
+        Route::resource('admin/boards', BoardController::class, [
+            'names' => [
+                'index' => 'boards.index',
+                'create' => 'boards.create',
+                'store' => 'boards.store',
+                'show' => 'boards.show',
+                'edit' => 'boards.edit',
+                'update' => 'boards.update',
+                'destroy' => 'boards.destroy',
+            ],
+        ]);
+
+        // Meeting management routes (for both committees and boards)
+        Route::prefix('admin/meetings/{type}/{id}')->group(function () {
+            Route::get('/', [MeetingController::class, 'index'])->name('meetings.index');
+            Route::get('/create', [MeetingController::class, 'create'])->name('meetings.create');
+            Route::post('/', [MeetingController::class, 'store'])->name('meetings.store');
+            Route::get('/{meeting}', [MeetingController::class, 'show'])->name('meetings.show');
+            Route::get('/{meeting}/edit', [MeetingController::class, 'edit'])->name('meetings.edit');
+            Route::put('/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+            Route::delete('/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
+            Route::post('/{meeting}/send-invitations', [MeetingController::class, 'sendInvitations'])->name('meetings.send-invitations');
+        });
+
+        // 
         // Email campaign management routes
         Route::resource('admin/campaigns', EmailCampaignController::class, [
             'names' => [
