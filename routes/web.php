@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeedController;
 use App\Http\Controllers\EmailCampaignController;
@@ -16,9 +18,14 @@ use App\Http\Controllers\HtmlPageController;
 use App\Http\Controllers\HtmlTemplateController;
 use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LeadershipDashboardController;
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Member\PaymentController;
+use App\Http\Controllers\Member\CommitteeController as MemberCommitteeController;
+use App\Http\Controllers\Member\BoardController as MemberBoardController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\NoteController;
@@ -54,6 +61,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('member/yahrzeits/request-change', [MemberDashboardController::class, 'requestYahrzeitChange'])->name('member.yahrzeits.request-change');
     Route::get('member/events', [MemberDashboardController::class, 'events'])->name('member.events');
     Route::post('member/events/{event}/register', [MemberDashboardController::class, 'registerForEvent'])->name('member.events.register');
+
+    // Member committees and boards
+    Route::get('member/committees', [MemberCommitteeController::class, 'index'])->name('member.committees.index');
+    Route::get('member/committees/{committee}', [MemberCommitteeController::class, 'show'])->name('member.committees.show');
+    Route::get('member/boards', [MemberBoardController::class, 'index'])->name('member.boards.index');
+    Route::get('member/boards/{board}', [MemberBoardController::class, 'show'])->name('member.boards.show');
 
     // Payment routes
     Route::get('member/invoices/{id}/pay', [PaymentController::class, 'create'])->name('member.invoices.pay');
@@ -93,6 +106,67 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
 
+        // Leadership dashboard
+        Route::get('admin/leadership', [LeadershipDashboardController::class, 'index'])->name('leadership.dashboard');
+
+        // Committee management routes
+        Route::resource('admin/committees', CommitteeController::class, [
+            'names' => [
+                'index' => 'committees.index',
+                'create' => 'committees.create',
+                'store' => 'committees.store',
+                'show' => 'committees.show',
+                'edit' => 'committees.edit',
+                'update' => 'committees.update',
+                'destroy' => 'committees.destroy',
+            ],
+        ]);
+
+        // Board management routes
+        Route::resource('admin/boards', BoardController::class, [
+            'names' => [
+                'index' => 'boards.index',
+                'create' => 'boards.create',
+                'store' => 'boards.store',
+                'show' => 'boards.show',
+                'edit' => 'boards.edit',
+                'update' => 'boards.update',
+                'destroy' => 'boards.destroy',
+            ],
+        ]);
+
+        // Committee member management
+        Route::post('admin/committees/{committee}/members', [CommitteeController::class, 'attachMember'])->name('committees.members.attach');
+        Route::delete('admin/committees/{committee}/members/{member}', [CommitteeController::class, 'detachMember'])->name('committees.members.detach');
+
+        // Board member management
+        Route::post('admin/boards/{board}/members', [BoardController::class, 'attachMember'])->name('boards.members.attach');
+        Route::delete('admin/boards/{board}/members/{member}', [BoardController::class, 'detachMember'])->name('boards.members.detach');
+
+        // Meeting management routes (for both committees and boards)
+        Route::prefix('admin/meetings/{type}/{id}')->group(function () {
+            Route::get('/', [MeetingController::class, 'index'])->name('meetings.index');
+            Route::get('/create', [MeetingController::class, 'create'])->name('meetings.create');
+            Route::post('/', [MeetingController::class, 'store'])->name('meetings.store');
+            Route::get('/{meeting}', [MeetingController::class, 'show'])->name('meetings.show');
+            Route::get('/{meeting}/edit', [MeetingController::class, 'edit'])->name('meetings.edit');
+            Route::put('/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+            Route::delete('/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
+            Route::post('/{meeting}/send-invitations', [MeetingController::class, 'sendInvitations'])->name('meetings.send-invitations');
+        });
+
+        // Report management routes (for both committees and boards)
+        Route::prefix('admin/reports/{type}/{id}')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/create', [ReportController::class, 'create'])->name('reports.create');
+            Route::post('/', [ReportController::class, 'store'])->name('reports.store');
+            Route::get('/{report}', [ReportController::class, 'show'])->name('reports.show');
+            Route::get('/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
+            Route::put('/{report}', [ReportController::class, 'update'])->name('reports.update');
+            Route::delete('/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
+        });
+
+        // 
         // Email campaign management routes
         Route::resource('admin/campaigns', EmailCampaignController::class, [
             'names' => [

@@ -2,3 +2,5 @@
 !private/
 !public/
 !.gitignore
+!weekly-newsletter-escaped.txt
+!weekly-newsletter-template.html
