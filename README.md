@@ -507,6 +507,15 @@ php artisan test tests/Feature/MemberTest.php
 php artisan test --coverage
 ```
 
+## Docker
+
+Release images are available here:
+https://hub.docker.com/repository/docker/parkerfly38/shulnet-php/general
+
+```bash
+docker push parkerfly38/shulnet-php:v1.0.2
+```
+
 ## Contributing
 
 1. Create a feature branch
