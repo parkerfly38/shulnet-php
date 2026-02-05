@@ -88,7 +88,8 @@ export default function LeadershipDashboard({
   };
 
   const getDaysUntil = (dateString: string) => {
-    const days = Math.ceil((new Date(dateString).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    const now = new Date().getTime();
+    const days = Math.ceil((new Date(dateString).getTime() - now) / (1000 * 60 * 60 * 24));
     return days;
   };
 
