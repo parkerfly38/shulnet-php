@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Committees & Boards - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html" class="active">Committees & Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Committee and Board Management</h1>
+      
+      <p>ShulNET provides comprehensive tools for managing synagogue committees and the board of directors. The system supports the full lifecycle of committee and board operations including member management, meeting coordination, minute-taking, and report publishing.</p>
+
+      <div class="alert alert-info">
+        <strong>Quick Access:</strong> Navigate to Admin → Committees or Admin → Boards to get started.
+      </div>
+
+      <h2>Overview</h2>
+
+      <p>The committee and board management system includes:</p>
+      <ul>
+        <li><strong>Committee Management</strong> - Create and manage synagogue committees</li>
+        <li><strong>Board Management</strong> - Track board of directors and governance</li>
+        <li><strong>Member Terms</strong> - Assign members with titles and term dates</li>
+        <li><strong>Meeting Management</strong> - Schedule meetings with agendas and email invitations</li>
+        <li><strong>Meeting Minutes</strong> - Attach minutes to meetings after they occur</li>
+        <li><strong>Reports</strong> - Create and publish committee and board reports</li>
+        <li><strong>Member Portal</strong> - Members view their committees/boards and meetings</li>
+        <li><strong>Leadership Dashboard</strong> - Executive overview with metrics and term tracking</li>
+      </ul>
+
+      <h2>Committees and Boards</h2>
+
+      <h3>Creating Committees</h3>
+
+      <p>Navigate to <code>/admin/committees</code> to manage all committees.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>Yes</td>
+            <td>Committee name (e.g., "Ritual Committee", "Education Committee")</td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>No</td>
+            <td>Detailed description of the committee's purpose and responsibilities</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Example Committees</h4>
+      <ul>
+        <li><strong>Ritual Committee</strong> - Oversees religious services and lifecycle events</li>
+        <li><strong>Education Committee</strong> - Manages educational programs and curriculum</li>
+        <li><strong>Social Action Committee</strong> - Coordinates community service initiatives</li>
+        <li><strong>Finance Committee</strong> - Oversees budget and financial planning</li>
+      </ul>
+
+      <h3>Creating Boards</h3>
+
+      <p>Navigate to <code>/admin/boards</code> to manage boards (typically the Board of Directors).</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>Yes</td>
+            <td>Board name (e.g., "Board of Directors")</td>
+          </tr>
+          <tr>
+            <td>Description</td>
+            <td>No</td>
+            <td>Detailed description of the board's responsibilities</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Example Board</h4>
+      <p><strong>Board of Directors</strong> - Provides governance and strategic direction for the congregation</p>
+
+      <h3>Managing Committees and Boards</h3>
+
+      <p>From the committee or board detail page, you can:</p>
+      <ul>
+        <li>View all members with their titles and terms</li>
+        <li>Add new members</li>
+        <li>Remove members</li>
+        <li>Schedule meetings</li>
+        <li>Create reports</li>
+        <li>View meeting history</li>
+      </ul>
+
+      <h2>Member Management</h2>
+
+      <h3>Adding Members to Committees/Boards</h3>
+
+      <p>From a committee or board detail page:</p>
+
+      <ol>
+        <li>Click <strong>Add Member</strong> button</li>
+        <li>Select a member from the dropdown</li>
+        <li>Enter their <strong>Title</strong> (e.g., "Chair", "Vice Chair", "Secretary")</li>
+        <li>Set <strong>Term Start Date</strong></li>
+        <li>Set <strong>Term End Date</strong> (optional)</li>
+        <li>Click <strong>Add Member</strong></li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Validation:</strong>
+        <ul>
+          <li>A member cannot be added to the same committee/board twice</li>
+          <li>Term end date must be on or after the term start date</li>
+          <li>All fields except term end date are required</li>
+        </ul>
+      </div>
+
+      <h3>Member Titles</h3>
+
+      <p>Common titles for committees and boards:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chair / President</td>
+            <td>Leads the committee/board</td>
+          </tr>
+          <tr>
+            <td>Vice Chair / Vice President</td>
+            <td>Assists the chair</td>
+          </tr>
+          <tr>
+            <td>Secretary</td>
+            <td>Takes minutes and manages records</td>
+          </tr>
+          <tr>
+            <td>Treasurer</td>
+            <td>Manages finances (for boards)</td>
+          </tr>
+          <tr>
+            <td>Member</td>
+            <td>General committee/board member</td>
+          </tr>
+          <tr>
+            <td>Ex-Officio</td>
+            <td>Non-voting advisory member</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Term Tracking</h3>
+
+      <p>Member terms are tracked with start and end dates:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Term Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-success">Active terms</span></td>
+            <td>Current members with no end date or future end date</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Expiring terms</span></td>
+            <td>Members whose terms are ending soon (tracked in leadership dashboard)</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Past terms</span></td>
+            <td>Members whose terms have ended (historical record)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Removing Members</h3>
+
+      <p>To remove a member from a committee/board:</p>
+      <ol>
+        <li>Find the member in the members list</li>
+        <li>Click <strong>Remove</strong> button</li>
+        <li>Confirm the removal</li>
+      </ol>
+
+      <p>This preserves the historical record while removing active membership.</p>
+
+      <h2>Meeting Management</h2>
+
+      <h3>Creating Meetings</h3>
+
+      <p>Meetings are polymorphic and can be attached to either committees or boards.</p>
+
+      <p>Navigate to <code>/admin/meetings/{type}/{id}</code> where:</p>
+      <ul>
+        <li><code>{type}</code> is either <code>committee</code> or <code>board</code></li>
+        <li><code>{id}</code> is the committee or board ID</li>
+      </ul>
+
+      <h4>Meeting Fields</h4>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Title</td>
+            <td>Yes</td>
+            <td>Meeting name (e.g., "Monthly Board Meeting")</td>
+          </tr>
+          <tr>
+            <td>Meeting Date</td>
+            <td>Yes</td>
+            <td>Date and time of the meeting</td>
+          </tr>
+          <tr>
+            <td>Agenda</td>
+            <td>No</td>
+            <td>Meeting agenda or topics to discuss</td>
+          </tr>
+          <tr>
+            <td>Meeting Link</td>
+            <td>No</td>
+            <td>Virtual meeting link (Zoom, Teams, Google Meet, etc.)</td>
+          </tr>
+          <tr>
+            <td>Minutes</td>
+            <td>No</td>
+            <td>Meeting minutes (can be added later)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Scheduling Meetings</h3>
+
+      <ol>
+        <li>From committee/board detail page, click <strong>Schedule Meeting</strong></li>
+        <li>Fill in meeting details</li>
+        <li>Click <strong>Create Meeting</strong></li>
+        <li>Optionally click <strong>Send Invitations</strong> to email all members</li>
+      </ol>
+
+      <h3>Email Invitations</h3>
+
+      <p>After creating a meeting, you can send email invitations to all committee/board members:</p>
+
+      <ol>
+        <li>From the meeting detail page, click <strong>Send Invitations</strong></li>
+        <li>An email will be sent to each member containing:
+          <ul>
+            <li>Meeting title</li>
+            <li>Date and time</li>
+            <li>Agenda</li>
+            <li>Meeting link (if provided)</li>
+            <li>Committee/board name</li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Email Template:</strong> The email uses <code>resources/views/emails/meeting-invitation.blade.php</code>
+      </div>
+
+      <h3>Adding Meeting Minutes</h3>
+
+      <p>Minutes can be added after a meeting has occurred:</p>
+
+      <ol>
+        <li>Navigate to the meeting detail page</li>
+        <li>Click <strong>Edit Meeting</strong></li>
+        <li>Add minutes in the <strong>Minutes</strong> field</li>
+        <li>Save the meeting</li>
+      </ol>
+
+      <p>Minutes support rich text and can include:</p>
+      <ul>
+        <li>Attendees</li>
+        <li>Discussion points</li>
+        <li>Decisions made</li>
+        <li>Action items</li>
+      </ul>
+
+      <h3>Viewing Meetings</h3>
+
+      <h4>Upcoming Meetings</h4>
+      <ul>
+        <li>Listed on committee/board detail pages</li>
+        <li>Shown on leadership dashboard</li>
+        <li>Displayed in member portal</li>
+      </ul>
+
+      <h4>Past Meetings</h4>
+      <ul>
+        <li>Archived meetings with minutes</li>
+        <li>Searchable history</li>
+        <li>Accessible from meeting list</li>
+      </ul>
+
+      <h2>Reports</h2>
+
+      <h3>Creating Reports</h3>
+
+      <p>Reports can be created for committees or boards to document activities, findings, or updates.</p>
+
+      <p>Navigate to <code>/admin/reports/{type}/{id}</code> where:</p>
+      <ul>
+        <li><code>{type}</code> is either <code>committee</code> or <code>board</code></li>
+        <li><code>{id}</code> is the committee or board ID</li>
+      </ul>
+
+      <h4>Report Fields</h4>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Title</td>
+            <td>Yes</td>
+            <td>Report title (e.g., "Q1 Financial Report")</td>
+          </tr>
+          <tr>
+            <td>Report Date</td>
+            <td>Yes</td>
+            <td>Date of the report</td>
+          </tr>
+          <tr>
+            <td>Content</td>
+            <td>Yes</td>
+            <td>Full report content (supports rich text)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Report Types</h3>
+
+      <p>Common report types:</p>
+      <ul>
+        <li><strong>Monthly Reports</strong> - Regular activity summaries</li>
+        <li><strong>Annual Reports</strong> - Yearly summaries</li>
+        <li><strong>Financial Reports</strong> - Budget and expense reports (for boards)</li>
+        <li><strong>Project Reports</strong> - Specific initiative updates</li>
+        <li><strong>Committee Findings</strong> - Research or investigation results</li>
+      </ul>
+
+      <h3>Viewing Reports</h3>
+
+      <p>Reports can be viewed by:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>User Type</th>
+            <th>Access Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Administrators</td>
+            <td>Full access to all reports</td>
+          </tr>
+          <tr>
+            <td>Committee/Board Members</td>
+            <td>Access to their committee/board reports via member portal</td>
+          </tr>
+          <tr>
+            <td>Leadership</td>
+            <td>Overview of recent reports in leadership dashboard</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Member Portal</h2>
+
+      <p>Members can access their committees and boards through the member-facing portal.</p>
+
+      <h3>My Committees</h3>
+
+      <p>Navigate to <code>/member/committees</code></p>
+
+      <p><strong>Features:</strong></p>
+      <ul>
+        <li>View all committees the member belongs to</li>
+        <li>See member's title and term dates</li>
+        <li>Access committee details</li>
+      </ul>
+
+      <h3>My Boards</h3>
+
+      <p>Navigate to <code>/member/boards</code></p>
+
+      <p><strong>Features:</strong></p>
+      <ul>
+        <li>View all boards the member belongs to</li>
+        <li>See member's title and term dates</li>
+        <li>Access board details</li>
+      </ul>
+
+      <h3>Committee/Board Detail Pages</h3>
+
+      <p>From the member portal, click on a committee or board to view:</p>
+
+      <h4>Upcoming Meetings</h4>
+      <ul>
+        <li>Next 5 upcoming meetings</li>
+        <li>Meeting date, time, and title</li>
+        <li>Meeting link (if available)</li>
+        <li>Agenda preview</li>
+      </ul>
+
+      <h4>Members</h4>
+      <ul>
+        <li>All current committee/board members</li>
+        <li>Member names, titles, and contact information</li>
+        <li>Ability to connect with other members</li>
+      </ul>
+
+      <h4>Reports</h4>
+      <ul>
+        <li>Recent reports (last 5)</li>
+        <li>Report titles, dates, and previews</li>
+        <li>Full report access</li>
+      </ul>
+
+      <h2>Leadership Dashboard</h2>
+
+      <p>The leadership dashboard provides an executive overview of all committee and board activities.</p>
+
+      <p>Navigate to <code>/admin/leadership</code></p>
+
+      <h3>Dashboard Statistics</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Card</th>
+            <th>Displays</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Committees</td>
+            <td>Total number of committees and distinct committee members</td>
+          </tr>
+          <tr>
+            <td>Boards</td>
+            <td>Total number of boards and distinct board members</td>
+          </tr>
+          <tr>
+            <td>Upcoming Meetings</td>
+            <td>Count of meetings in the next 30 days</td>
+          </tr>
+          <tr>
+            <td>Expiring Terms</td>
+            <td>Count of terms ending in the next 60 days</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Upcoming Meetings</h3>
+
+      <p>Displays the next 30 days of scheduled meetings:</p>
+      <ul>
+        <li>Meeting title</li>
+        <li>Entity name (committee or board)</li>
+        <li>Entity type badge</li>
+        <li>Date and time</li>
+        <li>Link to meeting details</li>
+      </ul>
+
+      <h3>Recent Meetings</h3>
+
+      <p>Shows meetings from the past 30 days:</p>
+      <ul>
+        <li>Meeting title</li>
+        <li>Entity name</li>
+        <li>Date</li>
+        <li>Minutes indicator (badge shows if minutes have been added)</li>
+        <li>Link to meeting details</li>
+      </ul>
+
+      <h3>Expiring Terms</h3>
+
+      <p>Lists all committee and board member terms expiring in the next 60 days.</p>
+
+      <h4>Color-coded Urgency</h4>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Badge Color</th>
+            <th>Timeframe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-danger">Red (Destructive)</span></td>
+            <td>Terms ending within 14 days</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Yellow (Default)</span></td>
+            <td>Terms ending within 30 days</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Gray (Secondary)</span></td>
+            <td>Terms ending within 60 days</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Information shown:</strong></p>
+      <ul>
+        <li>Member name</li>
+        <li>Title</li>
+        <li>Entity name (committee or board)</li>
+        <li>Days until term expires</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Use case:</strong> Proactively manage term rotations and ensure continuity
+      </div>
+
+      <h3>Recent Reports</h3>
+
+      <p>Displays reports from the current month:</p>
+      <ul>
+        <li>Report title</li>
+        <li>Entity name</li>
+        <li>Report date</li>
+        <li>Content preview (first 200 characters)</li>
+        <li>Link to full report</li>
+      </ul>
+
+      <h3>Quick Actions</h3>
+
+      <p>Two buttons for quick access:</p>
+      <ul>
+        <li><strong>View All Committees</strong> - Navigate to committee management</li>
+        <li><strong>View All Boards</strong> - Navigate to board management</li>
+      </ul>
+
+      <h2>Best Practices</h2>
+
+      <h3>Committee Management</h3>
+      <ol>
+        <li><strong>Clear Descriptions</strong> - Write detailed committee descriptions</li>
+        <li><strong>Regular Terms</strong> - Use consistent term lengths (e.g., 2-year terms)</li>
+        <li><strong>Term Overlap</strong> - Stagger term end dates to ensure continuity</li>
+        <li><strong>Title Consistency</strong> - Use standard titles across committees</li>
+      </ol>
+
+      <h3>Meeting Management</h3>
+      <ol>
+        <li><strong>Advance Scheduling</strong> - Schedule meetings well in advance</li>
+        <li><strong>Send Invitations</strong> - Always email invitations after creating meetings</li>
+        <li><strong>Add Agendas</strong> - Include detailed agendas so members can prepare</li>
+        <li><strong>Record Minutes</strong> - Add minutes promptly after meetings</li>
+        <li><strong>Include Links</strong> - Provide virtual meeting links for remote participation</li>
+      </ol>
+
+      <h3>Report Management</h3>
+      <ol>
+        <li><strong>Regular Reporting</strong> - Establish reporting schedules (monthly, quarterly, annual)</li>
+        <li><strong>Consistent Format</strong> - Use consistent report formats for easier reading</li>
+        <li><strong>Timely Publishing</strong> - Publish reports soon after completion</li>
+        <li><strong>Comprehensive Content</strong> - Include all relevant information and decisions</li>
+      </ol>
+
+      <h3>Term Management</h3>
+      <ol>
+        <li><strong>Monitor Expirations</strong> - Check the leadership dashboard regularly</li>
+        <li><strong>Advance Planning</strong> - Begin succession planning 60-90 days before term ends</li>
+        <li><strong>Overlap Period</strong> - Consider having new members join before old terms end</li>
+        <li><strong>Document Handoffs</strong> - Create transition documents for outgoing members</li>
+      </ol>
+
+      <h2>Troubleshooting</h2>
+
+      <h3>Members can't see their committees/boards</h3>
+      <ul>
+        <li>Verify the member has been added to the committee/board</li>
+        <li>Check that the term dates are valid (start date in past, end date in future or null)</li>
+        <li>Ensure member is logged in</li>
+      </ul>
+
+      <h3>Email invitations not sending</h3>
+      <ul>
+        <li>Check mail configuration in <code>.env</code></li>
+        <li>Verify <code>MAIL_FROM_ADDRESS</code> is set</li>
+        <li>Test mail with <code>php artisan tinker</code> and <code>Mail::raw()</code></li>
+      </ul>
+
+      <h3>Terms not showing as expiring</h3>
+      <ul>
+        <li>Verify term end dates are set</li>
+        <li>Check that term end dates are within the next 60 days</li>
+        <li>Refresh the leadership dashboard</li>
+      </ul>
+
+      <h3>Meeting link not clickable</h3>
+      <ul>
+        <li>Ensure the link includes the protocol (<code>https://</code>)</li>
+        <li>Example: <code>https://zoom.us/j/123456789</code></li>
+      </ul>
+
+      <div class="alert alert-success">
+        <strong>Need Help?</strong> Contact your administrator or review the committee and board models in the application code.
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="docs-footer">
+    <p>&copy; 2026 ShulNET 2.0. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Management System - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees & Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="content-management.html" class="active">Content Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Content Management System (CMS)</h1>
+      
+      <p>ShulNET includes a full-featured content management system that allows you to create, publish, and manage static HTML pages for your congregation's website. The system supports templates, reusable assets, and dynamic navigation.</p>
+
+      <div class="alert alert-info">
+        <strong>Quick Access:</strong> Navigate to Admin → HTML Pages to get started with content management.
+      </div>
+
+      <h2>Overview</h2>
+
+      <p>The CMS provides three main components:</p>
+      <ul>
+        <li><strong>HTML Pages</strong> - Individual web pages with rich content</li>
+        <li><strong>Templates</strong> - Reusable layouts for consistent design</li>
+        <li><strong>Assets</strong> - Images and files for use in pages</li>
+      </ul>
+
+      <h2>HTML Pages</h2>
+
+      <h3>Creating Pages</h3>
+
+      <p>Navigate to <code>/admin/html-pages</code> to manage all pages.</p>
+
+      <h4>Required Fields</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Title</td>
+            <td>Page title (displayed in browser and navigation)</td>
+          </tr>
+          <tr>
+            <td>Content</td>
+            <td>HTML content for the page body</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Optional Fields</h4>
+      <ul>
+        <li><strong>Slug:</strong> URL-friendly identifier (auto-generated from title if not provided)</li>
+        <li><strong>Template:</strong> Select a template to apply consistent styling</li>
+        <li><strong>Header:</strong> Custom header HTML (overrides template header)</li>
+        <li><strong>Footer:</strong> Custom footer HTML (overrides template footer)</li>
+        <li><strong>Navigation:</strong> Custom navigation HTML (overrides template navigation)</li>
+        <li><strong>Meta Description:</strong> SEO description (recommended 150-160 characters)</li>
+        <li><strong>Meta Keywords:</strong> SEO keywords (comma-separated)</li>
+        <li><strong>Status:</strong> draft, published, or archived</li>
+        <li><strong>Show in Navigation:</strong> Toggle page visibility in site navigation</li>
+        <li><strong>Sort Order:</strong> Control navigation menu order (lower numbers appear first)</li>
+      </ul>
+
+      <h3>Page Statuses</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge">Draft</span></td>
+            <td>Work in progress, not visible to public</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-success">Published</span></td>
+            <td>Live and accessible via URL</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-warning">Archived</span></td>
+            <td>Removed from navigation but URL still accessible</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Page URLs</h3>
+
+      <p>Pages are accessible via:</p>
+      <ul>
+        <li>Direct path: <code>/pages/{slug}</code></li>
+        <li>Published path: Custom paths can be configured</li>
+      </ul>
+
+      <div class="code-block">
+<strong>Example:</strong>
+Title: "About Our Congregation"
+Slug: about-us
+URL: https://yoursite.com/pages/about-us
+      </div>
+
+      <h2>Templates</h2>
+
+      <h3>Overview</h3>
+
+      <p>Templates provide consistent styling and structure across multiple pages. Create a template once and apply it to many pages.</p>
+
+      <h3>Creating Templates</h3>
+
+      <p>Navigate to <code>/admin/html-templates</code> to manage templates.</p>
+
+      <h4>Template Fields</h4>
+      <ul>
+        <li><strong>Name:</strong> Template identifier (e.g., "Main Website Template")</li>
+        <li><strong>Header:</strong> HTML for page header (navigation, logo, etc.)</li>
+        <li><strong>Footer:</strong> HTML for page footer (contact info, copyright, etc.)</li>
+        <li><strong>Custom CSS:</strong> Stylesheet rules for this template</li>
+      </ul>
+
+      <h3>Template Structure</h3>
+
+      <p>When a page uses a template, the final HTML structure is:</p>
+
+      <div class="code-block">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;{Page Title}&lt;/title&gt;
+    &lt;meta name="description" content="{Meta Description}"&gt;
+    &lt;meta name="keywords" content="{Meta Keywords}"&gt;
+    &lt;style&gt;
+        {Template Custom CSS}
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        {Template Header or Page Custom Header}
+    &lt;/header&gt;
+    
+    &lt;nav&gt;
+        {Template Navigation or Page Custom Navigation}
+    &lt;/nav&gt;
+    
+    &lt;main&gt;
+        {Page Content}
+    &lt;/main&gt;
+    
+    &lt;footer&gt;
+        {Template Footer or Page Custom Footer}
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+      </div>
+
+      <h2>Assets</h2>
+
+      <h3>Overview</h3>
+
+      <p>Assets are reusable media files (images, documents, etc.) that can be referenced in pages.</p>
+
+      <h3>Managing Assets</h3>
+
+      <p>Navigate to <code>/admin/html-assets</code> to manage all assets.</p>
+
+      <h4>Asset Fields</h4>
+      <ul>
+        <li><strong>Name:</strong> Asset identifier</li>
+        <li><strong>Alt Text:</strong> Accessibility description for images</li>
+        <li><strong>File:</strong> Upload the asset file</li>
+      </ul>
+
+      <h3>Using Assets in Pages</h3>
+
+      <p>Reference assets in your page content:</p>
+
+      <div class="code-block">
+&lt;img src="/storage/assets/congregation-logo.png" alt="Our Logo"&gt;
+&lt;img src="/storage/assets/sanctuary-hero.jpg" alt="Sanctuary interior"&gt;
+      </div>
+
+      <h3>Supported File Types</h3>
+
+      <p>Common supported types:</p>
+      <ul>
+        <li>Images: JPG, PNG, GIF, SVG, WebP</li>
+        <li>Documents: PDF, DOC, DOCX</li>
+        <li>Other: As configured by storage settings</li>
+      </ul>
+
+      <h2>Publishing Workflow</h2>
+
+      <h3>Publishing Process</h3>
+
+      <ol>
+        <li><strong>Create Draft</strong> - Start with status = "draft"</li>
+        <li><strong>Add Content</strong> - Write and format content</li>
+        <li><strong>Preview</strong> - Review the page (if preview feature enabled)</li>
+        <li><strong>Publish</strong> - Change status to "published"</li>
+        <li><strong>Update Navigation</strong> - Toggle "Show in Navigation" if desired</li>
+      </ol>
+
+      <h3>Publishing Best Practices</h3>
+
+      <ul>
+        <li>Always set meta description for SEO</li>
+        <li>Use descriptive, keyword-rich titles</li>
+        <li>Test on mobile devices (responsive design)</li>
+        <li>Check all links and images</li>
+        <li>Use templates for consistency</li>
+      </ul>
+
+      <h2>Navigation Management</h2>
+
+      <h3>Auto-Generated Navigation</h3>
+
+      <p>Pages with <code>show_in_nav = true</code> automatically appear in the site navigation menu.</p>
+
+      <h3>Navigation Order</h3>
+
+      <p>Control menu order with the <code>sort_order</code> field:</p>
+      <ul>
+        <li>Lower numbers appear first</li>
+        <li>Same numbers are sorted alphabetically by title</li>
+      </ul>
+
+      <h4>Example Order</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Sort Order</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Welcome</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>About Us</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>Services</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>Contact</td>
+            <td>10</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>SEO Features</h2>
+
+      <h3>Meta Tags</h3>
+
+      <p>Each page supports:</p>
+      <ul>
+        <li><strong>Title:</strong> Appears in browser tab and search results</li>
+        <li><strong>Meta Description:</strong> Displayed in search result snippets</li>
+        <li><strong>Meta Keywords:</strong> Helps with search indexing</li>
+      </ul>
+
+      <h3>SEO Best Practices</h3>
+
+      <h4>Title</h4>
+      <ul>
+        <li>Keep under 60 characters</li>
+        <li>Include primary keyword</li>
+        <li>Make it descriptive and compelling</li>
+      </ul>
+
+      <h4>Meta Description</h4>
+      <ul>
+        <li>Keep between 150-160 characters</li>
+        <li>Include call to action</li>
+        <li>Use primary and secondary keywords</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Example:</strong><br>
+        <strong>Title:</strong> "Weekly Shabbat Services | Congregation Beth Shalom"<br>
+        <strong>Meta Description:</strong> "Join us every Friday at 7 PM for traditional Shabbat services. All are welcome to our warm, inclusive community. Learn more about our services."<br>
+        <strong>Keywords:</strong> "shabbat services, friday night, jewish services, synagogue"
+      </div>
+
+      <h2>Seeded Content</h2>
+
+      <p>The system includes a seeder (<code>HtmlContentSeeder</code>) that creates sample content:</p>
+
+      <h3>Templates Created</h3>
+      <ol>
+        <li><strong>Main Website Template</strong> - Professional template with purple gradient header</li>
+        <li><strong>Simple Template</strong> - Minimal template for newsletters</li>
+      </ol>
+
+      <h3>Assets Created</h3>
+      <ol>
+        <li><strong>congregation-logo.png</strong> - Sample logo (400×200px)</li>
+        <li><strong>sanctuary-hero.jpg</strong> - Sample hero image (1920×1080px)</li>
+      </ol>
+
+      <h3>Pages Created</h3>
+      <ol>
+        <li><strong>Welcome Home</strong> - Published homepage with hero image</li>
+        <li><strong>About Our Congregation</strong> - Draft page with mission statement</li>
+        <li><strong>Contact Us</strong> - Published contact page with form</li>
+        <li><strong>Newsletter</strong> - Simple newsletter page</li>
+      </ol>
+
+      <h3>Running the Seeder</h3>
+
+      <div class="code-block">
+php artisan db:seed --class=HtmlContentSeeder
+      </div>
+
+      <h2>Best Practices</h2>
+
+      <ol>
+        <li><strong>Use Templates</strong> - Create templates for consistent branding</li>
+        <li><strong>Optimize Images</strong> - Compress images before uploading</li>
+        <li><strong>Mobile-First</strong> - Test on mobile devices</li>
+        <li><strong>SEO Optimization</strong> - Always add meta descriptions</li>
+        <li><strong>Accessibility</strong> - Use alt text for all images</li>
+        <li><strong>Semantic HTML</strong> - Use proper heading hierarchy (h1, h2, h3)</li>
+        <li><strong>Keep Content Fresh</strong> - Regularly update and archive old content</li>
+        <li><strong>Backup</strong> - Regularly backup your database and assets</li>
+      </ol>
+
+      <h2>Troubleshooting</h2>
+
+      <h3>Page Not Displaying</h3>
+      <ul>
+        <li>Check page status is "published"</li>
+        <li>Verify template is properly configured</li>
+        <li>Check for HTML errors in content</li>
+      </ul>
+
+      <h3>Broken Images</h3>
+      <ul>
+        <li>Verify asset file exists in storage</li>
+        <li>Check file path is correct</li>
+        <li>Ensure storage is properly linked: <code>php artisan storage:link</code></li>
+      </ul>
+
+      <h3>Navigation Not Showing</h3>
+      <ul>
+        <li>Verify <code>show_in_nav</code> is true</li>
+        <li>Check <code>sort_order</code> for proper ordering</li>
+        <li>Ensure page status is "published"</li>
+      </ul>
+
+      <div class="alert alert-success">
+        <strong>Need Help?</strong> Contact your administrator or check the developer documentation for more advanced features.
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="docs-footer">
+    <p>&copy; 2026 ShulNET 2.0. All rights reserved.</p>
+  </footer>
+</body>
+</html>
