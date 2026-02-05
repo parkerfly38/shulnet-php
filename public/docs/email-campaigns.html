@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Campaign Management - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees & Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html" class="active">Email Campaigns</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Email Campaign Management</h1>
+      
+      <p>ShulNET provides a comprehensive email campaign system for managing mailing lists, sending newsletters, and tracking subscriptions. The system supports both single opt-in and double opt-in (confirmed) subscription workflows.</p>
+
+      <div class="alert alert-info">
+        <strong>Quick Access:</strong> Navigate to Admin → Campaigns to manage your email campaigns.
+      </div>
+
+      <h2>Overview</h2>
+
+      <p>Email campaigns are mailing lists or newsletter groups that members can subscribe to. Each campaign has its own subscriber list and settings.</p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li><strong>Multiple Campaigns</strong> - Create separate lists for different purposes</li>
+        <li><strong>Subscriber Management</strong> - Track who subscribes and unsubscribes</li>
+        <li><strong>Double Opt-in</strong> - Require email confirmation for verified subscriptions</li>
+        <li><strong>Campaign Emails</strong> - Send newsletters to confirmed subscribers</li>
+        <li><strong>Bulk Operations</strong> - Subscribe multiple members at once</li>
+        <li><strong>Compliance</strong> - CAN-SPAM and GDPR-ready features</li>
+      </ul>
+
+      <h2>Email Campaigns</h2>
+
+      <h3>Creating Campaigns</h3>
+
+      <p>Navigate to <code>/admin/campaigns</code> to manage all campaigns.</p>
+
+      <h4>Required Fields</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>Campaign identifier (e.g., "Monthly Newsletter", "Weekly Update")</td>
+          </tr>
+          <tr>
+            <td>Subject</td>
+            <td>Default email subject line</td>
+          </tr>
+          <tr>
+            <td>Content</td>
+            <td>Default email body template</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Optional Fields</h4>
+      <ul>
+        <li><strong>Description:</strong> Internal description of campaign purpose</li>
+        <li><strong>Opt-in Type:</strong> <code>single</code> or <code>double</code></li>
+        <li><strong>Is Active:</strong> Enable/disable the campaign</li>
+        <li><strong>Confirmation Subject:</strong> Email subject for double opt-in confirmation</li>
+        <li><strong>Confirmation Content:</strong> Email body for double opt-in confirmation</li>
+      </ul>
+
+      <h3>Campaign Settings</h3>
+
+      <h4>Active Status</h4>
+      <ul>
+        <li>Active campaigns accept new subscribers</li>
+        <li>Inactive campaigns hide subscription forms but retain subscribers</li>
+      </ul>
+
+      <h2>Opt-in Types</h2>
+
+      <h3>Single Opt-in</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Member subscribes</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Immediately marked as "confirmed"</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Starts receiving emails immediately</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>When to use:</strong></p>
+      <ul>
+        <li>Internal lists (existing members)</li>
+        <li>Low-risk communications</li>
+        <li>When immediate subscription is desired</li>
+      </ul>
+
+      <h3>Double Opt-in (Confirmed)</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Member subscribes</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Marked as "pending"</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Confirmation email sent with unique token</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Member clicks link to confirm</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Status changes to "confirmed"</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>When to use:</strong></p>
+      <ul>
+        <li>Public-facing subscription forms</li>
+        <li>Compliance with anti-spam regulations</li>
+        <li>Higher-value email lists</li>
+        <li>When email verification is important</li>
+      </ul>
+
+      <div class="alert alert-success">
+        <strong>Benefits of Double Opt-in:</strong>
+        <ul>
+          <li>Validates email addresses</li>
+          <li>Reduces spam complaints</li>
+          <li>Better engagement (confirmed interest)</li>
+          <li>Legal compliance (GDPR, CAN-SPAM)</li>
+        </ul>
+      </div>
+
+      <h2>Subscription Management</h2>
+
+      <h3>Subscribe Member</h3>
+
+      <h4>Single Subscription</h4>
+      <ul>
+        <li>Navigate to campaign detail page</li>
+        <li>Click "Subscribe Member"</li>
+        <li>Select member from dropdown</li>
+        <li>Member is immediately added (status depends on opt-in type)</li>
+      </ul>
+
+      <h4>Bulk Subscription</h4>
+      <ul>
+        <li>Navigate to campaign detail page</li>
+        <li>Click "Bulk Subscribe"</li>
+        <li>Select multiple members</li>
+        <li>All selected members are subscribed at once</li>
+      </ul>
+
+      <h3>Subscription Statuses</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-warning">Pending</span></td>
+            <td>Awaiting confirmation (double opt-in only)</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-success">Confirmed</span></td>
+            <td>Active subscriber, will receive emails</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Unsubscribed</span></td>
+            <td>Opted out, won't receive emails</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Unsubscribe Member</h3>
+
+      <p><strong>Manual Unsubscribe:</strong></p>
+      <ul>
+        <li>Navigate to campaign detail page</li>
+        <li>Find member in subscriber list</li>
+        <li>Click "Unsubscribe"</li>
+      </ul>
+
+      <p><strong>Public Unsubscribe (via email link):</strong></p>
+      <ul>
+        <li>Member clicks unsubscribe link in email</li>
+        <li>Status automatically changed to "unsubscribed"</li>
+      </ul>
+
+      <h2>Campaign Emails</h2>
+
+      <h3>Overview</h3>
+
+      <p>Campaign emails are individual email messages sent to campaign subscribers. Track sent status and sending time.</p>
+
+      <h3>Creating Campaign Email</h3>
+
+      <ol>
+        <li>Navigate to campaign detail page</li>
+        <li>Click "Create Campaign Email"</li>
+        <li>Enter subject line</li>
+        <li>Write email content (HTML supported)</li>
+        <li>Save as "pending"</li>
+      </ol>
+
+      <h3>Email Statuses</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-warning">Pending</span></td>
+            <td>Queued to send, not yet sent</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-success">Sent</span></td>
+            <td>Successfully sent</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-danger">Failed</span></td>
+            <td>Send failed (if tracking failures)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Sending Campaign Emails</h3>
+
+      <ol>
+        <li>Create campaign email with "pending" status</li>
+        <li>Review content and test</li>
+        <li>Click "Send Now"</li>
+        <li>Email is sent to all confirmed subscribers</li>
+        <li>Status automatically changes to "sent"</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Important:</strong> Campaign emails are only sent to <strong>confirmed</strong> subscribers. Pending and unsubscribed members will not receive emails.
+      </div>
+
+      <h2>Email Templates</h2>
+
+      <h3>Using Email Templates</h3>
+
+      <p>The system supports reusable email templates for consistent branding.</p>
+
+      <h4>Template Variables</h4>
+
+      <p>Common variables that can be used in templates:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Variable</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>{{MEMBER_NAME}}</code></td>
+            <td>Subscriber's name</td>
+          </tr>
+          <tr>
+            <td><code>{{MEMBER_EMAIL}}</code></td>
+            <td>Subscriber's email</td>
+          </tr>
+          <tr>
+            <td><code>{{CAMPAIGN_NAME}}</code></td>
+            <td>Campaign name</td>
+          </tr>
+          <tr>
+            <td><code>{{UNSUBSCRIBE_LINK}}</code></td>
+            <td>Link to unsubscribe</td>
+          </tr>
+          <tr>
+            <td><code>{{CONFIRMATION_LINK}}</code></td>
+            <td>Link to confirm subscription (double opt-in)</td>
+          </tr>
+          <tr>
+            <td><code>{{CURRENT_DATE}}</code></td>
+            <td>Current date</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Bulk Operations</h2>
+
+      <h3>Subscribe All Active Members</h3>
+
+      <ol>
+        <li>Navigate to campaign detail page</li>
+        <li>Click "Bulk Subscribe"</li>
+        <li>Select "All Active Members"</li>
+        <li>Confirm the action</li>
+        <li>All active members are subscribed</li>
+      </ol>
+
+      <h3>Import from CSV</h3>
+
+      <p>You can bulk import subscribers from a CSV file:</p>
+
+      <ol>
+        <li>Prepare CSV file with email addresses</li>
+        <li>Match emails to existing members</li>
+        <li>Subscribe matched members to campaign</li>
+      </ol>
+
+      <div class="code-block">
+CSV Format:
+email,first_name,last_name
+john@example.com,John,Doe
+jane@example.com,Jane,Smith
+      </div>
+
+      <h2>Compliance</h2>
+
+      <h3>Legal Requirements</h3>
+
+      <h4>CAN-SPAM Act (US)</h4>
+      <ul>
+        <li>Include physical address</li>
+        <li>Accurate subject lines</li>
+        <li>Identify message as advertisement</li>
+        <li>Easy unsubscribe mechanism</li>
+        <li>Process unsubscribes within 10 business days</li>
+      </ul>
+
+      <h4>GDPR (Europe)</h4>
+      <ul>
+        <li>Get explicit consent</li>
+        <li>Explain what they're subscribing to</li>
+        <li>Easy way to withdraw consent</li>
+        <li>Keep records of consent</li>
+      </ul>
+
+      <h3>Compliant Email Footer</h3>
+
+      <div class="code-block">
+&lt;footer style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ccc;"&gt;
+    &lt;p&gt;Congregation Beth Shalom&lt;br&gt;
+    123 Main Street, Anytown, ST 12345&lt;/p&gt;
+    
+    &lt;p&gt;You are receiving this email because you subscribed to our {{CAMPAIGN_NAME}}.&lt;/p&gt;
+    
+    &lt;p&gt;
+        &lt;a href="{{UNSUBSCRIBE_LINK}}"&gt;Unsubscribe&lt;/a&gt; |
+        &lt;a href="{{PREFERENCES_LINK}}"&gt;Update Preferences&lt;/a&gt;
+    &lt;/p&gt;
+&lt;/footer&gt;
+      </div>
+
+      <h2>Best Practices</h2>
+
+      <ol>
+        <li><strong>Use Double Opt-in for Public Lists</strong> - Better compliance and engagement</li>
+        <li><strong>Personalize Emails</strong> - Use member name and relevant data</li>
+        <li><strong>Include Unsubscribe Link</strong> - Required by law, builds trust</li>
+        <li><strong>Test Before Sending</strong> - Send test to yourself first</li>
+        <li><strong>Track Metrics</strong> - Monitor open rates and engagement</li>
+        <li><strong>Segment Lists</strong> - Create targeted campaigns for different groups</li>
+        <li><strong>Mobile-Friendly HTML</strong> - Ensure emails render well on mobile</li>
+        <li><strong>Clear Call-to-Action</strong> - Make it clear what you want readers to do</li>
+        <li><strong>Respect Unsubscribes</strong> - Process immediately, no questions asked</li>
+        <li><strong>Regular Cadence</strong> - Consistent schedule builds expectations</li>
+      </ol>
+
+      <h2>Common Scenarios</h2>
+
+      <h3>Scenario 1: Monthly Newsletter</h3>
+
+      <ol>
+        <li>Create campaign: "Monthly Newsletter"</li>
+        <li>Set opt-in type to "double" for verification</li>
+        <li>Add all active members via bulk subscribe</li>
+        <li>Each month, create new campaign email</li>
+        <li>Write content and send to confirmed subscribers</li>
+      </ol>
+
+      <h3>Scenario 2: Event Announcements</h3>
+
+      <ol>
+        <li>Create campaign: "Special Events"</li>
+        <li>Set opt-in type to "single" for immediate access</li>
+        <li>Members subscribe themselves via member portal</li>
+        <li>Send campaign emails for each special event</li>
+      </ol>
+
+      <h3>Scenario 3: Weekly Torah Portion</h3>
+
+      <ol>
+        <li>Create campaign: "Weekly Torah Portion"</li>
+        <li>Set opt-in type to "double"</li>
+        <li>Provide subscription form on website</li>
+        <li>Members confirm via email</li>
+        <li>Send weekly campaign emails automatically</li>
+      </ol>
+
+      <h2>Troubleshooting</h2>
+
+      <h3>Emails Not Sending</h3>
+      <ul>
+        <li>Check mail configuration in <code>.env</code></li>
+        <li>Verify SMTP credentials</li>
+        <li>Check email queue if using queues</li>
+        <li>Review mail logs</li>
+      </ul>
+
+      <h3>Confirmation Links Not Working</h3>
+      <ul>
+        <li>Verify token in database</li>
+        <li>Check route is properly defined</li>
+        <li>Ensure tokens don't expire (if implemented)</li>
+      </ul>
+
+      <h3>Subscribers Not Receiving</h3>
+      <ul>
+        <li>Verify status is "confirmed"</li>
+        <li>Check spam folders</li>
+        <li>Verify email addresses are valid</li>
+        <li>Review sending logs</li>
+      </ul>
+
+      <div class="alert alert-success">
+        <strong>Need Help?</strong> Contact your administrator or check the mail configuration in your <code>.env</code> file.
+      </div>
+
+    </main>
+  </div>
+
+  <footer class="docs-footer">
+    <p>&copy; 2026 ShulNET 2.0. All rights reserved.</p>
+  </footer>
+</body>
+</html>

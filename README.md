@@ -68,6 +68,15 @@ This is a replacement for the previous open source solution based on Zenbership.
 - **Publishing Workflow** - Draft and published states with scheduling
 - **Navigation Management** - Control which pages appear in site navigation
 
+### Email Campaign Management
+- **Campaign Creation** - Manage multiple email campaigns and newsletters
+- **Subscriber Management** - Member subscription tracking with opt-in/opt-out
+- **Double Opt-in Support** - Confirmation emails for verified subscriptions
+- **Campaign Emails** - Send newsletters and announcements to subscribers
+- **Bulk Operations** - Subscribe multiple members at once
+- **Email Templates** - Reusable templates with variable substitution
+- **Compliance** - CAN-SPAM and GDPR-ready features
+
 ### Dashboard
 - Members joined trend analysis (line chart)
 - Current Hebrew month yahrzeits
@@ -431,6 +440,23 @@ The system provides comprehensive tools for managing synagogue committees and th
 - Member engagement and participation
 
 Access committee management at `/admin/committees` and board management at `/admin/boards`.
+
+## Documentation
+
+Comprehensive user documentation is available at `/docs` (or visit [public/docs/index.html](public/docs/index.html) directly):
+
+- **[Committee and Board Management](public/docs/committees-boards.html)** - Complete guide to managing committees, boards, meetings, and reports
+- **[Content Management System](public/docs/content-management.html)** - HTML publisher, templates, assets, and SEO features
+- **[Email Campaign Management](public/docs/email-campaigns.html)** - Email campaigns, subscriber management, and campaign emails
+- **[User Roles](public/docs/user-roles.html)** - User role system and access control
+- **[Member Management](public/docs/members.html)** - Managing member records and information
+- **[Student Management](public/docs/students.html)** - School administration and student tracking
+- **[Event Management](public/docs/events.html)** - Calendar events and RSVP tracking
+- **[Financial Management](public/docs/invoices.html)** - Invoices, payments, and reports
+- **[Yahrzeit Tracking](public/docs/yahrzeits.html)** - Hebrew calendar integration
+
+Additional documentation:
+- **[Roles and Permissions](ROLES_README.md)** - Developer guide to the role system
 
 ## Configuration
 
