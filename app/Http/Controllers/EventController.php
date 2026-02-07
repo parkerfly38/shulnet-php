@@ -259,4 +259,162 @@ class EventController extends Controller
 
         return response()->json($events);
     }
+
+    /**
+     * API: Get a paginated list of events
+     *
+     * @group Events
+     *
+     * @authenticated
+     */
+    public function apiIndex(Request $request)
+    {
+        $search = $request->get('search');
+        $calendar = $request->get('calendar');
+        $membersOnly = $request->get('members_only');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        $perPage = $request->get('per_page', 15);
+
+        $query = Event::query()
+            ->with(['calendar'])
+            ->orderBy('event_start', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($calendar) {
+            $query->where('calendar_id', $calendar);
+        }
+
+        if ($membersOnly !== null) {
+            $query->where('members_only', $membersOnly);
+        }
+
+        if ($startDate) {
+            $query->where('event_start', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->where('event_start', '<=', $endDate);
+        }
+
+        $events = $query->paginate($perPage);
+
+        return response()->json($events);
+    }
+
+    /**
+     * API: Get a single event
+     *
+     * @group Events
+     *
+     * @authenticated
+     */
+    public function apiShow(Event $event)
+    {
+        $event->load(['calendar', 'rsvps.member', 'ticketTypes']);
+
+        return response()->json([
+            'data' => $event,
+        ]);
+    }
+
+    /**
+     * API: Create a new event
+     *
+     * @group Events
+     *
+     * @authenticated
+     */
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'calendar_id' => 'required|exists:calendars,id',
+            'name' => 'required|string|max:255',
+            'tagline' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'event_start' => 'required|date',
+            'event_end' => 'nullable|date|after_or_equal:event_start',
+            'all_day' => 'boolean',
+            'location' => 'nullable|string|max:255',
+            'online' => 'boolean',
+            'online_url' => 'nullable|url',
+            'members_only' => 'boolean',
+            'public' => 'boolean',
+            'registration_required' => 'boolean',
+            'registration_starts' => 'nullable|date',
+            'registration_ends' => 'nullable|date',
+            'maxrsvp' => 'nullable|integer|min:0',
+            'allow_guests' => 'boolean',
+            'max_guests' => 'nullable|integer|min:0',
+        ]);
+
+        $event = Event::create($validated);
+        $event->load(['calendar', 'ticketTypes']);
+
+        return response()->json([
+            'data' => $event,
+            'message' => 'Event created successfully.',
+        ], 201);
+    }
+
+    /**
+     * API: Update an existing event
+     *
+     * @group Events
+     *
+     * @authenticated
+     */
+    public function apiUpdate(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'calendar_id' => 'sometimes|required|exists:calendars,id',
+            'name' => 'sometimes|required|string|max:255',
+            'tagline' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'event_start' => 'sometimes|required|date',
+            'event_end' => 'nullable|date|after_or_equal:event_start',
+            'all_day' => 'boolean',
+            'location' => 'nullable|string|max:255',
+            'online' => 'boolean',
+            'online_url' => 'nullable|url',
+            'members_only' => 'boolean',
+            'public' => 'boolean',
+            'registration_required' => 'boolean',
+            'registration_starts' => 'nullable|date',
+            'registration_ends' => 'nullable|date',
+            'maxrsvp' => 'nullable|integer|min:0',
+            'allow_guests' => 'boolean',
+            'max_guests' => 'nullable|integer|min:0',
+        ]);
+
+        $event->update($validated);
+        $event->load(['calendar', 'ticketTypes']);
+
+        return response()->json([
+            'data' => $event,
+            'message' => 'Event updated successfully.',
+        ]);
+    }
+
+    /**
+     * API: Delete an event
+     *
+     * @group Events
+     *
+     * @authenticated
+     */
+    public function apiDestroy(Event $event)
+    {
+        $event->delete();
+
+        return response()->json([
+            'message' => 'Event deleted successfully.',
+        ]);
+    }
 }

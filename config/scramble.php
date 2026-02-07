@@ -127,8 +127,9 @@ return [
 
     'middleware' => [
         'web',
-        'auth',
-        'role:admin',
+        // Uncomment these lines to require authentication:
+        // 'auth',
+        // 'role:admin',
     ],
 
     'extensions' => [],

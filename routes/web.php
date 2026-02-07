@@ -651,6 +651,38 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(fu
     Route::patch('invoices/{invoice}', [InvoiceController::class, 'apiUpdate'])->name('api.admin.invoices.patch');
     Route::delete('invoices/{invoice}', [InvoiceController::class, 'apiDestroy'])->name('api.admin.invoices.destroy');
 
+    // Note CRUD API endpoints
+    Route::get('notes', [\App\Http\Controllers\NoteController::class, 'apiIndex'])->name('api.admin.notes.index');
+    Route::post('notes', [\App\Http\Controllers\NoteController::class, 'apiStore'])->name('api.admin.notes.store');
+    Route::get('notes/{note}', [\App\Http\Controllers\NoteController::class, 'apiShow'])->name('api.admin.notes.show');
+    Route::put('notes/{note}', [\App\Http\Controllers\NoteController::class, 'apiUpdate'])->name('api.admin.notes.update');
+    Route::patch('notes/{note}', [\App\Http\Controllers\NoteController::class, 'apiUpdate'])->name('api.admin.notes.patch');
+    Route::delete('notes/{note}', [\App\Http\Controllers\NoteController::class, 'apiDestroy'])->name('api.admin.notes.destroy');
+
+    // HTML Page CRUD API endpoints
+    Route::get('html-pages', [\App\Http\Controllers\HtmlPageController::class, 'apiIndex'])->name('api.admin.html-pages.index');
+    Route::post('html-pages', [\App\Http\Controllers\HtmlPageController::class, 'apiStore'])->name('api.admin.html-pages.store');
+    Route::get('html-pages/{htmlPage}', [\App\Http\Controllers\HtmlPageController::class, 'apiShow'])->name('api.admin.html-pages.show');
+    Route::put('html-pages/{htmlPage}', [\App\Http\Controllers\HtmlPageController::class, 'apiUpdate'])->name('api.admin.html-pages.update');
+    Route::patch('html-pages/{htmlPage}', [\App\Http\Controllers\HtmlPageController::class, 'apiUpdate'])->name('api.admin.html-pages.patch');
+    Route::delete('html-pages/{htmlPage}', [\App\Http\Controllers\HtmlPageController::class, 'apiDestroy'])->name('api.admin.html-pages.destroy');
+
+    // Calendar CRUD API endpoints
+    Route::get('calendars', [\App\Http\Controllers\CalendarController::class, 'apiIndex'])->name('api.admin.calendars.index');
+    Route::post('calendars', [\App\Http\Controllers\CalendarController::class, 'apiStore'])->name('api.admin.calendars.store');
+    Route::get('calendars/{calendar}', [\App\Http\Controllers\CalendarController::class, 'apiShow'])->name('api.admin.calendars.show');
+    Route::put('calendars/{calendar}', [\App\Http\Controllers\CalendarController::class, 'apiUpdate'])->name('api.admin.calendars.update');
+    Route::patch('calendars/{calendar}', [\App\Http\Controllers\CalendarController::class, 'apiUpdate'])->name('api.admin.calendars.patch');
+    Route::delete('calendars/{calendar}', [\App\Http\Controllers\CalendarController::class, 'apiDestroy'])->name('api.admin.calendars.destroy');
+
+    // Event CRUD API endpoints
+    Route::get('events', [EventController::class, 'apiIndex'])->name('api.admin.events.index');
+    Route::post('events', [EventController::class, 'apiStore'])->name('api.admin.events.store');
+    Route::get('events/{event}', [EventController::class, 'apiShow'])->name('api.admin.events.show');
+    Route::put('events/{event}', [EventController::class, 'apiUpdate'])->name('api.admin.events.update');
+    Route::patch('events/{event}', [EventController::class, 'apiUpdate'])->name('api.admin.events.patch');
+    Route::delete('events/{event}', [EventController::class, 'apiDestroy'])->name('api.admin.events.destroy');
+
     // Yahrzeit search API endpoint
     Route::get('yahrzeits/search', [YahrzeitController::class, 'search'])->name('api.admin.yahrzeits.search');
 

@@ -234,4 +234,141 @@ class HtmlPageController extends Controller
         
         return back()->with('error', 'Failed to create ZIP file.');
     }
+
+    /**
+     * API: Get a paginated list of HTML pages
+     *
+     * @group HTML Publisher
+     *
+     * @authenticated
+     */
+    public function apiIndex(Request $request)
+    {
+        $search = $request->get('search');
+        $status = $request->get('status');
+        $perPage = $request->get('per_page', 15);
+
+        $query = HtmlPage::query()
+            ->with('template')
+            ->orderBy('sort_order')
+            ->orderBy('title');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $pages = $query->paginate($perPage);
+
+        return response()->json($pages);
+    }
+
+    /**
+     * API: Get a single HTML page
+     *
+     * @group HTML Publisher
+     *
+     * @authenticated
+     */
+    public function apiShow(HtmlPage $htmlPage)
+    {
+        $htmlPage->load('template');
+
+        return response()->json([
+            'data' => $htmlPage,
+        ]);
+    }
+
+    /**
+     * API: Create a new HTML page
+     *
+     * @group HTML Publisher
+     *
+     * @authenticated
+     */
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:html_pages,slug',
+            'content' => 'nullable|string',
+            'header' => 'nullable|string',
+            'footer' => 'nullable|string',
+            'navigation' => 'nullable|string',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'template_id' => 'nullable|exists:html_templates,id',
+            'status' => 'required|in:draft,published,archived',
+            'sort_order' => 'nullable|integer',
+            'show_in_nav' => 'boolean',
+        ]);
+
+        $page = HtmlPage::create($validated);
+        $page->load('template');
+
+        return response()->json([
+            'data' => $page,
+            'message' => 'HTML page created successfully.',
+        ], 201);
+    }
+
+    /**
+     * API: Update an existing HTML page
+     *
+     * @group HTML Publisher
+     *
+     * @authenticated
+     */
+    public function apiUpdate(Request $request, HtmlPage $htmlPage)
+    {
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:html_pages,slug,' . $htmlPage->id,
+            'content' => 'nullable|string',
+            'header' => 'nullable|string',
+            'footer' => 'nullable|string',
+            'navigation' => 'nullable|string',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'template_id' => 'nullable|exists:html_templates,id',
+            'status' => 'sometimes|required|in:draft,published,archived',
+            'sort_order' => 'nullable|integer',
+            'show_in_nav' => 'boolean',
+        ]);
+
+        $htmlPage->update($validated);
+        $htmlPage->load('template');
+
+        return response()->json([
+            'data' => $htmlPage,
+            'message' => 'HTML page updated successfully.',
+        ]);
+    }
+
+    /**
+     * API: Delete an HTML page
+     *
+     * @group HTML Publisher
+     *
+     * @authenticated
+     */
+    public function apiDestroy(HtmlPage $htmlPage)
+    {
+        if ($htmlPage->published_path && Storage::disk('public')->exists($htmlPage->published_path)) {
+            Storage::disk('public')->delete($htmlPage->published_path);
+        }
+
+        $htmlPage->delete();
+
+        return response()->json([
+            'message' => 'HTML page deleted successfully.',
+        ]);
+    }
 }
