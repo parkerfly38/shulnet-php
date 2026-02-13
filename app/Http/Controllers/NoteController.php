@@ -9,7 +9,9 @@ use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Synagogue Management')]
 class NoteController extends Controller
 {
     /**
@@ -263,7 +265,7 @@ class NoteController extends Controller
     }
 
     /**
-     * API: Get a paginated list of notes
+     *  Get a paginated list of notes
      *
      * @group Notes
      *
@@ -306,7 +308,7 @@ class NoteController extends Controller
     }
 
     /**
-     * API: Get a single note
+     *  Get a single note
      *
      * @group Notes
      *
@@ -322,7 +324,7 @@ class NoteController extends Controller
     }
 
     /**
-     * API: Create a new note
+     *  Create a new note
      *
      * @group Notes
      *
@@ -353,7 +355,7 @@ class NoteController extends Controller
     }
 
     /**
-     * API: Update an existing note
+     *  Update an existing note
      *
      * @group Notes
      *
@@ -393,7 +395,7 @@ class NoteController extends Controller
     }
 
     /**
-     * API: Delete a note
+     *  Delete a note
      *
      * @group Notes
      *

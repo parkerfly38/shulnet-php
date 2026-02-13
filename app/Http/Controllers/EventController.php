@@ -6,7 +6,9 @@ use App\Models\Calendar;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group(name: 'Synagogue Management')]
 class EventController extends Controller
 {
     /**
@@ -261,7 +263,7 @@ class EventController extends Controller
     }
 
     /**
-     * API: Get a paginated list of events
+     *  Get a paginated list of events
      *
      * @group Events
      *
@@ -309,7 +311,7 @@ class EventController extends Controller
     }
 
     /**
-     * API: Get a single event
+     *  Get a single event
      *
      * @group Events
      *
@@ -325,7 +327,7 @@ class EventController extends Controller
     }
 
     /**
-     * API: Create a new event
+     *  Create a new event
      *
      * @group Events
      *
@@ -364,7 +366,7 @@ class EventController extends Controller
     }
 
     /**
-     * API: Update an existing event
+     *  Update an existing event
      *
      * @group Events
      *
@@ -403,7 +405,7 @@ class EventController extends Controller
     }
 
     /**
-     * API: Delete an event
+     *  Delete an event
      *
      * @group Events
      *

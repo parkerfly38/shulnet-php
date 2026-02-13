@@ -414,6 +414,162 @@
         <li>Accessible from meeting list</li>
       </ul>
 
+      <h2>Zoom Integration for Meetings</h2>
+
+      <p>ShulNET integrates with Zoom to automatically create and manage virtual meetings for committees and boards, eliminating the need to manually set up Zoom meetings.</p>
+
+      <h3>How Zoom Integration Works</h3>
+
+      <p>When Zoom integration is enabled, the system automatically:</p>
+      <ul>
+        <li>Creates a Zoom meeting when you schedule a committee or board meeting</li>
+        <li>Adds the Zoom join link to the meeting record</li>
+        <li>Includes the Zoom link in email invitations</li>
+        <li>Updates Zoom meetings when you change meeting details</li>
+        <li>Deletes Zoom meetings when you cancel meetings</li>
+      </ul>
+
+      <h3>Setting Up Zoom Integration</h3>
+
+      <p>Before using Zoom with meetings, ensure Zoom integration is configured:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Administrator Configuration</h4>
+          <p>Your system administrator must:</p>
+          <ul>
+            <li>Create a Zoom Server-to-Server OAuth app</li>
+            <li>Configure environment variables in <code>.env</code></li>
+            <li>Enable Zoom integration in Settings</li>
+          </ul>
+          <p>See the <a href="events.html#zoom-integration">Events - Zoom Integration</a> section for detailed setup instructions.</p>
+        </li>
+
+        <li>
+          <h4>Verify Integration Status</h4>
+          <p>Check Settings → Integrations to confirm Zoom is enabled and connected.</p>
+        </li>
+      </ol>
+
+      <h3>Creating Meetings with Zoom</h3>
+
+      <p>Once Zoom integration is enabled, meetings automatically get Zoom links:</p>
+
+      <ol>
+        <li>Navigate to your committee or board</li>
+        <li>Click "Schedule Meeting"</li>
+        <li>Fill in meeting details:
+          <ul>
+            <li>Title</li>
+            <li>Date and time</li>
+            <li>Agenda (optional)</li>
+          </ul>
+        </li>
+        <li>Click "Create Meeting"</li>
+        <li>The system automatically:
+          <ul>
+            <li>Creates a Zoom meeting</li>
+            <li>Sets Zoom meeting title to your meeting title</li>
+            <li>Schedules Zoom for the specified date/time</li>
+            <li>Adds your agenda as the Zoom meeting description</li>
+            <li>Populates the "Meeting Link" field with the Zoom join URL</li>
+          </ul>
+        </li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>💡 Automatic Link:</strong> You don't need to manually add a Zoom link – the system creates and adds it automatically!
+      </div>
+
+      <h3>Zoom Meeting Features</h3>
+
+      <ul>
+        <li><strong>Host URLs:</strong> Meeting organizers receive special start URLs to begin meetings</li>
+        <li><strong>Join URLs:</strong> All members receive participant join links in email invitations</li>
+        <li><strong>Meeting Passwords:</strong> Automatically generated and stored for security</li>
+        <li><strong>Auto-sync:</strong> Changes to meeting title, date, or agenda update Zoom automatically</li>
+        <li><strong>Default Duration:</strong> Meetings are scheduled for 60 minutes by default</li>
+      </ul>
+
+      <h3>Viewing Zoom Meeting Details</h3>
+
+      <p>On the meeting detail page, you'll see:</p>
+      <ul>
+        <li><strong>Meeting Link:</strong> Zoom join URL (clickable)</li>
+        <li><strong>Meeting ID:</strong> Zoom meeting ID number</li>
+        <li><strong>Password:</strong> Meeting password (if set)</li>
+        <li><strong>Host URL:</strong> Special link for meeting host to start the meeting</li>
+      </ul>
+
+      <h3>Email Invitations with Zoom</h3>
+
+      <p>When you send meeting invitations, the email automatically includes:</p>
+      <ul>
+        <li>Zoom join link (prominently displayed)</li>
+        <li>Meeting ID and password</li>
+        <li>One-click join button</li>
+        <li>Meeting date, time, and agenda</li>
+      </ul>
+
+      <h3>Updating Meetings with Zoom</h3>
+
+      <p>When you edit a meeting that has a Zoom link:</p>
+      <ul>
+        <li><strong>Title change:</strong> Updates Zoom meeting topic</li>
+        <li><strong>Date/time change:</strong> Reschedules the Zoom meeting</li>
+        <li><strong>Agenda change:</strong> Updates Zoom meeting description</li>
+      </ul>
+
+      <p>Changes sync automatically – you don't need to do anything special.</p>
+
+      <h3>Manual Zoom Links</h3>
+
+      <p>If you prefer to use your own Zoom meeting or another platform:</p>
+      <ol>
+        <li>Create the meeting without Zoom integration (disable in Settings temporarily)</li>
+        <li>Manually paste your Zoom/Teams/Meet link in the "Meeting Link" field</li>
+        <li>The link will be included in invitations but won't be managed by ShulNET</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>⚠️ Note:</strong> If you manually add a non-Zoom meeting link, the system won't manage or update it. You'll need to handle changes yourself.
+      </div>
+
+      <h3>Troubleshooting Zoom Meetings</h3>
+
+      <h4>No Zoom link created</h4>
+      <ul>
+        <li>Verify Zoom integration is enabled in Settings</li>
+        <li>Check that environment variables are configured</li>
+        <li>Review application logs for API errors</li>
+        <li>Ensure meeting date is in the future</li>
+      </ul>
+
+      <h4>Zoom link not in email invitations</h4>
+      <ul>
+        <li>Confirm the meeting has a Zoom meeting ID stored</li>
+        <li>Check the "Meeting Link" field is populated</li>
+        <li>Re-send invitations after verifying the link</li>
+      </ul>
+
+      <h4>Can't join Zoom meeting</h4>
+      <ul>
+        <li>Ensure the link includes <code>https://</code> protocol</li>
+        <li>Verify the meeting hasn't been deleted in Zoom</li>
+        <li>Check that the meeting time hasn't passed (Zoom removes old meetings)</li>
+        <li>Try using the Meeting ID directly in Zoom app</li>
+      </ul>
+
+      <h3>Best Practices</h3>
+
+      <ol>
+        <li><strong>Test First:</strong> Create a test meeting to verify Zoom integration is working</li>
+        <li><strong>Add Agendas:</strong> Include detailed agendas – they appear in Zoom meeting descriptions</li>
+        <li><strong>Schedule in Advance:</strong> Create meetings at least a day before to allow proper email distribution</li>
+        <li><strong>Check Host URLs:</strong> Meeting chairs should use the host URL to ensure they have full control</li>
+        <li><strong>Monitor Limits:</strong> Be aware of your Zoom account's meeting duration and participant limits</li>
+      </ol>
+
       <h2>Reports</h2>
 
       <h3>Creating Reports</h3>
@@ -723,6 +879,16 @@
       <ul>
         <li>Ensure the link includes the protocol (<code>https://</code>)</li>
         <li>Example: <code>https://zoom.us/j/123456789</code></li>
+        <li>If using Zoom integration, the system adds this automatically</li>
+      </ul>
+
+      <h3>Zoom integration not working</h3>
+      <ul>
+        <li>Verify Zoom is enabled in Settings → Integrations</li>
+        <li>Check <code>.env</code> file has correct Zoom credentials</li>
+        <li>Run <code>php artisan config:clear</code> to refresh configuration</li>
+        <li>Review logs at <code>storage/logs/laravel.log</code> for Zoom API errors</li>
+        <li>See <a href="events.html#zoom-integration">Zoom Integration Setup</a> for detailed troubleshooting</li>
       </ul>
 
       <div class="alert alert-success">

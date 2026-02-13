@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Calendar;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group('Synagogue Management')]
 
 class CalendarController extends Controller
 {
@@ -111,7 +114,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * API: Get a paginated list of calendars
+     *  Get a paginated list of calendars
      *
      * @group Calendars
      *
@@ -146,7 +149,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * API: Get a single calendar
+     *  Get a single calendar
      *
      * @group Calendars
      *
@@ -162,7 +165,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * API: Create a new calendar
+     *  Create a new calendar
      *
      * @group Calendars
      *
@@ -186,7 +189,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * API: Update an existing calendar
+     *  Update an existing calendar
      *
      * @group Calendars
      *
@@ -210,7 +213,7 @@ class CalendarController extends Controller
     }
 
     /**
-     * API: Delete a calendar
+     *  Delete a calendar
      *
      * @group Calendars
      *

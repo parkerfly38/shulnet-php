@@ -29,6 +29,7 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
         title: meeting.title || '',
         agenda: meeting.agenda || '',
         meeting_date: formattedDateTime,
+        location: meeting.location || '',
         meeting_link: meeting.meeting_link || '',
         minutes: meeting.minutes || '',
     });
@@ -90,6 +91,22 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                                 />
                                 {errors.meeting_date && (
                                     <p className="text-sm text-destructive">{errors.meeting_date}</p>
+                                )}
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="location">Location</Label>
+                                <Input
+                                    id="location"
+                                    value={data.location}
+                                    onChange={(e) => setData('location', e.target.value)}
+                                    placeholder="e.g., Conference Room, Synagogue Office"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Optional: Physical location for in-person meetings
+                                </p>
+                                {errors.location && (
+                                    <p className="text-sm text-destructive">{errors.location}</p>
                                 )}
                             </div>
 

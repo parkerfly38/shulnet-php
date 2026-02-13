@@ -704,6 +704,15 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(fu
     Route::apiResource('subjects', \App\Http\Controllers\SubjectController::class);
     Route::apiResource('subject-grades', \App\Http\Controllers\SubjectGradeController::class);
     Route::apiResource('teachers', \App\Http\Controllers\TeacherController::class);
+
+    // Leadership Management resources
+    Route::apiResource('boards', \App\Http\Controllers\BoardController::class);
+    Route::apiResource('committees', \App\Http\Controllers\CommitteeController::class);
+    Route::apiResource('meetings', \App\Http\Controllers\MeetingController::class);
+
+    // Event RSVPs
+    Route::apiResource('event-rsvps', \App\Http\Controllers\EventRSVPController::class);
+
 });
 
 // API Token management routes

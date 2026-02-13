@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('School Management')]
 class AttendanceController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of attendances.
+     * 
+     * @authenticated
      */
     public function index(Request $request)
     {
@@ -36,7 +40,9 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     *  Store a newly created attendance record
+     * 
+     * @authenticated
      */
     public function store(Request $request)
     {
@@ -68,7 +74,9 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     *  Display the specified attendance record.
+     * 
+     * @authenticated
      */
     public function show(string $id)
     {
@@ -76,7 +84,9 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     *  Update the specified attendance record.
+     * 
+     * @authenticated
      */
     public function update(Request $request, string $id)
     {
@@ -93,7 +103,9 @@ class AttendanceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     *  Remove the specified attendance record.
+     * 
+     * @authenticated
      */
     public function destroy(string $id)
     {

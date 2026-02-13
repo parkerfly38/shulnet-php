@@ -9,7 +9,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Financial Management')]
 class InvoiceController extends Controller
 {
     /**
@@ -359,7 +361,7 @@ class InvoiceController extends Controller
     // ==================== API Methods ====================
 
     /**
-     * API: List all invoices with pagination
+     *  List all invoices with pagination
      *
      * @group Invoices
      *
@@ -401,7 +403,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * API: Get a single invoice
+     *  Get a single invoice
      *
      * @group Invoices
      *
@@ -417,7 +419,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * API: Create a new invoice
+     *  Create a new invoice
      *
      * @group Invoices
      *
@@ -483,7 +485,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * API: Update an existing invoice
+     *  Update an existing invoice
      *
      * @group Invoices
      *
@@ -554,7 +556,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * API: Delete an invoice
+     *  Delete an invoice
      *
      * @group Invoices
      *

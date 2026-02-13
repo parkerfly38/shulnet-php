@@ -73,7 +73,7 @@ export default function GabbaiDashboard() {
         setSefariaLoading(true);
         setSefariaText(null);
         try {
-            // Sefaria Calendar API: Get next reading info for a parsha
+            // Sefaria Calendar  Get next reading info for a parsha
             // Format: parasha name, e.g., "Bereshit"
             const res = await fetch(`https://www.sefaria.org/api/calendars/next-read/${parshaName}`);
             

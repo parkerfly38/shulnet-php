@@ -6,11 +6,14 @@ use App\Models\Committee;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group('Leadership Management')]
 
 class CommitteeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of committees.
      */
     public function index()
     {
@@ -24,7 +27,7 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new committee.
      */
     public function create()
     {
@@ -32,7 +35,7 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created committee in storage.
      */
     public function store(Request $request)
     {
@@ -48,7 +51,7 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified committee.
      */
     public function show(Committee $committee)
     {
@@ -70,7 +73,7 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified committee.
      */
     public function edit(Committee $committee)
     {
@@ -80,7 +83,7 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified committee in storage.
      */
     public function update(Request $request, Committee $committee)
     {
@@ -96,7 +99,7 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified committee from storage.
      */
     public function destroy(Committee $committee)
     {

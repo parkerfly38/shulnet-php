@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use ZipArchive;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group(name: 'Content Management')]
 
 class HtmlPageController extends Controller
 {
@@ -236,7 +239,7 @@ class HtmlPageController extends Controller
     }
 
     /**
-     * API: Get a paginated list of HTML pages
+     *  Get a paginated list of HTML pages
      *
      * @group HTML Publisher
      *
@@ -271,7 +274,7 @@ class HtmlPageController extends Controller
     }
 
     /**
-     * API: Get a single HTML page
+     *  Get a single HTML page
      *
      * @group HTML Publisher
      *
@@ -287,7 +290,7 @@ class HtmlPageController extends Controller
     }
 
     /**
-     * API: Create a new HTML page
+     *  Create a new HTML page
      *
      * @group HTML Publisher
      *
@@ -320,7 +323,7 @@ class HtmlPageController extends Controller
     }
 
     /**
-     * API: Update an existing HTML page
+     *  Update an existing HTML page
      *
      * @group HTML Publisher
      *
@@ -353,7 +356,7 @@ class HtmlPageController extends Controller
     }
 
     /**
-     * API: Delete an HTML page
+     *  Delete an HTML page
      *
      * @group HTML Publisher
      *

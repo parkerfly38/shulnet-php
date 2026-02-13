@@ -6,11 +6,13 @@ use App\Models\Board;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Leadership Management')]
 class BoardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the boards.
      */
     public function index()
     {
@@ -24,7 +26,7 @@ class BoardController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new board.
      */
     public function create()
     {
@@ -32,7 +34,7 @@ class BoardController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created board in storage.
      */
     public function store(Request $request)
     {
@@ -48,7 +50,7 @@ class BoardController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified board.
      */
     public function show(Board $board)
     {
@@ -70,7 +72,7 @@ class BoardController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified board.
      */
     public function edit(Board $board)
     {
@@ -80,7 +82,7 @@ class BoardController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified board in storage.
      */
     public function update(Request $request, Board $board)
     {
@@ -96,7 +98,7 @@ class BoardController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified board from storage.
      */
     public function destroy(Board $board)
     {
