@@ -37,6 +37,11 @@ class Event extends Model
         'public',
         'location',
         'calendar_id',
+        'zoom_meeting_id',
+        'zoom_join_url',
+        'zoom_start_url',
+        'zoom_password',
+        'zoom_registration_url',
     ];
 
     public function calendar(): BelongsTo

@@ -9,7 +9,9 @@ use App\Mail\MeetingInvitationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Leadership Management')]
 class MeetingController extends Controller
 {
     /**
@@ -54,6 +56,7 @@ class MeetingController extends Controller
             'title' => 'required|string|max:255',
             'agenda' => 'nullable|string',
             'meeting_date' => 'required|date',
+            'location' => 'nullable|string|max:255',
             'meeting_link' => 'nullable|url|max:255',
         ]);
 
@@ -105,6 +108,7 @@ class MeetingController extends Controller
             'title' => 'required|string|max:255',
             'agenda' => 'nullable|string',
             'meeting_date' => 'required|date',
+            'location' => 'nullable|string|max:255',
             'meeting_link' => 'nullable|url|max:255',
             'minutes' => 'nullable|string',
         ]);

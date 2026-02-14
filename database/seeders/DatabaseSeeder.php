@@ -48,6 +48,10 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             EmailTemplateSeeder::class,
 
+            // Leadership Management Seeders
+            BoardSeeder::class,
+            CommitteeSeeder::class,
+
             // School Management Seeders
             SchoolTuitionTierSeeder::class,
             SubjectSeeder::class,

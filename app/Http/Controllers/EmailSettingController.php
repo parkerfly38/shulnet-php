@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group(name: 'Email Management')]
 
 class EmailSettingController extends Controller
 {

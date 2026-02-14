@@ -14,7 +14,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group(name: 'Synagogue Management')]
 class MemberController extends Controller
 {
     /**
@@ -380,7 +382,7 @@ class MemberController extends Controller
     // ==================== API Methods ====================
 
     /**
-     * API: Create a new member
+     *  Create a new member
      *
      * @group Members
      *
@@ -428,7 +430,7 @@ class MemberController extends Controller
     }
 
     /**
-     * API: Update an existing member
+     *  Update an existing member
      *
      * @group Members
      *
@@ -476,7 +478,7 @@ class MemberController extends Controller
     }
 
     /**
-     * API: Delete a member
+     *  Delete a member
      *
      * @group Members
      *
@@ -493,7 +495,7 @@ class MemberController extends Controller
     }
 
     /**
-     * API: Get a single member
+     *  Get a single member
      *
      * @group Members
      *
@@ -512,7 +514,7 @@ class MemberController extends Controller
     }
 
     /**
-     * API: List all members with pagination
+     *  List all members with pagination
      *
      * @group Members
      *

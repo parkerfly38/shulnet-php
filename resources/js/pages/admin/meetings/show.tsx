@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Calendar, Clock, Video, FileText, Mail, Pencil, Trash2 } from 'lucide-react';
+import { Calendar, Clock, MapPin, Video, FileText, Mail, Pencil, Trash2 } from 'lucide-react';
 
 interface Props {
     meetable: Committee | Board;
@@ -92,6 +92,19 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                                     <p className="text-sm text-muted-foreground">Time</p>
                                 </div>
                             </div>
+
+                            {meeting.location && (
+                                <>
+                                    <Separator />
+                                    <div className="flex items-center gap-3">
+                                        <MapPin className="h-5 w-5 text-muted-foreground" />
+                                        <div>
+                                            <p className="font-medium">{meeting.location}</p>
+                                            <p className="text-sm text-muted-foreground">Location</p>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
 
                             {meeting.meeting_link && (
                                 <>

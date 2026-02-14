@@ -16,8 +16,13 @@ class Meeting extends Model
         'title',
         'agenda',
         'meeting_date',
+        'location',
         'meeting_link',
         'minutes',
+        'zoom_meeting_id',
+        'zoom_join_url',
+        'zoom_start_url',
+        'zoom_password',
     ];
 
     protected $casts = [

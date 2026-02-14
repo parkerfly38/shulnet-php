@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\EmailRecord;
 use Illuminate\Http\Request;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group('Email Management')]
 
 class EmailRecordController extends Controller
 {
     /**
-     * Store a new email record.
+     * API: Store a new email record.
      */
     public function store(Request $request)
     {

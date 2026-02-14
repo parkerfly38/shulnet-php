@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassDefinition;
 use Illuminate\Http\Request;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('School Management')]
 class ClassDefinitionController extends Controller
 {
+    /**
+     *  Get a paginated list of class definitions
+     *
+     * @authenticated
+     */
     public function index(Request $request)
     {
         $perPage = (int) $request->input('per_page', 25);
@@ -31,11 +38,25 @@ class ClassDefinitionController extends Controller
         return response()->json($pag);
     }
 
+    /**
+     *  Get a single class definition
+     *
+     * @group Class Definitions
+     *
+     * @authenticated
+     */
     public function show($id)
     {
         return response()->json(ClassDefinition::findOrFail($id));
     }
 
+    /**
+     *  Create a new class definition
+     *
+     * @group Class Definitions
+     *
+     * @authenticated
+     */
     public function store(Request $request)
     {
         $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
@@ -44,6 +65,13 @@ class ClassDefinitionController extends Controller
         return response()->json($model, 201);
     }
 
+    /**
+     *  Update an existing class definition
+     *
+     * @group Class Definitions
+     *
+     * @authenticated
+     */
     public function update(Request $request, $id)
     {
         $model = ClassDefinition::findOrFail($id);
@@ -53,6 +81,13 @@ class ClassDefinitionController extends Controller
         return response()->json($model);
     }
 
+    /**
+     *  Delete a class definition
+     *
+     * @group Class Definitions
+     *
+     * @authenticated
+     */
     public function destroy($id)
     {
         $model = ClassDefinition::findOrFail($id);

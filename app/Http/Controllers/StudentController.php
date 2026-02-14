@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('School Management')]
 class StudentController extends Controller
 {
+    /**
+     *  Get a paginated list of students
+     *
+     * @group Students
+     *
+     * @authenticated
+     */
     public function index(Request $request)
     {
         $perPage = (int) $request->input('per_page', 25);
@@ -24,11 +33,25 @@ class StudentController extends Controller
         return response()->json($query->paginate($perPage));
     }
 
+    /**
+     *  Get a single student
+     *
+     * @group Students
+     *
+     * @authenticated
+     */
     public function show($id)
     {
         return response()->json(Student::findOrFail($id));
     }
 
+    /**
+     *  Create a new student
+     *
+     * @group Students
+     *
+     * @authenticated
+     */
     public function store(Request $request)
     {
         $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'dob' => 'nullable|date', 'parent_id' => 'nullable|integer', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
@@ -37,6 +60,13 @@ class StudentController extends Controller
         return response()->json($model, 201);
     }
 
+    /**
+     *  Update an existing student
+     *
+     * @group Students
+     *
+     * @authenticated
+     */
     public function update(Request $request, $id)
     {
         $model = Student::findOrFail($id);
@@ -46,6 +76,13 @@ class StudentController extends Controller
         return response()->json($model);
     }
 
+    /**
+     *  Delete a student
+     *
+     * @group Students
+     *
+     * @authenticated
+     */
     public function destroy($id)
     {
         $model = Student::findOrFail($id);

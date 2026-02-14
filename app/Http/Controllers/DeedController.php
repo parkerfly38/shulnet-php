@@ -11,6 +11,9 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group(name: 'Cemetery Management')]
 
 class DeedController extends Controller
 {
