@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Synagogue Management')]
 class YahrzeitController extends Controller
 {
     protected HebrewCalendarService $hebrewCalendar;

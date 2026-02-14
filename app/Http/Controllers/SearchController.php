@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
+    /**
+     * Global Search function.
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function globalSearch(Request $request)
     {
         $query = $request->input('q', '');

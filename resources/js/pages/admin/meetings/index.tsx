@@ -4,7 +4,7 @@ import { Committee, Board, Meeting, BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, Plus, Video, FileText } from 'lucide-react';
+import { Calendar, Clock, MapPin, Plus, Video, FileText } from 'lucide-react';
 
 interface Props {
     meetable: Committee | Board;
@@ -88,6 +88,12 @@ export default function Index({ meetable, meetableType, meetings }: Readonly<Pro
                                                         <Clock className="mr-1 h-4 w-4" />
                                                         {formatTime(meeting.meeting_date)}
                                                     </span>
+                                                    {meeting.location && (
+                                                        <span className="flex items-center">
+                                                            <MapPin className="mr-1 h-4 w-4" />
+                                                            {meeting.location}
+                                                        </span>
+                                                    )}
                                                     {meeting.meeting_link && (
                                                         <span className="flex items-center">
                                                             <Video className="mr-1 h-4 w-4" />
@@ -148,6 +154,12 @@ export default function Index({ meetable, meetableType, meetings }: Readonly<Pro
                                                         <Clock className="mr-1 h-4 w-4" />
                                                         {formatTime(meeting.meeting_date)}
                                                     </span>
+                                                    {meeting.location && (
+                                                        <span className="flex items-center">
+                                                            <MapPin className="mr-1 h-4 w-4" />
+                                                            {meeting.location}
+                                                        </span>
+                                                    )}
                                                     {meeting.minutes && (
                                                         <span className="flex items-center text-green-600">
                                                             <FileText className="mr-1 h-4 w-4" />

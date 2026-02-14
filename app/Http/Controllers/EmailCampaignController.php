@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group(name: 'Email Management')]
 
 class EmailCampaignController extends Controller
 {

@@ -10,10 +10,15 @@ use App\Services\SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group('Synagogue Management')]
 
 class GabbaiController extends Controller
 {
     /**
+     * Return anniversary and bnai mitzvah dates
+     * 
      * Return upcoming anniversaries and bnai mitzvah dates within a date range.
      * Accepts optional `start` and `end` query params (YYYY-MM-DD). Defaults to today..+30 days.
      */
@@ -106,6 +111,8 @@ class GabbaiController extends Controller
     }
 
     /**
+     * Save assignments for a date
+     * 
      * Save assignments for a date. Replaces existing assignments for that date.
      * Payload: { date: 'YYYY-MM-DD', assignments: [{ honor: '1', member_id: 123 | null }, ...] }
      */
@@ -146,6 +153,8 @@ class GabbaiController extends Controller
     }
 
     /**
+     * Return aliyah pledge invoices
+     * 
      * Return invoice items that look like pledges for Torah honors (e.g., description contains "aliyah").
      * Optionally filter by due date range via `start` and `end`.
      */

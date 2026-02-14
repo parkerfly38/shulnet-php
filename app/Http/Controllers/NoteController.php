@@ -9,7 +9,9 @@ use App\Models\Note;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group('Synagogue Management')]
 class NoteController extends Controller
 {
     /**
@@ -260,5 +262,151 @@ class NoteController extends Controller
         $text = str_replace("\n", '\\n', $text);
 
         return $text;
+    }
+
+    /**
+     *  Get a paginated list of notes
+     *
+     * @group Notes
+     *
+     * @authenticated
+     */
+    public function apiIndex(Request $request)
+    {
+        $search = $request->get('search');
+        $assigned = $request->get('assigned');
+        $priority = $request->get('priority');
+        $visibility = $request->get('visibility');
+        $perPage = $request->get('per_page', 15);
+
+        $query = Note::query()
+            ->with(['member', 'user'])
+            ->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('note_text', 'like', "%{$search}%");
+            });
+        }
+
+        if ($assigned && auth()->user()) {
+            $query->where('user_id', auth()->user()->id);
+        }
+
+        if ($priority) {
+            $query->where('priority', $priority);
+        }
+
+        if ($visibility) {
+            $query->where('visibility', $visibility);
+        }
+
+        $notes = $query->paginate($perPage);
+
+        return response()->json($notes);
+    }
+
+    /**
+     *  Get a single note
+     *
+     * @group Notes
+     *
+     * @authenticated
+     */
+    public function apiShow(Note $note)
+    {
+        $note->load(['member', 'user']);
+
+        return response()->json([
+            'data' => $note,
+        ]);
+    }
+
+    /**
+     *  Create a new note
+     *
+     * @group Notes
+     *
+     * @authenticated
+     */
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'item_scope' => 'required|in:User,Member,Contact',
+            'name' => 'required|string|max:255',
+            'deadline_date' => 'nullable|date',
+            'note_text' => 'nullable|string',
+            'label' => 'nullable|string|max:255',
+            'added_by' => 'nullable|string|max:255',
+            'visibility' => 'required|in:Member,Admin,Broadcast',
+            'priority' => 'required|in:Low,Medium,High',
+            'member_id' => 'nullable|exists:members,id',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        $note = Note::create($validated);
+        $note->load(['member', 'user']);
+
+        return response()->json([
+            'data' => $note,
+            'message' => 'Note created successfully.',
+        ], 201);
+    }
+
+    /**
+     *  Update an existing note
+     *
+     * @group Notes
+     *
+     * @authenticated
+     */
+    public function apiUpdate(Request $request, Note $note)
+    {
+        $validated = $request->validate([
+            'item_scope' => 'sometimes|required|in:User,Member,Contact',
+            'name' => 'sometimes|required|string|max:255',
+            'deadline_date' => 'nullable|date',
+            'completed_date' => 'nullable|date',
+            'note_text' => 'nullable|string',
+            'label' => 'nullable|string|max:255',
+            'added_by' => 'nullable|string|max:255',
+            'visibility' => 'sometimes|required|in:Member,Admin,Broadcast',
+            'priority' => 'sometimes|required|in:Low,Medium,High',
+            'member_id' => 'nullable|exists:members,id',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
+
+        // Convert ISO datetime strings to MySQL format
+        if (isset($validated['completed_date'])) {
+            $validated['completed_date'] = \Carbon\Carbon::parse($validated['completed_date'])->format('Y-m-d H:i:s');
+        }
+        if (isset($validated['deadline_date'])) {
+            $validated['deadline_date'] = \Carbon\Carbon::parse($validated['deadline_date'])->format('Y-m-d H:i:s');
+        }
+
+        $note->update($validated);
+        $note->load(['member', 'user']);
+
+        return response()->json([
+            'data' => $note,
+            'message' => 'Note updated successfully.',
+        ]);
+    }
+
+    /**
+     *  Delete a note
+     *
+     * @group Notes
+     *
+     * @authenticated
+     */
+    public function apiDestroy(Note $note)
+    {
+        $note->delete();
+
+        return response()->json([
+            'message' => 'Note deleted successfully.',
+        ]);
     }
 }

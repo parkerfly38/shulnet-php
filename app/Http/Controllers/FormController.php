@@ -6,7 +6,9 @@ use App\Models\Form;
 use App\Models\FormSubmission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group(name: 'Synagogue Management')]
 class FormController extends Controller
 {
     /**

@@ -17,6 +17,7 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
         title: '',
         agenda: '',
         meeting_date: '',
+        location: '',
         meeting_link: '',
     });
 
@@ -75,6 +76,22 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
                                 />
                                 {errors.meeting_date && (
                                     <p className="text-sm text-destructive">{errors.meeting_date}</p>
+                                )}
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="location">Location</Label>
+                                <Input
+                                    id="location"
+                                    value={data.location}
+                                    onChange={(e) => setData('location', e.target.value)}
+                                    placeholder="e.g., Conference Room, Synagogue Office"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Optional: Physical location for in-person meetings
+                                </p>
+                                {errors.location && (
+                                    <p className="text-sm text-destructive">{errors.location}</p>
                                 )}
                             </div>
 

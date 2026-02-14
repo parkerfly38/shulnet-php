@@ -159,8 +159,13 @@ export interface Meeting {
     title: string;
     agenda?: string;
     meeting_date: string;
+    location?: string;
     meeting_link?: string;
     minutes?: string;
+    zoom_meeting_id?: string;
+    zoom_join_url?: string;
+    zoom_start_url?: string;
+    zoom_password?: string;
     created_at: string;
     updated_at: string;
     meetable?: Committee | Board;

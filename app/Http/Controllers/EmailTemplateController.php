@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\EmailTemplate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
+
+#[Group(name: 'Email Management')]
 
 class EmailTemplateController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the email templates.
      */
     public function index()
     {
@@ -21,7 +24,7 @@ class EmailTemplateController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new email template.
      */
     public function create()
     {
@@ -29,7 +32,7 @@ class EmailTemplateController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created email template in storage.
      */
     public function store(Request $request)
     {
@@ -47,7 +50,7 @@ class EmailTemplateController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified email template.
      */
     public function show(EmailTemplate $template)
     {
@@ -57,7 +60,7 @@ class EmailTemplateController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified email template.
      */
     public function edit(EmailTemplate $template)
     {
@@ -67,7 +70,7 @@ class EmailTemplateController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified email template in storage.
      */
     public function update(Request $request, EmailTemplate $template)
     {
@@ -85,7 +88,7 @@ class EmailTemplateController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified email template from storage.
      */
     public function destroy(EmailTemplate $template)
     {

@@ -96,6 +96,13 @@
                 <span class="value">{{ $meeting->meeting_date->format('l, F j, Y') }} at {{ $meeting->meeting_date->format('g:i A') }}</span>
             </div>
             
+            @if($meeting->location)
+            <div class="detail-row">
+                <span class="label">Location:</span>
+                <span class="value">{{ $meeting->location }}</span>
+            </div>
+            @endif
+            
             @if($meeting->meeting_link)
             <div class="detail-row">
                 <span class="label">Meeting Link:</span>

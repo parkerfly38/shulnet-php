@@ -81,7 +81,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get income summary report
+     *  Get income summary report
      *
      * @group Financial Reports
      * @authenticated
@@ -102,7 +102,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get outstanding balances report
+     *  Get outstanding balances report
      *
      * @group Financial Reports
      * @authenticated
@@ -117,7 +117,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get aging report
+     *  Get aging report
      *
      * @group Financial Reports
      * @authenticated
@@ -130,7 +130,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get revenue by source report
+     *  Get revenue by source report
      *
      * @group Financial Reports
      * @authenticated
@@ -151,7 +151,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get member growth report
+     *  Get member growth report
      *
      * @group Financial Reports
      * @authenticated
@@ -172,7 +172,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get tuition revenue report
+     *  Get tuition revenue report
      *
      * @group Financial Reports
      * @authenticated
@@ -188,7 +188,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get payment method analysis
+     *  Get payment method analysis
      *
      * @group Financial Reports
      * @authenticated
@@ -209,7 +209,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get event revenue report
+     *  Get event revenue report
      *
      * @group Financial Reports
      * @authenticated
@@ -230,7 +230,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * API: Get budget vs actual report
+     *  Get budget vs actual report
      *
      * @group Financial Reports
      * @authenticated

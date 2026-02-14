@@ -409,12 +409,145 @@
       <h3>Can members bring guests?</h3>
       <p>Yes if "Allow Guests" is enabled. Set "Max Guests" to control how many guests per RSVP (typically 1-5).</p>
 
+      <h2>Zoom Integration</h2>
+
+      <p>ShulNET can automatically create and manage Zoom meetings for your online events, streamlining virtual event management and attendee registration.</p>
+
+      <h3>Setting Up Zoom Integration</h3>
+
+      <ol class="steps">
+        <li>
+          <h4>Create a Zoom Server-to-Server OAuth App</h4>
+          <p>Visit the <a href="https://marketplace.zoom.us/" target="_blank" rel="noopener noreferrer">Zoom Marketplace</a> and create a Server-to-Server OAuth application.</p>
+          <p>Required scopes:</p>
+          <ul>
+            <li><code>meeting:write:admin</code> - Create and manage meetings</li>
+            <li><code>meeting:write:meeting</code> - Update meeting details</li>
+            <li><code>user:read:admin</code> - Read user information</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Configure Environment Variables</h4>
+          <p>Add your Zoom credentials to the <code>.env</code> file:</p>
+          <div class="code-block">
+ZOOM_ACCOUNT_ID=your-account-id
+ZOOM_CLIENT_ID=your-client-id
+ZOOM_CLIENT_SECRET=your-client-secret
+ZOOM_USER_ID=me
+          </div>
+        </li>
+
+        <li>
+          <h4>Enable Zoom in Settings</h4>
+          <p>Navigate to Settings → Integrations and enable Zoom integration. The system will validate your credentials.</p>
+        </li>
+      </ol>
+
+      <h3>Creating Online Events with Zoom</h3>
+
+      <p>When Zoom integration is enabled, creating an online event automatically creates a Zoom meeting:</p>
+
+      <ol>
+        <li>Create a new event and mark it as "Online"</li>
+        <li>Fill in event details (title, date, time, description)</li>
+        <li>Save the event</li>
+        <li>The system automatically:
+          <ul>
+            <li>Creates a Zoom meeting</li>
+            <li>Sets the meeting title and timing</li>
+            <li>Adds the description as the agenda</li>
+            <li>Stores the Zoom meeting ID and join URL</li>
+            <li>Updates the event's online URL</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Zoom Meeting Features</h3>
+
+      <ul>
+        <li><strong>Auto-sync:</strong> Changes to event title, date/time, or description automatically update the Zoom meeting</li>
+        <li><strong>Join URLs:</strong> Attendees receive Zoom join links in confirmation emails</li>
+        <li><strong>Registration:</strong> For events requiring registration, RSVPs are automatically registered in Zoom</li>
+        <li><strong>Host URLs:</strong> Event organizers receive special host URLs to start meetings</li>
+        <li><strong>Security:</strong> Meeting passwords are automatically generated and stored</li>
+      </ul>
+
+      <h3>RSVP to Zoom Registration</h3>
+
+      <p>When attendees RSVP to an online event with Zoom enabled:</p>
+
+      <ol>
+        <li>Their RSVP is recorded in ShulNET</li>
+        <li>They're automatically added as Zoom meeting registrants</li>
+        <li>They receive a Zoom confirmation email with their unique join link</li>
+        <li>Their attendance is tracked in both systems</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>💡 Tip:</strong> Enable "Registration Required" on events to leverage Zoom's registration features and get detailed attendance tracking.
+      </div>
+
+      <h3>Managing Zoom Meetings</h3>
+
+      <h4>View Zoom Details</h4>
+      <p>On the event detail page, you'll see:</p>
+      <ul>
+        <li>Zoom Meeting ID</li>
+        <li>Join URL (for attendees)</li>
+        <li>Start URL (for hosts)</li>
+        <li>Meeting password</li>
+        <li>Registration URL (if enabled)</li>
+      </ul>
+
+      <h4>Update Zoom Meetings</h4>
+      <p>Edit the event normally – changes sync automatically to Zoom:</p>
+      <ul>
+        <li><strong>Title change:</strong> Updates Zoom meeting topic</li>
+        <li><strong>Date/time change:</strong> Reschedules Zoom meeting</li>
+        <li><strong>Description change:</strong> Updates Zoom agenda</li>
+        <li><strong>Online toggle off:</strong> Deletes Zoom meeting</li>
+      </ul>
+
+      <h4>Delete Zoom Meetings</h4>
+      <p>Deleting an event automatically cancels and removes the associated Zoom meeting.</p>
+
+      <h3>Troubleshooting Zoom Integration</h3>
+
+      <h4>Zoom meeting not created</h4>
+      <ul>
+        <li>Verify Zoom integration is enabled in Settings</li>
+        <li>Check that environment variables are correctly set</li>
+        <li>Ensure the event is marked as "Online"</li>
+        <li>Review application logs for API errors</li>
+      </ul>
+
+      <h4>Attendees not registered in Zoom</h4>
+      <ul>
+        <li>Confirm "Registration Required" is enabled on the event</li>
+        <li>Check that the event has a valid Zoom meeting ID</li>
+        <li>Verify RSVP email addresses are valid</li>
+      </ul>
+
+      <h4>Zoom credentials invalid</h4>
+      <ul>
+        <li>Regenerate credentials in Zoom Marketplace</li>
+        <li>Update <code>.env</code> file with new values</li>
+        <li>Run <code>php artisan config:clear</code></li>
+        <li>Disable and re-enable Zoom in Settings</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>⚠️ Important:</strong> Zoom Server-to-Server OAuth apps have rate limits. For high-volume usage, monitor your API usage in the Zoom dashboard.
+      </div>
+
       <h2>Related Documentation</h2>
 
       <ul>
         <li><a href="calendars.html">Managing Calendars</a> - Organizing events</li>
         <li><a href="rsvps.html">RSVP Management</a> - Detailed RSVP guide</li>
         <li><a href="email-campaigns.html">Email Campaigns</a> - Event announcements</li>
+        <li><a href="committees-boards.html">Committees & Boards</a> - Zoom for meetings</li>
       </ul>
     </main>
   </div>
