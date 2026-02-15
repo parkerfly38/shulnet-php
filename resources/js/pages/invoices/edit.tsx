@@ -20,6 +20,7 @@ interface InvoiceItem {
   description: string;
   quantity: string;
   unit_price: string;
+  amount_paid: string;
 }
 
 interface FormData {
@@ -28,6 +29,7 @@ interface FormData {
   due_date: string;
   status: string;
   tax_amount: string;
+  amount_paid: string;
   notes: string;
   recurring: boolean;
   recurring_interval: string;
@@ -55,6 +57,7 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
     due_date: formatDateForInput(invoice.due_date),
     status: invoice.status,
     tax_amount: invoice.tax_amount,
+    amount_paid: invoice.amount_paid || '0.00',
     notes: invoice.notes || '',
     recurring: invoice.recurring,
     recurring_interval: invoice.recurring_interval || 'monthly',
@@ -65,7 +68,8 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
       description: item.description,
       quantity: item.quantity,
       unit_price: item.unit_price,
-    })) || [{ description: '', quantity: '1', unit_price: '0.00' }],
+      amount_paid: item.amount_paid || '0.00',
+    })) || [{ description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00' }],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,24 +78,36 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
   };
 
   const addItem = () => {
-    setData('items', [...data.items, { description: '', quantity: '1', unit_price: '0.00' }]);
+    setData('items', [...data.items, { description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00' }]);
   };
 
   const removeItem = (index: number) => {
     const newItems = data.items.filter((_, i) => i !== index);
-    setData('items', newItems.length > 0 ? newItems : [{ description: '', quantity: '1', unit_price: '0.00' }]);
+    setData('items', newItems.length > 0 ? newItems : [{ description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00' }]);
   };
 
   const updateItem = (index: number, field: keyof InvoiceItem, value: string) => {
     const newItems = [...data.items];
     newItems[index] = { ...newItems[index], [field]: value };
     setData('items', newItems);
+    
+    // Automatically update invoice amount_paid when item amount_paid changes
+    if (field === 'amount_paid') {
+      const totalItemsPaid = newItems.reduce((sum, item) => sum + (parseFloat(item.amount_paid) || 0), 0);
+      setData('amount_paid', totalItemsPaid.toFixed(2));
+    }
   };
 
   const calculateItemTotal = (item: InvoiceItem) => {
     const quantity = parseFloat(item.quantity) || 0;
     const unitPrice = parseFloat(item.unit_price) || 0;
     return quantity * unitPrice;
+  };
+
+  const calculateItemBalance = (item: InvoiceItem) => {
+    const total = calculateItemTotal(item);
+    const paid = parseFloat(item.amount_paid) || 0;
+    return total - paid;
   };
 
   const calculateSubtotal = () => {
@@ -102,6 +118,16 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
     const subtotal = calculateSubtotal();
     const tax = parseFloat(data.tax_amount) || 0;
     return subtotal + tax;
+  };
+
+  const calculateTotalAmountPaid = () => {
+    return data.items.reduce((sum, item) => sum + (parseFloat(item.amount_paid) || 0), 0);
+  };
+
+  const calculateBalance = () => {
+    const total = calculateTotal();
+    const paid = parseFloat(data.amount_paid) || 0;
+    return total - paid;
   };
 
   const { currency } = usePage().props as any;
@@ -160,7 +186,8 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="open">Open</SelectItem>
+                    <SelectItem value="open">Open</SelectItem>
+                    <SelectItem value="partial">Partial</SelectItem>
                     <SelectItem value="paid">Paid</SelectItem>
                     <SelectItem value="overdue">Overdue</SelectItem>
                     <SelectItem value="cancelled">Cancelled</SelectItem>
@@ -263,6 +290,24 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
                       {formatCurrency(calculateItemTotal(item))}
                     </div>
                   </div>
+                  <div className="w-32">
+                    <Label htmlFor={`item-${index}-amount_paid`}>Paid</Label>
+                    <Input
+                      id={`item-${index}-amount_paid`}
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max={calculateItemTotal(item)}
+                      value={item.amount_paid}
+                      onChange={(e) => updateItem(index, 'amount_paid', e.target.value)}
+                      className={errors[`items.${index}.amount_paid`] ? 'border-red-500' : ''}
+                    />
+                  </div>
+                  <div className="w-32 pt-6">
+                    <div className={`text-sm font-medium ${calculateItemBalance(item) > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+                      {formatCurrency(calculateItemBalance(item))}
+                    </div>
+                  </div>
                   {data.items.length > 1 && (
                     <Button
                       type="button"
@@ -302,6 +347,25 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
                 <span className="text-gray-900 dark:text-gray-100">Total:</span>
                 <span className="text-gray-900 dark:text-gray-100">
                   {formatCurrency(calculateTotal())}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-sm pt-2">
+                <Label htmlFor="amount_paid" className="text-gray-600 dark:text-gray-400">Amount Paid:</Label>
+                <Input
+                  id="amount_paid"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max={calculateTotal()}
+                  value={data.amount_paid}
+                  onChange={(e) => setData('amount_paid', e.target.value)}
+                  className={`w-32 ${errors.amount_paid ? 'border-red-500' : ''}`}
+                />
+              </div>
+              <div className="flex justify-between text-lg font-semibold pt-2">
+                <span className="text-gray-900 dark:text-gray-100">Balance Due:</span>
+                <span className={calculateBalance() > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}>
+                  {formatCurrency(calculateBalance())}
                 </span>
               </div>
             </div>

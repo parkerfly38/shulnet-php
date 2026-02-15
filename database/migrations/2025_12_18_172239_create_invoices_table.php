@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('invoice_number')->unique();
             $table->date('invoice_date');
             $table->date('due_date');
-            $table->enum('status', ['draft', 'open', 'paid', 'overdue', 'cancelled'])->default('draft');
+            $table->enum('status', ['draft', 'open', 'partial', 'paid', 'overdue', 'cancelled'])->default('draft');
             $table->decimal('subtotal', 10, 2)->default(0);
             $table->decimal('tax_amount', 10, 2)->default(0);
             $table->decimal('total', 10, 2)->default(0);

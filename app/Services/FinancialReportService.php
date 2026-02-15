@@ -19,10 +19,10 @@ class FinancialReportService
         $start = Carbon::parse($startDate)->startOfDay();
         $end = Carbon::parse($endDate)->endOfDay();
 
-        // Get payments in date range
-        $payments = Payment::where('status', 'completed')
-            ->whereBetween('paid_at', [$start, $end])
-            ->with('invoice')
+        // Get invoices in date range (excluding cancelled and draft)
+        $invoices = Invoice::whereIn('status', ['open', 'paid', 'overdue', 'partial'])
+            ->whereBetween('invoice_date', [$start, $end])
+            ->with('items')
             ->get();
 
         $membershipDues = 0;
@@ -31,16 +31,12 @@ class FinancialReportService
         $donations = 0;
         $otherIncome = 0;
 
-        foreach ($payments as $payment) {
-            $invoice = $payment->invoice;
-            if (!$invoice) {
-                $otherIncome += $payment->amount;
+        foreach ($invoices as $invoice) {
+            if (!$invoice->items || $invoice->items->isEmpty()) {
                 continue;
             }
 
-            // Categorize based on invoice items
-            $items = $invoice->items;
-            foreach ($items as $item) {
+            foreach ($invoice->items as $item) {
                 $description = strtolower($item->description);
                 $itemTotal = $item->total;
 
@@ -71,7 +67,7 @@ class FinancialReportService
                 'other_income' => round($otherIncome, 2),
             ],
             'total_revenue' => round($total, 2),
-            'payment_count' => $payments->count(),
+            'invoice_count' => $invoices->count(),
         ];
     }
 
@@ -217,86 +213,79 @@ class FinancialReportService
     }
 
     /**
-     * Get event revenue report with detailed analytics
+     * Get event revenue report with detailed analytics from invoices
      */
     public function getEventRevenue(string $startDate, string $endDate): array
     {
         $start = Carbon::parse($startDate)->startOfDay();
         $end = Carbon::parse($endDate)->endOfDay();
 
-        // Get all events in date range
-        $events = \App\Models\Event::whereBetween('event_start', [$start, $end])
-            ->with(['ticketTypes', 'rsvps.ticketType', 'rsvps.member'])
+        // Get invoices with event/ticket items in date range
+        $invoices = Invoice::whereIn('status', ['open', 'paid', 'overdue', 'partial'])
+            ->whereBetween('invoice_date', [$start, $end])
+            ->with('items')
             ->get();
 
         $totalRevenue = 0;
-        $totalAttendees = 0;
+        $eventItemCount = 0;
         $eventBreakdown = [];
         $ticketTypeBreakdown = [];
 
-        foreach ($events as $event) {
-            $eventRevenue = 0;
-            $eventAttendees = 0;
-            $ticketSales = [];
+        foreach ($invoices as $invoice) {
+            foreach ($invoice->items as $item) {
+                $description = strtolower($item->description);
+                
+                // Only process event/ticket related items
+                if (str_contains($description, 'event') || str_contains($description, 'ticket')) {
+                    $itemTotal = $item->total;
+                    $totalRevenue += $itemTotal;
+                    $eventItemCount++;
 
-            foreach ($event->rsvps as $rsvp) {
-                if ($rsvp->status === 'confirmed' || $rsvp->status === 'paid') {
-                    $rsvpAmount = $rsvp->total_amount ?? ($rsvp->ticket_price * $rsvp->quantity);
-                    $eventRevenue += $rsvpAmount;
-                    $totalRevenue += $rsvpAmount;
-                    
-                    $attendeeCount = $rsvp->quantity ?? 1;
-                    $eventAttendees += $attendeeCount;
-                    $totalAttendees += $attendeeCount;
+                    // Track by description (treat each unique description as an "event")
+                    $eventKey = $item->description;
+                    if (!isset($eventBreakdown[$eventKey])) {
+                        $eventBreakdown[$eventKey] = [
+                            'event_id' => $item->id,
+                            'event_name' => $item->description,
+                            'event_date' => $invoice->invoice_date,
+                            'revenue' => 0,
+                            'attendees' => 0,
+                            'capacity' => 0,
+                            'sell_through_rate' => 0,
+                            'average_ticket_price' => 0,
+                        ];
+                    }
+                    $eventBreakdown[$eventKey]['revenue'] += $itemTotal;
+                    $eventBreakdown[$eventKey]['attendees'] += $item->quantity;
 
-                    // Track ticket type sales
-                    $ticketTypeName = $rsvp->ticketType->name ?? 'General Admission';
-                    if (!isset($ticketSales[$ticketTypeName])) {
-                        $ticketSales[$ticketTypeName] = [
+                    // Track ticket types by description
+                    if (!isset($ticketTypeBreakdown[$eventKey])) {
+                        $ticketTypeBreakdown[$eventKey] = [
+                            'ticket_type' => $item->description,
                             'quantity' => 0,
                             'revenue' => 0,
                         ];
                     }
-                    $ticketSales[$ticketTypeName]['quantity'] += $attendeeCount;
-                    $ticketSales[$ticketTypeName]['revenue'] += $rsvpAmount;
-
-                    // Track global ticket type breakdown
-                    if (!isset($ticketTypeBreakdown[$ticketTypeName])) {
-                        $ticketTypeBreakdown[$ticketTypeName] = [
-                            'ticket_type' => $ticketTypeName,
-                            'quantity' => 0,
-                            'revenue' => 0,
-                        ];
-                    }
-                    $ticketTypeBreakdown[$ticketTypeName]['quantity'] += $attendeeCount;
-                    $ticketTypeBreakdown[$ticketTypeName]['revenue'] += $rsvpAmount;
+                    $ticketTypeBreakdown[$eventKey]['quantity'] += $item->quantity;
+                    $ticketTypeBreakdown[$eventKey]['revenue'] += $itemTotal;
                 }
             }
+        }
 
-            $capacity = $event->maxrsvp ?? 0;
-            $sellThroughRate = $capacity > 0 ? ($eventAttendees / $capacity) * 100 : 0;
-
-            $eventBreakdown[] = [
-                'event_id' => $event->id,
-                'event_name' => $event->name,
-                'event_date' => Carbon::parse($event->event_start)->format('Y-m-d'),
-                'revenue' => round($eventRevenue, 2),
-                'attendees' => $eventAttendees,
-                'capacity' => $capacity,
-                'sell_through_rate' => round($sellThroughRate, 2),
-                'average_ticket_price' => $eventAttendees > 0 ? round($eventRevenue / $eventAttendees, 2) : 0,
-                'ticket_sales' => $ticketSales,
-            ];
+        // Calculate average ticket prices and finalize event data
+        $eventBreakdown = array_values($eventBreakdown);
+        foreach ($eventBreakdown as &$event) {
+            $event['revenue'] = round($event['revenue'], 2);
+            $event['average_ticket_price'] = $event['attendees'] > 0 
+                ? round($event['revenue'] / $event['attendees'], 2) 
+                : 0;
         }
 
         // Sort events by revenue (highest first)
         usort($eventBreakdown, fn($a, $b) => $b['revenue'] <=> $a['revenue']);
 
-        // Convert ticket type breakdown to array and sort
+        // Finalize ticket type breakdown
         $ticketTypeBreakdown = array_values($ticketTypeBreakdown);
-        usort($ticketTypeBreakdown, fn($a, $b) => $b['revenue'] <=> $a['revenue']);
-
-        // Round ticket type totals
         foreach ($ticketTypeBreakdown as &$ticketType) {
             $ticketType['revenue'] = round($ticketType['revenue'], 2);
             $ticketType['average_price'] = $ticketType['quantity'] > 0 
@@ -304,14 +293,19 @@ class FinancialReportService
                 : 0;
         }
 
+        // Sort ticket types by revenue
+        usort($ticketTypeBreakdown, fn($a, $b) => $b['revenue'] <=> $a['revenue']);
+
+        $totalAttendees = array_sum(array_column($eventBreakdown, 'attendees'));
+
         return [
             'start_date' => $start->format('Y-m-d'),
             'end_date' => $end->format('Y-m-d'),
             'total_revenue' => round($totalRevenue, 2),
             'total_attendees' => $totalAttendees,
-            'event_count' => $events->count(),
-            'average_revenue_per_event' => $events->count() > 0 
-                ? round($totalRevenue / $events->count(), 2) 
+            'event_count' => count($eventBreakdown),
+            'average_revenue_per_event' => count($eventBreakdown) > 0 
+                ? round($totalRevenue / count($eventBreakdown), 2) 
                 : 0,
             'events' => $eventBreakdown,
             'ticket_types' => $ticketTypeBreakdown,

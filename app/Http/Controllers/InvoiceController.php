@@ -109,8 +109,9 @@ class InvoiceController extends Controller
             'member_id' => 'required|exists:members,id',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:invoice_date',
-            'status' => 'required|in:draft,open,paid,overdue,cancelled',
+            'status' => 'required|in:draft,open,paid,overdue,cancelled,partial',
             'tax_amount' => 'nullable|numeric|min:0',
+            'amount_paid' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
             'recurring' => 'boolean',
             'recurring_interval' => 'nullable|required_if:recurring,true|in:daily,weekly,monthly,yearly',
@@ -120,6 +121,7 @@ class InvoiceController extends Controller
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.amount_paid' => 'nullable|numeric|min:0',
         ]);
 
         // Generate invoice number
@@ -146,6 +148,7 @@ class InvoiceController extends Controller
                 'quantity' => $itemData['quantity'],
                 'unit_price' => $itemData['unit_price'],
                 'total' => $total,
+                'amount_paid' => $itemData['amount_paid'] ?? 0,
                 'sort_order' => $index,
             ]);
             $subtotal += $total;
@@ -154,6 +157,15 @@ class InvoiceController extends Controller
         // Update totals
         $invoice->subtotal = $subtotal;
         $invoice->total = $subtotal + ($validated['tax_amount'] ?? 0);
+        
+        // Auto-update status based on amount paid
+        $amountPaid = $validated['amount_paid'] ?? 0;
+        if ($amountPaid >= $invoice->total && $invoice->total > 0) {
+            $invoice->status = 'paid';
+        } elseif ($amountPaid > 0 && $amountPaid < $invoice->total) {
+            $invoice->status = 'partial';
+        }
+        
         $invoice->save();
 
         // Generate and email PDF if requested
@@ -205,8 +217,9 @@ class InvoiceController extends Controller
             'member_id' => 'required|exists:members,id',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:invoice_date',
-            'status' => 'required|in:draft,open,paid,overdue,cancelled',
+            'status' => 'required|in:draft,open,paid,overdue,cancelled,partial',
             'tax_amount' => 'nullable|numeric|min:0',
+            'amount_paid' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
             'recurring' => 'boolean',
             'recurring_interval' => 'nullable|required_if:recurring,true|in:daily,weekly,monthly,yearly',
@@ -216,6 +229,7 @@ class InvoiceController extends Controller
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.amount_paid' => 'nullable|numeric|min:0',
         ]);
 
         // Calculate next invoice date if recurring changed
@@ -245,10 +259,27 @@ class InvoiceController extends Controller
                 'quantity' => $itemData['quantity'],
                 'unit_price' => $itemData['unit_price'],
                 'total' => $total,
+                'amount_paid' => $itemData['amount_paid'] ?? 0,
                 'sort_order' => $index,
             ]);
             $subtotal += $total;
         }
+
+        // Update totals
+        $invoice->subtotal = $subtotal;
+        $invoice->total = $subtotal + ($validated['tax_amount'] ?? 0);
+        
+        // Auto-update status based on amount paid
+        $amountPaid = $validated['amount_paid'] ?? 0;
+        if ($amountPaid >= $invoice->total && $invoice->total > 0) {
+            $invoice->status = 'paid';
+        } elseif ($amountPaid > 0 && $amountPaid < $invoice->total) {
+            $invoice->status = 'partial';
+        } elseif ($amountPaid == 0 && $invoice->status === 'partial') {
+            $invoice->status = 'open';
+        }
+        
+        $invoice->save();
 
         // Generate and email PDF if requested
         if ($request->boolean('send_email')) {
@@ -431,8 +462,9 @@ class InvoiceController extends Controller
             'member_id' => 'required|exists:members,id',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:invoice_date',
-            'status' => 'required|in:draft,open,paid,overdue,cancelled',
+            'status' => 'required|in:draft,open,paid,overdue,cancelled,partial',
             'tax_amount' => 'nullable|numeric|min:0',
+            'amount_paid' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
             'recurring' => 'boolean',
             'recurring_interval' => 'nullable|required_if:recurring,true|in:daily,weekly,monthly,yearly',
@@ -442,6 +474,7 @@ class InvoiceController extends Controller
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.amount_paid' => 'nullable|numeric|min:0',
         ]);
 
         // Generate invoice number
@@ -497,7 +530,7 @@ class InvoiceController extends Controller
             'member_id' => 'sometimes|required|exists:members,id',
             'invoice_date' => 'sometimes|required|date',
             'due_date' => 'sometimes|required|date|after_or_equal:invoice_date',
-            'status' => 'sometimes|required|in:draft,open,paid,overdue,cancelled',
+            'status' => 'sometimes|required|in:draft,open,paid,overdue,cancelled,partial',
             'tax_amount' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
             'recurring' => 'sometimes|boolean',
