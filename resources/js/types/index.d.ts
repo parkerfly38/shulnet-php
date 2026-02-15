@@ -317,8 +317,8 @@ export interface InvoiceItem {
     quantity: string;
     unit_price: string;
     total: string;
-    amount_paid?: string;
-    gl_account_id?: number;
+    amount_paid: string;
+    balance: number;
     sort_order: number;
     created_at: string;
     updated_at: string;
