@@ -208,36 +208,9 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
       });
     } else {
       // Generate PDF with one page per selected member
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = `/admin/yahrzeits/${selectedYahrzeit.id}/print-reminder`;
-      form.target = '_blank';
-
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      if (csrfToken) {
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = csrfToken;
-        form.appendChild(csrfInput);
-      }
-
-      // Send member IDs to backend
-      const memberIdsInput = document.createElement('input');
-      memberIdsInput.type = 'hidden';
-      memberIdsInput.name = 'member_ids';
-      memberIdsInput.value = JSON.stringify(selectedMembers);
-      form.appendChild(memberIdsInput);
-
-      const dateInput = document.createElement('input');
-      dateInput.type = 'hidden';
-      dateInput.name = 'gregorian_date';
-      dateInput.value = gregorianDate;
-      form.appendChild(dateInput);
-
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      const memberIdsParam = selectedMembers.join(',');
+      const url = `/admin/yahrzeits/${selectedYahrzeit.id}/print-reminder?member_ids=${encodeURIComponent(memberIdsParam)}&gregorian_date=${encodeURIComponent(gregorianDate)}`;
+      window.open(url, '_blank');
       
       setShowReminderDialog(false);
       setSelectedYahrzeit(null);
