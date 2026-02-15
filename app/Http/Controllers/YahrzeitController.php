@@ -374,11 +374,11 @@ class YahrzeitController extends Controller
     public function printReminder(Yahrzeit $yahrzeit, Request $request)
     {
         $validated = $request->validate([
-            'member_ids' => 'required|json',
+            'member_ids' => 'required|string',
             'gregorian_date' => 'required|string',
         ]);
 
-        $memberIds = json_decode($validated['member_ids'], true);
+        $memberIds = explode(',', $validated['member_ids']);
 
         // Load the selected members
         $yahrzeit->load(['members' => function ($query) use ($memberIds) {
