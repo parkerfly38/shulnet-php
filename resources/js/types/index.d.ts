@@ -43,6 +43,7 @@ export interface User {
     avatar?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
+    roles?: string[];
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
@@ -241,10 +242,12 @@ export interface Invoice {
     invoice_number: string;
     invoice_date: string;
     due_date: string;
-    status: 'draft' | 'open' | 'paid' | 'overdue' | 'cancelled';
+    status: 'draft' | 'open' | 'partial' | 'paid' | 'overdue' | 'cancelled';
     subtotal: string;
     tax_amount: string;
     total: string;
+    amount_paid: string;
+    balance: number;
     notes?: string;
     recurring: boolean;
     recurring_interval?: 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -266,6 +269,8 @@ export interface InvoiceItem {
     quantity: string;
     unit_price: string;
     total: string;
+    amount_paid: string;
+    balance: number;
     sort_order: number;
     created_at: string;
     updated_at: string;
