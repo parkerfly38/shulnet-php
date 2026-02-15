@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // For MySQL/MariaDB, we need to alter the enum
-        DB::statement("ALTER TABLE invoices MODIFY COLUMN status ENUM('draft', 'open', 'partial', 'paid', 'overdue', 'cancelled') DEFAULT 'draft'");
+        // Only run on MySQL/MariaDB - SQLite doesn't support ALTER COLUMN and fresh installs already have 'partial' in the create table migration
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE invoices MODIFY COLUMN status ENUM('draft', 'open', 'partial', 'paid', 'overdue', 'cancelled') DEFAULT 'draft'");
+        }
     }
 
     /**
@@ -21,8 +23,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Remove 'partial' status - first update any partial invoices to 'open'
-        DB::statement("UPDATE invoices SET status = 'open' WHERE status = 'partial'");
-        DB::statement("ALTER TABLE invoices MODIFY COLUMN status ENUM('draft', 'open', 'paid', 'overdue', 'cancelled') DEFAULT 'draft'");
+        // Only run on MySQL/MariaDB
+        if (DB::getDriverName() === 'mysql') {
+            // Remove 'partial' status - first update any partial invoices to 'open'
+            DB::statement("UPDATE invoices SET status = 'open' WHERE status = 'partial'");
+            DB::statement("ALTER TABLE invoices MODIFY COLUMN status ENUM('draft', 'open', 'paid', 'overdue', 'cancelled') DEFAULT 'draft'");
+        }
     }
 };
