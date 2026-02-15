@@ -129,9 +129,9 @@
             <p>{{ config('app.name') }}</p>
         </div>
 
-        <div class="footer no-print">
+        <!--<div class="footer no-print">
             <p>{{ config('app.name') }} &copy; {{ date('Y') }} - Page {{ $loop->iteration }} of {{ $members->count() }}</p>
-        </div>
+        </div>-->
     </div>
     @endforeach
 

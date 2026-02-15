@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('quantity', 10, 2)->default(1);
             $table->decimal('unit_price', 10, 2);
             $table->decimal('total', 10, 2);
+            $table->decimal('amount_paid', 10, 2)->default(0);
             $table->integer('sort_order')->default(0);
             $table->timestamps();
         });
