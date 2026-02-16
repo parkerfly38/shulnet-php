@@ -1,10 +1,23 @@
-import React, { useMemo } from 'react';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import React, { useMemo, useState } from 'react';
+import { Head, Link, router, usePage, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Edit, Trash2, RefreshCw, Calendar, User, FileText, Printer } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Edit, Trash2, RefreshCw, Printer, CheckCircle, DollarSign } from 'lucide-react';
 import { BreadcrumbItem, Invoice } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 
@@ -32,6 +45,13 @@ const statusLabels: Record<string, string> = {
 
 export default function InvoicesShow({ invoice }: Readonly<Props>) {
   const { currency } = usePage().props as any;
+  const [markPaidOpen, setMarkPaidOpen] = useState(false);
+
+  const { data, setData, post, processing, reset } = useForm({
+    payment_method: 'check',
+    amount: (parseFloat(invoice.total) - parseFloat(invoice.amount_paid)).toFixed(2),
+    note: '',
+  });
 
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
@@ -51,6 +71,16 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
     }
   };
 
+  const handleMarkAsPaid = (e: React.FormEvent) => {
+    e.preventDefault();
+    post(`/admin/invoices/${invoice.id}/mark-as-paid`, {
+      onSuccess: () => {
+        setMarkPaidOpen(false);
+        reset();
+      },
+    });
+  };
+
   const formatAmount = (amount: string) => {
     return formatCurrency(parseFloat(amount), currency);
   };
@@ -61,6 +91,22 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const getPaymentStatusClass = (status: string) => {
+    if (status === 'completed') {
+      return 'bg-green-50 text-green-700 border-green-300 dark:bg-green-900/20 dark:text-green-400';
+    }
+    if (status === 'pending') {
+      return 'bg-yellow-50 text-yellow-700 border-yellow-300 dark:bg-yellow-900/20 dark:text-yellow-400';
+    }
+    return 'bg-gray-50 text-gray-700 border-gray-300 dark:bg-gray-900/20 dark:text-gray-400';
+  };
+
+  const formatPaymentMethod = (method: string) => {
+    if (method === 'credit_card') return 'Credit Card';
+    if (method === 'wire_transfer') return 'Wire Transfer';
+    return method.charAt(0).toUpperCase() + method.slice(1);
   };
 
   return (
@@ -86,6 +132,83 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Generate Next
               </Button>
+            )}
+            {invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
+              <Dialog open={markPaidOpen} onOpenChange={setMarkPaidOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="text-green-600 hover:text-green-700">
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    Mark as Paid
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <form onSubmit={handleMarkAsPaid}>
+                    <DialogHeader>
+                      <DialogTitle>Mark Invoice as Paid</DialogTitle>
+                      <DialogDescription>
+                        Record a manual payment for this invoice. A payment record will be created.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="payment_method">Payment Method</Label>
+                        <Select
+                          value={data.payment_method}
+                          onValueChange={(value) => setData('payment_method', value)}
+                        >
+                          <SelectTrigger id="payment_method">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="check">Check</SelectItem>
+                            <SelectItem value="cash">Cash</SelectItem>
+                            <SelectItem value="wire_transfer">Wire Transfer</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="amount">Amount</Label>
+                        <Input
+                          id="amount"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={data.amount}
+                          onChange={(e) => setData('amount', e.target.value)}
+                          placeholder="Payment amount"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Remaining balance: {formatAmount((parseFloat(invoice.total) - parseFloat(invoice.amount_paid)).toString())}
+                        </p>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="note">Note (Optional)</Label>
+                        <Textarea
+                          id="note"
+                          value={data.note}
+                          onChange={(e) => setData('note', e.target.value)}
+                          placeholder="Add any notes about this payment..."
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setMarkPaidOpen(false)}
+                        disabled={processing}
+                      >
+                        Cancel
+                      </Button>
+                      <Button type="submit" disabled={processing}>
+                        {processing ? 'Recording...' : 'Record Payment'}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             )}
             <Button
               variant="outline"
@@ -313,6 +436,82 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                 )}
               </CardContent>
             </Card>
+
+            {/* Payment History */}
+            {invoice.payments && invoice.payments.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <DollarSign className="h-5 w-5 mr-2" />
+                    Payment History
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Payment Summary */}
+                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Total Amount:</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {formatAmount(invoice.total)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600 dark:text-gray-400">Total Paid:</span>
+                        <span className="font-medium text-green-600 dark:text-green-400">
+                          {formatAmount(invoice.amount_paid)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">Balance Due:</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {formatAmount((Number.parseFloat(invoice.total) - Number.parseFloat(invoice.amount_paid)).toFixed(2))}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Payment List */}
+                    <div className="space-y-3">
+                      {invoice.payments.map((payment) => (
+                        <div 
+                          key={payment.id}
+                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 space-y-2"
+                        >
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {formatAmount(payment.amount)}
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {payment.paid_at ? formatDate(payment.paid_at) : formatDate(payment.created_at)}
+                              </p>
+                            </div>
+                            <Badge 
+                              variant="outline" 
+                              className={getPaymentStatusClass(payment.status)}
+                            >
+                              {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
+                            </Badge>
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-400">
+                            <p>
+                              <span className="font-medium">Method:</span>{' '}
+                              {formatPaymentMethod(payment.payment_method)}
+                            </p>
+                            {payment.transaction_id && (
+                              <p className="mt-1">
+                                <span className="font-medium">Transaction:</span>{' '}
+                                <span className="font-mono">{payment.transaction_id}</span>
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

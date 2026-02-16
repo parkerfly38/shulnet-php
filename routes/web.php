@@ -336,6 +336,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Generate next recurring invoice
         Route::post('admin/invoices/{invoice}/generate-next', [InvoiceController::class, 'generateNext'])->name('invoices.generate-next');
 
+        // Mark invoice as paid
+        Route::post('admin/invoices/{invoice}/mark-as-paid', [InvoiceController::class, 'markAsPaid'])->name('invoices.mark-as-paid');
+
         // Print invoice
         Route::get('admin/invoices/{invoice}/print', [InvoiceController::class, 'print'])->name('invoices.print');
 
@@ -715,6 +718,10 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(fu
 
 });
 
+// Mobile app login (for React Native / external apps)
+Route::post('api/login', [\App\Http\Controllers\Api\TokenController::class, 'login'])->name('api.login');
+Route::post('api/logout', [\App\Http\Controllers\Api\TokenController::class, 'logout'])->middleware('auth:sanctum')->name('api.logout');
+
 // API Token management routes
 Route::post('api/tokens/create', [\App\Http\Controllers\Api\TokenController::class, 'create'])->name('api.tokens.create');
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api')->group(function () {
@@ -730,6 +737,17 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api')->group(function
     
     // Email record API routes
     Route::post('emails/record', [\App\Http\Controllers\EmailRecordController::class, 'store'])->name('api.emails.record');
+});
+
+// Member Portal API routes (for React Native app)
+Route::middleware(['auth:sanctum'])->prefix('api/member')->group(function () {
+    Route::get('dashboard', [MemberDashboardController::class, 'apiDashboard'])->name('api.member.dashboard');
+    Route::get('profile', [MemberDashboardController::class, 'apiProfile'])->name('api.member.profile');
+    Route::put('profile', [MemberDashboardController::class, 'apiUpdateProfile'])->name('api.member.profile.update');
+    Route::get('invoices', [MemberDashboardController::class, 'apiInvoices'])->name('api.member.invoices');
+    Route::get('invoices/{id}', [MemberDashboardController::class, 'apiShowInvoice'])->name('api.member.invoices.show');
+    Route::get('students', [MemberDashboardController::class, 'apiStudents'])->name('api.member.students');
+    Route::get('yahrzeits', [MemberDashboardController::class, 'apiYahrzeits'])->name('api.member.yahrzeits');
 });
 
 // Public campaign routes (no auth required)

@@ -135,4 +135,69 @@ class TokenController extends Controller
             }),
         ]);
     }
+
+    /**
+     * Mobile App Login
+     *
+     * Authenticate a user and return a bearer token for mobile apps.
+     * Unlike the create() method, this allows any authenticated user (not just admins).
+     *
+     * @unauthenticated
+     */
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'device_name' => 'string|max:255',
+        ]);
+
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        $deviceName = $request->device_name ?? 'Mobile App';
+        $token = $user->createToken($deviceName);
+
+        // Get member info if available
+        $memberData = null;
+        if ($user->member) {
+            $memberData = [
+                'id' => $user->member->id,
+                'first_name' => $user->member->first_name,
+                'last_name' => $user->member->last_name,
+                'email' => $user->member->email,
+            ];
+        }
+
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token->plainTextToken,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+            'member' => $memberData,
+        ], 200);
+    }
+
+    /**
+     * Mobile App Logout
+     *
+     * Revoke the current access token being used to authenticate the request.
+     */
+    public function logout(Request $request)
+    {
+        // Revoke the current token that was used to authenticate the request
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout successful',
+        ], 200);
+    }
 }

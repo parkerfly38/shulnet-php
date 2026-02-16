@@ -49,6 +49,21 @@ class Member extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'dob' => 'date',
+        'bnaimitzvahdate' => 'date',
+        'anniversary_date' => 'date',
+        'lastrenewal' => 'date',
+        'lastaction' => 'datetime',
+        'lastlogin' => 'datetime',
+        'aliyah' => 'boolean',
+        'chazanut' => 'boolean',
+        'dvartorah' => 'boolean',
+        'deceased' => 'boolean',
+        'briabatorah' => 'boolean',
+        'maftir' => 'boolean',
+    ];
+
     /**
      * Get the yahrzeits associated with this member.
      */

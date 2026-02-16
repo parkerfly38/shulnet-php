@@ -182,7 +182,9 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice->load(['member', 'items']);
+        $invoice->load(['member', 'items', 'payments' => function ($query) {
+            $query->orderBy('paid_at', 'desc');
+        }]);
 
         return Inertia::render('invoices/show', [
             'invoice' => $invoice,
@@ -318,6 +320,70 @@ class InvoiceController extends Controller
 
         return redirect()->route('invoices.show', $newInvoice)
             ->with('success', 'Next recurring invoice generated successfully.');
+    }
+
+    /**
+     * Mark invoice as paid (manual payment)
+     */
+    public function markAsPaid(Request $request, Invoice $invoice)
+    {
+        if ($invoice->status === 'paid') {
+            return back()->with('error', 'This invoice is already marked as paid.');
+        }
+
+        $validated = $request->validate([
+            'payment_method' => 'required|string|in:check,cash,wire_transfer,other',
+            'amount' => 'nullable|numeric|min:0',
+            'note' => 'nullable|string|max:500',
+        ]);
+
+        $paymentAmount = $validated['amount'] ?? ($invoice->total - $invoice->amount_paid);
+
+        // Create payment record
+        \App\Models\Payment::create([
+            'invoice_id' => $invoice->id,
+            'member_id' => $invoice->member_id,
+            'amount' => $paymentAmount,
+            'payment_method' => $validated['payment_method'],
+            'transaction_id' => null,
+            'status' => 'completed',
+            'payment_details' => $validated['note'] ? ['note' => $validated['note']] : null,
+            'paid_at' => now(),
+        ]);
+
+        // Distribute payment across invoice items in ascending sort_order
+        $remainingPayment = $paymentAmount;
+        $items = $invoice->items()->orderBy('sort_order')->get();
+        
+        foreach ($items as $item) {
+            if ($remainingPayment <= 0) {
+                break;
+            }
+            
+            $itemBalance = $item->total - $item->amount_paid;
+            
+            if ($itemBalance > 0) {
+                $amountToApply = min($remainingPayment, $itemBalance);
+                $item->amount_paid = $item->amount_paid + $amountToApply;
+                $item->save();
+                $remainingPayment -= $amountToApply;
+            }
+        }
+
+        // Update invoice amount_paid and status
+        $newAmountPaid = $invoice->amount_paid + $paymentAmount;
+        $newStatus = $newAmountPaid >= $invoice->total ? 'paid' : 'partial';
+
+        $invoice->update([
+            'amount_paid' => $newAmountPaid,
+            'status' => $newStatus,
+        ]);
+
+        $message = $newStatus === 'paid'
+            ? 'Invoice marked as paid successfully!'
+            : 'Partial payment recorded successfully!';
+
+        return back()->with('success', $message);
     }
 
     /**

@@ -44,6 +44,15 @@ interface MemberForm {
 }
 
 export default function MembersEdit({ member }: Readonly<Props>) {
+  // Format date for HTML date input (YYYY-MM-DD)
+  const formatDateForInput = (dateValue: any): string => {
+    if (!dateValue) return '';
+    if (typeof dateValue === 'string') {
+      return dateValue.split('T')[0];
+    }
+    return '';
+  };
+
   const { data, setData, put, processing, errors } = useForm<MemberForm>({
     member_type: member.member_type || 'member',
     first_name: member.first_name || '',
@@ -59,7 +68,7 @@ export default function MembersEdit({ member }: Readonly<Props>) {
     state: member.state || '',
     zip: member.zip || '',
     country: member.country || '',
-    dob: member.dob || '',
+    dob: formatDateForInput(member.dob),
     gender: member.gender || '',
     aliyah: (member as any).aliyah || false,
     bnaimitzvahdate: (member as any).bnaimitzvahdate ? new Date((member as any).bnaimitzvahdate) : null,

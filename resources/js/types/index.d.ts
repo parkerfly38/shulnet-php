@@ -258,6 +258,7 @@ export interface Invoice {
     parent_invoice_id?: number;
     member?: Member;
     items?: InvoiceItem[];
+    payments?: Payment[];
     created_at: string;
     updated_at: string;
 }
@@ -272,6 +273,20 @@ export interface InvoiceItem {
     amount_paid: string;
     balance: number;
     sort_order: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Payment {
+    id: number;
+    invoice_id: number;
+    member_id: number;
+    amount: string;
+    payment_method: string;
+    transaction_id?: string;
+    status: string;
+    payment_details?: any;
+    paid_at?: string;
     created_at: string;
     updated_at: string;
 }
