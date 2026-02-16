@@ -289,6 +289,124 @@ Content-Type: application/json
 }
 ```
 
+#### Pay Invoice
+
+**Endpoint:** `POST /api/member/invoices/{id}/pay`
+
+**Description:** Process a payment for an invoice from an external payment system. Use this endpoint when your mobile app handles payment processing (e.g., Stripe, PayPal, or other payment SDK) and needs to record the payment in ShulNet.
+
+**Request Body:**
+```json
+{
+  "amount": 250.00,
+  "payment_method": "stripe",
+  "transaction_id": "pi_3ABC123DEF456GHI",
+  "payment_details": {
+    "card_last4": "4242",
+    "card_brand": "visa"
+  }
+}
+```
+
+**Request Parameters:**
+- `amount` (required): Payment amount (must be between 0.01 and the invoice balance)
+- `payment_method` (required): One of: `stripe`, `authorize_net`, `paypal`, `credit_card`, `external`
+- `transaction_id` (optional): Transaction ID from the payment processor
+- `payment_details` (optional): Additional payment details as an object
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Partial payment processed successfully!",
+  "payment": {
+    "id": 42,
+    "amount": 250.00,
+    "payment_method": "stripe",
+    "transaction_id": "pi_3ABC123DEF456GHI",
+    "status": "completed",
+    "paid_at": "2026-03-10T15:30:00.000000Z"
+  },
+  "invoice": {
+    "id": 123,
+    "invoice_number": "INV-2026-001",
+    "description": "Membership dues for 2026",
+    "total": "500.00",
+    "amount_paid": "250.00",
+    "balance": "250.00",
+    "status": "partial",
+    "due_date": "2026-03-15",
+    "items": [
+      {
+        "id": 1,
+        "description": "Annual Membership",
+        "quantity": 1,
+        "unit_price": "500.00",
+        "amount": "500.00",
+        "amount_paid": "0.00"
+      }
+    ]
+  }
+}
+```
+
+**Error Responses:**
+
+404 Not Found:
+```json
+{
+  "error": "Invoice not found."
+}
+```
+
+403 Forbidden:
+```json
+{
+  "error": "You do not have permission to pay this invoice."
+}
+```
+
+400 Bad Request:
+```json
+{
+  "error": "This invoice has already been paid."
+}
+```
+
+**Example Usage:**
+
+After processing a payment through Stripe or another payment provider in your React Native app, call this endpoint to record the payment:
+
+```typescript
+// 1. Process payment with Stripe (or other provider)
+const paymentIntent = await stripe.confirmPayment({
+  amount: 25000, // $250.00 in cents
+  // ... other Stripe parameters
+});
+
+// 2. Record the payment in ShulNet
+const response = await fetch('https://shulnet.example.com/api/member/invoices/123/pay', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+  body: JSON.stringify({
+    amount: 250.00,
+    payment_method: 'stripe',
+    transaction_id: paymentIntent.id,
+    payment_details: {
+      card_last4: paymentIntent.payment_method.card.last4,
+      card_brand: paymentIntent.payment_method.card.brand,
+    }
+  })
+});
+
+const data = await response.json();
+console.log(data.message); // "Partial payment processed successfully!"
+```
+
 ---
 
 ### Students
@@ -512,6 +630,24 @@ export async function getInvoices() {
 
 export async function getInvoice(id: number) {
   return apiRequest(`/api/member/invoices/${id}`);
+}
+
+export async function payInvoice(
+  id: number,
+  amount: number,
+  paymentMethod: string,
+  transactionId?: string,
+  paymentDetails?: any
+) {
+  return apiRequest(`/api/member/invoices/${id}/pay`, {
+    method: 'POST',
+    body: JSON.stringify({
+      amount,
+      payment_method: paymentMethod,
+      transaction_id: transactionId,
+      payment_details: paymentDetails,
+    }),
+  });
 }
 
 export async function getStudents() {

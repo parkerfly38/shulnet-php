@@ -746,6 +746,7 @@ Route::middleware(['auth:sanctum'])->prefix('api/member')->group(function () {
     Route::put('profile', [MemberDashboardController::class, 'apiUpdateProfile'])->name('api.member.profile.update');
     Route::get('invoices', [MemberDashboardController::class, 'apiInvoices'])->name('api.member.invoices');
     Route::get('invoices/{id}', [MemberDashboardController::class, 'apiShowInvoice'])->name('api.member.invoices.show');
+    Route::post('invoices/{id}/pay', [MemberDashboardController::class, 'apiPayInvoice'])->name('api.member.invoices.pay');
     Route::get('students', [MemberDashboardController::class, 'apiStudents'])->name('api.member.students');
     Route::get('yahrzeits', [MemberDashboardController::class, 'apiYahrzeits'])->name('api.member.yahrzeits');
 });
