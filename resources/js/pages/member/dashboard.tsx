@@ -68,6 +68,8 @@ interface Props {
     yahrzeits: Yahrzeit[];
     assignments: Assignment[];
     events: Event[];
+    isBirthday: boolean;
+    isAnniversary: boolean;
 }
 
 function formatCurrency(amount: number) {
@@ -85,7 +87,7 @@ function formatDate(dateString: string) {
     });
 }
 
-export default function MemberDashboard({ member, invoices, students, yahrzeits, assignments, events }: Props) {
+export default function MemberDashboard({ member, invoices, students, yahrzeits, assignments, events, isBirthday, isAnniversary }: Readonly<Props>) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Member Portal" />
@@ -94,6 +96,26 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Welcome, {member.first_name}!</h1>
                 </div>
+
+                {/* Birthday/Anniversary Celebration */}
+                {(isBirthday || isAnniversary) && (
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-700 rounded-lg p-6 text-center">
+                        <div className="text-4xl mb-2">🎉</div>
+                        {isBirthday && (
+                            <h2 className="text-2xl font-bold text-purple-900 dark:text-purple-100 mb-1">
+                                Happy Birthday, {member.first_name}!
+                            </h2>
+                        )}
+                        {isAnniversary && (
+                            <h2 className="text-2xl font-bold text-purple-900 dark:text-purple-100 mb-1">
+                                Happy Anniversary!
+                            </h2>
+                        )}
+                        <p className="text-purple-700 dark:text-purple-300">
+                            Wishing you a wonderful day filled with blessings and joy!
+                        </p>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Invoices */}
