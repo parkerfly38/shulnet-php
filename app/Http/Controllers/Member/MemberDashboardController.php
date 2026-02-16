@@ -172,7 +172,6 @@ class MemberDashboardController extends Controller
             'events' => $events,
             'isBirthday' => $isBirthday,
             'isAnniversary' => $isAnniversary,
-            'roleSwitch' => $this->getRoleSwitchData($user),
         ]);
     }
 
@@ -981,10 +980,9 @@ class MemberDashboardController extends Controller
                 ];
             });
 
-        // Get upcoming events (next 90 days)
-        $eventsEndDate = Carbon::today()->addDays(90);
+        // Get upcoming events (next 60 days)
         $events = Event::where('event_start', '>=', $startDate->toDateString())
-            ->where('event_start', '<=', $eventsEndDate->toDateString())
+            ->where('event_start', '<=', $endDate->toDateString())
             ->orderBy('event_start', 'asc')
             ->limit(10)
             ->get()
