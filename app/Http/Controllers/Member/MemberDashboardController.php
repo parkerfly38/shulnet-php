@@ -8,6 +8,7 @@ use App\Models\GabbaiAssignment;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Note;
+use App\Models\Payment;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Yahrzeit;
@@ -801,15 +802,26 @@ class MemberDashboardController extends Controller
         // Get the yahrzeit to include its details in the note
         $yahrzeit = Yahrzeit::find($validated['yahrzeit_id']);
 
-        // Get the default admin user
-        $defaultAdmin = User::getDefaultAdmin();
-
-        if (! $defaultAdmin) {
-            return back()->with('error', 'No default admin configured. Please contact support.');
+        if (! $yahrzeit) {
+            return back()->with('error', 'Yahrzeit not found.');
         }
 
-        // Create a note for the default admin
-        Note::create([
+        // Get the default admin user, or fallback to any admin
+        $defaultAdmin = User::getDefaultAdmin();
+        
+        if (! $defaultAdmin) {
+            // Fallback to first user with admin role (stored in JSON column)
+            $defaultAdmin = User::whereNotNull('roles')
+                ->where('roles', 'LIKE', '%"admin"%')
+                ->first();
+        }
+
+        if (! $defaultAdmin) {
+            return back()->with('error', 'No admin users found. Please contact support.');
+        }
+
+        // Create a note for the admin
+        $note = Note::create([
             'name' => 'Yahrzeit Change Request',
             'note_text' => "Member: {$member->first_name} {$member->last_name}\n".
                           "Yahrzeit: {$yahrzeit->name}".($yahrzeit->hebrew_name ? " ({$yahrzeit->hebrew_name})" : '')."\n".
@@ -1351,6 +1363,104 @@ class MemberDashboardController extends Controller
                 'last_name' => $member->last_name,
             ],
             'yahrzeits' => $yahrzeits,
+        ]);
+    }
+
+    /**
+     * API: Pay an invoice (from external payment system)
+     */
+    public function apiPayInvoice(Request $request, $id)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        $invoice = Invoice::find($id);
+
+        if (! $invoice) {
+            return response()->json(['error' => 'Invoice not found.'], 404);
+        }
+
+        // Verify the invoice belongs to this member
+        if ($invoice->member_id !== $member->id) {
+            return response()->json(['error' => 'You do not have permission to pay this invoice.'], 403);
+        }
+
+        // Check if invoice is already paid
+        if ($invoice->status === 'paid') {
+            return response()->json(['error' => 'This invoice has already been paid.'], 400);
+        }
+
+        // Validate payment data
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0.01|max:'.$invoice->balance,
+            'payment_method' => 'required|string|in:stripe,authorize_net,paypal,credit_card,external',
+            'transaction_id' => 'nullable|string',
+            'payment_details' => 'nullable|array',
+        ]);
+
+        $paymentAmount = (float) $validated['amount'];
+
+        // Create payment record
+        $payment = Payment::create([
+            'invoice_id' => $invoice->id,
+            'member_id' => $member->id,
+            'amount' => $paymentAmount,
+            'payment_method' => $validated['payment_method'],
+            'transaction_id' => $validated['transaction_id'] ?? null,
+            'status' => 'completed',
+            'payment_details' => $validated['payment_details'] ?? null,
+            'paid_at' => now(),
+        ]);
+
+        // Update invoice amount_paid and status
+        $newAmountPaid = $invoice->amount_paid + $paymentAmount;
+        $newStatus = $newAmountPaid >= $invoice->total ? 'paid' : 'partial';
+
+        $invoice->update([
+            'amount_paid' => $newAmountPaid,
+            'status' => $newStatus,
+        ]);
+
+        // Reload invoice with items
+        $invoice = Invoice::with('items')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => $newStatus === 'paid'
+                ? 'Payment processed successfully! Invoice is now fully paid.'
+                : 'Partial payment processed successfully!',
+            'payment' => [
+                'id' => $payment->id,
+                'amount' => $payment->amount,
+                'payment_method' => $payment->payment_method,
+                'transaction_id' => $payment->transaction_id,
+                'status' => $payment->status,
+                'paid_at' => $payment->paid_at->toISOString(),
+            ],
+            'invoice' => [
+                'id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'description' => $invoice->notes ?? 'Invoice',
+                'total' => $invoice->total,
+                'amount_paid' => $invoice->amount_paid,
+                'balance' => $invoice->balance,
+                'status' => $invoice->status,
+                'due_date' => $invoice->due_date,
+                'items' => $invoice->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'description' => $item->description,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'amount' => $item->amount,
+                        'amount_paid' => $item->amount_paid,
+                    ];
+                }),
+            ],
         ]);
     }
 }

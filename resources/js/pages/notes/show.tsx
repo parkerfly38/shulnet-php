@@ -36,7 +36,17 @@ export default function NoteShow({ note }: NoteShowProps) {
     const handleMarkComplete = () => {
         if (!note.completed_date) {
             router.put(`/admin/notes/${note.id}`, {
-                completed_date: new Date().toISOString()
+                item_scope: note.item_scope,
+                name: note.name,
+                deadline_date: note.deadline_date,
+                completed_date: new Date().toISOString(),
+                note_text: note.note_text,
+                label: note.label,
+                added_by: note.added_by,
+                visibility: note.visibility,
+                priority: note.priority,
+                member_id: note.member_id,
+                user_id: note.user_id,
             });
         }
     };

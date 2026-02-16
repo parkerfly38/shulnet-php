@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use Exception;
 use Stripe\PaymentIntent;
 use Stripe\Refund;
@@ -13,7 +14,10 @@ class StripePaymentGateway implements PaymentGatewayInterface
 
     public function __construct()
     {
-        $this->secretKey = config('services.stripe.secret_key') ?: '';
+        // Check database settings first, fall back to config
+        $this->secretKey = Setting::where('key', 'stripe_secret_key')->value('value') 
+            ?? config('services.stripe.secret_key') 
+            ?? '';
         Stripe::setApiKey($this->secretKey);
     }
 
