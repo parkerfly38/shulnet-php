@@ -18,13 +18,23 @@ interface Member {
     father_hebrew_name: string | null;
     mother_hebrew_name: string | null;
     date_of_birth: string | null;
+    anniversary_date: string | null;
 }
 
 interface Props {
     member: Member;
 }
 
-export default function ProfilePage({ member }: Props) {
+export default function ProfilePage({ member }: Readonly<Props>) {
+    // Format date for HTML date input (YYYY-MM-DD)
+    const formatDateForInput = (dateValue: string | null): string => {
+        if (!dateValue) return '';
+        if (typeof dateValue === 'string') {
+            return dateValue.split('T')[0];
+        }
+        return '';
+    };
+
     const { data, setData, put, processing, errors } = useForm({
         first_name: member.first_name || '',
         last_name: member.last_name || '',
@@ -39,7 +49,8 @@ export default function ProfilePage({ member }: Props) {
         hebrew_name: member.hebrew_name || '',
         father_hebrew_name: member.father_hebrew_name || '',
         mother_hebrew_name: member.mother_hebrew_name || '',
-        date_of_birth: member.date_of_birth || '',
+        date_of_birth: formatDateForInput(member.date_of_birth),
+        anniversary_date: formatDateForInput(member.anniversary_date),
     });
 
     const handleSubmit = (e: FormEvent) => {
@@ -135,6 +146,21 @@ export default function ProfilePage({ member }: Props) {
                                 />
                                 {errors.date_of_birth && (
                                     <p className="text-red-500 text-sm mt-1">{errors.date_of_birth}</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Anniversary Date
+                                </label>
+                                <input
+                                    type="date"
+                                    value={data.anniversary_date}
+                                    onChange={(e) => setData('anniversary_date', e.target.value)}
+                                    className="w-full border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 dark:bg-gray-900"
+                                />
+                                {errors.anniversary_date && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.anniversary_date}</p>
                                 )}
                             </div>
                         </div>

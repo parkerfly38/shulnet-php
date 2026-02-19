@@ -8,13 +8,16 @@ use App\Models\GabbaiAssignment;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Note;
+use App\Models\Payment;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Yahrzeit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group(name: 'Member Dashboard API')]
 class MemberDashboardController extends Controller
 {
     public function index(Request $request)
@@ -139,6 +142,19 @@ class MemberDashboardController extends Controller
                 ];
             });
 
+        // Check if today is member's birthday or anniversary
+        $today = Carbon::today();
+        $isBirthday = false;
+        $isAnniversary = false;
+        
+        if ($member->dob) {
+            $isBirthday = $member->dob->month === $today->month && $member->dob->day === $today->day;
+        }
+        
+        if ($member->anniversary_date) {
+            $isAnniversary = $member->anniversary_date->month === $today->month && $member->anniversary_date->day === $today->day;
+        }
+
         return Inertia::render('member/dashboard', [
             'member' => [
                 'id' => $member->id,
@@ -151,6 +167,8 @@ class MemberDashboardController extends Controller
             'yahrzeits' => $yahrzeits,
             'assignments' => $assignments,
             'events' => $events,
+            'isBirthday' => $isBirthday,
+            'isAnniversary' => $isAnniversary,
         ]);
     }
 
@@ -281,7 +299,8 @@ class MemberDashboardController extends Controller
                 'hebrew_name' => $member->hebrew_name,
                 'father_hebrew_name' => $member->father_hebrew_name,
                 'mother_hebrew_name' => $member->mother_hebrew_name,
-                'date_of_birth' => $member->date_of_birth,
+                'date_of_birth' => $member->dob,
+                'anniversary_date' => $member->anniversary_date,
             ],
         ]);
     }
@@ -310,7 +329,14 @@ class MemberDashboardController extends Controller
             'father_hebrew_name' => 'nullable|string|max:255',
             'mother_hebrew_name' => 'nullable|string|max:255',
             'date_of_birth' => 'nullable|date',
+            'anniversary_date' => 'nullable|date',
         ]);
+
+        // Map date_of_birth to dob for database
+        if (isset($validated['date_of_birth'])) {
+            $validated['dob'] = $validated['date_of_birth'];
+            unset($validated['date_of_birth']);
+        }
 
         $member->update($validated);
 
@@ -776,15 +802,26 @@ class MemberDashboardController extends Controller
         // Get the yahrzeit to include its details in the note
         $yahrzeit = Yahrzeit::find($validated['yahrzeit_id']);
 
-        // Get the default admin user
-        $defaultAdmin = User::getDefaultAdmin();
-
-        if (! $defaultAdmin) {
-            return back()->with('error', 'No default admin configured. Please contact support.');
+        if (! $yahrzeit) {
+            return back()->with('error', 'Yahrzeit not found.');
         }
 
-        // Create a note for the default admin
-        Note::create([
+        // Get the default admin user, or fallback to any admin
+        $defaultAdmin = User::getDefaultAdmin();
+        
+        if (! $defaultAdmin) {
+            // Fallback to first user with admin role (stored in JSON column)
+            $defaultAdmin = User::whereNotNull('roles')
+                ->where('roles', 'LIKE', '%"admin"%')
+                ->first();
+        }
+
+        if (! $defaultAdmin) {
+            return back()->with('error', 'No admin users found. Please contact support.');
+        }
+
+        // Create a note for the admin
+        $note = Note::create([
             'name' => 'Yahrzeit Change Request',
             'note_text' => "Member: {$member->first_name} {$member->last_name}\n".
                           "Yahrzeit: {$yahrzeit->name}".($yahrzeit->hebrew_name ? " ({$yahrzeit->hebrew_name})" : '')."\n".
@@ -798,5 +835,632 @@ class MemberDashboardController extends Controller
         ]);
 
         return back()->with('success', 'Your change request has been submitted to the administrator.');
+    }
+
+    /**
+     * API: Get member dashboard data
+     */
+    public function apiDashboard(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        // Get invoices for this member
+        $invoices = Invoice::where('member_id', $member->id)
+            ->orderBy('due_date', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($invoice) {
+                return [
+                    'id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'description' => $invoice->notes ?? 'Invoice',
+                    'total_amount' => $invoice->total,
+                    'status' => $invoice->status,
+                    'due_date' => $invoice->due_date,
+                    'created_at' => $invoice->created_at,
+                ];
+            });
+
+        // Get students if member is a parent
+        $students = [];
+        if ($member->parent_id) {
+            $students = Student::where('parent_id', $member->parent_id)
+                ->with(['classGrades.classDefinition.teacher'])
+                ->get()
+                ->map(function ($student) {
+                    return [
+                        'id' => $student->id,
+                        'first_name' => $student->first_name,
+                        'last_name' => $student->last_name,
+                        'email' => $student->email,
+                        'classes' => $student->classGrades->map(function ($classGrade) {
+                            return [
+                                'id' => $classGrade->id,
+                                'class_name' => $classGrade->classDefinition->name ?? 'N/A',
+                                'teacher_name' => $classGrade->classDefinition->teacher ? ($classGrade->classDefinition->teacher->first_name.' '.$classGrade->classDefinition->teacher->last_name) : 'N/A',
+                                'grade' => $classGrade->grade,
+                            ];
+                        }),
+                    ];
+                });
+        }
+
+        // Get upcoming yahrzeits (next 60 days)
+        $startDate = Carbon::today();
+        $endDate = Carbon::today()->addDays(60);
+
+        $yahrzeits = $member->yahrzeits()
+            ->get()
+            ->filter(function ($yahrzeit) use ($startDate, $endDate) {
+                if (! $yahrzeit->date_of_death) {
+                    return false;
+                }
+
+                // Calculate occurrence in current year based on date_of_death
+                $occurrence = Carbon::parse($yahrzeit->date_of_death);
+                $currentYearOccurrence = Carbon::createFromDate($startDate->year, $occurrence->month, $occurrence->day);
+
+                if ($currentYearOccurrence->lt($startDate)) {
+                    $currentYearOccurrence->addYear();
+                }
+
+                return $currentYearOccurrence->between($startDate, $endDate);
+            })
+            ->map(function ($yahrzeit) {
+                $occurrence = Carbon::parse($yahrzeit->date_of_death);
+                $currentYearOccurrence = Carbon::createFromDate(Carbon::today()->year, $occurrence->month, $occurrence->day);
+
+                if ($currentYearOccurrence->lt(Carbon::today())) {
+                    $currentYearOccurrence->addYear();
+                }
+
+                return [
+                    'id' => $yahrzeit->id,
+                    'name' => $yahrzeit->name,
+                    'hebrew_name' => $yahrzeit->hebrew_name,
+                    'relationship' => $yahrzeit->pivot->relationship ?? 'Unknown',
+                    'date_of_death' => $yahrzeit->date_of_death,
+                    'occurrence_date' => $currentYearOccurrence->toDateString(),
+                ];
+            })
+            ->sortBy('occurrence_date')
+            ->values();
+
+        // Get upcoming aliyah assignments (next 60 days)
+        $assignments = GabbaiAssignment::where('member_id', $member->id)
+            ->where('date', '>=', $startDate->toDateString())
+            ->where('date', '<=', $endDate->toDateString())
+            ->orderBy('date', 'asc')
+            ->get()
+            ->map(function ($assignment) {
+                return [
+                    'id' => $assignment->id,
+                    'date' => $assignment->date,
+                    'honor' => $assignment->honor,
+                ];
+            });
+
+        // Get upcoming events (next 60 days)
+        $events = Event::where('event_start', '>=', $startDate->toDateString())
+            ->where('event_start', '<=', $endDate->toDateString())
+            ->orderBy('event_start', 'asc')
+            ->limit(10)
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'title' => $event->name,
+                    'description' => $event->tagline ?? $event->description,
+                    'start_date' => $event->event_start,
+                    'end_date' => $event->event_end,
+                    'location' => $event->location,
+                ];
+            });
+
+        // Check if today is member's birthday or anniversary
+        $today = Carbon::today();
+        $isBirthday = false;
+        $isAnniversary = false;
+        
+        if ($member->dob) {
+            $isBirthday = $member->dob->month === $today->month && $member->dob->day === $today->day;
+        }
+        
+        if ($member->anniversary_date) {
+            $isAnniversary = $member->anniversary_date->month === $today->month && $member->anniversary_date->day === $today->day;
+        }
+
+        return response()->json([
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+                'email' => $member->email,
+            ],
+            'invoices' => $invoices,
+            'students' => $students,
+            'yahrzeits' => $yahrzeits,
+            'assignments' => $assignments,
+            'events' => $events,
+            'isBirthday' => $isBirthday,
+            'isAnniversary' => $isAnniversary,
+        ]);
+    }
+
+    /**
+     * API: Get member profile
+     */
+    public function apiProfile(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        return response()->json([
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+                'email' => $member->email,
+                'phone1' => $member->phone1,
+                'phone2' => $member->phone2,
+                'address_line_1' => $member->address_line_1,
+                'address_line_2' => $member->address_line_2,
+                'city' => $member->city,
+                'state' => $member->state,
+                'zip' => $member->zip,
+                'hebrew_name' => $member->hebrew_name,
+                'father_hebrew_name' => $member->father_hebrew_name,
+                'mother_hebrew_name' => $member->mother_hebrew_name,
+                'date_of_birth' => $member->dob,
+                'anniversary_date' => $member->anniversary_date,
+            ],
+        ]);
+    }
+
+    /**
+     * API: Update member profile
+     */
+    public function apiUpdateProfile(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone1' => 'nullable|string|max:20',
+            'phone2' => 'nullable|string|max:20',
+            'address_line_1' => 'nullable|string|max:255',
+            'address_line_2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:2',
+            'zip' => 'nullable|string|max:10',
+            'hebrew_name' => 'nullable|string|max:255',
+            'father_hebrew_name' => 'nullable|string|max:255',
+            'mother_hebrew_name' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
+            'anniversary_date' => 'nullable|date',
+        ]);
+
+        // Map date_of_birth to dob for database
+        if (isset($validated['date_of_birth'])) {
+            $validated['dob'] = $validated['date_of_birth'];
+            unset($validated['date_of_birth']);
+        }
+
+        $member->update($validated);
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+                'email' => $member->email,
+                'phone1' => $member->phone1,
+                'phone2' => $member->phone2,
+                'address_line_1' => $member->address_line_1,
+                'address_line_2' => $member->address_line_2,
+                'city' => $member->city,
+                'state' => $member->state,
+                'zip' => $member->zip,
+                'hebrew_name' => $member->hebrew_name,
+                'father_hebrew_name' => $member->father_hebrew_name,
+                'mother_hebrew_name' => $member->mother_hebrew_name,
+                'date_of_birth' => $member->dob,
+                'anniversary_date' => $member->anniversary_date,
+            ],
+        ]);
+    }
+
+    /**
+     * API: Get member invoices
+     */
+    public function apiInvoices(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        // Get all invoices for this member, ordered by date
+        $invoices = Invoice::where('member_id', $member->id)
+            ->orderBy('invoice_date', 'desc')
+            ->get()
+            ->map(function ($invoice) {
+                return [
+                    'id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'invoice_date' => $invoice->invoice_date,
+                    'due_date' => $invoice->due_date,
+                    'status' => $invoice->status,
+                    'total' => $invoice->total,
+                    'amount_paid' => $invoice->amount_paid,
+                    'balance' => $invoice->balance,
+                    'notes' => $invoice->notes,
+                ];
+            });
+
+        return response()->json([
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+            ],
+            'invoices' => $invoices,
+        ]);
+    }
+
+    /**
+     * API: Get single invoice
+     */
+    public function apiShowInvoice(Request $request, $id)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        // Get the invoice and verify it belongs to this member
+        $invoice = Invoice::with(['items', 'payments'])->findOrFail($id);
+
+        if ($invoice->member_id !== $member->id) {
+            return response()->json(['error' => 'You do not have permission to view this invoice.'], 403);
+        }
+
+        return response()->json([
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+                'email' => $member->email,
+                'phone1' => $member->phone1,
+                'address_line_1' => $member->address_line_1,
+                'address_line_2' => $member->address_line_2,
+                'city' => $member->city,
+                'state' => $member->state,
+                'zip' => $member->zip,
+            ],
+            'invoice' => [
+                'id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'invoice_date' => $invoice->invoice_date,
+                'due_date' => $invoice->due_date,
+                'status' => $invoice->status,
+                'subtotal' => $invoice->subtotal,
+                'tax_amount' => $invoice->tax_amount,
+                'total' => $invoice->total,
+                'amount_paid' => $invoice->amount_paid,
+                'balance' => $invoice->balance,
+                'notes' => $invoice->notes,
+                'created_at' => $invoice->created_at,
+                'items' => $invoice->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'description' => $item->description,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'total' => $item->total,
+                    ];
+                }),
+                'payments' => $invoice->payments->map(function ($payment) {
+                    return [
+                        'id' => $payment->id,
+                        'amount' => $payment->amount,
+                        'payment_method' => $payment->payment_method,
+                        'status' => $payment->status,
+                        'paid_at' => $payment->paid_at,
+                        'transaction_id' => $payment->transaction_id,
+                    ];
+                }),
+            ],
+        ]);
+    }
+
+    /**
+     * API: Get member students
+     */
+    public function apiStudents(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        // Get students if member is a parent
+        $students = [];
+        if ($member->parent_id) {
+            $students = Student::where('parent_id', $member->parent_id)
+                ->with([
+                    'classGrades.classDefinition.teacher',
+                    'examGrades.exam',
+                    'subjectGrades.subject',
+                    'attendances.classDefinition',
+                ])
+                ->get()
+                ->map(function ($student) {
+                    // Calculate attendance statistics
+                    $totalAttendances = $student->attendances->count();
+                    $presentCount = $student->attendances->where('status', 'present')->count();
+                    $absentCount = $student->attendances->where('status', 'absent')->count();
+                    $tardyCount = $student->attendances->where('status', 'tardy')->count();
+                    $excusedCount = $student->attendances->where('status', 'excused')->count();
+
+                    $attendanceRate = $totalAttendances > 0
+                        ? round(($presentCount / $totalAttendances) * 100, 1)
+                        : null;
+
+                    return [
+                        'id' => $student->id,
+                        'first_name' => $student->first_name,
+                        'last_name' => $student->last_name,
+                        'middle_name' => $student->middle_name,
+                        'gender' => $student->gender,
+                        'date_of_birth' => $student->date_of_birth,
+                        'email' => $student->email,
+                        'address' => $student->address,
+                        'picture_url' => $student->picture_url,
+                        'classes' => $student->classGrades->map(function ($classGrade) {
+                            return [
+                                'id' => $classGrade->id,
+                                'class_name' => $classGrade->classDefinition->name ?? 'N/A',
+                                'teacher_name' => $classGrade->classDefinition->teacher
+                                    ? ($classGrade->classDefinition->teacher->first_name.' '.$classGrade->classDefinition->teacher->last_name)
+                                    : 'N/A',
+                                'grade' => $classGrade->grade,
+                                'school_year' => $classGrade->classDefinition->school_year ?? null,
+                            ];
+                        }),
+                        'subject_grades' => $student->subjectGrades->map(function ($subjectGrade) {
+                            return [
+                                'id' => $subjectGrade->id,
+                                'subject_name' => $subjectGrade->subject->name ?? 'N/A',
+                                'grade' => $subjectGrade->grade,
+                            ];
+                        }),
+                        'exam_grades' => $student->examGrades->map(function ($examGrade) {
+                            return [
+                                'id' => $examGrade->id,
+                                'exam_name' => $examGrade->exam->name ?? 'N/A',
+                                'grade' => $examGrade->grade,
+                                'date_taken' => $examGrade->exam->start_date ?? null,
+                            ];
+                        }),
+                        'attendance' => [
+                            'total' => $totalAttendances,
+                            'present' => $presentCount,
+                            'absent' => $absentCount,
+                            'tardy' => $tardyCount,
+                            'excused' => $excusedCount,
+                            'attendance_rate' => $attendanceRate,
+                        ],
+                        'recent_attendances' => $student->attendances()
+                            ->with('classDefinition')
+                            ->orderBy('attendance_date', 'desc')
+                            ->limit(10)
+                            ->get()
+                            ->map(function ($attendance) {
+                                return [
+                                    'id' => $attendance->id,
+                                    'date' => $attendance->attendance_date,
+                                    'status' => $attendance->status,
+                                    'class_name' => $attendance->classDefinition->name ?? 'N/A',
+                                    'notes' => $attendance->notes,
+                                ];
+                            }),
+                    ];
+                });
+        }
+
+        return response()->json([
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+            ],
+            'students' => $students,
+            'hasStudents' => $member->parent_id !== null,
+        ]);
+    }
+
+    /**
+     * API: Get member yahrzeits
+     */
+    public function apiYahrzeits(Request $request)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        // Get all yahrzeits for this member
+        $yahrzeits = $member->yahrzeits()
+            ->get()
+            ->map(function ($yahrzeit) {
+                // Calculate next occurrence
+                $occurrence = null;
+                $currentYearOccurrence = null;
+                $nextYearOccurrence = null;
+                $daysUntil = null;
+
+                if ($yahrzeit->date_of_death) {
+                    $occurrence = Carbon::parse($yahrzeit->date_of_death);
+                    $currentYearOccurrence = Carbon::createFromDate(
+                        Carbon::today()->year,
+                        $occurrence->month,
+                        $occurrence->day
+                    );
+
+                    if ($currentYearOccurrence->lt(Carbon::today())) {
+                        $nextOccurrence = $currentYearOccurrence->copy()->addYear();
+                    } else {
+                        $nextOccurrence = $currentYearOccurrence;
+                    }
+
+                    $daysUntil = Carbon::today()->diffInDays($nextOccurrence, false);
+                }
+
+                return [
+                    'id' => $yahrzeit->id,
+                    'name' => $yahrzeit->name,
+                    'hebrew_name' => $yahrzeit->hebrew_name,
+                    'relationship' => $yahrzeit->pivot->relationship ?? 'Unknown',
+                    'date_of_death' => $yahrzeit->date_of_death,
+                    'hebrew_date_of_death' => $yahrzeit->hebrew_date_of_death,
+                    'next_occurrence' => $nextOccurrence ? $nextOccurrence->toDateString() : null,
+                    'days_until' => $daysUntil,
+                ];
+            })
+            ->sortBy('days_until')
+            ->values();
+
+        return response()->json([
+            'member' => [
+                'id' => $member->id,
+                'first_name' => $member->first_name,
+                'last_name' => $member->last_name,
+            ],
+            'yahrzeits' => $yahrzeits,
+        ]);
+    }
+
+    /**
+     * API: Pay an invoice (from external payment system)
+     */
+    public function apiPayInvoice(Request $request, $id)
+    {
+        $user = $request->user();
+        $member = $user->member;
+
+        if (! $member) {
+            return response()->json(['error' => 'No member profile found.'], 404);
+        }
+
+        $invoice = Invoice::find($id);
+
+        if (! $invoice) {
+            return response()->json(['error' => 'Invoice not found.'], 404);
+        }
+
+        // Verify the invoice belongs to this member
+        if ($invoice->member_id !== $member->id) {
+            return response()->json(['error' => 'You do not have permission to pay this invoice.'], 403);
+        }
+
+        // Check if invoice is already paid
+        if ($invoice->status === 'paid') {
+            return response()->json(['error' => 'This invoice has already been paid.'], 400);
+        }
+
+        // Validate payment data
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0.01|max:'.$invoice->balance,
+            'payment_method' => 'required|string|in:stripe,authorize_net,paypal,credit_card,external',
+            'transaction_id' => 'nullable|string',
+            'payment_details' => 'nullable|array',
+        ]);
+
+        $paymentAmount = (float) $validated['amount'];
+
+        // Create payment record
+        $payment = Payment::create([
+            'invoice_id' => $invoice->id,
+            'member_id' => $member->id,
+            'amount' => $paymentAmount,
+            'payment_method' => $validated['payment_method'],
+            'transaction_id' => $validated['transaction_id'] ?? null,
+            'status' => 'completed',
+            'payment_details' => $validated['payment_details'] ?? null,
+            'paid_at' => now(),
+        ]);
+
+        // Update invoice amount_paid and status
+        $newAmountPaid = $invoice->amount_paid + $paymentAmount;
+        $newStatus = $newAmountPaid >= $invoice->total ? 'paid' : 'partial';
+
+        $invoice->update([
+            'amount_paid' => $newAmountPaid,
+            'status' => $newStatus,
+        ]);
+
+        // Reload invoice with items
+        $invoice = Invoice::with('items')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => $newStatus === 'paid'
+                ? 'Payment processed successfully! Invoice is now fully paid.'
+                : 'Partial payment processed successfully!',
+            'payment' => [
+                'id' => $payment->id,
+                'amount' => $payment->amount,
+                'payment_method' => $payment->payment_method,
+                'transaction_id' => $payment->transaction_id,
+                'status' => $payment->status,
+                'paid_at' => $payment->paid_at->toISOString(),
+            ],
+            'invoice' => [
+                'id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number,
+                'description' => $invoice->notes ?? 'Invoice',
+                'total' => $invoice->total,
+                'amount_paid' => $invoice->amount_paid,
+                'balance' => $invoice->balance,
+                'status' => $invoice->status,
+                'due_date' => $invoice->due_date,
+                'items' => $invoice->items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'description' => $item->description,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->unit_price,
+                        'amount' => $item->amount,
+                        'amount_paid' => $item->amount_paid,
+                    ];
+                }),
+            ],
+        ]);
     }
 }
