@@ -241,10 +241,12 @@ export interface Invoice {
     invoice_number: string;
     invoice_date: string;
     due_date: string;
-    status: 'draft' | 'open' | 'paid' | 'overdue' | 'cancelled';
+    status: 'draft' | 'open' | 'partial' | 'paid' | 'overdue' | 'cancelled';
     subtotal: string;
     tax_amount: string;
     total: string;
+    amount_paid: string;
+    balance: number;
     notes?: string;
     recurring: boolean;
     recurring_interval?: 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -255,6 +257,7 @@ export interface Invoice {
     parent_invoice_id?: number;
     member?: Member;
     items?: InvoiceItem[];
+    payments?: Payment[];
     created_at: string;
     updated_at: string;
 }
@@ -267,6 +270,20 @@ export interface InvoiceItem {
     unit_price: string;
     total: string;
     sort_order: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Payment {
+    id: number;
+    invoice_id: number;
+    member_id: number;
+    amount: string;
+    payment_method: string;
+    transaction_id?: string;
+    status: string;
+    payment_details?: any;
+    paid_at?: string;
     created_at: string;
     updated_at: string;
 }

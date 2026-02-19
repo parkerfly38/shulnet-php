@@ -45,13 +45,16 @@ class PaymentController extends Controller
 
         $processor = $this->paymentService->getActiveProcessor();
 
+        $stripePublicKey = \App\Models\Setting::where('key', 'stripe_public_key')->value('value') 
+            ?? config('services.stripe.public_key');
+
         return Inertia::render('member/payment', [
             'invoice' => array_merge($invoice->toArray(), [
                 'balance' => $invoice->balance,
             ]),
             'member' => $member,
             'processor' => $processor,
-            'stripePublicKey' => config('services.stripe.public_key'),
+            'stripePublicKey' => $stripePublicKey,
         ]);
     }
 

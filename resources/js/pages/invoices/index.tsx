@@ -1,11 +1,21 @@
 import React, { useMemo, useState } from 'react';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, FileText, Edit, Trash2, RefreshCw, Clock, CheckCircle, AlertCircle, XCircle, Printer } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Plus, Search, FileText, Edit, Trash2, RefreshCw, Clock, CheckCircle, AlertCircle, Printer } from 'lucide-react';
 import { BreadcrumbItem, Invoice, Member } from '@/types';
 import { formatCurrency } from '@/lib/utils';
 
@@ -65,7 +75,14 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState(filters.status || '');
   const [memberId, setMemberId] = useState(filters.member || '');
+  const [markPaidInvoice, setMarkPaidInvoice] = useState<Invoice | null>(null);
   const { currency } = usePage().props as any;
+
+  const { data, setData, post, processing, reset } = useForm({
+    payment_method: 'check',
+    amount: '',
+    note: '',
+  });
 
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
@@ -85,6 +102,23 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
     setStatus('');
     setMemberId('');
     router.get('/admin/invoices');
+  };
+
+  const handleMarkAsPaid = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!markPaidInvoice) return;
+    
+    post(`/admin/invoices/${markPaidInvoice.id}/mark-as-paid`, {
+      onSuccess: () => {
+        setMarkPaidInvoice(null);
+        reset();
+      },
+    });
+  };
+
+  const openMarkPaidDialog = (invoice: Invoice) => {
+    setMarkPaidInvoice(invoice);
+    setData('amount', (parseFloat(invoice.total) - parseFloat(invoice.amount_paid)).toFixed(2));
   };
 
   const handleDelete = (invoice: Invoice) => {
@@ -332,6 +366,17 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end gap-2">
+                          {invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => openMarkPaidDialog(invoice)}
+                              title="Mark as Paid"
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <CheckCircle className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Link href={`/admin/invoices/${invoice.id}`}>
                             <Button variant="ghost" size="sm" title="View">
                               <FileText className="h-4 w-4" />
@@ -406,6 +451,82 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
           )}
         </div>
       </div>
+
+      {/* Mark as Paid Dialog */}
+      <Dialog open={!!markPaidInvoice} onOpenChange={(open) => !open && setMarkPaidInvoice(null)}>
+        <DialogContent>
+          <form onSubmit={handleMarkAsPaid}>
+            <DialogHeader>
+              <DialogTitle>Mark Invoice as Paid</DialogTitle>
+              <DialogDescription>
+                Record a manual payment for invoice {markPaidInvoice?.invoice_number}. A payment record will be created.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="payment_method">Payment Method</Label>
+                <Select
+                  value={data.payment_method}
+                  onValueChange={(value) => setData('payment_method', value)}
+                >
+                  <SelectTrigger id="payment_method">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="check">Check</SelectItem>
+                    <SelectItem value="cash">Cash</SelectItem>
+                    <SelectItem value="wire_transfer">Wire Transfer</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="amount">Amount</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={data.amount}
+                  onChange={(e) => setData('amount', e.target.value)}
+                  placeholder="Payment amount"
+                />
+                {markPaidInvoice && (
+                  <p className="text-xs text-muted-foreground">
+                    Remaining balance: {formatCurrency(
+                      parseFloat(markPaidInvoice.total) - parseFloat(markPaidInvoice.amount_paid),
+                      currency
+                    )}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="note">Note (Optional)</Label>
+                <Textarea
+                  id="note"
+                  value={data.note}
+                  onChange={(e) => setData('note', e.target.value)}
+                  placeholder="Add any notes about this payment..."
+                  rows={3}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setMarkPaidInvoice(null)}
+                disabled={processing}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={processing}>
+                {processing ? 'Recording...' : 'Record Payment'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }
