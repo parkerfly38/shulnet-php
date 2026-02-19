@@ -539,7 +539,7 @@ Release images are available here:
 https://hub.docker.com/repository/docker/parkerfly38/shulnet-php/general
 
 ```bash
-docker push parkerfly38/shulnet-php:v1.0.2
+docker pull parkerfly38/shulnet-php:latest
 ```
 
 ## Contributing
