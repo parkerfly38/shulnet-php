@@ -97,6 +97,9 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                         { value: 'CHF', label: 'CHF (Fr) - Swiss Franc' },
                         { value: 'CNY', label: 'CNY (¥) - Chinese Yuan' },
                         { value: 'INR', label: 'INR (₹) - Indian Rupee' },
+                        { value: 'SGD', label: 'SGD (S$) - Singapore Dollar' },
+                        { value: 'ARS', label: 'ARS ($) - Argentine Peso' },
+                        { value: 'ZAR', label: 'ZAR (R) - South African Rand' },
                     ];
                 } else if (setting.key === 'smtp_encryption') {
                     options = [
