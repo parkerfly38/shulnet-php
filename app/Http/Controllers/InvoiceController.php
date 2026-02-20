@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\InvoiceMail;
 use App\Models\Invoice;
 use App\Models\Member;
+use App\Models\MembershipTier;
+use App\Models\SchoolTuitionTier;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -94,9 +96,21 @@ class InvoiceController extends Controller
             ->orderBy('first_name')
             ->get();
 
+        $membershipTiers = MembershipTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
+        $tuitionTiers = SchoolTuitionTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
         return Inertia::render('invoices/create', [
             'members' => $members,
             'selectedMember' => $request->get('member'),
+            'membershipTiers' => $membershipTiers,
+            'tuitionTiers' => $tuitionTiers,
         ]);
     }
 
@@ -204,9 +218,21 @@ class InvoiceController extends Controller
             ->orderBy('first_name')
             ->get();
 
+        $membershipTiers = MembershipTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
+        $tuitionTiers = SchoolTuitionTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
         return Inertia::render('invoices/edit', [
             'invoice' => $invoice,
             'members' => $members,
+            'membershipTiers' => $membershipTiers,
+            'tuitionTiers' => $tuitionTiers,
         ]);
     }
 

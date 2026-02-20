@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Plus, Trash2, Send, Printer } from 'lucide-react';
 import { BreadcrumbItem, Member, Gravesite } from '@/types';
+import { InvoiceLineItemInput } from '@/components/invoice-line-item-input';
 
 // Calculate default dates outside component to avoid impure function calls during render
 const getDefaultDates = () => ({
@@ -20,10 +21,20 @@ const getDefaultDates = () => ({
 
 const defaultDates = getDefaultDates();
 
+interface Tier {
+  id: number;
+  name: string;
+  description?: string;
+  price: string | number;
+  billing_period?: string;
+}
+
 interface Props {
   members: Member[];
   gravesites: Gravesite[];
   deed?: any;
+  membershipTiers: Tier[];
+  tuitionTiers: Tier[];
 }
 
 interface FlashProps {
@@ -37,7 +48,7 @@ interface PageProps {
   [key: string]: any;
 }
 
-export default function DeedsCreate({ members, gravesites, deed: propsDeed }: Readonly<Props>) {
+export default function DeedsCreate({ members, gravesites, deed: propsDeed, membershipTiers, tuitionTiers }: Readonly<Props>) {
   const { props } = usePage<PageProps>();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [createdDeed, setCreatedDeed] = useState<any>(null);
@@ -301,15 +312,22 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed }: Re
                 {invoiceItems.map((item, index) => (
                   <div key={index} className="flex gap-2 items-start">
                     <div className="flex-1 space-y-2">
-                      <Input
-                        placeholder="Description"
+                      <InvoiceLineItemInput
                         value={item.description}
-                        onChange={(e) => {
+                        price={item.unit_price.toString()}
+                        onDescriptionChange={(value) => {
                           const newItems = [...invoiceItems];
-                          newItems[index].description = e.target.value;
+                          newItems[index].description = value;
                           setInvoiceItems(newItems);
                         }}
-                        required
+                        onPriceChange={(value) => {
+                          const newItems = [...invoiceItems];
+                          newItems[index].unit_price = value;
+                          setInvoiceItems(newItems);
+                        }}
+                        membershipTiers={membershipTiers}
+                        tuitionTiers={tuitionTiers}
+                        placeholder="Start typing to search tiers or enter custom description"
                       />
                     </div>
                     <div className="w-24 space-y-2">

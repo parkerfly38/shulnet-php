@@ -8,6 +8,8 @@ use App\Models\Gravesite;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Member;
+use App\Models\MembershipTier;
+use App\Models\SchoolTuitionTier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -89,9 +91,21 @@ class DeedController extends Controller
             ->orderBy('plot_number')
             ->get();
 
+        $membershipTiers = MembershipTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
+        $tuitionTiers = SchoolTuitionTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
         return Inertia::render('deeds/create', [
             'members' => $members,
             'gravesites' => $gravesites,
+            'membershipTiers' => $membershipTiers,
+            'tuitionTiers' => $tuitionTiers,
         ]);
     }
 
@@ -133,10 +147,22 @@ class DeedController extends Controller
             ->orderBy('plot_number')
             ->get();
 
+        $membershipTiers = MembershipTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
+        $tuitionTiers = SchoolTuitionTier::active()
+            ->ordered()
+            ->select('id', 'name', 'description', 'price', 'billing_period')
+            ->get();
+
         return Inertia::render('deeds/create', [
             'members' => $members,
             'gravesites' => $gravesites,
             'deed' => $deed->toArray(),
+            'membershipTiers' => $membershipTiers,
+            'tuitionTiers' => $tuitionTiers,
         ])->with('success', 'Deed created successfully.');
     }
 
