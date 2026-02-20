@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 
 interface Tier {
   id: number;
@@ -91,12 +90,10 @@ export function InvoiceLineItemInput({
   };
 
   const handleInputBlur = () => {
-    // Delay closing to allow click events on dropdown items
+    // Use a longer delay to ensure clicks register
     setTimeout(() => {
-      if (!containerRef.current?.contains(document.activeElement)) {
-        setIsOpen(false);
-      }
-    }, 200);
+      setIsOpen(false);
+    }, 300);
   };
 
   return (
@@ -115,68 +112,84 @@ export function InvoiceLineItemInput({
       />
       
       {showDropdown && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-950 border rounded-md shadow-lg max-h-[300px] overflow-hidden">
-          <Command shouldFilter={false}>
-            <CommandList>
-              {filteredMembershipTiers.length === 0 && filteredTuitionTiers.length === 0 && (
-                <CommandEmpty>No tiers found. Continue typing for custom description.</CommandEmpty>
-              )}
-              
-              {filteredMembershipTiers.length > 0 && (
-                <CommandGroup heading="Membership Tiers">
-                  {filteredMembershipTiers.map((tier) => (
-                    <CommandItem
-                      key={`membership-${tier.id}`}
-                      value={tier.name}
-                      onSelect={() => handleSelectTier(tier)}
-                    >
-                      <div className="flex flex-col flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium">{tier.name}</span>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            ${Number.parseFloat(tier.price.toString()).toFixed(2)}
-                            {tier.billing_period && ` / ${tier.billing_period}`}
-                          </span>
-                        </div>
-                        {tier.description && (
-                          <span className="text-xs text-gray-500 dark:text-gray-500">
-                            {tier.description}
-                          </span>
-                        )}
+        <div 
+          className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-950 border rounded-md shadow-lg max-h-[300px] overflow-y-auto"
+        >
+          <div className="p-2">
+            {filteredMembershipTiers.length === 0 && filteredTuitionTiers.length === 0 && (
+              <div className="py-6 text-center text-sm text-gray-500">
+                No tiers found. Continue typing for custom description.
+              </div>
+            )}
+            
+            {filteredMembershipTiers.length > 0 && (
+              <div className="mb-2">
+                <div className="px-2 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Membership Tiers
+                </div>
+                {filteredMembershipTiers.map((tier) => (
+                  <button
+                    key={`membership-${tier.id}`}
+                    type="button"
+                    className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
+                    onClick={() => handleSelectTier(tier)}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    <div className="flex flex-col flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{tier.name}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          ${Number.parseFloat(tier.price.toString()).toFixed(2)}
+                          {tier.billing_period && ` / ${tier.billing_period}`}
+                        </span>
                       </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
+                      {tier.description && (
+                        <span className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
+                          {tier.description}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
 
-              {filteredTuitionTiers.length > 0 && (
-                <CommandGroup heading="Tuition Tiers">
-                  {filteredTuitionTiers.map((tier) => (
-                    <CommandItem
-                      key={`tuition-${tier.id}`}
-                      value={tier.name}
-                      onSelect={() => handleSelectTier(tier)}
-                    >
-                      <div className="flex flex-col flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium">{tier.name}</span>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            ${Number.parseFloat(tier.price.toString()).toFixed(2)}
-                            {tier.billing_period && ` / ${tier.billing_period}`}
-                          </span>
-                        </div>
-                        {tier.description && (
-                          <span className="text-xs text-gray-500 dark:text-gray-500">
-                            {tier.description}
-                          </span>
-                        )}
+            {filteredTuitionTiers.length > 0 && (
+              <div>
+                <div className="px-2 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Tuition Tiers
+                </div>
+                {filteredTuitionTiers.map((tier) => (
+                  <button
+                    key={`tuition-${tier.id}`}
+                    type="button"
+                    className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
+                    onClick={() => handleSelectTier(tier)}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    <div className="flex flex-col flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">{tier.name}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          ${Number.parseFloat(tier.price.toString()).toFixed(2)}
+                          {tier.billing_period && ` / ${tier.billing_period}`}
+                        </span>
                       </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-            </CommandList>
-          </Command>
+                      {tier.description && (
+                        <span className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
+                          {tier.description}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
