@@ -3,14 +3,30 @@ import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard } from 'lucide-react';
+import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard, TrendingUp, Users, DollarSign, Award, ShoppingCart } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
+
+interface ContributionData {
+  boards_count: number;
+  committees_count: number;
+  dues_total: number;
+  donations_total: number;
+  other_purchases_total: number;
+}
 
 interface Props {
   member: Member;
+  contributionData: ContributionData;
 }
 
-export default function MembersShow({ member }: Readonly<Props>) {
+export default function MembersShow({ member, contributionData }: Readonly<Props>) {
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -433,6 +449,96 @@ export default function MembersShow({ member }: Readonly<Props>) {
                   </a>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Member Value Contribution Chart */}
+        <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
+          <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6 flex items-center">
+            <TrendingUp className="h-5 w-5 mr-2" />
+            Member Value Contribution
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Boards Count */}
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-blue-500 rounded-lg">
+                  <Users className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-3xl font-bold text-blue-700 dark:text-blue-300">
+                  {contributionData.boards_count}
+                </span>
+              </div>
+              <h3 className="text-sm font-medium text-blue-900 dark:text-blue-200">Boards</h3>
+              <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
+                Board memberships
+              </p>
+            </div>
+
+            {/* Committees Count */}
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg p-6 border border-purple-200 dark:border-purple-800">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-purple-500 rounded-lg">
+                  <Award className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-3xl font-bold text-purple-700 dark:text-purple-300">
+                  {contributionData.committees_count}
+                </span>
+              </div>
+              <h3 className="text-sm font-medium text-purple-900 dark:text-purple-200">Committees</h3>
+              <p className="text-xs text-purple-700 dark:text-purple-400 mt-1">
+                Committee memberships
+              </p>
+            </div>
+
+            {/* Dues Total */}
+            <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg p-6 border border-green-200 dark:border-green-800">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-green-500 rounded-lg">
+                  <CreditCard className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-3xl font-bold text-green-700 dark:text-green-300">
+                  {formatCurrency(contributionData.dues_total)}
+                </span>
+              </div>
+              <h3 className="text-sm font-medium text-green-900 dark:text-green-200">Dues</h3>
+              <p className="text-xs text-green-700 dark:text-green-400 mt-1">
+                Total membership dues paid
+              </p>
+            </div>
+
+            {/* Donations Total */}
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-lg p-6 border border-amber-200 dark:border-amber-800">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-amber-500 rounded-lg">
+                  <DollarSign className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-3xl font-bold text-amber-700 dark:text-amber-300">
+                  {formatCurrency(contributionData.donations_total)}
+                </span>
+              </div>
+              <h3 className="text-sm font-medium text-amber-900 dark:text-amber-200">Donations</h3>
+              <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                Total donations contributed
+              </p>
+            </div>
+
+            {/* Other Purchases Total */}
+            <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-lg p-6 border border-indigo-200 dark:border-indigo-800">
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 bg-indigo-500 rounded-lg">
+                  <ShoppingCart className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-3xl font-bold text-indigo-700 dark:text-indigo-300">
+                  {formatCurrency(contributionData.other_purchases_total)}
+                </span>
+              </div>
+              <h3 className="text-sm font-medium text-indigo-900 dark:text-indigo-200">Other Purchases</h3>
+              <p className="text-xs text-indigo-700 dark:text-indigo-400 mt-1">
+                Events, products, and services
+              </p>
             </div>
           </div>
         </div>

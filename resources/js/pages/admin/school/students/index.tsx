@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Plus, Eye, Edit, Trash2, Upload, Download } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 const breadcrums: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
@@ -29,6 +37,10 @@ export default function StudentsIndex() {
     const [from, setFrom] = useState<number>(0);
     const [to, setTo] = useState<number>(0);
     const [lastPage, setLastPage] = useState<number>(1);
+    const [showImportDialog, setShowImportDialog] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { flash } = usePage().props as any;
 
     function updateUrl(p: number = 1, s: string = '') {
         const params = new URLSearchParams();
@@ -85,21 +97,112 @@ export default function StudentsIndex() {
             .catch((err) => alert('Failed to delete student'));
     }
 
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
+    const handleImport = () => {
+        if (!selectedFile) return;
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        router.post('/admin/school/students/import', formData, {
+            onSuccess: () => {
+                setShowImportDialog(false);
+                setSelectedFile(null);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+                load(page, search); // Reload the data
+            },
+        });
+    };
+
+    const handleDownloadTemplate = () => {
+        window.location.href = '/admin/school/students/template/download';
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrums} >
             <Head title="Students - School Management" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                {flash?.success && (
+                    <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
+                        {flash.success}
+                    </div>
+                )}
+                {flash?.error && (
+                    <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+                        {flash.error}
+                    </div>
+                )}
+                
                 <div className="flex justify-between items-center">
                     <div>
                         <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Students</h1>
                         <p className="text-sm text-gray-600 dark:text-gray-400">Manage student records and information</p>
                     </div>
-                    <Link href="/admin/school/students/create">
-                        <Button className="flex items-center gap-2">
-                            <Plus className="h-4 w-4" />
-                            Add Student
-                        </Button>
-                    </Link>
+                    <div className="flex gap-2">
+                        <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="flex items-center gap-2">
+                                    <Upload className="h-4 w-4" />
+                                    Import Students
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Import Students from CSV</DialogTitle>
+                                    <DialogDescription>
+                                        Upload a CSV file to import or update students. Download the template to see the required format.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="space-y-4 pt-4">
+                                    <div>
+                                        <Button
+                                            variant="outline"
+                                            onClick={handleDownloadTemplate}
+                                            className="w-full flex items-center gap-2"
+                                        >
+                                            <Download className="h-4 w-4" />
+                                            Download CSV Template
+                                        </Button>
+                                    </div>
+                                    <div className="border-t pt-4">
+                                        <Input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept=".csv,.xlsx,.xls"
+                                            onChange={handleFileSelect}
+                                            className="cursor-pointer"
+                                        />
+                                        {selectedFile && (
+                                            <p className="text-sm text-gray-600 mt-2">
+                                                Selected: {selectedFile.name}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <Button
+                                        onClick={handleImport}
+                                        disabled={!selectedFile}
+                                        className="w-full"
+                                    >
+                                        Import Students
+                                    </Button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                        
+                        <Link href="/admin/school/students/create">
+                            <Button className="flex items-center gap-2">
+                                <Plus className="h-4 w-4" />
+                                Add Student
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
