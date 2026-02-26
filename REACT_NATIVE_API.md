@@ -485,6 +485,149 @@ console.log(data.message); // "Partial payment processed successfully!"
 
 ---
 
+## Admin Dashboard API
+
+**Requires:** Admin role
+
+### Get Admin Dashboard Data
+
+**Endpoint:** `GET /api/admin/dashboard`
+
+**Description:** Get comprehensive administrative dashboard data including membership statistics, yahrzeits, events, invoices, and financial aging reports.
+
+**Response:**
+```json
+{
+  "stats": {
+    "total_members": 250,
+    "active_members": 200,
+    "total_students": 75,
+    "total_invoices": 150,
+    "open_invoices": 25,
+    "total_events": 12
+  },
+  "members_joined_data": [
+    {"month": "Jan", "members": 5},
+    {"month": "Feb", "members": 3},
+    {"month": "Mar", "members": 8},
+    {"month": "Apr", "members": 6},
+    {"month": "May", "members": 4},
+    {"month": "Jun", "members": 7},
+    {"month": "Jul", "members": 2},
+    {"month": "Aug", "members": 9},
+    {"month": "Sep", "members": 11},
+    {"month": "Oct", "members": 5},
+    {"month": "Nov", "members": 3},
+    {"month": "Dec", "members": 6}
+  ],
+  "current_year": 2024,
+  "current_hebrew_date": {
+    "day": 15,
+    "month": "Adar",
+    "year": 5784
+  },
+  "current_month_yahrzeits": [
+    {
+      "id": 1,
+      "name": "Sarah Cohen",
+      "hebrew_name": "שרה כהן",
+      "hebrew_day_of_death": 10,
+      "date_of_death": "2020-03-15"
+    }
+  ],
+  "upcoming_events": [
+    {
+      "id": 5,
+      "name": "Shabbat Service",
+      "event_start": "2024-03-22T18:00:00.000000Z",
+      "event_end": "2024-03-22T20:00:00.000000Z",
+      "location": "Main Sanctuary",
+      "members_only": true
+    }
+  ],
+  "recent_invoices": [
+    {
+      "id": 123,
+      "invoice_number": "INV-2024-123",
+      "member_name": "David Levy",
+      "total": 500.00,
+      "status": "open",
+      "due_date": "2024-04-01"
+    }
+  ],
+  "invoice_aging": {
+    "current": {"count": 10, "total": 5000.00},
+    "1-30": {"count": 8, "total": 3200.00},
+    "31-60": {"count": 4, "total": 1500.00},
+    "61-90": {"count": 2, "total": 800.00},
+    "90+": {"count": 1, "total": 250.00}
+  }
+}
+```
+
+---
+
+## School Dashboard API
+
+**Requires:** Admin or Teacher role
+
+### Get School Dashboard Data
+
+**Endpoint:** `GET /api/school/dashboard`
+
+**Description:** Get school-specific dashboard data including statistics, recent students, upcoming exams, active classes, and recent attendance.
+
+**Response:**
+```json
+{
+  "stats": {
+    "total_students": 75,
+    "total_teachers": 8,
+    "total_classes": 12,
+    "total_subjects": 15,
+    "total_exams": 20,
+    "total_parents": 60
+  },
+  "recent_students": [
+    {
+      "id": 42,
+      "first_name": "Emma",
+      "last_name": "Cohen",
+      "email": "emma.cohen@example.com",
+      "date_of_birth": "2010-05-15",
+      "parent_name": "Rachel Cohen"
+    }
+  ],
+  "upcoming_exams": [
+    {
+      "id": 10,
+      "name": "Hebrew Reading Test",
+      "start_date": "2024-03-25",
+      "end_date": "2024-03-25"
+    }
+  ],
+  "active_classes": [
+    {
+      "id": 5,
+      "name": "Hebrew 101",
+      "description": "Beginning Hebrew",
+      "teacher_name": "Sarah Goldstein"
+    }
+  ],
+  "recent_attendance": [
+    {
+      "id": 150,
+      "student_name": "Emma Cohen",
+      "class_name": "Hebrew 101",
+      "attendance_date": "2024-03-20",
+      "status": "present"
+    }
+  ]
+}
+```
+
+---
+
 ## Error Responses
 
 All API endpoints may return error responses in the following format:

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Mail\InvoiceMail;
+use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -18,7 +20,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Dedoc\Scramble\Attributes\Group;
 
+#[Group(name: 'Dashboard API')]
 class DashboardController extends Controller
 {
     public function index(HebrewCalendarService $hebrewCalendarService, Request $request)
@@ -460,5 +464,263 @@ class DashboardController extends Controller
 
             return back()->withErrors(['error' => 'Failed to onboard student(s): '.$e->getMessage()]);
         }
+    }
+
+    /**
+     * Get Admin Dashboard Data (API)
+     *
+     * Returns admin dashboard statistics and data for mobile apps.
+     *
+     * @authenticated
+     */
+    public function apiAdminDashboard(Request $request, HebrewCalendarService $hebrewCalendarService)
+    {
+        // Ensure user has admin role
+        if (! $request->user()->hasRole('admin')) {
+            return response()->json([
+                'message' => 'Insufficient permissions. Admin role required.',
+            ], 403);
+        }
+
+        // Get summary statistics
+        $stats = [
+            'total_members' => Member::count(),
+            'active_members' => Member::where('member_type', 'member')->count(),
+            'total_students' => Student::count(),
+            'total_invoices' => Invoice::count(),
+            'open_invoices' => Invoice::whereIn('status', ['open', 'overdue'])->count(),
+            'total_events' => Event::where('event_start', '>=', now())->count(),
+        ];
+
+        // Get members joined by month for the current year
+        $currentYear = now()->year;
+        $driver = DB::connection()->getDriverName();
+
+        if ($driver === 'sqlite') {
+            $monthExpression = "CAST(strftime('%m', created_at) AS INTEGER)";
+        } else {
+            $monthExpression = 'MONTH(created_at)';
+        }
+
+        $membersJoinedByMonth = Member::select(
+            DB::raw("$monthExpression as month"),
+            DB::raw('COUNT(*) as count')
+        )
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Fill in missing months with 0
+        $chartData = [];
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        for ($month = 1; $month <= 12; $month++) {
+            $chartData[] = [
+                'month' => $monthNames[$month - 1],
+                'members' => $membersJoinedByMonth[$month] ?? 0,
+            ];
+        }
+
+        // Get current Hebrew date
+        $currentHebrewDate = $hebrewCalendarService->getCurrentHebrewDate();
+
+        // Get yahrzeits for the current Hebrew month (limited for mobile)
+        $currentMonthYahrzeits = Yahrzeit::where('hebrew_month_of_death', $currentHebrewDate['month'])
+            ->with('members:id,first_name,last_name')
+            ->orderBy('hebrew_day_of_death')
+            ->take(10)
+            ->get()
+            ->map(function ($yahrzeit) {
+                return [
+                    'id' => $yahrzeit->id,
+                    'name' => $yahrzeit->name,
+                    'hebrew_name' => $yahrzeit->hebrew_name,
+                    'hebrew_day_of_death' => $yahrzeit->hebrew_day_of_death,
+                    'date_of_death' => $yahrzeit->date_of_death?->format('Y-m-d'),
+                ];
+            });
+
+        // Get upcoming events
+        $upcomingEvents = Event::where('event_start', '>=', now())
+            ->orderBy('event_start')
+            ->limit(10)
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'name' => $event->name,
+                    'event_start' => $event->event_start,
+                    'event_end' => $event->event_end,
+                    'location' => $event->location,
+                    'members_only' => $event->members_only,
+                ];
+            });
+
+        // Get recent invoices
+        $recentInvoices = Invoice::with('member:id,first_name,last_name')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($invoice) {
+                return [
+                    'id' => $invoice->id,
+                    'invoice_number' => $invoice->invoice_number,
+                    'member_name' => $invoice->member ?
+                        $invoice->member->first_name.' '.$invoice->member->last_name :
+                        'Unknown',
+                    'total' => (float) $invoice->total,
+                    'status' => $invoice->status,
+                    'due_date' => $invoice->due_date?->format('Y-m-d'),
+                ];
+            });
+
+        // Get invoice aging summary
+        $openInvoices = Invoice::whereIn('status', ['open', 'overdue'])
+            ->get();
+
+        $invoiceAging = [
+            'current' => ['count' => 0, 'total' => 0],
+            '1-30' => ['count' => 0, 'total' => 0],
+            '31-60' => ['count' => 0, 'total' => 0],
+            '61-90' => ['count' => 0, 'total' => 0],
+            '90+' => ['count' => 0, 'total' => 0],
+        ];
+
+        foreach ($openInvoices as $invoice) {
+            $daysOverdue = 0;
+            $agingCategory = 'current';
+
+            if ($invoice->due_date) {
+                $daysOverdue = (int) floor(now()->diffInDays($invoice->due_date, false));
+
+                if ($daysOverdue < 0) {
+                    $daysOverdue = abs($daysOverdue);
+                    if ($daysOverdue <= 30) {
+                        $agingCategory = '1-30';
+                    } elseif ($daysOverdue <= 60) {
+                        $agingCategory = '31-60';
+                    } elseif ($daysOverdue <= 90) {
+                        $agingCategory = '61-90';
+                    } else {
+                        $agingCategory = '90+';
+                    }
+                }
+            }
+
+            $invoiceAging[$agingCategory]['count']++;
+            $invoiceAging[$agingCategory]['total'] += floatval($invoice->total);
+        }
+
+        return response()->json([
+            'stats' => $stats,
+            'members_joined_data' => $chartData,
+            'current_year' => $currentYear,
+            'current_hebrew_date' => $currentHebrewDate,
+            'current_month_yahrzeits' => $currentMonthYahrzeits,
+            'upcoming_events' => $upcomingEvents,
+            'recent_invoices' => $recentInvoices,
+            'invoice_aging' => $invoiceAging,
+        ]);
+    }
+
+    /**
+     * Get School Dashboard Data (API)
+     *
+     * Returns school dashboard statistics and data for mobile apps.
+     *
+     * @authenticated
+     */
+    public function apiSchoolDashboard(Request $request)
+    {
+        // Ensure user has admin or teacher role
+        if (! $request->user()->hasAnyRole([UserRole::from('admin'), UserRole::from('teacher')])) {
+            return response()->json([
+                'message' => 'Insufficient permissions. Admin or Teacher role required.',
+            ], 403);
+        }
+
+        // Get summary statistics
+        $stats = [
+            'total_students' => Student::count(),
+            'total_teachers' => \App\Models\Teacher::count(),
+            'total_classes' => \App\Models\ClassDefinition::count(),
+            'total_subjects' => \App\Models\Subject::count(),
+            'total_exams' => \App\Models\Exam::count(),
+            'total_parents' => ParentModel::count(),
+        ];
+
+        // Get recent students
+        $recentStudents = Student::with('parent:id,first_name,last_name')
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'first_name' => $student->first_name,
+                    'last_name' => $student->last_name,
+                    'email' => $student->email,
+                    'date_of_birth' => $student->date_of_birth ?? $student->dob,
+                    'parent_name' => $student->parent ?
+                        $student->parent->first_name.' '.$student->parent->last_name :
+                        null,
+                ];
+            });
+
+        // Get upcoming exams
+        $upcomingExams = \App\Models\Exam::where('start_date', '>=', now())
+            ->orderBy('start_date')
+            ->take(10)
+            ->get()
+            ->map(function ($exam) {
+                return [
+                    'id' => $exam->id,
+                    'name' => $exam->name,
+                    'start_date' => $exam->start_date,
+                    'end_date' => $exam->end_date,
+                ];
+            });
+
+        // Get active classes
+        $activeClasses = \App\Models\ClassDefinition::with('teacher:id,first_name,last_name')
+            ->take(10)
+            ->get()
+            ->map(function ($class) {
+                return [
+                    'id' => $class->id,
+                    'name' => $class->name,
+                    'description' => $class->description,
+                    'teacher_name' => $class->teacher ?
+                        $class->teacher->first_name.' '.$class->teacher->last_name :
+                        null,
+                ];
+            });
+
+        // Get recent attendance records
+        $recentAttendance = Attendance::with(['student:id,first_name,last_name', 'classDefinition:id,name'])
+            ->orderBy('attendance_date', 'desc')
+            ->take(10)
+            ->get()
+            ->map(function ($attendance) {
+                return [
+                    'id' => $attendance->id,
+                    'student_name' => $attendance->student ?
+                        $attendance->student->first_name.' '.$attendance->student->last_name :
+                        null,
+                    'class_name' => $attendance->classDefinition?->name,
+                    'attendance_date' => $attendance->attendance_date?->format('Y-m-d'),
+                    'status' => $attendance->status,
+                ];
+            });
+
+        return response()->json([
+            'stats' => $stats,
+            'recent_students' => $recentStudents,
+            'upcoming_exams' => $upcomingExams,
+            'active_classes' => $activeClasses,
+            'recent_attendance' => $recentAttendance,
+        ]);
     }
 }

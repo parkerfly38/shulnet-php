@@ -573,6 +573,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             return Inertia::render('admin/school/students/edit', ['item' => $model]);
         })->name('admin.school.students.edit');
+        Route::post('admin/school/students/import', [\App\Http\Controllers\StudentController::class, 'import'])->name('admin.school.students.import');
+        Route::get('admin/school/students/template/download', [\App\Http\Controllers\StudentController::class, 'downloadTemplate'])->name('admin.school.students.template.download');
 
         // Attendance routes
         Route::get('admin/school/attendance', function () {
@@ -749,6 +751,89 @@ Route::middleware(['auth:sanctum'])->prefix('api/member')->group(function () {
     Route::post('invoices/{id}/pay', [MemberDashboardController::class, 'apiPayInvoice'])->name('api.member.invoices.pay');
     Route::get('students', [MemberDashboardController::class, 'apiStudents'])->name('api.member.students');
     Route::get('yahrzeits', [MemberDashboardController::class, 'apiYahrzeits'])->name('api.member.yahrzeits');
+});
+
+// Admin Dashboard API routes (for mobile apps)
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'apiAdminDashboard'])->name('api.admin.dashboard');
+});
+
+// School Dashboard API routes (for admin and teacher roles)
+Route::middleware(['auth:sanctum', 'role:admin,teacher'])->prefix('api/school')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'apiSchoolDashboard'])->name('api.school.dashboard');
+});
+
+// Mobile School Management API routes (for admin and teacher roles)
+Route::middleware(['auth:sanctum', 'role:admin,teacher'])->prefix('api/school')->group(function () {
+    // Students
+    Route::get('students', [\App\Http\Controllers\StudentController::class, 'index'])->name('api.school.students.index');
+    Route::post('students', [\App\Http\Controllers\StudentController::class, 'store'])->name('api.school.students.store');
+    Route::get('students/{id}', [\App\Http\Controllers\StudentController::class, 'show'])->name('api.school.students.show');
+    Route::put('students/{id}', [\App\Http\Controllers\StudentController::class, 'update'])->name('api.school.students.update');
+    Route::delete('students/{id}', [\App\Http\Controllers\StudentController::class, 'destroy'])->name('api.school.students.destroy');
+    
+    // Attendance
+    Route::get('attendance', [\App\Http\Controllers\AttendanceController::class, 'index'])->name('api.school.attendance.index');
+    Route::post('attendance', [\App\Http\Controllers\AttendanceController::class, 'store'])->name('api.school.attendance.store');
+    Route::get('attendance/{id}', [\App\Http\Controllers\AttendanceController::class, 'show'])->name('api.school.attendance.show');
+    Route::put('attendance/{id}', [\App\Http\Controllers\AttendanceController::class, 'update'])->name('api.school.attendance.update');
+    Route::delete('attendance/{id}', [\App\Http\Controllers\AttendanceController::class, 'destroy'])->name('api.school.attendance.destroy');
+    
+    // Classes
+    Route::get('classes', [\App\Http\Controllers\ClassDefinitionController::class, 'index'])->name('api.school.classes.index');
+    Route::post('classes', [\App\Http\Controllers\ClassDefinitionController::class, 'store'])->name('api.school.classes.store');
+    Route::get('classes/{id}', [\App\Http\Controllers\ClassDefinitionController::class, 'show'])->name('api.school.classes.show');
+    Route::put('classes/{id}', [\App\Http\Controllers\ClassDefinitionController::class, 'update'])->name('api.school.classes.update');
+    Route::delete('classes/{id}', [\App\Http\Controllers\ClassDefinitionController::class, 'destroy'])->name('api.school.classes.destroy');
+    
+    // Class Grades
+    Route::get('class-grades', [\App\Http\Controllers\ClassGradeController::class, 'index'])->name('api.school.class-grades.index');
+    Route::post('class-grades', [\App\Http\Controllers\ClassGradeController::class, 'store'])->name('api.school.class-grades.store');
+    Route::get('class-grades/{id}', [\App\Http\Controllers\ClassGradeController::class, 'show'])->name('api.school.class-grades.show');
+    Route::put('class-grades/{id}', [\App\Http\Controllers\ClassGradeController::class, 'update'])->name('api.school.class-grades.update');
+    Route::delete('class-grades/{id}', [\App\Http\Controllers\ClassGradeController::class, 'destroy'])->name('api.school.class-grades.destroy');
+    
+    // Exams
+    Route::get('exams', [\App\Http\Controllers\ExamController::class, 'index'])->name('api.school.exams.index');
+    Route::post('exams', [\App\Http\Controllers\ExamController::class, 'store'])->name('api.school.exams.store');
+    Route::get('exams/{id}', [\App\Http\Controllers\ExamController::class, 'show'])->name('api.school.exams.show');
+    Route::put('exams/{id}', [\App\Http\Controllers\ExamController::class, 'update'])->name('api.school.exams.update');
+    Route::delete('exams/{id}', [\App\Http\Controllers\ExamController::class, 'destroy'])->name('api.school.exams.destroy');
+    
+    // Exam Grades
+    Route::get('exam-grades', [\App\Http\Controllers\ExamGradeController::class, 'index'])->name('api.school.exam-grades.index');
+    Route::post('exam-grades', [\App\Http\Controllers\ExamGradeController::class, 'store'])->name('api.school.exam-grades.store');
+    Route::get('exam-grades/{id}', [\App\Http\Controllers\ExamGradeController::class, 'show'])->name('api.school.exam-grades.show');
+    Route::put('exam-grades/{id}', [\App\Http\Controllers\ExamGradeController::class, 'update'])->name('api.school.exam-grades.update');
+    Route::delete('exam-grades/{id}', [\App\Http\Controllers\ExamGradeController::class, 'destroy'])->name('api.school.exam-grades.destroy');
+    
+    // Subjects
+    Route::get('subjects', [\App\Http\Controllers\SubjectController::class, 'index'])->name('api.school.subjects.index');
+    Route::post('subjects', [\App\Http\Controllers\SubjectController::class, 'store'])->name('api.school.subjects.store');
+    Route::get('subjects/{id}', [\App\Http\Controllers\SubjectController::class, 'show'])->name('api.school.subjects.show');
+    Route::put('subjects/{id}', [\App\Http\Controllers\SubjectController::class, 'update'])->name('api.school.subjects.update');
+    Route::delete('subjects/{id}', [\App\Http\Controllers\SubjectController::class, 'destroy'])->name('api.school.subjects.destroy');
+    
+    // Subject Grades
+    Route::get('subject-grades', [\App\Http\Controllers\SubjectGradeController::class, 'index'])->name('api.school.subject-grades.index');
+    Route::post('subject-grades', [\App\Http\Controllers\SubjectGradeController::class, 'store'])->name('api.school.subject-grades.store');
+    Route::get('subject-grades/{id}', [\App\Http\Controllers\SubjectGradeController::class, 'show'])->name('api.school.subject-grades.show');
+    Route::put('subject-grades/{id}', [\App\Http\Controllers\SubjectGradeController::class, 'update'])->name('api.school.subject-grades.update');
+    Route::delete('subject-grades/{id}', [\App\Http\Controllers\SubjectGradeController::class, 'destroy'])->name('api.school.subject-grades.destroy');
+    
+    // Teachers
+    Route::get('teachers', [\App\Http\Controllers\TeacherController::class, 'index'])->name('api.school.teachers.index');
+    Route::post('teachers', [\App\Http\Controllers\TeacherController::class, 'store'])->name('api.school.teachers.store');
+    Route::get('teachers/{id}', [\App\Http\Controllers\TeacherController::class, 'show'])->name('api.school.teachers.show');
+    Route::put('teachers/{id}', [\App\Http\Controllers\TeacherController::class, 'update'])->name('api.school.teachers.update');
+    Route::delete('teachers/{id}', [\App\Http\Controllers\TeacherController::class, 'destroy'])->name('api.school.teachers.destroy');
+    
+    // Parents
+    Route::get('parents', [\App\Http\Controllers\ParentModelController::class, 'index'])->name('api.school.parents.index');
+    Route::post('parents', [\App\Http\Controllers\ParentModelController::class, 'store'])->name('api.school.parents.store');
+    Route::get('parents/{id}', [\App\Http\Controllers\ParentModelController::class, 'show'])->name('api.school.parents.show');
+    Route::put('parents/{id}', [\App\Http\Controllers\ParentModelController::class, 'update'])->name('api.school.parents.update');
+    Route::delete('parents/{id}', [\App\Http\Controllers\ParentModelController::class, 'destroy'])->name('api.school.parents.destroy');
 });
 
 // Public campaign routes (no auth required)
