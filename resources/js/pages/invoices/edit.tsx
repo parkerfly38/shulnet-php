@@ -10,10 +10,21 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeft, Save, Plus, Trash2, Printer } from 'lucide-react';
 import { BreadcrumbItem, Invoice, Member } from '@/types';
 import { formatCurrency } from '@/lib/utils';
+import { InvoiceLineItemInput } from '@/components/invoice-line-item-input';
+
+interface Tier {
+  id: number;
+  name: string;
+  description?: string;
+  price: string | number;
+  billing_period?: string;
+}
 
 interface Props {
   invoice: Invoice;
   members: Member[];
+  membershipTiers: Tier[];
+  tuitionTiers: Tier[];
 }
 
 interface InvoiceItem {
@@ -39,7 +50,7 @@ interface FormData {
   items: InvoiceItem[];
 }
 
-export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
+export default function InvoicesEdit({ invoice, members, membershipTiers, tuitionTiers }: Readonly<Props>) {
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Invoices', href: '/admin/invoices' },
@@ -250,11 +261,14 @@ export default function InvoicesEdit({ invoice, members }: Readonly<Props>) {
                 <div key={index} className="flex gap-2 items-start">
                   <div className="flex-1">
                     <Label htmlFor={`item-${index}-description`}>Description *</Label>
-                    <Input
+                    <InvoiceLineItemInput
                       id={`item-${index}-description`}
                       value={item.description}
-                      onChange={(e) => updateItem(index, 'description', e.target.value)}
-                      placeholder="Item description"
+                      price={item.unit_price}
+                      onDescriptionChange={(value) => updateItem(index, 'description', value)}
+                      onPriceChange={(value) => updateItem(index, 'unit_price', value)}
+                      membershipTiers={membershipTiers}
+                      tuitionTiers={tuitionTiers}
                       className={errors[`items.${index}.description`] ? 'border-red-500' : ''}
                     />
                     {errors[`items.${index}.description`] && (

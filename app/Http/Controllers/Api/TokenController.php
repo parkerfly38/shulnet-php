@@ -181,6 +181,7 @@ class TokenController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'roles' => array_map(fn($role) => $role->value, $user->roles ?? []),
             ],
             'member' => $memberData,
         ], 200);
