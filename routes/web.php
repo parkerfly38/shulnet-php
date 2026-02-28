@@ -435,27 +435,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // API Tokens management
         Route::get('admin/api-tokens', [\App\Http\Controllers\Api\TokenController::class, 'page'])->name('admin.api-tokens');
 
-        // Reports routes
-        Route::get('admin/reports', [ReportsController::class, 'index'])->name('reports.index');
+        // Data Reports routes (exports and analytics)
+        Route::get('admin/reports', [ReportsController::class, 'index'])->name('admin.reports.list');
         Route::get('admin/reports/financial', function () {
             return Inertia::render('admin/reports/financial');
-        })->name('reports.financial');
-        Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('reports.export.members');
-        Route::post('admin/reports/export/invoices', [ReportsController::class, 'exportInvoices'])->name('reports.export.invoices');
-        Route::post('admin/reports/export/students', [ReportsController::class, 'exportStudents'])->name('reports.export.students');
-        Route::post('admin/reports/export/financial-summary', [ReportsController::class, 'exportFinancialSummary'])->name('reports.export.financial-summary');
-        Route::post('admin/reports/export/yahrzeit', [ReportsController::class, 'exportYahrzeit'])->name('reports.export.yahrzeit');
+        })->name('admin.reports.financial');
+        Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('admin.reports.export.members');
+        Route::post('admin/reports/export/invoices', [ReportsController::class, 'exportInvoices'])->name('admin.reports.export.invoices');
+        Route::post('admin/reports/export/students', [ReportsController::class, 'exportStudents'])->name('admin.reports.export.students');
+        Route::post('admin/reports/export/financial-summary', [ReportsController::class, 'exportFinancialSummary'])->name('admin.reports.export.financial-summary');
+        Route::post('admin/reports/export/yahrzeit', [ReportsController::class, 'exportYahrzeit'])->name('admin.reports.export.yahrzeit');
         
         // Financial Reports API
-        Route::get('admin/reports/income-summary', [ReportsController::class, 'getIncomeSummary'])->name('reports.income-summary');
-        Route::get('admin/reports/outstanding-balances', [ReportsController::class, 'getOutstandingBalances'])->name('reports.outstanding-balances');
-        Route::get('admin/reports/aging', [ReportsController::class, 'getAgingReport'])->name('reports.aging');
-        Route::get('admin/reports/event-revenue', [ReportsController::class, 'getEventRevenue'])->name('reports.event-revenue');
-        Route::get('admin/reports/revenue-by-source', [ReportsController::class, 'getRevenueBySource'])->name('reports.revenue-by-source');
-        Route::get('admin/reports/member-growth', [ReportsController::class, 'getMemberGrowth'])->name('reports.member-growth');
-        Route::get('admin/reports/tuition-revenue', [ReportsController::class, 'getTuitionRevenue'])->name('reports.tuition-revenue');
-        Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('reports.payment-methods');
-        Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('reports.budget-vs-actual');
+        Route::get('admin/reports/income-summary', [ReportsController::class, 'getIncomeSummary'])->name('admin.reports.income-summary');
+        Route::get('admin/reports/outstanding-balances', [ReportsController::class, 'getOutstandingBalances'])->name('admin.reports.outstanding-balances');
+        Route::get('admin/reports/aging', [ReportsController::class, 'getAgingReport'])->name('admin.reports.aging');
+        Route::get('admin/reports/event-revenue', [ReportsController::class, 'getEventRevenue'])->name('admin.reports.event-revenue');
+        Route::get('admin/reports/revenue-by-source', [ReportsController::class, 'getRevenueBySource'])->name('admin.reports.revenue-by-source');
+        Route::get('admin/reports/member-growth', [ReportsController::class, 'getMemberGrowth'])->name('admin.reports.member-growth');
+        Route::get('admin/reports/tuition-revenue', [ReportsController::class, 'getTuitionRevenue'])->name('admin.reports.tuition-revenue');
+        Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('admin.reports.payment-methods');
+        Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('admin.reports.budget-vs-actual');
 
         // Gabbai UI pages (Inertia)
         Route::get('admin/gabbai', function () {
@@ -711,9 +711,27 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(fu
     Route::apiResource('teachers', \App\Http\Controllers\TeacherController::class);
 
     // Leadership Management resources
-    Route::apiResource('boards', \App\Http\Controllers\BoardController::class);
-    Route::apiResource('committees', \App\Http\Controllers\CommitteeController::class);
-    Route::apiResource('meetings', \App\Http\Controllers\MeetingController::class);
+    Route::apiResource('boards', \App\Http\Controllers\BoardController::class)->names([
+        'index' => 'api.boards.index',
+        'store' => 'api.boards.store',
+        'show' => 'api.boards.show',
+        'update' => 'api.boards.update',
+        'destroy' => 'api.boards.destroy',
+    ]);
+    Route::apiResource('committees', \App\Http\Controllers\CommitteeController::class)->names([
+        'index' => 'api.committees.index',
+        'store' => 'api.committees.store',
+        'show' => 'api.committees.show',
+        'update' => 'api.committees.update',
+        'destroy' => 'api.committees.destroy',
+    ]);
+    Route::apiResource('meetings', \App\Http\Controllers\MeetingController::class)->names([
+        'index' => 'api.meetings.index',
+        'store' => 'api.meetings.store',
+        'show' => 'api.meetings.show',
+        'update' => 'api.meetings.update',
+        'destroy' => 'api.meetings.destroy',
+    ]);
 
     // Event RSVPs
     Route::apiResource('event-rsvps', \App\Http\Controllers\EventRSVPController::class);
