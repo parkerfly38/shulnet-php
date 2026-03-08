@@ -86,6 +86,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('admin/users', [UserController::class, 'index'])->name('admin.users');
 
+        // Member import routes (must be BEFORE resource routes)
+        Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
+        Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
+
         // Member management routes
         Route::resource('admin/members', MemberController::class, [
             'names' => [
@@ -98,10 +102,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'members.destroy',
             ],
         ]);
-
-        // Member import routes
-        Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
-        Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
 
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');

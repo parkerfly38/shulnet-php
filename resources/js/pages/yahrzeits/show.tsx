@@ -29,6 +29,8 @@ interface Yahrzeit {
     hebrew_month_of_death: number;
     observance_type: 'standard' | 'kaddish' | 'memorial_candle' | 'other';
     notes?: string;
+    next_observance_date?: string;
+    previous_observance_date?: string;
     created_at: string;
     updated_at: string;
 }
@@ -220,6 +222,13 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                                         {formatHebrewDate(yahrzeit.hebrew_day_of_death, yahrzeit.hebrew_month_of_death)}
                                     </p>
                                 </div>
+
+                                {yahrzeit.previous_observance_date && (
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Previous Observance</label>
+                                        <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{formatDate(yahrzeit.previous_observance_date)}</p>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="space-y-4">
@@ -231,6 +240,13 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                                         </Badge>
                                     </div>
                                 </div>
+
+                                {yahrzeit.next_observance_date && (
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Next Observance</label>
+                                        <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{formatDate(yahrzeit.next_observance_date)}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

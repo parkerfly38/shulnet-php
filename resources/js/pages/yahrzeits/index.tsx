@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Edit, Plus, Search, Eye, Calendar, Star, Upload, Download, Mail, Printer } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Eye, Calendar, Star, Upload, Download, Mail, Printer, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { type BreadcrumbItem } from '@/types';
 import {
@@ -44,9 +44,10 @@ interface Yahrzeit {
     members: Member[];
     name: string;
     hebrew_name?: string;
-    date_of_death: string;
+    date_of_death?: string | null;
     hebrew_day_of_death: number;
     hebrew_month_of_death: number;
+    next_observance_date?: string | null;
     observance_type: 'standard' | 'kaddish' | 'memorial_candle' | 'other';
     created_at: string;
     updated_at: string;
@@ -82,8 +83,25 @@ interface Props {
 const HEBREW_MONTHS = [
     '', // 0 index placeholder
     'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar',
-    'Nissan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'
+    'Nisan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul', 'Elul' // 13th element for leap year Elul
 ];
+
+// Leap year month names (for display when month is 7 in leap year context)
+const HEBREW_MONTHS_LEAP: Record<number, string> = {
+    1: 'Tishrei',
+    2: 'Cheshvan',
+    3: 'Kislev',
+    4: 'Tevet',
+    5: 'Shevat',
+    6: 'Adar I',
+    7: 'Adar II',
+    8: 'Nisan',
+    9: 'Iyar',
+    10: 'Sivan',
+    11: 'Tammuz',
+    12: 'Av',
+    13: 'Elul'
+};
 
 const OBSERVANCE_COLORS = {
     standard: 'bg-blue-100 text-blue-800',
@@ -109,8 +127,44 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
   const [gregorianDate, setGregorianDate] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [showResultsDialog, setShowResultsDialog] = useState(false);
+  const [importResults, setImportResults] = useState<{
+    imported?: number;
+    updated?: number;
+    errors?: Array<{ row: number; attribute: string; errors: string[] }>;
+    success?: boolean;
+    errorMessage?: string;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { flash } = usePage().props as any;
+
+  // Check for import results in flash messages
+  useEffect(() => {
+    if (flash?.success?.includes('Import completed')) {
+      // Parse the success message to extract counts
+      const match = flash.success.match(/(\d+) yahrzeits imported, (\d+) updated/);
+      if (match) {
+        setImportResults({
+          imported: Number.parseInt(match[1]),
+          updated: Number.parseInt(match[2]),
+          errors: flash.import_errors || [],
+          success: true,
+        });
+        setShowResultsDialog(true);
+      }
+    } else if (flash?.error) {
+      // Show error in results dialog
+      setImportResults({
+        imported: 0,
+        updated: 0,
+        errors: [],
+        success: false,
+        errorMessage: flash.error,
+      });
+      setShowResultsDialog(true);
+    }
+  }, [flash]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,13 +186,19 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
+    setImporting(true);
+
     router.post('/admin/yahrzeits/import', formData, {
       onSuccess: () => {
         setShowImportDialog(false);
         setSelectedFile(null);
+        setImporting(false);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+      },
+      onError: () => {
+        setImporting(false);
       },
     });
   };
@@ -217,16 +277,36 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return 'Not available';
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   const formatHebrewDate = (day: number, month: number) => {
-    const monthName = HEBREW_MONTHS[month] || 'Unknown';
+    // For months 1-12, use regular array; for month 7 or 13, check leap year context
+    let monthName: string;
+    
+    if (month === 7 && HEBREW_MONTHS_LEAP[7]) {
+      // Could be Adar II in leap year or Nisan in regular year
+      // Default to regular month names unless we have more context
+      monthName = HEBREW_MONTHS[month] || 'Unknown';
+    } else if (month === 13) {
+      // Month 13 only exists in leap years (Elul)
+      monthName = HEBREW_MONTHS_LEAP[13] || 'Elul';
+    } else if (month >= 1 && month <= 12) {
+      monthName = HEBREW_MONTHS[month] || 'Unknown';
+    } else {
+      monthName = 'Unknown';
+    }
+    
     return `${day} ${monthName}`;
   };
 
@@ -283,37 +363,56 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
-                  <div>
-                    <Button
-                      variant="outline"
-                      onClick={handleDownloadTemplate}
-                      className="w-full flex items-center gap-2"
-                    >
-                      <Download className="h-4 w-4" />
-                      Download CSV Template
-                    </Button>
-                  </div>
-                  <div className="border-t pt-4">
-                    <Input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".csv,.xlsx,.xls"
-                      onChange={handleFileSelect}
-                      className="cursor-pointer"
-                    />
-                    {selectedFile && (
-                      <p className="text-sm text-gray-600 mt-2">
-                        Selected: {selectedFile.name}
-                      </p>
-                    )}
-                  </div>
-                  <Button
-                    onClick={handleImport}
-                    disabled={!selectedFile}
-                    className="w-full"
-                  >
-                    Import Yahrzeits
-                  </Button>
+                  {importing ? (
+                    <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                      <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+                      <div className="text-center">
+                        <p className="text-lg font-medium text-gray-900">
+                          Importing Yahrzeits...
+                        </p>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Please wait while we process your file. Large files may take several minutes.
+                        </p>
+                        <p className="text-xs text-gray-500 mt-2">
+                          Do not close this window
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <Button
+                          variant="outline"
+                          onClick={handleDownloadTemplate}
+                          className="w-full flex items-center gap-2"
+                        >
+                          <Download className="h-4 w-4" />
+                          Download CSV Template
+                        </Button>
+                      </div>
+                      <div className="border-t pt-4">
+                        <Input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".csv,.xlsx,.xls"
+                          onChange={handleFileSelect}
+                          className="cursor-pointer"
+                        />
+                        {selectedFile && (
+                          <p className="text-sm text-gray-600 mt-2">
+                            Selected: {selectedFile.name}
+                          </p>
+                        )}
+                      </div>
+                      <Button
+                        onClick={handleImport}
+                        disabled={!selectedFile}
+                        className="w-full"
+                      >
+                        Import Yahrzeits
+                      </Button>
+                    </>
+                  )}
                 </div>
               </DialogContent>
             </Dialog>
@@ -379,7 +478,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                     Deceased
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Date of Death
+                    Next Observance
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Hebrew Date
@@ -411,7 +510,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-2 text-gray-400" />
-                          {formatDate(yahrzeit.date_of_death)}
+                          {formatDate(yahrzeit.next_observance_date)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
@@ -647,6 +746,144 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   disabled={selectedMembers.length === 0 || !gregorianDate || (reminderType === 'email' && !familyMembers.filter(m => selectedMembers.includes(m.id)).some(m => m.email))}
                 >
                   {reminderType === 'email' ? `Send Email (${selectedMembers.length})` : `Print Letter (${selectedMembers.length})`}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Import Results Dialog */}
+        <Dialog open={showResultsDialog} onOpenChange={setShowResultsDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {importResults?.success ? (
+                  <>
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    Import Completed
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="h-5 w-5 text-red-600" />
+                    Import Failed
+                  </>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {importResults?.success ? 'Your yahrzeit import has been processed.' : 'There was a problem with the import.'}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-900">
+                        New Yahrzeits
+                      </p>
+                      <p className="text-2xl font-bold text-green-600 mt-1">
+                        {importResults?.imported || 0}
+                      </p>
+                    </div>
+                    <Plus className="h-8 w-8 text-green-600" />
+                  </div>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">
+                        Updated Yahrzeits
+                      </p>
+                      <p className="text-2xl font-bold text-blue-600 mt-1">
+                        {importResults?.updated || 0}
+                      </p>
+                    </div>
+                    <CheckCircle className="h-8 w-8 text-blue-600" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Errors Section */}
+              {importResults?.errors && importResults.errors.length > 0 && (
+                <div className="border-t pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertCircle className="h-5 w-5 text-amber-600" />
+                    <h4 className="font-medium text-gray-900">
+                      Validation Errors ({importResults.errors.length})
+                    </h4>
+                  </div>
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <p className="text-sm text-amber-900 mb-2">
+                      The following rows had validation errors and were not imported:
+                    </p>
+                    <div className="max-h-48 overflow-y-auto rounded-md border border-amber-200 bg-white">
+                      <div className="p-3 space-y-3">
+                        {importResults.errors.map((error) => (
+                          <div
+                            key={`error-${error.row}-${error.attribute}`}
+                            className="text-sm border-l-4 border-red-500 pl-3 py-1"
+                          >
+                            <div className="font-medium text-gray-900">
+                              Row {error.row}
+                              {error.attribute && (
+                                <span className="text-gray-600">
+                                  {' '}— {error.attribute}
+                                </span>
+                              )}
+                            </div>
+                            {error.errors && error.errors.length > 0 && (
+                              <ul className="mt-1 space-y-1 text-red-600">
+                                {error.errors.map((msg) => (
+                                  <li key={`${error.row}-${error.attribute}-${msg.substring(0, 20)}`}>• {msg}</li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* General error message */}
+              {importResults?.errorMessage && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-red-900">
+                        Import Error
+                      </p>
+                      <p className="text-sm text-red-700 mt-1">
+                        {importResults.errorMessage}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Success message when no errors */}
+              {importResults?.success && (!importResults?.errors || importResults.errors.length === 0) && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-green-900">
+                        All records processed successfully
+                      </p>
+                      <p className="text-sm text-green-700 mt-1">
+                        No validation errors were encountered during the import.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end pt-4 border-t">
+                <Button onClick={() => setShowResultsDialog(false)}>
+                  Close
                 </Button>
               </div>
             </div>
