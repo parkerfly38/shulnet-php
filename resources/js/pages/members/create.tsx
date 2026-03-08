@@ -219,13 +219,13 @@ export default function MembersCreate() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="email">Email Address *</Label>
+                <Label htmlFor="email">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
                   value={data.email}
                   onChange={(e) => setData('email', e.target.value)}
-                  required
+                  placeholder="Optional - needed for user account"
                 />
                 {errors.email && (
                   <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.email}</p>

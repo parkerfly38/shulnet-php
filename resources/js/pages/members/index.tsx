@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download, KeyRound } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download, KeyRound, CheckCircle, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { type Member, type BreadcrumbItem } from '@/types';
 import {
@@ -74,8 +74,44 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [showResultsDialog, setShowResultsDialog] = useState(false);
+  const [importResults, setImportResults] = useState<{
+    imported?: number;
+    updated?: number;
+    errors?: Array<{ row: number; attribute: string; errors: string[] }>;
+    success?: boolean;
+    errorMessage?: string;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { flash } = usePage().props as any;
+
+  // Check for import results in flash messages
+  useEffect(() => {
+    if (flash?.success?.includes('Import completed')) {
+      // Parse the success message to extract counts
+      const match = flash.success.match(/(\d+) members imported, (\d+) updated/);
+      if (match) {
+        setImportResults({
+          imported: Number.parseInt(match[1]),
+          updated: Number.parseInt(match[2]),
+          errors: flash.import_errors || [],
+          success: true,
+        });
+        setShowResultsDialog(true);
+      }
+    } else if (flash?.error) {
+      // Show error in results dialog
+      setImportResults({
+        imported: 0,
+        updated: 0,
+        errors: [],
+        success: false,
+        errorMessage: flash.error,
+      });
+      setShowResultsDialog(true);
+    }
+  }, [flash]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,7 +130,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.[0]) {
       setSelectedFile(e.target.files[0]);
     }
   };
@@ -105,19 +141,25 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
     const formData = new FormData();
     formData.append('file', selectedFile);
 
+    setImporting(true);
+
     router.post('/admin/members/import', formData, {
       onSuccess: () => {
         setShowImportDialog(false);
         setSelectedFile(null);
+        setImporting(false);
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
+      },
+      onError: () => {
+        setImporting(false);
       },
     });
   };
 
   const handleDownloadTemplate = () => {
-    window.location.href = '/admin/members/template/download';
+    globalThis.location.href = '/admin/members/template/download';
   };
 
   const handleDelete = (member: Member) => {
@@ -205,12 +247,12 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
       <Head title="Member Management" />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-        {flash?.success && (
+        {flash?.success && !flash.success.includes('Import completed') && (
           <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
             {flash.success}
           </div>
         )}
-        {flash?.error && (
+        {flash?.error && !showResultsDialog && (
           <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
             {flash.error}
           </div>
@@ -237,41 +279,61 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                 <DialogHeader>
                   <DialogTitle>Import Members from CSV</DialogTitle>
                   <DialogDescription>
-                    Upload a CSV file to import or update members. Download the template to see the required format.
+                    Upload a CSV file to import or update members. Download the template to see the required format. 
+                    Large files (1000+ rows) may take several minutes to process.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
-                  <div>
-                    <Button
-                      variant="outline"
-                      onClick={handleDownloadTemplate}
-                      className="w-full flex items-center gap-2"
-                    >
-                      <Download className="h-4 w-4" />
-                      Download CSV Template
-                    </Button>
-                  </div>
-                  <div className="border-t pt-4">
-                    <Input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".csv,.xlsx,.xls"
-                      onChange={handleFileSelect}
-                      className="cursor-pointer"
-                    />
-                    {selectedFile && (
-                      <p className="text-sm text-gray-600 mt-2">
-                        Selected: {selectedFile.name}
-                      </p>
-                    )}
-                  </div>
-                  <Button
-                    onClick={handleImport}
-                    disabled={!selectedFile}
-                    className="w-full"
-                  >
-                    Import Members
-                  </Button>
+                  {importing ? (
+                    <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                      <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+                      <div className="text-center">
+                        <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                          Importing Members...
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          Please wait while we process your file. Large files may take several minutes.
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                          Do not close this window
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div>
+                        <Button
+                          variant="outline"
+                          onClick={handleDownloadTemplate}
+                          className="w-full flex items-center gap-2"
+                        >
+                          <Download className="h-4 w-4" />
+                          Download CSV Template
+                        </Button>
+                      </div>
+                      <div className="border-t pt-4">
+                        <Input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".csv,.xlsx,.xls"
+                          onChange={handleFileSelect}
+                          className="cursor-pointer"
+                        />
+                        {selectedFile && (
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            Selected: {selectedFile.name}
+                          </p>
+                        )}
+                      </div>
+                      <Button
+                        onClick={handleImport}
+                        disabled={!selectedFile}
+                        className="w-full"
+                      >
+                        Import Members
+                      </Button>
+                    </>
+                  )}
                 </div>
               </DialogContent>
             </Dialog>
@@ -284,6 +346,144 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
             </Link>
           </div>
         </div>
+
+        {/* Import Results Dialog */}
+        <Dialog open={showResultsDialog} onOpenChange={setShowResultsDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {importResults?.success ? (
+                  <>
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    Import Completed
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="h-5 w-5 text-red-600" />
+                    Import Failed
+                  </>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {importResults?.success ? 'Your member import has been processed.' : 'There was a problem with the import.'}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 pt-2">
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-900 dark:text-green-100">
+                        New Members
+                      </p>
+                      <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
+                        {importResults?.imported || 0}
+                      </p>
+                    </div>
+                    <UserPlus className="h-8 w-8 text-green-600 dark:text-green-400" />
+                  </div>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                        Updated Members
+                      </p>
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
+                        {importResults?.updated || 0}
+                      </p>
+                    </div>
+                    <UserCheck className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Errors Section */}
+              {importResults?.errors && importResults.errors.length > 0 && (
+                <div className="border-t pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertCircle className="h-5 w-5 text-amber-600" />
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100">
+                      Validation Errors ({importResults.errors.length})
+                    </h4>
+                  </div>
+                  <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                    <p className="text-sm text-amber-900 dark:text-amber-100 mb-2">
+                      The following rows had validation errors and were not imported:
+                    </p>
+                    <div className="max-h-48 overflow-y-auto rounded-md border border-amber-200 dark:border-amber-700 bg-white dark:bg-gray-900">
+                      <div className="p-3 space-y-3">
+                        {importResults.errors.map((error) => (
+                          <div
+                            key={`error-${error.row}-${error.attribute}`}
+                            className="text-sm border-l-4 border-red-500 pl-3 py-1"
+                          >
+                            <div className="font-medium text-gray-900 dark:text-gray-100">
+                              Row {error.row}
+                              {error.attribute && (
+                                <span className="text-gray-600 dark:text-gray-400">
+                                  {' '}— {error.attribute}
+                                </span>
+                              )}
+                            </div>
+                            {error.errors && error.errors.length > 0 && (
+                              <ul className="mt-1 space-y-1 text-red-600 dark:text-red-400">
+                                {error.errors.map((msg) => (
+                                  <li key={`${error.row}-${error.attribute}-${msg.substring(0, 20)}`}>• {msg}</li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* General error message */}
+              {importResults?.errorMessage && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <XCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-red-900 dark:text-red-100">
+                        Import Error
+                      </p>
+                      <p className="text-sm text-red-700 dark:text-red-300 mt-1">
+                        {importResults.errorMessage}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Success message when no errors */}
+              {importResults?.success && (!importResults?.errors || importResults.errors.length === 0) && (
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
+                    <div>
+                      <p className="font-medium text-green-900 dark:text-green-100">
+                        All records processed successfully
+                      </p>
+                      <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                        No validation errors were encountered during the import.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end pt-4 border-t">
+                <Button onClick={() => setShowResultsDialog(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Stats Dashboard */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -416,7 +616,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900 dark:text-gray-100">
-                          {member.email}
+                          {member.email || '-'}
                         </div>
                         {member.phone1 && (
                           <div className="text-sm text-gray-500 dark:text-gray-400">

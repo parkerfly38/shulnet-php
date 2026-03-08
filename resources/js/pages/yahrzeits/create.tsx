@@ -195,7 +195,7 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                 />
                                 {errors.date_of_death && <p className="text-sm text-red-600 mt-1">{errors.date_of_death}</p>}
                                 <p className="text-sm text-gray-600 mt-1">
-                                    Hebrew calendar date will be calculated automatically
+                                    Hebrew calendar date will be calculated automatically. For Hebrew-only dates, use the CSV import.
                                 </p>
                             </div>
 

@@ -89,6 +89,11 @@ class HandleInertiaRequests extends Middleware
                 'gregorian' => $gregorianDate,
                 'hebrew' => $hebrewDate['formatted'],
             ],
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'import_errors' => $request->session()->get('import_errors'),
+            ],
         ];
     }
 }

@@ -38,8 +38,8 @@ class YahrzeitController extends Controller
             }])
             ->select([
                 'id', 'name', 'hebrew_name', 'date_of_death',
-                'hebrew_day_of_death', 'hebrew_month_of_death', 'observance_type',
-                'notes', 'created_at', 'updated_at',
+                'hebrew_day_of_death', 'hebrew_month_of_death', 'hebrew_year_of_death',
+                'observance_type', 'notes', 'created_at', 'updated_at',
             ])
             ->orderBy('hebrew_month_of_death')
             ->orderBy('hebrew_day_of_death')
@@ -59,6 +59,24 @@ class YahrzeitController extends Controller
         }
 
         $yahrzeits = $query->paginate($perPage);
+        
+        // Calculate next observance date for each yahrzeit
+        $yahrzeits->getCollection()->transform(function ($yahrzeit) {
+            try {
+                if ($yahrzeit->hebrew_day_of_death && $yahrzeit->hebrew_month_of_death) {
+                    $yahrzeit->next_observance_date = $this->hebrewCalendar->getNextYahrzeitDate(
+                        $yahrzeit->hebrew_day_of_death,
+                        $yahrzeit->hebrew_month_of_death
+                    );
+                } else {
+                    $yahrzeit->next_observance_date = null;
+                }
+            } catch (\Exception $e) {
+                // If calculation fails, set to null
+                $yahrzeit->next_observance_date = null;
+            }
+            return $yahrzeit;
+        });
 
         return Inertia::render('yahrzeits/index', [
             'yahrzeits' => $yahrzeits,
@@ -134,6 +152,26 @@ class YahrzeitController extends Controller
                 ->withPivot('relationship');
         }]);
 
+        // Calculate next and previous observance dates
+        try {
+            if ($yahrzeit->hebrew_day_of_death && $yahrzeit->hebrew_month_of_death) {
+                $yahrzeit->next_observance_date = $this->hebrewCalendar->getNextYahrzeitDate(
+                    $yahrzeit->hebrew_day_of_death,
+                    $yahrzeit->hebrew_month_of_death
+                );
+                $yahrzeit->previous_observance_date = $this->hebrewCalendar->getPreviousYahrzeitDate(
+                    $yahrzeit->hebrew_day_of_death,
+                    $yahrzeit->hebrew_month_of_death
+                );
+            } else {
+                $yahrzeit->next_observance_date = null;
+                $yahrzeit->previous_observance_date = null;
+            }
+        } catch (\Exception $e) {
+            $yahrzeit->next_observance_date = null;
+            $yahrzeit->previous_observance_date = null;
+        }
+
         return Inertia::render('yahrzeits/show', [
             'yahrzeit' => $yahrzeit,
         ]);
@@ -171,7 +209,7 @@ class YahrzeitController extends Controller
                 }),
                 'name' => $yahrzeit->name,
                 'hebrew_name' => $yahrzeit->hebrew_name,
-                'date_of_death' => $yahrzeit->date_of_death->format('Y-m-d'),
+                'date_of_death' => $yahrzeit->date_of_death?->format('Y-m-d'),
                 'hebrew_day_of_death' => $yahrzeit->hebrew_day_of_death,
                 'hebrew_month_of_death' => $yahrzeit->hebrew_month_of_death,
                 'observance_type' => $yahrzeit->observance_type,
@@ -270,6 +308,10 @@ class YahrzeitController extends Controller
             'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
         ]);
 
+        // Increase time and memory limits for large imports
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+
         try {
             $import = new YahrzeitsImport($this->hebrewCalendar);
             Excel::import($import, $request->file('file'));
@@ -285,7 +327,7 @@ class YahrzeitController extends Controller
                 'import_errors' => $errors,
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Import failed: '.$e->getMessage());
+            return redirect()->route('yahrzeits.index')->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 
@@ -299,21 +341,34 @@ class YahrzeitController extends Controller
             'Content-Disposition' => 'attachment; filename="yahrzeits-import-template.csv"',
         ];
 
-        $columns = ['name', 'hebrew_name', 'date_of_death', 'observance_type', 'notes', 'member_email', 'relationship'];
+        $columns = ['name', 'hebrew_name', 'date_of_death', 'hebrew_day_of_death', 'hebrew_month_of_death', 'hebrew_year_of_death', 'observance_type', 'notes'];
 
         $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
+
+            // Add comment row with field requirements
+            fputcsv($file, [
+                'REQUIRED',
+                'Optional',
+                'Optional (YYYY-MM-DD) - Required if Hebrew dates not provided',
+                'Optional (1-30) - Required if date_of_death not provided',
+                'Optional (1-13 or name like Tishrei, Adar I, Adar II) - Required if date_of_death not provided',
+                'Optional (e.g. 5780)',
+                'Optional (standard/kaddish/memorial_candle/other)',
+                'Optional',
+            ]);
 
             // Add sample row
             fputcsv($file, [
                 'John Doe',
                 'יוחנן בן דוד',
                 '2020-01-15',
+                '20',
+                'Tevet',
+                '5780',
                 'standard',
                 'Optional notes about the deceased',
-                'member@example.com',
-                'Father',
             ]);
 
             fclose($file);

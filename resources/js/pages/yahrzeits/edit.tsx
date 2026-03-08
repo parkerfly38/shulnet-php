@@ -359,11 +359,11 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <Label htmlFor="date_of_death">Date of Death *</Label>
+                                <Label htmlFor="date_of_death">Date of Death {!data.date_of_death && '(Optional if Hebrew date is known)'}</Label>
                                 <Input
                                     id="date_of_death"
                                     type="date"
-                                    value={data.date_of_death}
+                                    value={data.date_of_death || ''}
                                     onChange={(e) => setData('date_of_death', e.target.value)}
                                     className={errors.date_of_death ? 'border-red-500' : ''}
                                 />
