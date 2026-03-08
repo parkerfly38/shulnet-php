@@ -3,12 +3,13 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import { Calendar, CalendarDays, MapPin, Globe, AlertCircle, UserPlus, Zap, GraduationCap } from 'lucide-react';
+import { Calendar, CalendarDays, MapPin, Globe, AlertCircle, UserPlus, Zap, GraduationCap, Mail, Printer, CheckCircle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatCurrency } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -92,6 +93,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
     // Dialog state
     const [showMemberOnboarding, setShowMemberOnboarding] = useState(false);
     const [showStudentOnboarding, setShowStudentOnboarding] = useState(false);
+    const [showMonthlyYahrzeits, setShowMonthlyYahrzeits] = useState(false);
 
     // Currency symbol mapping
     const currencySymbols: Record<string, string> = {
@@ -244,6 +246,38 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                         parents={parents}
                                         members={members}
                                         onClose={() => setShowStudentOnboarding(false)}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+
+                            <Dialog open={showMonthlyYahrzeits} onOpenChange={setShowMonthlyYahrzeits}>
+                                <DialogTrigger asChild>
+                                    <button className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
+                                        <div className="flex items-center">
+                                            <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
+                                                <Mail className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                            </div>
+                                            <div className="ml-3 flex-1">
+                                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                    Print/Email Monthly Yahrzeit Letters
+                                                </h3>
+                                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                                                    Generate letters for this Hebrew month
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Monthly Yahrzeit Letters</DialogTitle>
+                                        <DialogDescription>
+                                            Generate PDF or send email reminders for all yahrzeits in the current Hebrew month.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <MonthlyYahrzeitWorkflow 
+                                        currentHebrewDate={currentHebrewDate}
+                                        onClose={() => setShowMonthlyYahrzeits(false)}
                                     />
                                 </DialogContent>
                             </Dialog>
@@ -971,6 +1005,343 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                     </Button>
                 )}
             </div>
+        </div>
+    );
+}
+
+interface MonthlyYahrzeitWorkflowProps {
+    currentHebrewDate: HebrewDate;
+    onClose: () => void;
+}
+
+interface YahrzeitData {
+    id: number;
+    name: string;
+    hebrew_name: string | null;
+    hebrew_day_of_death: number;
+    hebrew_month_of_death: number;
+    date_of_death: string;
+    observance_type: string | null;
+    notes: string | null;
+    gregorian_date: string;
+    members: Array<{
+        id: number;
+        first_name: string;
+        last_name: string;
+        email: string | null;
+        relationship: string;
+    }>;
+}
+
+function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeitWorkflowProps) {
+    const [yahrzeits, setYahrzeits] = useState<YahrzeitData[]>([]);
+    const [selectedYahrzeits, setSelectedYahrzeits] = useState<number[]>([]);
+    const [selectedMonth, setSelectedMonth] = useState<number>(currentHebrewDate.month);
+    const [loading, setLoading] = useState(true);
+    const [action, setAction] = useState<'email' | 'print'>('email');
+    const [processing, setProcessing] = useState(false);
+
+    const hebrewMonthNames: Record<number, string> = {
+        1: 'Tishrei', 2: 'Cheshvan', 3: 'Kislev', 4: 'Tevet', 5: 'Shevat', 6: 'Adar',
+        7: 'Nisan', 8: 'Iyar', 9: 'Sivan', 10: 'Tammuz', 11: 'Av', 12: 'Elul'
+    };
+
+    useEffect(() => {
+        // Fetch yahrzeits for selected month
+        setLoading(true);
+        fetch(`/admin/yahrzeits/monthly/prepare?month=${selectedMonth}`)
+            .then(res => res.json())
+            .then(data => {
+                setYahrzeits(data.yahrzeits);
+                // Select all by default
+                setSelectedYahrzeits(data.yahrzeits.map((y: YahrzeitData) => y.id));
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error('Failed to load yahrzeits:', err);
+                setLoading(false);
+            });
+    }, [selectedMonth]);
+
+    const handleToggleYahrzeit = (id: number) => {
+        setSelectedYahrzeits(prev => 
+            prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+        );
+    };
+
+    const handleToggleAll = () => {
+        if (selectedYahrzeits.length === yahrzeits.length) {
+            setSelectedYahrzeits([]);
+        } else {
+            setSelectedYahrzeits(yahrzeits.map(y => y.id));
+        }
+    };
+
+    const handleSubmit = () => {
+        if (selectedYahrzeits.length === 0) return;
+
+        setProcessing(true);
+
+        if (action === 'email') {
+            // Send emails
+            router.post('/admin/yahrzeits/monthly/send', {
+                yahrzeit_ids: selectedYahrzeits,
+                month: selectedMonth,
+            }, {
+                preserveState: true,
+                onSuccess: () => {
+                    onClose();
+                },
+                onFinish: () => {
+                    setProcessing(false);
+                },
+            });
+        } else {
+            // Open print view in new window
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/admin/yahrzeits/monthly/print';
+            form.target = '_blank';
+
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            if (csrfToken) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+            }
+
+            // Add yahrzeit IDs
+            selectedYahrzeits.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'yahrzeit_ids[]';
+                input.value = id.toString();
+                form.appendChild(input);
+            });
+
+            // Add month
+            const monthInput = document.createElement('input');
+            monthInput.type = 'hidden';
+            monthInput.name = 'month';
+            monthInput.value = selectedMonth.toString();
+            form.appendChild(monthInput);
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+
+            setProcessing(false);
+            onClose();
+        }
+    };
+
+    const getTotalRecipients = () => {
+        return yahrzeits
+            .filter(y => selectedYahrzeits.includes(y.id))
+            .reduce((total, y) => {
+                return total + (action === 'email' 
+                    ? y.members.filter(m => m.email).length 
+                    : y.members.length);
+            }, 0);
+    };
+
+    return (
+        <div className="space-y-6">
+            {loading ? (
+                <div className="text-center py-8">
+                    <p className="text-gray-600 dark:text-gray-400">Loading yahrzeits...</p>
+                </div>
+            ) : yahrzeits.length === 0 ? (
+                <div className="text-center py-8">
+                    <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                    <p className="text-gray-600 dark:text-gray-400">
+                        No yahrzeits found for {hebrewMonthNames[selectedMonth]}.
+                    </p>
+                    <div className="mt-4">
+                        <Label htmlFor="hebrew-month-empty" className="text-sm font-medium">Select a Different Month</Label>
+                        <select
+                            id="hebrew-month-empty"
+                            value={selectedMonth}
+                            onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                            className="mt-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                        >
+                            {Object.entries(hebrewMonthNames).map(([num, name]) => (
+                                <option key={num} value={num}>
+                                    {name} {parseInt(num) === currentHebrewDate.month ? '(Current)' : ''}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            ) : (
+                <>
+                    <div className="space-y-4">
+                        <div>
+                            <h3 className="font-medium text-lg mb-2">
+                                Monthly Yahrzeit Letters
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Select the Hebrew month and yahrzeits to include
+                            </p>
+                        </div>
+
+                        {/* Month Selection */}
+                        <div className="space-y-2">
+                            <Label htmlFor="hebrew-month" className="text-sm font-medium">Hebrew Month</Label>
+                            <select
+                                id="hebrew-month"
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                            >
+                                {Object.entries(hebrewMonthNames).map(([num, name]) => (
+                                    <option key={num} value={num}>
+                                        {name} {parseInt(num) === currentHebrewDate.month ? '(Current)' : ''}
+                                    </option>
+                                ))}
+                            </select>
+                            <p className="text-xs text-gray-500">
+                                Found {yahrzeits.length} yahrzeit{yahrzeits.length !== 1 ? 's' : ''} for {hebrewMonthNames[selectedMonth]}
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="font-medium text-lg mb-2">
+                                Yahrzeits for {hebrewMonthNames[selectedMonth]} ({yahrzeits.length} total)
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Select the yahrzeits to include in the letters
+                            </p>
+                        </div>
+
+                        {/* Action Selection */}
+                        <div className="space-y-2">
+                            <label className="block text-sm font-medium">Action</label>
+                            <div className="space-y-2">
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="action-email"
+                                        name="action"
+                                        value="email"
+                                        checked={action === 'email'}
+                                        onChange={(e) => setAction(e.target.value as 'email' | 'print')}
+                                        className="h-4 w-4 text-blue-600"
+                                    />
+                                    <label htmlFor="action-email" className="cursor-pointer font-normal flex items-center gap-2">
+                                        <Mail className="h-4 w-4" />
+                                        Send via Email to All Members
+                                    </label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="radio"
+                                        id="action-print"
+                                        name="action"
+                                        value="print"
+                                        checked={action === 'print'}
+                                        onChange={(e) => setAction(e.target.value as 'email' | 'print')}
+                                        className="h-4 w-4 text-blue-600"
+                                    />
+                                    <label htmlFor="action-print" className="cursor-pointer font-normal flex items-center gap-2">
+                                        <Printer className="h-4 w-4" />
+                                        Generate PDF for All Members
+                                    </label>
+                                </div>
+                            </div>
+                            <p className="text-xs text-gray-500">
+                                {action === 'email' 
+                                    ? 'Individual emails will be sent to each member with an email address'
+                                    : 'A single PDF document will be generated with one letter per member'}
+                            </p>
+                        </div>
+
+                        {/* Yahrzeit Selection */}
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <label className="block text-sm font-medium">Select Yahrzeits</label>
+                                <button
+                                    type="button"
+                                    onClick={handleToggleAll}
+                                    className="text-sm text-blue-600 hover:text-blue-800"
+                                >
+                                    {selectedYahrzeits.length === yahrzeits.length ? 'Deselect All' : 'Select All'}
+                                </button>
+                            </div>
+                            <div className="space-y-2 max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
+                                {yahrzeits.map((yahrzeit) => {
+                                    const membersWithEmail = yahrzeit.members.filter(m => m.email).length;
+                                    const totalMembers = yahrzeit.members.length;
+                                    
+                                    return (
+                                        <div key={yahrzeit.id} className="flex items-start space-x-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded">
+                                            <input
+                                                type="checkbox"
+                                                id={`yahrzeit-${yahrzeit.id}`}
+                                                checked={selectedYahrzeits.includes(yahrzeit.id)}
+                                                onChange={() => handleToggleYahrzeit(yahrzeit.id)}
+                                                className="mt-1 h-4 w-4 text-blue-600"
+                                            />
+                                            <label htmlFor={`yahrzeit-${yahrzeit.id}`} className="cursor-pointer flex-1">
+                                                <div className="flex items-start justify-between">
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                            {yahrzeit.name}
+                                                        </div>
+                                                        {yahrzeit.hebrew_name && (
+                                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                                {yahrzeit.hebrew_name}
+                                                            </div>
+                                                        )}
+                                                        <div className="text-xs text-gray-500 mt-1">
+                                                            {hebrewMonthNames[yahrzeit.hebrew_month_of_death]} {yahrzeit.hebrew_day_of_death} • {yahrzeit.gregorian_date}
+                                                        </div>
+                                                        <div className="text-xs text-gray-500">
+                                                            {totalMembers} member{totalMembers !== 1 ? 's' : ''}
+                                                            {action === 'email' && ` (${membersWithEmail} with email)`}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex-shrink-0 ml-2">
+                                                        <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded">
+                                                            {yahrzeit.hebrew_day_of_death}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Summary and Actions */}
+                    <div className="flex items-center justify-between pt-4 border-t">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                            {selectedYahrzeits.length} yahrzeit{selectedYahrzeits.length !== 1 ? 's' : ''} selected
+                            {selectedYahrzeits.length > 0 && ` • ${getTotalRecipients()} letter${getTotalRecipients() !== 1 ? 's' : ''}`}
+                        </div>
+                        <div className="flex gap-2">
+                            <Button variant="outline" onClick={onClose} disabled={processing}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleSubmit}
+                                disabled={selectedYahrzeits.length === 0 || processing || (action === 'email' && getTotalRecipients() === 0)}
+                            >
+                                {processing ? 'Processing...' : (
+                                    action === 'email' 
+                                        ? `Send ${getTotalRecipients()} Email${getTotalRecipients() !== 1 ? 's' : ''}`
+                                        : `Generate PDF (${getTotalRecipients()} Letter${getTotalRecipients() !== 1 ? 's' : ''})`
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

@@ -269,6 +269,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/yahrzeits/{yahrzeit}/send-reminder', [YahrzeitController::class, 'sendReminder'])->name('yahrzeits.send-reminder');
         Route::get('admin/yahrzeits/{yahrzeit}/print-reminder', [YahrzeitController::class, 'printReminder'])->name('yahrzeits.print-reminder');
 
+        // Monthly yahrzeit letters workflow
+        Route::get('admin/yahrzeits/monthly/prepare', [YahrzeitController::class, 'prepareMonthlyLetters'])->name('yahrzeits.monthly.prepare');
+        Route::post('admin/yahrzeits/monthly/send', [YahrzeitController::class, 'sendMonthlyReminders'])->name('yahrzeits.monthly.send');
+        Route::post('admin/yahrzeits/monthly/print', [YahrzeitController::class, 'printMonthlyLetters'])->name('yahrzeits.monthly.print');
+
         // Calendar management routes
         Route::resource('admin/calendars', CalendarController::class, [
             'names' => [
