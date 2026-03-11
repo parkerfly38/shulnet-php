@@ -33,6 +33,7 @@ export interface SharedData {
         hebrew: string;
     };
     currency: string;
+    roleSwitch?: RoleSwitch;
     [key: string]: unknown;
 }
 
@@ -43,7 +44,6 @@ export interface User {
     avatar?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
-    roles?: string[];
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
@@ -67,6 +67,13 @@ export interface Member {
     country?: string;
     dob?: string;
     gender?: string;
+    parent_id?: number;
+    parent?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        email: string;
+    };
     aliyah?: boolean;
     bnaimitzvahdate?: string;
     chazanut?: boolean;
@@ -83,9 +90,18 @@ export interface Member {
     committees?: CommitteeMembership[];
     boards?: BoardMembership[];
     email_records?: EmailRecord[];
+    related_members?: RelatedMember[];
+    related_by?: RelatedMember[];
     created_at: string;
     updated_at: string;
     user_id?: number;
+}
+
+export interface RelatedMember extends Omit<Member, 'related_members' | 'related_by'> {
+    pivot: {
+        id: number;
+        relationship_type: string;
+    };
 }
 
 export interface MembershipPeriod {
@@ -199,6 +215,35 @@ export interface EmailRecord {
     updated_at: string;
 }
 
+export interface Banner {
+    id: number;
+    title: string;
+    message: string;
+    type: 'info' | 'warning' | 'success' | 'error';
+    target_audience: 'members' | 'students' | 'parents' | 'all';
+    start_date: string;
+    end_date?: string;
+    display_duration_seconds: number;
+    is_active: boolean;
+    is_dismissible: boolean;
+    show_on_login: boolean;
+    show_on_dashboard: boolean;
+    send_as_push_notification: boolean;
+    push_notification_sent_at?: string;
+    action_url?: string;
+    action_text?: string;
+    created_by: number;
+    view_count: number;
+    click_count: number;
+    dismiss_count: number;
+    creator?: {
+        id: number;
+        name: string;
+    };
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Note {
     id: number;
     item_scope: string;
@@ -270,8 +315,8 @@ export interface InvoiceItem {
     quantity: string;
     unit_price: string;
     total: string;
-    amount_paid: string;
-    balance: number;
+    amount_paid?: string;
+    gl_account_id?: number;
     sort_order: number;
     created_at: string;
     updated_at: string;
@@ -331,6 +376,7 @@ export interface HebrewDate {
     day: number;
     month: number;
     year: number;
+    isLeapYear: boolean;
     formatted: string;
 }
 
@@ -482,4 +528,17 @@ export interface TorahReadingResponse {
         end: string; // ISO date
     };
     items: TorahReadingItem[];
+}
+
+// Role Switching
+export interface RoleInfo {
+    value: string;
+    label: string;
+    route: string;
+}
+
+export interface RoleSwitch {
+    enabled: boolean;
+    activeRole: string;
+    roles: RoleInfo[];
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\GabbaiController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeedController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTicketTypeController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\GLBatchController;
 use App\Http\Controllers\GravesiteController;
 use App\Http\Controllers\HtmlAssetController;
 use App\Http\Controllers\HtmlPageController;
@@ -461,6 +463,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/reports/tuition-revenue', [ReportsController::class, 'getTuitionRevenue'])->name('admin.reports.tuition-revenue');
         Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('admin.reports.payment-methods');
         Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('admin.reports.budget-vs-actual');
+
+        // GL Batch Export routes
+        Route::get('admin/gl-batch', [GLBatchController::class, 'index'])->name('admin.gl-batch.index');
+        Route::get('admin/gl-batch/export', [GLBatchController::class, 'export'])->name('admin.gl-batch.export');
+        Route::get('admin/gl-batch/summary', [GLBatchController::class, 'summary'])->name('admin.gl-batch.summary');
+
+        // Chart of Accounts management routes
+        Route::resource('admin/chart-of-accounts', ChartOfAccountController::class, [
+            'names' => [
+                'index' => 'admin.chart-of-accounts.index',
+                'create' => 'admin.chart-of-accounts.create',
+                'store' => 'admin.chart-of-accounts.store',
+                'edit' => 'admin.chart-of-accounts.edit',
+                'update' => 'admin.chart-of-accounts.update',
+                'destroy' => 'admin.chart-of-accounts.destroy',
+            ],
+        ])->except(['show']);
 
         // Gabbai UI pages (Inertia)
         Route::get('admin/gabbai', function () {

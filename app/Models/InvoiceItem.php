@@ -10,6 +10,7 @@ class InvoiceItem extends Model
     protected $fillable = [
         'invoice_id',
         'description',
+        'gl_account_id',
         'quantity',
         'unit_price',
         'total',
@@ -28,6 +29,11 @@ class InvoiceItem extends Model
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
+    }
+
+    public function glAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'gl_account_id');
     }
 
     /**
