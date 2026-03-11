@@ -46,7 +46,6 @@ export interface User {
     avatar?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
-    roles?: string[];
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
@@ -318,8 +317,8 @@ export interface InvoiceItem {
     quantity: string;
     unit_price: string;
     total: string;
-    amount_paid: string;
-    balance: number;
+    amount_paid?: string;
+    gl_account_id?: number;
     sort_order: number;
     created_at: string;
     updated_at: string;
