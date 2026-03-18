@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\UserRole;
 use App\Mail\InvoiceMail;
 use App\Models\Attendance;
+use App\Models\Banner;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -45,11 +46,26 @@ class DashboardController extends Controller
 
     private function defaultDashboard($user)
     {
+        // Get active banners for the user
+        $banners = Banner::getForUser($user, 'dashboard');
+
         return Inertia::render('dashboard', [
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
             ],
+            'banners' => $banners->map(function ($banner) {
+                return [
+                    'id' => $banner->id,
+                    'title' => $banner->title,
+                    'message' => $banner->message,
+                    'type' => $banner->type,
+                    'display_duration_seconds' => $banner->display_duration_seconds,
+                    'is_dismissible' => $banner->is_dismissible,
+                    'action_url' => $banner->action_url,
+                    'action_text' => $banner->action_text,
+                ];
+            }),
         ]);
     }
 
@@ -213,6 +229,25 @@ class DashboardController extends Controller
             ->orderBy('first_name')
             ->get();
 
+        // Get active banners for admin dashboard
+        $banners = Banner::active()
+            ->showOnDashboard()
+            ->forAudience('members') // Admins see member banners
+            ->orderBy('start_date', 'desc')
+            ->get()
+            ->map(function ($banner) {
+                return [
+                    'id' => $banner->id,
+                    'title' => $banner->title,
+                    'message' => $banner->message,
+                    'type' => $banner->type,
+                    'display_duration_seconds' => $banner->display_duration_seconds,
+                    'is_dismissible' => $banner->is_dismissible,
+                    'action_url' => $banner->action_url,
+                    'action_text' => $banner->action_text,
+                ];
+            });
+
         return Inertia::render('admin/dashboard', [
             'membersJoinedData' => $chartData,
             'currentYear' => $currentYear,
@@ -225,6 +260,7 @@ class DashboardController extends Controller
             'schoolTuitionTiers' => $schoolTuitionTiers,
             'parents' => $parents,
             'members' => $members,
+            'banners' => $banners,
         ]);
     }
 

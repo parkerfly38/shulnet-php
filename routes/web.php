@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeedController;
+use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\EmailCampaignController;
 use App\Http\Controllers\EmailSettingController;
 use App\Http\Controllers\EmailTemplateController;
@@ -275,6 +277,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/yahrzeits/monthly/prepare', [YahrzeitController::class, 'prepareMonthlyLetters'])->name('yahrzeits.monthly.prepare');
         Route::post('admin/yahrzeits/monthly/send', [YahrzeitController::class, 'sendMonthlyReminders'])->name('yahrzeits.monthly.send');
         Route::post('admin/yahrzeits/monthly/print', [YahrzeitController::class, 'printMonthlyLetters'])->name('yahrzeits.monthly.print');
+
+        // Banner management routes
+        Route::resource('admin/banners', BannerController::class, [
+            'names' => [
+                'index' => 'banners.index',
+                'create' => 'banners.create',
+                'store' => 'banners.store',
+                'show' => 'banners.show',
+                'edit' => 'banners.edit',
+                'update' => 'banners.update',
+                'destroy' => 'banners.destroy',
+            ],
+        ]);
+        Route::post('admin/banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])->name('banners.toggle-active');
 
         // Calendar management routes
         Route::resource('admin/calendars', CalendarController::class, [
@@ -655,6 +671,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');
     });
 });
+// Device token management (authenticated users)
+Route::middleware(['auth:sanctum'])->prefix('api/device-tokens')->group(function () {
+    Route::get('/', [DeviceTokenController::class, 'index'])->name('api.device-tokens.index');
+    Route::post('/register', [DeviceTokenController::class, 'register'])->name('api.device-tokens.register');
+    Route::post('/unregister', [DeviceTokenController::class, 'unregister'])->name('api.device-tokens.unregister');
+});
 
 // API routes for admin functionality
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(function () {
@@ -781,6 +803,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api')->group(function
     
     // Email record API routes
     Route::post('emails/record', [\App\Http\Controllers\EmailRecordController::class, 'store'])->name('api.emails.record');
+    
+    // Banner management API routes (admin only)
+    Route::get('banners/push-notifications', [BannerController::class, 'apiGetPushNotificationBanners'])->name('api.banners.push-notifications');
+    Route::post('banners/{banner}/push-notification-sent', [BannerController::class, 'apiMarkPushNotificationSent'])->name('api.banners.push-notification-sent');
+    Route::get('banners/{banner}/statistics', [BannerController::class, 'apiGetStatistics'])->name('api.banners.statistics');
 });
 
 // Member Portal API routes (for React Native app)
@@ -793,6 +820,12 @@ Route::middleware(['auth:sanctum'])->prefix('api/member')->group(function () {
     Route::post('invoices/{id}/pay', [MemberDashboardController::class, 'apiPayInvoice'])->name('api.member.invoices.pay');
     Route::get('students', [MemberDashboardController::class, 'apiStudents'])->name('api.member.students');
     Route::get('yahrzeits', [MemberDashboardController::class, 'apiYahrzeits'])->name('api.member.yahrzeits');
+    
+    // Banner API routes for members
+    Route::get('banners', [BannerController::class, 'apiGetActiveBanners'])->name('api.member.banners');
+    Route::post('banners/{banner}/viewed', [BannerController::class, 'apiMarkAsViewed'])->name('api.member.banners.viewed');
+    Route::post('banners/{banner}/dismissed', [BannerController::class, 'apiMarkAsDismissed'])->name('api.member.banners.dismissed');
+    Route::post('banners/{banner}/clicked', [BannerController::class, 'apiMarkAsClicked'])->name('api.member.banners.clicked');
 });
 
 // Admin Dashboard API routes (for mobile apps)
@@ -884,5 +917,8 @@ Route::get('campaigns/{campaign}/unsubscribe/{member}', [EmailCampaignController
 
 // Public form routes (no auth required)
 Route::post('forms/{form}/submit', [FormController::class, 'submit'])->name('forms.submit');
+
+// Public banner API for WordPress plugin (requires API key)
+Route::get('api/public/banners', [BannerController::class, 'apiPublicBanners'])->name('api.public.banners');
 
 require __DIR__.'/settings.php';
