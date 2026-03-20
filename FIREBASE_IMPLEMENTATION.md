@@ -171,33 +171,6 @@ $results = $firebase->sendBannerNotification($banner, $users);
 dd($results);
 ```
 
-## Step 5: Monitoring and Logging
-
-Add logging to `config/logging.php`:
-
-```php
-'channels' => [
-    'firebase' => [
-        'driver' => 'daily',
-        'path' => storage_path('logs/firebase.log'),
-        'level' => 'debug',
-        'days' => 14,
-    ],
-],
-```
-
-Use in FirebaseService:
-
-```php
-use Illuminate\Support\Facades\Log;
-
-Log::channel('firebase')->info('Push notification sent', [
-    'banner_id' => $banner->id,
-    'user_id' => $user->id,
-    'device_token' => $deviceToken->token,
-]);
-```
-
 ## Security Best Practices
 
 1. **Never commit Firebase credentials** to version control
