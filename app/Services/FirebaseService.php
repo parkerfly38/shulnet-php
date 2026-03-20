@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Banner;
 use App\Models\DeviceToken;
 use App\Models\PushNotificationLog;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Kreait\Firebase\Factory;
@@ -98,6 +99,13 @@ class FirebaseService
                 'sent_at' => now(),
             ]);
 
+            Log::channel('firebase')->info('Push notification sent',
+            [
+                'banner_id' => $banner->id,
+                'user_id' => $user->id,
+                'device_token' => $deviceToken->token,
+            ]);
+
             $deviceToken->markAsUsed();
 
             return ['success' => true];
@@ -119,6 +127,14 @@ class FirebaseService
                 'status' => 'failed',
                 'error_message' => $e->getMessage(),
                 'sent_at' => now(),
+            ]);
+
+            Log::channel('firebase')->error('Failed to send push notification',
+            [
+                'banner_id' => $banner->id,
+                'user_id' => $user->id,
+                'device_token' => $deviceToken->token,
+                'error' => $e->getMessage(),
             ]);
 
             return [
