@@ -110,6 +110,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
     };
     const currencySymbol = currencySymbols[currency] || '$';
 
+    // Hebrew month names (regular year)
     const hebrewMonthNames: Record<number, string> = {
         1: 'Tishrei',
         2: 'Cheshvan',
@@ -123,6 +124,31 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
         10: 'Tammuz',
         11: 'Av',
         12: 'Elul'
+    };
+
+    // Hebrew month names (leap year)
+    const hebrewMonthNamesLeap: Record<number, string> = {
+        1: 'Tishrei',
+        2: 'Cheshvan',
+        3: 'Kislev',
+        4: 'Tevet',
+        5: 'Shevat',
+        6: 'Adar I',
+        7: 'Adar II',
+        8: 'Nisan',
+        9: 'Iyar',
+        10: 'Sivan',
+        11: 'Tammuz',
+        12: 'Av',
+        13: 'Elul'
+    };
+
+    // Get the correct month name based on whether it's a leap year
+    const getHebrewMonthName = (month: number) => {
+        if (currentHebrewDate.isLeapYear) {
+            return hebrewMonthNamesLeap[month] || 'Unknown';
+        }
+        return hebrewMonthNames[month] || 'Unknown';
     };
 
     return (
@@ -291,7 +317,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
                                 <Calendar className="h-4 w-4 mr-2" />
-                                {hebrewMonthNames[currentHebrewDate.month]} Yahrzeits
+                                {getHebrewMonthName(currentHebrewDate.month)} Yahrzeits
                             </h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                                 Today: {currentHebrewDate.formatted}
@@ -1041,9 +1067,24 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
     const [action, setAction] = useState<'email' | 'print'>('email');
     const [processing, setProcessing] = useState(false);
 
+    // Hebrew month names (regular year)
     const hebrewMonthNames: Record<number, string> = {
         1: 'Tishrei', 2: 'Cheshvan', 3: 'Kislev', 4: 'Tevet', 5: 'Shevat', 6: 'Adar',
         7: 'Nisan', 8: 'Iyar', 9: 'Sivan', 10: 'Tammuz', 11: 'Av', 12: 'Elul'
+    };
+
+    // Hebrew month names (leap year)
+    const hebrewMonthNamesLeap: Record<number, string> = {
+        1: 'Tishrei', 2: 'Cheshvan', 3: 'Kislev', 4: 'Tevet', 5: 'Shevat', 6: 'Adar I',
+        7: 'Adar II', 8: 'Nisan', 9: 'Iyar', 10: 'Sivan', 11: 'Tammuz', 12: 'Av', 13: 'Elul'
+    };
+
+    // Get the correct month name based on whether it's a leap year
+    const getHebrewMonthName = (month: number) => {
+        if (currentHebrewDate.isLeapYear) {
+            return hebrewMonthNamesLeap[month] || 'Unknown';
+        }
+        return hebrewMonthNames[month] || 'Unknown';
     };
 
     useEffect(() => {
@@ -1158,7 +1199,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                 <div className="text-center py-8">
                     <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                     <p className="text-gray-600 dark:text-gray-400">
-                        No yahrzeits found for {hebrewMonthNames[selectedMonth]}.
+                        No yahrzeits found for {getHebrewMonthName(selectedMonth)}.
                     </p>
                     <div className="mt-4">
                         <Label htmlFor="hebrew-month-empty" className="text-sm font-medium">Select a Different Month</Label>
@@ -1168,7 +1209,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                             onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                             className="mt-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                         >
-                            {Object.entries(hebrewMonthNames).map(([num, name]) => (
+                            {Object.entries(currentHebrewDate.isLeapYear ? hebrewMonthNamesLeap : hebrewMonthNames).map(([num, name]) => (
                                 <option key={num} value={num}>
                                     {name} {parseInt(num) === currentHebrewDate.month ? '(Current)' : ''}
                                 </option>
@@ -1197,20 +1238,20 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
                                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                             >
-                                {Object.entries(hebrewMonthNames).map(([num, name]) => (
+                                {Object.entries(currentHebrewDate.isLeapYear ? hebrewMonthNamesLeap : hebrewMonthNames).map(([num, name]) => (
                                     <option key={num} value={num}>
                                         {name} {parseInt(num) === currentHebrewDate.month ? '(Current)' : ''}
                                     </option>
                                 ))}
                             </select>
                             <p className="text-xs text-gray-500">
-                                Found {yahrzeits.length} yahrzeit{yahrzeits.length !== 1 ? 's' : ''} for {hebrewMonthNames[selectedMonth]}
+                                Found {yahrzeits.length} yahrzeit{yahrzeits.length !== 1 ? 's' : ''} for {getHebrewMonthName(selectedMonth)}
                             </p>
                         </div>
 
                         <div>
                             <h3 className="font-medium text-lg mb-2">
-                                Yahrzeits for {hebrewMonthNames[selectedMonth]} ({yahrzeits.length} total)
+                                Yahrzeits for {getHebrewMonthName(selectedMonth)} ({yahrzeits.length} total)
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                                 Select the yahrzeits to include in the letters
@@ -1297,7 +1338,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                                                             </div>
                                                         )}
                                                         <div className="text-xs text-gray-500 mt-1">
-                                                            {hebrewMonthNames[yahrzeit.hebrew_month_of_death]} {yahrzeit.hebrew_day_of_death} • {yahrzeit.gregorian_date}
+                                                            {getHebrewMonthName(yahrzeit.hebrew_month_of_death)} {yahrzeit.hebrew_day_of_death} • {yahrzeit.gregorian_date}
                                                         </div>
                                                         <div className="text-xs text-gray-500">
                                                             {totalMembers} member{totalMembers !== 1 ? 's' : ''}

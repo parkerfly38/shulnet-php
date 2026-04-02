@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banner Messages - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees & Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html" class="active">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Banner Messages</h1>
+      
+      <p>The Banner Message System allows administrators to create and manage important announcements and notifications that display to members when they log in or visit their dashboard.</p>
+
+      <h2>Overview</h2>
+
+      <p>Banners are highly visible messages that appear at the top of pages to communicate important information to your members. They can be used for:</p>
+      
+      <ul>
+        <li>Important announcements (e.g., office closures, holiday schedules)</li>
+        <li>Urgent alerts (e.g., weather-related cancellations)</li>
+        <li>Success messages (e.g., successful event registrations)</li>
+        <li>Time-sensitive information (e.g., upcoming deadlines)</li>
+        <li>Call-to-action messages with links to specific pages or actions</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Banner management is only available to administrators. Regular members can view and interact with banners but cannot create or edit them.
+      </div>
+
+      <h2>Viewing Banners (All Users)</h2>
+
+      <p>As a member, you'll see active banners when you:</p>
+
+      <ul>
+        <li><strong>Log in:</strong> Banners configured to show on login will appear immediately</li>
+        <li><strong>Visit your dashboard:</strong> Dashboard banners will appear at the top of the page</li>
+        <li><strong>Use the mobile app:</strong> Banners are delivered via the API and displayed in the app</li>
+      </ul>
+
+      <h3>Banner Types</h3>
+
+      <p>Banners come in four types, each with distinct colors to indicate their purpose:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Color</th>
+            <th>Use Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Info</td>
+            <td>Blue</td>
+            <td>General information and announcements</td>
+          </tr>
+          <tr>
+            <td>Success</td>
+            <td>Green</td>
+            <td>Positive updates or confirmations</td>
+          </tr>
+          <tr>
+            <td>Warning</td>
+            <td>Yellow</td>
+            <td>Important notices that need attention</td>
+          </tr>
+          <tr>
+            <td>Error</td>
+            <td>Red</td>
+            <td>Critical alerts or urgent messages</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Interacting with Banners</h3>
+
+      <p>Depending on the banner configuration, you can:</p>
+
+      <ul>
+        <li><strong>Dismiss:</strong> Click the "×" button to hide banners you've already read</li>
+        <li><strong>Take Action:</strong> Click action buttons to navigate to relevant pages or resources</li>
+        <li><strong>View Automatically:</strong> Some banners auto-hide after a specified duration</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Tip:</strong> Once you dismiss a banner, it won't appear again. Make sure you've read important information before dismissing!
+      </div>
+
+      <h2>Managing Banners (Administrators)</h2>
+
+      <p>Administrators can create, edit, and manage banners from the admin dashboard.</p>
+
+      <h3>Accessing Banner Management</h3>
+
+      <ol class="steps">
+        <li>
+          <h4>Navigate to Banners</h4>
+          <p>From the admin dashboard, go to <strong>Admin &gt; Banners</strong> in the main menu.</p>
+        </li>
+
+        <li>
+          <h4>View Banner List</h4>
+          <p>You'll see a list of all banners with their status, type, and target audience.</p>
+        </li>
+      </ol>
+
+      <h3>Creating a New Banner</h3>
+
+      <ol class="steps">
+        <li>
+          <h4>Click "Create New Banner"</h4>
+          <p>On the banner management page, click the button to create a new banner.</p>
+        </li>
+
+        <li>
+          <h4>Enter Basic Information</h4>
+          <p>Fill in the following required fields:</p>
+          <ul>
+            <li><strong>Title:</strong> A short headline for the banner (e.g., "Office Closed Tomorrow")</li>
+            <li><strong>Message:</strong> The main content of the banner. HTML is supported for formatting.</li>
+            <li><strong>Type:</strong> Select Info, Success, Warning, or Error</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Choose Target Audience</h4>
+          <p>Select who should see this banner:</p>
+          <ul>
+            <li><strong>Members:</strong> Display to congregation members only</li>
+            <li><strong>Students:</strong> Display to students only (if using school features)</li>
+            <li><strong>Parents:</strong> Display to parents only (if using school features)</li>
+            <li><strong>All:</strong> Display to everyone</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Set Display Schedule</h4>
+          <p>Control when the banner appears:</p>
+          <ul>
+            <li><strong>Start Date:</strong> When the banner should start displaying</li>
+            <li><strong>End Date:</strong> (Optional) When the banner should stop displaying</li>
+            <li><strong>Display Duration:</strong> How long (in seconds) the banner shows before auto-hiding</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Configure Display Options</h4>
+          <p>Check the appropriate boxes:</p>
+          <ul>
+            <li><strong>Is Active:</strong> Enable or disable the banner</li>
+            <li><strong>Is Dismissible:</strong> Allow users to dismiss the banner</li>
+            <li><strong>Show on Login:</strong> Display immediately when users log in</li>
+            <li><strong>Show on Dashboard:</strong> Display on the user's dashboard</li>
+            <li><strong>Send as Push Notification:</strong> Send to mobile app users (if enabled)</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Add Action Button (Optional)</h4>
+          <p>Include a call-to-action button:</p>
+          <ul>
+            <li><strong>Action Button URL:</strong> Where the button should link to</li>
+            <li><strong>Action Button Text:</strong> What the button should say (e.g., "Learn More", "Register Now")</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Save the Banner</h4>
+          <p>Click "Save" to create the banner. It will immediately be active based on your settings.</p>
+        </li>
+      </ol>
+
+      <h3>Editing a Banner</h3>
+
+      <ol class="steps">
+        <li>
+          <h4>Locate the Banner</h4>
+          <p>Find the banner you want to edit in the banner list.</p>
+        </li>
+
+        <li>
+          <h4>Click "Edit"</h4>
+          <p>Click the edit button next to the banner.</p>
+        </li>
+
+        <li>
+          <h4>Make Changes</h4>
+          <p>Update any fields as needed.</p>
+        </li>
+
+        <li>
+          <h4>Save Changes</h4>
+          <p>Click "Update" to save your changes. They'll take effect immediately.</p>
+        </li>
+      </ol>
+
+      <h3>Toggling Banner Status</h3>
+
+      <p>You can quickly enable or disable banners without editing them:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Find the Banner</h4>
+          <p>Locate the banner in the list.</p>
+        </li>
+
+        <li>
+          <h4>Click Toggle Button</h4>
+          <p>Use the toggle switch or "Activate/Deactivate" button to change the status.</p>
+        </li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Tip:</strong> Deactivating a banner is useful when you want to temporarily hide it without deleting it. You can reactivate it later.
+      </div>
+
+      <h3>Deleting a Banner</h3>
+
+      <ol class="steps">
+        <li>
+          <h4>Locate the Banner</h4>
+          <p>Find the banner you want to delete.</p>
+        </li>
+
+        <li>
+          <h4>Click "Delete"</h4>
+          <p>Click the delete button.</p>
+        </li>
+
+        <li>
+          <h4>Confirm Deletion</h4>
+          <p>Confirm that you want to permanently delete the banner.</p>
+        </li>
+      </ol>
+
+      <div class="alert alert-danger">
+        <strong>Warning:</strong> Deleting a banner is permanent and cannot be undone. All statistics will also be deleted.
+      </div>
+
+      <h2>Banner Statistics</h2>
+
+      <p>Administrators can track how users interact with banners:</p>
+
+      <h3>Available Metrics</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>View Count</td>
+            <td>How many times the banner was displayed to users</td>
+          </tr>
+          <tr>
+            <td>Click Count</td>
+            <td>How many times users clicked the action button</td>
+          </tr>
+          <tr>
+            <td>Dismiss Count</td>
+            <td>How many times users dismissed the banner</td>
+          </tr>
+          <tr>
+            <td>Click-Through Rate</td>
+            <td>Percentage of views that resulted in clicks</td>
+          </tr>
+          <tr>
+            <td>Dismiss Rate</td>
+            <td>Percentage of views that were dismissed</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Viewing Statistics</h3>
+
+      <ol class="steps">
+        <li>
+          <h4>Open Banner Details</h4>
+          <p>Click on a banner in the list to view its details.</p>
+        </li>
+
+        <li>
+          <h4>Navigate to Statistics</h4>
+          <p>Look for the "Statistics" or "Analytics" section in the banner details.</p>
+        </li>
+
+        <li>
+          <h4>Review Metrics</h4>
+          <p>View engagement metrics to understand how users are interacting with the banner.</p>
+        </li>
+      </ol>
+
+      <h2>Best Practices</h2>
+
+      <h3>Creating Effective Banners</h3>
+
+      <ul>
+        <li><strong>Be Concise:</strong> Keep messages short and focused. Users should understand the message at a glance.</li>
+        <li><strong>Choose the Right Type:</strong> Match the banner type to the message urgency and importance.</li>
+        <li><strong>Use Action Buttons Wisely:</strong> Include clear calls-to-action when you want users to take specific steps.</li>
+        <li><strong>Set Appropriate Dates:</strong> Use start and end dates to automatically manage banner visibility.</li>
+        <li><strong>Target the Right Audience:</strong> Only show banners to users who need to see them.</li>
+      </ul>
+
+      <h3>When to Use Each Banner Type</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Good Use Cases</th>
+            <th>Avoid Using For</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Info (Blue)</td>
+            <td>New features, general updates, reminders</td>
+            <td>Urgent issues, errors</td>
+          </tr>
+          <tr>
+            <td>Success (Green)</td>
+            <td>Completed actions, positive news, achievements</td>
+            <td>Future events, warnings</td>
+          </tr>
+          <tr>
+            <td>Warning (Yellow)</td>
+            <td>Important deadlines, potential issues, changes</td>
+            <td>Good news, routine updates</td>
+          </tr>
+          <tr>
+            <td>Error (Red)</td>
+            <td>System outages, critical alerts, security issues</td>
+            <td>Regular announcements, minor issues</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Managing Multiple Banners</h3>
+
+      <ul>
+        <li><strong>Limit Active Banners:</strong> Too many banners can overwhelm users. Keep only the most important ones active.</li>
+        <li><strong>Prioritize by Urgency:</strong> Use the "Error" type sparingly for only the most critical messages.</li>
+        <li><strong>Update Regularly:</strong> Remove or deactivate outdated banners promptly.</li>
+        <li><strong>Test Before Publishing:</strong> Preview banners to ensure they display correctly.</li>
+      </ul>
+
+      <h2>Mobile App Integration</h2>
+
+      <p>Banners are automatically available in the ShulNET mobile app through the API.</p>
+
+      <h3>Push Notifications</h3>
+
+      <p>When enabled, banners can trigger push notifications to mobile users:</p>
+
+      <ul>
+        <li>Check <strong>"Send as Push Notification"</strong> when creating the banner</li>
+        <li>Mobile users will receive a notification even when not actively using the app</li>
+        <li>The banner will also display within the app when they open it</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> Push notifications require proper mobile app configuration. Contact your administrator if this feature isn't working.
+      </div>
+
+      <h2>WordPress Integration</h2>
+
+      <p>If your organization uses a WordPress website, the ShulNET WordPress plugin can display banners on your public site.</p>
+
+      <h3>Benefits</h3>
+
+      <ul>
+        <li>Consistent messaging across all platforms</li>
+        <li>Automatic updates from ShulNET</li>
+        <li>No need to duplicate content</li>
+        <li>Members see the same important messages everywhere</li>
+      </ul>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> WordPress integration requires the ShulNET Banner Feed plugin to be installed and configured on your WordPress site.
+      </div>
+
+      <h2>Troubleshooting</h2>
+
+      <h3>Banner Not Displaying</h3>
+
+      <p>If a banner isn't showing to users, check:</p>
+
+      <ul>
+        <li><strong>Is Active:</strong> Ensure the banner is activated</li>
+        <li><strong>Dates:</strong> Verify the current date is between start and end dates</li>
+        <li><strong>Target Audience:</strong> Confirm the user is in the selected audience</li>
+        <li><strong>Display Settings:</strong> Check that "Show on Dashboard" or "Show on Login" is enabled</li>
+      </ul>
+
+      <h3>Users Can't Dismiss Banner</h3>
+
+      <p>If users are unable to dismiss a banner:</p>
+
+      <ul>
+        <li>Verify that <strong>"Is Dismissible"</strong> is checked in the banner settings</li>
+        <li>Some banners may be intentionally non-dismissible for critical messages</li>
+      </ul>
+
+      <h3>Statistics Not Updating</h3>
+
+      <p>If statistics appear incorrect:</p>
+
+      <ul>
+        <li>Statistics are updated in real-time, but may have a slight delay</li>
+        <li>Refresh the page to see the latest data</li>
+        <li>Ensure users are properly authenticated when viewing banners</li>
+      </ul>
+
+      <h2>Related Resources</h2>
+
+      <ul>
+        <li><a href="email-campaigns.html">Email Campaigns</a> - Send targeted email messages to members</li>
+        <li><a href="content-management.html">Content Management</a> - Manage other types of content</li>
+        <li><a href="member-portal.html">Member Portal</a> - Learn more about the member experience</li>
+      </ul>
+
+    </main>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2026 ShulNET. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
