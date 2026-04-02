@@ -60,7 +60,6 @@ export default function AppSidebarLayout({
                 )}
                 {children}
             </AppContent>
-            {isAdmin && <AdminChatWidget />}
         </AppShell>
     );
 }
