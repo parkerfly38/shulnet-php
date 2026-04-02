@@ -41,7 +41,7 @@ export default function AppSidebarLayout({
         }
     };
     const { auth } = usePage<SharedData>().props;
-    const isAdmin = auth?.user?.roles?.includes('admin') ?? false;
+    const isAdmin = Array.isArray(auth?.user?.roles) && auth.user.roles.includes('admin');
 
     return (
         <AppShell variant="sidebar">
