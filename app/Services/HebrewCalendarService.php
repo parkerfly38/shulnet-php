@@ -63,10 +63,12 @@ class HebrewCalendarService
 
         if (empty($hebrewDate)) {
             // Fallback if conversion fails
+            $approxYear = (int) $year + 3760;
             return [
                 'day' => (int) $day,
                 'month' => $this->getHebrewMonthNumberApproximate((int) $month),
-                'year' => (int) $year + 3760, // Approximate Hebrew year
+                'year' => $approxYear,
+                'isLeapYear' => $this->isHebrewLeapYear($approxYear),
                 'formatted' => null,
             ];
         }
@@ -76,10 +78,12 @@ class HebrewCalendarService
 
         if (count($parts) !== 3) {
             // Fallback parsing
+            $approxYear = (int) $year + 3760;
             return [
                 'day' => (int) $day,
                 'month' => $this->getHebrewMonthNumberApproximate((int) $month),
-                'year' => (int) $year + 3760,
+                'year' => $approxYear,
+                'isLeapYear' => $this->isHebrewLeapYear($approxYear),
                 'formatted' => null,
             ];
         }
@@ -87,28 +91,33 @@ class HebrewCalendarService
         $hebrewMonth = (int) $parts[0];
         $hebrewDay = (int) $parts[1];
         $hebrewYear = (int) $parts[2];
+        $isLeapYear = $this->isHebrewLeapYear($hebrewYear);
 
         return [
             'day' => $hebrewDay,
             'month' => $hebrewMonth,
             'year' => $hebrewYear,
-            'formatted' => sprintf('%d %s %d', $hebrewDay, $this->getHebrewMonthName($hebrewMonth), $hebrewYear),
+            'isLeapYear' => $isLeapYear,
+            'formatted' => sprintf('%d %s %d', $hebrewDay, $this->getHebrewMonthName($hebrewMonth, $hebrewYear), $hebrewYear),
         ];
     }
 
     /**
      * Get Hebrew month name by number
+     * Takes Hebrew year into account to determine if it's a leap year
      */
-    private function getHebrewMonthName(int $monthNumber): string
+    private function getHebrewMonthName(int $monthNumber, int $hebrewYear): string
     {
-        // For months 1-12, use regular year names
-        // For month 13 (only in leap years), use leap year array
-        if ($monthNumber >= 1 && $monthNumber <= 12) {
+        // Check if this is a leap year to determine which array to use
+        $isLeapYear = $this->isHebrewLeapYear($hebrewYear);
+        
+        if ($isLeapYear) {
+            // Use leap year month names
+            return self::HEBREW_MONTHS_LEAP[$monthNumber] ?? 'Unknown';
+        } else {
+            // Use regular year month names
             return self::HEBREW_MONTHS[$monthNumber] ?? 'Unknown';
         }
-        
-        // Month 13 only exists in leap years (Elul)
-        return self::HEBREW_MONTHS_LEAP[$monthNumber] ?? 'Unknown';
     }
 
     /**

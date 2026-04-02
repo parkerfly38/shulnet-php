@@ -190,17 +190,6 @@ class BannerController extends Controller
      */
     public function apiPublicBanners(Request $request)
     {
-        // Simple API key validation (you should add this to your settings)
-        $apiKey = $request->header('X-API-Key') ?? $request->input('api_key');
-        
-        // Get expected API key from settings or environment
-        $expectedApiKey = config('services.banner_api_key') ?? env('BANNER_API_KEY');
-        
-        if (!$apiKey || $apiKey !== $expectedApiKey) {
-            return response()->json([
-                'message' => 'Invalid or missing API key.',
-            ], 401);
-        }
 
         // Get target audience from request (default to 'all')
         $targetAudience = $request->input('audience', 'all');

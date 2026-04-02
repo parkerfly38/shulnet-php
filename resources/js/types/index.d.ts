@@ -198,6 +198,35 @@ export interface EmailRecord {
     updated_at: string;
 }
 
+export interface Banner {
+    id: number;
+    title: string;
+    message: string;
+    type: 'info' | 'warning' | 'success' | 'error';
+    target_audience: 'members' | 'students' | 'parents' | 'all';
+    start_date: string;
+    end_date?: string;
+    display_duration_seconds: number;
+    is_active: boolean;
+    is_dismissible: boolean;
+    show_on_login: boolean;
+    show_on_dashboard: boolean;
+    send_as_push_notification: boolean;
+    push_notification_sent_at?: string;
+    action_url?: string;
+    action_text?: string;
+    created_by: number;
+    view_count: number;
+    click_count: number;
+    dismiss_count: number;
+    creator?: {
+        id: number;
+        name: string;
+    };
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Note {
     id: number;
     item_scope: string;
@@ -330,6 +359,7 @@ export interface HebrewDate {
     day: number;
     month: number;
     year: number;
+    isLeapYear: boolean;
     formatted: string;
 }
 
