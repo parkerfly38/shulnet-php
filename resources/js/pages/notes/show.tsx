@@ -18,7 +18,7 @@ export default function NoteShow({ note }: NoteShowProps) {
             href: '/dashboard',
         },
         {
-            title: 'Notes',
+            title: 'Notes & Tasks',
             href: '/admin/notes',
         },
         {

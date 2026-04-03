@@ -91,7 +91,7 @@ const adminNavItems: NavItem[] = [
         icon: Receipt,
     },
     {
-        title: 'Notes',
+        title: 'Notes & Tasks',
         href: '/admin/notes',
         icon: BookOpen,
     },
