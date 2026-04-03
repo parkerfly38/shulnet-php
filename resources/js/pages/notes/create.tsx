@@ -21,11 +21,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/dashboard',
   },
   {
-    title: 'Notes',
+    title: 'Notes & Tasks',
     href: '/admin/notes',
   },
   {
-    title: 'Create Note',
+    title: 'Create Note or Task',
     href: '/admin/notes/create',
   }
 ];
