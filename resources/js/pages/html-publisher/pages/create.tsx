@@ -121,7 +121,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                   <Label htmlFor="template">Template</Label>
                   <Select
                     value={data.template_id?.toString() || ''}
-                    onValueChange={(value) => setData('template_id', value ? parseInt(value) : null)}
+                    onValueChange={(value) => setData('template_id', value ? Number.parseInt(value) : null)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="No template" />
@@ -159,7 +159,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                     id="sort_order"
                     type="number"
                     value={data.sort_order}
-                    onChange={(e) => setData('sort_order', parseInt(e.target.value) || 0)}
+                    onChange={(e) => setData('sort_order', Number.parseInt(e.target.value) || 0)}
                   />
                   <p className="text-sm text-gray-500">For navigation ordering</p>
                 </div>

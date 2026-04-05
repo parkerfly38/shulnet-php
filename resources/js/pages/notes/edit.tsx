@@ -36,7 +36,7 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
             href: '/dashboard',
         },
         {
-            title: 'Notes',
+            title: 'Notes & Tasks',
             href: '/admin/notes',
         },
         {

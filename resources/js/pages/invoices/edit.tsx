@@ -20,11 +20,19 @@ interface Tier {
   billing_period?: string;
 }
 
+interface ChartOfAccount {
+  id: number;
+  account_code: string;
+  account_name: string;
+  account_type: string;
+}
+
 interface Props {
   invoice: Invoice;
   members: Member[];
   membershipTiers: Tier[];
   tuitionTiers: Tier[];
+  chartOfAccounts: ChartOfAccount[];
 }
 
 interface InvoiceItem {
@@ -32,6 +40,7 @@ interface InvoiceItem {
   quantity: string;
   unit_price: string;
   amount_paid: string;
+  gl_account_id?: string;
 }
 
 interface FormData {
@@ -50,7 +59,7 @@ interface FormData {
   items: InvoiceItem[];
 }
 
-export default function InvoicesEdit({ invoice, members, membershipTiers, tuitionTiers }: Readonly<Props>) {
+export default function InvoicesEdit({ invoice, members, membershipTiers, tuitionTiers, chartOfAccounts }: Readonly<Props>) {
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Invoices', href: '/admin/invoices' },
@@ -80,7 +89,8 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
       quantity: item.quantity,
       unit_price: item.unit_price,
       amount_paid: item.amount_paid || '0.00',
-    })) || [{ description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00' }],
+      gl_account_id: item.gl_account_id ? item.gl_account_id.toString() : '',
+    })) || [{ description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00', gl_account_id: '' }],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -89,12 +99,12 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
   };
 
   const addItem = () => {
-    setData('items', [...data.items, { description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00' }]);
+    setData('items', [...data.items, { description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00', gl_account_id: '' }]);
   };
 
   const removeItem = (index: number) => {
     const newItems = data.items.filter((_, i) => i !== index);
-    setData('items', newItems.length > 0 ? newItems : [{ description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00' }]);
+    setData('items', newItems.length > 0 ? newItems : [{ description: '', quantity: '1', unit_price: '0.00', amount_paid: '0.00', gl_account_id: '' }]);
   };
 
   const updateItem = (index: number, field: keyof InvoiceItem, value: string) => {
@@ -298,6 +308,28 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                       onChange={(e) => updateItem(index, 'unit_price', e.target.value)}
                       className={errors[`items.${index}.unit_price`] ? 'border-red-500' : ''}
                     />
+                  </div>
+                  <div className="w-56">
+                    <Label htmlFor={`item-${index}-gl_account_id`}>GL Account</Label>
+                    <Select 
+                      value={item.gl_account_id} 
+                      onValueChange={(value) => updateItem(index, 'gl_account_id', value)}
+                    >
+                      <SelectTrigger className={errors[`items.${index}.gl_account_id`] ? 'border-red-500' : ''}>
+                        <SelectValue placeholder="Select GL account" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value=" ">None</SelectItem>
+                        {chartOfAccounts.map((account) => (
+                          <SelectItem key={account.id} value={account.id.toString()}>
+                            {account.account_code} - {account.account_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors[`items.${index}.gl_account_id`] && (
+                      <p className="text-sm text-red-600 mt-1">{errors[`items.${index}.gl_account_id`]}</p>
+                    )}
                   </div>
                   <div className="w-32 pt-6">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">

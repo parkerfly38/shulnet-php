@@ -13,7 +13,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Notes',
+        title: 'Notes & Tasks',
         href: '/admin/notes',
     },
 ];
@@ -147,10 +147,10 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                            {filters.assigned ? 'My Notes' : 'Notes'}
+                            {filters.assigned ? 'My Notes & Tasks' : 'Notes & Tasks'}
                         </h1>
                         <p className="text-gray-600 dark:text-gray-400">
-                            {filters.assigned ? 'Notes assigned to you' : 'Manage notes and tasks'}
+                            {filters.assigned ? 'Notes and tasks assigned to you' : 'Manage notes and tasks'}
                         </p>
                     </div>
                     <div className="flex items-center space-x-2">

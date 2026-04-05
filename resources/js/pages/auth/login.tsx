@@ -1,5 +1,6 @@
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
+import { BannerDisplay } from '@/components/banner-display';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -9,7 +10,9 @@ import AuthLayout from '@/layouts/auth-layout';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, usePage, router } from '@inertiajs/react';
+import { type Banner } from '@/types';
+import axios from 'axios';
 
 interface LoginProps {
     status?: string;
@@ -22,12 +25,59 @@ export default function Login({
     canResetPassword,
     canRegister,
 }: LoginProps) {
+    const { loginBanners, auth } = usePage().props as any;
+    const banners = (loginBanners || []) as Banner[];
+    const isAuthenticated = !!auth?.user;
+
+    const handleBannerDismiss = async (bannerId: number) => {
+        if (isAuthenticated) {
+            try {
+                await axios.post(`/api/member/banners/${bannerId}/dismissed`);
+                router.reload({ only: ['loginBanners'] });
+            } catch (error) {
+                console.error('Failed to dismiss banner:', error);
+            }
+        }
+        // For unauthenticated users, dismissal is only client-side
+    };
+
+    const handleBannerView = async (bannerId: number) => {
+        if (isAuthenticated) {
+            try {
+                await axios.post(`/api/member/banners/${bannerId}/viewed`);
+            } catch (error) {
+                console.error('Failed to mark banner as viewed:', error);
+            }
+        }
+    };
+
+    const handleBannerClick = async (bannerId: number) => {
+        if (isAuthenticated) {
+            try {
+                await axios.post(`/api/member/banners/${bannerId}/clicked`);
+            } catch (error) {
+                console.error('Failed to mark banner as clicked:', error);
+            }
+        }
+    };
+
     return (
         <AuthLayout
             title="Log in to your account"
             description="Enter your email and password below to log in"
         >
             <Head title="Log in" />
+
+            {banners.length > 0 && (
+                <div className="mb-6">
+                    <BannerDisplay 
+                        banners={banners}
+                        onDismiss={handleBannerDismiss}
+                        onView={handleBannerView}
+                        onClick={handleBannerClick}
+                    />
+                </div>
+            )}
 
             <Form
                 {...store.form()}

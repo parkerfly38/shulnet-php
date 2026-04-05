@@ -88,7 +88,7 @@ class MemberController extends Controller
             'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:members,email',
+            'email' => 'nullable|email|unique:members,email',
             'phone1' => 'nullable|string|max:20',
             'phone2' => 'nullable|string|max:20',
             'address_line_1' => 'nullable|string|max:255',
@@ -223,7 +223,7 @@ class MemberController extends Controller
             'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('members')->ignore($member->id)],
+            'email' => ['nullable', 'email', Rule::unique('members')->ignore($member->id)],
             'phone1' => 'nullable|string|max:20',
             'phone2' => 'nullable|string|max:20',
             'address_line_1' => 'nullable|string|max:255',
@@ -299,13 +299,17 @@ class MemberController extends Controller
             'file' => 'required|file|mimes:csv,xlsx,xls|max:10240', // Max 10MB
         ]);
 
+        // Increase execution time and memory for large imports
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+
         try {
             $import = new MembersImport;
             Excel::import($import, $request->file('file'));
 
             $errors = $import->getErrors();
 
-            return back()->with([
+            return redirect()->route('members.index')->with([
                 'success' => sprintf(
                     'Import completed! %d members imported, %d updated.',
                     $import->getImported(),
@@ -314,7 +318,7 @@ class MemberController extends Controller
                 'import_errors' => $errors,
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Import failed: '.$e->getMessage());
+            return redirect()->route('members.index')->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 
@@ -350,6 +354,25 @@ class MemberController extends Controller
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
+            // Add a comment row explaining required/optional fields
+            fputcsv($file, [
+                'optional',
+                'REQUIRED',
+                'REQUIRED',
+                'optional (needed for user account)',
+                'optional',
+                'optional',
+                'optional: member, contact, prospect, or former',
+                'optional',
+                'optional',
+                'optional',
+                'optional',
+                'optional',
+                'optional',
+                'optional',
+                'optional',
+            ]);
+
             // Add a sample row
             fputcsv($file, [
                 'Mr.',
@@ -358,7 +381,7 @@ class MemberController extends Controller
                 'john.doe@example.com',
                 '555-1234',
                 '555-5678',
-                'individual',
+                'member',
                 '123 Main St',
                 'Apt 4B',
                 'Anytown',
@@ -451,7 +474,7 @@ class MemberController extends Controller
             'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:members,email',
+            'email' => 'nullable|email|unique:members,email',
             'phone1' => 'nullable|string|max:20',
             'phone2' => 'nullable|string|max:20',
             'address_line_1' => 'nullable|string|max:255',
@@ -499,7 +522,7 @@ class MemberController extends Controller
             'member_type' => ['sometimes', 'required', Rule::in(['member', 'contact', 'prospect', 'former'])],
             'first_name' => 'sometimes|required|string|max:255',
             'last_name' => 'sometimes|required|string|max:255',
-            'email' => ['sometimes', 'required', 'email', Rule::unique('members')->ignore($member->id)],
+            'email' => ['nullable', 'email', Rule::unique('members')->ignore($member->id)],
             'phone1' => 'nullable|string|max:20',
             'phone2' => 'nullable|string|max:20',
             'address_line_1' => 'nullable|string|max:255',
