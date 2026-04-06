@@ -33,7 +33,7 @@ export function BannerDisplay({ banners, onDismiss, onView, onClick }: Readonly<
   const handleActionClick = (banner: Banner) => {
     onClick?.(banner.id);
     if (banner.action_url) {
-      globalThis.location.href = banner.action_url;
+      window.location.assign(banner.action_url);
     }
   };
 

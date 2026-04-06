@@ -40,7 +40,7 @@ export default [
         },
     },
     {
-        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js'],
+        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js','wordpress-plugin'],
     },
     {
         files: ['**/*.{js,jsx,ts,tsx}'],
