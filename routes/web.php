@@ -1,17 +1,21 @@
 <?php
 
 use App\Http\Controllers\Admin\GabbaiController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeedController;
+use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\EmailCampaignController;
 use App\Http\Controllers\EmailSettingController;
 use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTicketTypeController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\GLBatchController;
 use App\Http\Controllers\GravesiteController;
 use App\Http\Controllers\HtmlAssetController;
 use App\Http\Controllers\HtmlPageController;
@@ -86,6 +90,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('admin/users', [UserController::class, 'index'])->name('admin.users');
 
+        // Member import routes (must be BEFORE resource routes)
+        Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
+        Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
+
         // Member management routes
         Route::resource('admin/members', MemberController::class, [
             'names' => [
@@ -98,10 +106,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'destroy' => 'members.destroy',
             ],
         ]);
-
-        // Member import routes
-        Route::post('admin/members/import', [MemberController::class, 'import'])->name('members.import');
-        Route::get('admin/members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
 
         // Member user creation route
         Route::post('admin/members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
@@ -268,6 +272,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/yahrzeits/{yahrzeit}/prepare-reminder', [YahrzeitController::class, 'prepareReminder'])->name('yahrzeits.prepare-reminder');
         Route::post('admin/yahrzeits/{yahrzeit}/send-reminder', [YahrzeitController::class, 'sendReminder'])->name('yahrzeits.send-reminder');
         Route::get('admin/yahrzeits/{yahrzeit}/print-reminder', [YahrzeitController::class, 'printReminder'])->name('yahrzeits.print-reminder');
+
+        // Monthly yahrzeit letters workflow
+        Route::get('admin/yahrzeits/monthly/prepare', [YahrzeitController::class, 'prepareMonthlyLetters'])->name('yahrzeits.monthly.prepare');
+        Route::post('admin/yahrzeits/monthly/send', [YahrzeitController::class, 'sendMonthlyReminders'])->name('yahrzeits.monthly.send');
+        Route::post('admin/yahrzeits/monthly/print', [YahrzeitController::class, 'printMonthlyLetters'])->name('yahrzeits.monthly.print');
+
+        // Banner management routes
+        Route::resource('admin/banners', BannerController::class, [
+            'names' => [
+                'index' => 'banners.index',
+                'create' => 'banners.create',
+                'store' => 'banners.store',
+                'show' => 'banners.show',
+                'edit' => 'banners.edit',
+                'update' => 'banners.update',
+                'destroy' => 'banners.destroy',
+            ],
+        ]);
+        Route::post('admin/banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])->name('banners.toggle-active');
 
         // Calendar management routes
         Route::resource('admin/calendars', CalendarController::class, [
@@ -457,6 +480,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('admin.reports.payment-methods');
         Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('admin.reports.budget-vs-actual');
 
+        // GL Batch Export routes
+        Route::get('admin/gl-batch', [GLBatchController::class, 'index'])->name('admin.gl-batch.index');
+        Route::get('admin/gl-batch/export', [GLBatchController::class, 'export'])->name('admin.gl-batch.export');
+        Route::get('admin/gl-batch/summary', [GLBatchController::class, 'summary'])->name('admin.gl-batch.summary');
+
+        // Chart of Accounts management routes
+        Route::resource('admin/chart-of-accounts', ChartOfAccountController::class, [
+            'names' => [
+                'index' => 'admin.chart-of-accounts.index',
+                'create' => 'admin.chart-of-accounts.create',
+                'store' => 'admin.chart-of-accounts.store',
+                'edit' => 'admin.chart-of-accounts.edit',
+                'update' => 'admin.chart-of-accounts.update',
+                'destroy' => 'admin.chart-of-accounts.destroy',
+            ],
+        ])->except(['show']);
+
         // Gabbai UI pages (Inertia)
         Route::get('admin/gabbai', function () {
             return Inertia::render('admin/gabbai/dashboard');
@@ -631,6 +671,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/notifications/mark-seen', [NoteController::class, 'markAllSeen'])->name('notifications.mark-seen');
     });
 });
+// Device token management (authenticated users)
+Route::middleware(['auth:sanctum'])->prefix('api/device-tokens')->group(function () {
+    Route::get('/', [DeviceTokenController::class, 'index'])->name('api.device-tokens.index');
+    Route::post('/register', [DeviceTokenController::class, 'register'])->name('api.device-tokens.register');
+    Route::post('/unregister', [DeviceTokenController::class, 'unregister'])->name('api.device-tokens.unregister');
+});
 
 // API routes for admin functionality
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api/admin')->group(function () {
@@ -757,6 +803,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('api')->group(function
     
     // Email record API routes
     Route::post('emails/record', [\App\Http\Controllers\EmailRecordController::class, 'store'])->name('api.emails.record');
+    
+    // Banner management API routes (admin only)
+    Route::get('banners/push-notifications', [BannerController::class, 'apiGetPushNotificationBanners'])->name('api.banners.push-notifications');
+    Route::post('banners/{banner}/push-notification-sent', [BannerController::class, 'apiMarkPushNotificationSent'])->name('api.banners.push-notification-sent');
+    Route::get('banners/{banner}/statistics', [BannerController::class, 'apiGetStatistics'])->name('api.banners.statistics');
 });
 
 // Member Portal API routes (for React Native app)
@@ -769,6 +820,12 @@ Route::middleware(['auth:sanctum'])->prefix('api/member')->group(function () {
     Route::post('invoices/{id}/pay', [MemberDashboardController::class, 'apiPayInvoice'])->name('api.member.invoices.pay');
     Route::get('students', [MemberDashboardController::class, 'apiStudents'])->name('api.member.students');
     Route::get('yahrzeits', [MemberDashboardController::class, 'apiYahrzeits'])->name('api.member.yahrzeits');
+    
+    // Banner API routes for members
+    Route::get('banners', [BannerController::class, 'apiGetActiveBanners'])->name('api.member.banners');
+    Route::post('banners/{banner}/viewed', [BannerController::class, 'apiMarkAsViewed'])->name('api.member.banners.viewed');
+    Route::post('banners/{banner}/dismissed', [BannerController::class, 'apiMarkAsDismissed'])->name('api.member.banners.dismissed');
+    Route::post('banners/{banner}/clicked', [BannerController::class, 'apiMarkAsClicked'])->name('api.member.banners.clicked');
 });
 
 // Admin Dashboard API routes (for mobile apps)
@@ -860,5 +917,8 @@ Route::get('campaigns/{campaign}/unsubscribe/{member}', [EmailCampaignController
 
 // Public form routes (no auth required)
 Route::post('forms/{form}/submit', [FormController::class, 'submit'])->name('forms.submit');
+
+// Public banner API for WordPress plugin (requires API key)
+Route::get('api/public/banners', [BannerController::class, 'apiPublicBanners'])->name('api.public.banners');
 
 require __DIR__.'/settings.php';

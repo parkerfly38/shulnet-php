@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\InvoiceMail;
+use App\Models\ChartOfAccount;
 use App\Models\Invoice;
 use App\Models\Member;
 use App\Models\MembershipTier;
@@ -106,11 +107,17 @@ class InvoiceController extends Controller
             ->select('id', 'name', 'description', 'price', 'billing_period')
             ->get();
 
+        $chartOfAccounts = ChartOfAccount::active()
+            ->orderBy('account_code')
+            ->select('id', 'account_code', 'account_name', 'account_type')
+            ->get();
+
         return Inertia::render('invoices/create', [
             'members' => $members,
             'selectedMember' => $request->get('member'),
             'membershipTiers' => $membershipTiers,
             'tuitionTiers' => $tuitionTiers,
+            'chartOfAccounts' => $chartOfAccounts,
         ]);
     }
 
@@ -163,6 +170,7 @@ class InvoiceController extends Controller
                 'unit_price' => $itemData['unit_price'],
                 'total' => $total,
                 'amount_paid' => $itemData['amount_paid'] ?? 0,
+                'gl_account_id' => $itemData['gl_account_id'] ?? null,
                 'sort_order' => $index,
             ]);
             $subtotal += $total;
@@ -228,11 +236,17 @@ class InvoiceController extends Controller
             ->select('id', 'name', 'description', 'price', 'billing_period')
             ->get();
 
+        $chartOfAccounts = ChartOfAccount::active()
+            ->orderBy('account_code')
+            ->select('id', 'account_code', 'account_name', 'account_type')
+            ->get();
+
         return Inertia::render('invoices/edit', [
             'invoice' => $invoice,
             'members' => $members,
             'membershipTiers' => $membershipTiers,
             'tuitionTiers' => $tuitionTiers,
+            'chartOfAccounts' => $chartOfAccounts,
         ]);
     }
 
@@ -258,6 +272,7 @@ class InvoiceController extends Controller
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
             'items.*.amount_paid' => 'nullable|numeric|min:0',
+            'items.*.gl_account_id' => 'nullable|exists:chart_of_accounts,id',
         ]);
 
         // Calculate next invoice date if recurring changed
@@ -288,6 +303,7 @@ class InvoiceController extends Controller
                 'unit_price' => $itemData['unit_price'],
                 'total' => $total,
                 'amount_paid' => $itemData['amount_paid'] ?? 0,
+                'gl_account_id' => $itemData['gl_account_id'] ?? null,
                 'sort_order' => $index,
             ]);
             $subtotal += $total;

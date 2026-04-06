@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes & Tasks - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees & Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html" class="active">Notes & Tasks</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Notes & Tasks</h1>
+      
+      <p class="lead">The Notes & Tasks feature helps you organize work, track to-dos, and keep important information accessible. Create reminders, assign tasks to team members, and ensure nothing falls through the cracks.</p>
+
+      <h2>Overview</h2>
+      
+      <p>Notes & Tasks is a flexible system for managing all types of reminders and action items within your organization. Whether you need to follow up with a member, coordinate committee work, or track building maintenance, this feature keeps everything organized in one place.</p>
+
+      <h2>Accessing Notes & Tasks</h2>
+      
+      <p>To access the Notes & Tasks section:</p>
+      
+      <ol>
+        <li>Log in to your ShulNET account</li>
+        <li>Navigate to <strong>Notes & Tasks</strong> from the admin menu</li>
+        <li>You'll see a dashboard with statistics and a list of all notes/tasks</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Tip:</strong> You can filter to view only tasks assigned to you by clicking "My Notes & Tasks" or using the assigned filter.
+      </div>
+
+      <h2>Creating a Note or Task</h2>
+      
+      <p>To create a new note or task:</p>
+      
+      <ol>
+        <li>Click the <strong>Add Note</strong> button</li>
+        <li>Fill in the required information:
+          <ul>
+            <li><strong>Name:</strong> A brief title for the note/task</li>
+            <li><strong>Note Text:</strong> Detailed description or instructions</li>
+            <li><strong>Deadline Date:</strong> (Optional) When the task should be completed</li>
+            <li><strong>Priority:</strong> Low, Medium, or High</li>
+            <li><strong>Label:</strong> Category tag like "Financial", "Meetings", "Technology", etc.</li>
+            <li><strong>Visibility:</strong> Who can see this note (Admin, Member, or Broadcast)</li>
+          </ul>
+        </li>
+        <li>Optionally assign the task to:
+          <ul>
+            <li>A specific user (staff member or volunteer)</li>
+            <li>A specific member</li>
+          </ul>
+        </li>
+        <li>Click <strong>Create Note</strong></li>
+      </ol>
+
+      <h2>Note Properties</h2>
+
+      <div class="card">
+        <h3>Priority Levels</h3>
+        <ul>
+          <li><strong>High:</strong> Urgent items requiring immediate attention</li>
+          <li><strong>Medium:</strong> Important but not urgent tasks</li>
+          <li><strong>Low:</strong> Items to address when time permits</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Visibility Settings</h3>
+        <ul>
+          <li><strong>Admin:</strong> Only visible to administrators</li>
+          <li><strong>Member:</strong> Visible to the assigned member</li>
+          <li><strong>Broadcast:</strong> Visible to all relevant parties</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Item Scope</h3>
+        <ul>
+          <li><strong>User:</strong> Task related to a staff member or admin</li>
+          <li><strong>Member:</strong> Task related to a specific congregation member</li>
+          <li><strong>Contact:</strong> Task related to an external contact</li>
+        </ul>
+      </div>
+
+      <h2>Managing Notes & Tasks</h2>
+
+      <h3>Viewing a Note</h3>
+      <p>Click on any note to view its full details, including all properties, assigned parties, and completion status.</p>
+
+      <h3>Editing a Note</h3>
+      <ol>
+        <li>Open the note you want to edit</li>
+        <li>Click the <strong>Edit</strong> button</li>
+        <li>Make your changes</li>
+        <li>Click <strong>Update Note</strong></li>
+      </ol>
+
+      <h3>Marking a Task Complete</h3>
+      <p>To mark a task as complete:</p>
+      <ol>
+        <li>Open the note/task</li>
+        <li>Click <strong>Mark Complete</strong></li>
+        <li>The completion date will be automatically recorded</li>
+      </ol>
+
+      <div class="alert alert-success">
+        <strong>Completed tasks</strong> remain in the system for record-keeping but are visually distinguished with a completed badge.
+      </div>
+
+      <h3>Deleting a Note</h3>
+      <p>To delete a note:</p>
+      <ol>
+        <li>Open the note you want to delete</li>
+        <li>Click the <strong>Delete</strong> button</li>
+        <li>Confirm the deletion</li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Warning:</strong> Deleted notes cannot be recovered. Make sure you really want to delete before confirming.
+      </div>
+
+      <h2>Calendar Integration</h2>
+      
+      <p>Tasks with deadlines can be added to your personal calendar:</p>
+      
+      <ol>
+        <li>Find a task with a deadline date</li>
+        <li>Click the calendar icon next to the task</li>
+        <li>Download the ICS file</li>
+        <li>Import it into your calendar application (Google Calendar, Outlook, Apple Calendar, etc.)</li>
+      </ol>
+
+      <p>This creates a calendar event for the deadline, helping you stay on track with your tasks.</p>
+
+      <h2>Dashboard Statistics</h2>
+      
+      <p>The Notes & Tasks dashboard shows helpful statistics:</p>
+      
+      <ul>
+        <li><strong>Total Notes:</strong> All notes and tasks in the system</li>
+        <li><strong>Pending:</strong> Tasks not yet completed</li>
+        <li><strong>Completed:</strong> Tasks that have been marked complete</li>
+        <li><strong>Overdue:</strong> Tasks past their deadline that haven't been completed</li>
+      </ul>
+
+      <h2>Search and Filtering</h2>
+      
+      <p>Use the search bar to find specific notes by:</p>
+      <ul>
+        <li>Note name/title</li>
+        <li>Note text content</li>
+      </ul>
+
+      <p>Additional filters available:</p>
+      <ul>
+        <li><strong>Assigned to me:</strong> Show only tasks assigned to you</li>
+        <li><strong>Priority:</strong> Filter by Low, Medium, or High priority</li>
+        <li><strong>Visibility:</strong> Filter by visibility setting</li>
+      </ul>
+
+      <h2>Common Use Cases</h2>
+
+      <div class="card">
+        <h3>Member Follow-ups</h3>
+        <p>Create a note when you need to follow up with a member about dues, event attendance, or other matters. Set a deadline and assign it to the appropriate staff member.</p>
+        <p><em>Example:</em> "Follow up with Sarah Cohen about outstanding membership dues - she mentioned financial difficulties but wants to continue membership."</p>
+      </div>
+
+      <div class="card">
+        <h3>Meeting Coordination</h3>
+        <p>Track meetings that need to be scheduled with the Rabbi, board members, or committee chairs.</p>
+        <p><em>Example:</em> "Schedule quarterly meeting with Rabbi to discuss High Holiday planning."</p>
+      </div>
+
+      <div class="card">
+        <h3>Building Maintenance</h3>
+        <p>Keep track of maintenance issues and repairs needed around the building.</p>
+        <p><em>Example:</em> "HVAC system making unusual noise in sanctuary - schedule inspection."</p>
+      </div>
+
+      <div class="card">
+        <h3>Event Planning</h3>
+        <p>Create tasks for all the steps involved in planning an event, from booking vendors to sending reminders.</p>
+        <p><em>Example:</em> "Send Passover Seder registration reminder emails 2 weeks before event."</p>
+      </div>
+
+      <div class="card">
+        <h3>Committee Organization</h3>
+        <p>Track action items from committee meetings and assign them to specific members.</p>
+        <p><em>Example:</em> "Contact three catering vendors for quotes - assigned to Events Committee chair."</p>
+      </div>
+
+      <h2>Best Practices</h2>
+
+      <div class="card">
+        <h4>Use Clear, Descriptive Titles</h4>
+        <p>Write note names that clearly describe what needs to be done. This makes it easier to scan your task list at a glance.</p>
+        <p>✅ Good: "Call David Levy about board meeting RSVP"<br>
+        ❌ Poor: "Call David"</p>
+      </div>
+
+      <div class="card">
+        <h4>Set Realistic Deadlines</h4>
+        <p>Include deadline dates for time-sensitive tasks, but make sure they're achievable. Overdue tasks can create stress and clutter.</p>
+      </div>
+
+      <div class="card">
+        <h4>Use Labels Consistently</h4>
+        <p>Develop a standard set of labels for your organization (Financial, Events, Maintenance, etc.) and use them consistently to make filtering easier.</p>
+      </div>
+
+      <div class="card">
+        <h4>Add Detailed Notes</h4>
+        <p>Include context in the note text field. Future you (or your colleagues) will appreciate the details when following up weeks or months later.</p>
+      </div>
+
+      <div class="card">
+        <h4>Mark Tasks Complete Promptly</h4>
+        <p>Keep your task list current by marking items complete as soon as they're done. This helps you track progress and maintains accurate statistics.</p>
+      </div>
+
+      <div class="card">
+        <h4>Review Regularly</h4>
+        <p>Set aside time weekly to review your notes and tasks, update deadlines, and mark completed items.</p>
+      </div>
+
+      <h2>Tips & Troubleshooting</h2>
+
+      <div class="card">
+        <h4>Can't Find a Note?</h4>
+        <p>Use the search feature to find notes by keyword. You can search both titles and note text content.</p>
+      </div>
+
+      <div class="card">
+        <h4>Too Many Overdue Tasks?</h4>
+        <p>Review overdue tasks and either complete them, delete them if no longer relevant, or update the deadline to a more realistic date.</p>
+      </div>
+
+      <div class="card">
+        <h4>Notification Not Showing?</h4>
+        <p>If you've been assigned a task but don't see a notification, check that the visibility is set appropriately and that you're the assigned user.</p>
+      </div>
+
+      <h2>API Access</h2>
+
+      <p>For developers and integrations, the Notes & Tasks feature is fully accessible via the ShulNET API. See the <a href="api-access.html">API Access</a> documentation for details.</p>
+
+      <div class="alert alert-info">
+        <strong>Need Help?</strong> If you have questions about using Notes & Tasks, contact your system administrator or refer to the main <a href="index.html">documentation home</a>.
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -43,6 +43,12 @@ export default function ReportsIndex() {
         end_date: '',
     });
 
+    const [glBatchFilters, setGlBatchFilters] = useState({
+        start_date: '',
+        end_date: '',
+        batch_number: '',
+    });
+
     const handleExport = (endpoint: string, filters: Record<string, any>) => {
         // Create a form element
         const form = document.createElement('form');
@@ -74,7 +80,7 @@ export default function ReportsIndex() {
         // Submit form
         document.body.appendChild(form);
         form.submit();
-        document.body.removeChild(form);
+        form.remove();
     };
 
     return (
@@ -350,6 +356,86 @@ export default function ReportsIndex() {
                                 <Download className="mr-2 h-4 w-4" />
                                 Export Yahrzeit Calendar
                             </Button>
+                        </CardContent>
+                    </Card>
+
+                    {/* GL Batch Export */}
+                    <Card className="border-green-500">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <DollarSign className="h-5 w-5 text-green-600" />
+                                <CardTitle>GL Batch Export</CardTitle>
+                            </div>
+                            <CardDescription>
+                                Export transactions by date range mapped to your Chart of Accounts for QuickBooks or other accounting software
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-start-date">Start Date *</Label>
+                                    <Input
+                                        id="gl-start-date"
+                                        type="date"
+                                        required
+                                        value={glBatchFilters.start_date}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, start_date: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-end-date">End Date *</Label>
+                                    <Input
+                                        id="gl-end-date"
+                                        type="date"
+                                        required
+                                        value={glBatchFilters.end_date}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, end_date: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-batch-number">Batch Number (Optional)</Label>
+                                    <Input
+                                        id="gl-batch-number"
+                                        placeholder="e.g., 2026-03-001"
+                                        value={glBatchFilters.batch_number}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, batch_number: e.target.value })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <Button
+                                    onClick={() => {
+                                        const params = new URLSearchParams();
+                                        if (glBatchFilters.start_date) params.append('start_date', glBatchFilters.start_date);
+                                        if (glBatchFilters.end_date) params.append('end_date', glBatchFilters.end_date);
+                                        if (glBatchFilters.batch_number) params.append('batch_number', glBatchFilters.batch_number);
+                                        
+                                        globalThis.location.href = `/admin/gl-batch/export?${params.toString()}`;
+                                    }}
+                                    disabled={!glBatchFilters.start_date || !glBatchFilters.end_date}
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Export GL Batch
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => router.visit('/admin/chart-of-accounts')}
+                                    className="w-full sm:w-auto"
+                                >
+                                    Manage Chart of Accounts
+                                </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                                Note: Only transactions with assigned GL account codes will be included in the export.
+                                Configure your Chart of Accounts and assign accounts to invoice items for accurate GL reporting.
+                            </p>
                         </CardContent>
                     </Card>
                 </div>

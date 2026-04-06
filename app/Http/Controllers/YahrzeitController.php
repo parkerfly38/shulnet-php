@@ -38,8 +38,8 @@ class YahrzeitController extends Controller
             }])
             ->select([
                 'id', 'name', 'hebrew_name', 'date_of_death',
-                'hebrew_day_of_death', 'hebrew_month_of_death', 'observance_type',
-                'notes', 'created_at', 'updated_at',
+                'hebrew_day_of_death', 'hebrew_month_of_death', 'hebrew_year_of_death',
+                'observance_type', 'notes', 'created_at', 'updated_at',
             ])
             ->orderBy('hebrew_month_of_death')
             ->orderBy('hebrew_day_of_death')
@@ -59,6 +59,24 @@ class YahrzeitController extends Controller
         }
 
         $yahrzeits = $query->paginate($perPage);
+        
+        // Calculate next observance date for each yahrzeit
+        $yahrzeits->getCollection()->transform(function ($yahrzeit) {
+            try {
+                if ($yahrzeit->hebrew_day_of_death && $yahrzeit->hebrew_month_of_death) {
+                    $yahrzeit->next_observance_date = $this->hebrewCalendar->getNextYahrzeitDate(
+                        $yahrzeit->hebrew_day_of_death,
+                        $yahrzeit->hebrew_month_of_death
+                    );
+                } else {
+                    $yahrzeit->next_observance_date = null;
+                }
+            } catch (\Exception $e) {
+                // If calculation fails, set to null
+                $yahrzeit->next_observance_date = null;
+            }
+            return $yahrzeit;
+        });
 
         return Inertia::render('yahrzeits/index', [
             'yahrzeits' => $yahrzeits,
@@ -134,6 +152,26 @@ class YahrzeitController extends Controller
                 ->withPivot('relationship');
         }]);
 
+        // Calculate next and previous observance dates
+        try {
+            if ($yahrzeit->hebrew_day_of_death && $yahrzeit->hebrew_month_of_death) {
+                $yahrzeit->next_observance_date = $this->hebrewCalendar->getNextYahrzeitDate(
+                    $yahrzeit->hebrew_day_of_death,
+                    $yahrzeit->hebrew_month_of_death
+                );
+                $yahrzeit->previous_observance_date = $this->hebrewCalendar->getPreviousYahrzeitDate(
+                    $yahrzeit->hebrew_day_of_death,
+                    $yahrzeit->hebrew_month_of_death
+                );
+            } else {
+                $yahrzeit->next_observance_date = null;
+                $yahrzeit->previous_observance_date = null;
+            }
+        } catch (\Exception $e) {
+            $yahrzeit->next_observance_date = null;
+            $yahrzeit->previous_observance_date = null;
+        }
+
         return Inertia::render('yahrzeits/show', [
             'yahrzeit' => $yahrzeit,
         ]);
@@ -171,7 +209,7 @@ class YahrzeitController extends Controller
                 }),
                 'name' => $yahrzeit->name,
                 'hebrew_name' => $yahrzeit->hebrew_name,
-                'date_of_death' => $yahrzeit->date_of_death->format('Y-m-d'),
+                'date_of_death' => $yahrzeit->date_of_death?->format('Y-m-d'),
                 'hebrew_day_of_death' => $yahrzeit->hebrew_day_of_death,
                 'hebrew_month_of_death' => $yahrzeit->hebrew_month_of_death,
                 'observance_type' => $yahrzeit->observance_type,
@@ -270,6 +308,10 @@ class YahrzeitController extends Controller
             'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
         ]);
 
+        // Increase time and memory limits for large imports
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+
         try {
             $import = new YahrzeitsImport($this->hebrewCalendar);
             Excel::import($import, $request->file('file'));
@@ -285,7 +327,7 @@ class YahrzeitController extends Controller
                 'import_errors' => $errors,
             ]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Import failed: '.$e->getMessage());
+            return redirect()->route('yahrzeits.index')->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 
@@ -299,21 +341,34 @@ class YahrzeitController extends Controller
             'Content-Disposition' => 'attachment; filename="yahrzeits-import-template.csv"',
         ];
 
-        $columns = ['name', 'hebrew_name', 'date_of_death', 'observance_type', 'notes', 'member_email', 'relationship'];
+        $columns = ['name', 'hebrew_name', 'date_of_death', 'hebrew_day_of_death', 'hebrew_month_of_death', 'hebrew_year_of_death', 'observance_type', 'notes'];
 
         $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
+
+            // Add comment row with field requirements
+            fputcsv($file, [
+                'REQUIRED',
+                'Optional',
+                'Optional (YYYY-MM-DD) - Required if Hebrew dates not provided',
+                'Optional (1-30) - Required if date_of_death not provided',
+                'Optional (1-13 or name like Tishrei, Adar I, Adar II) - Required if date_of_death not provided',
+                'Optional (e.g. 5780)',
+                'Optional (standard/kaddish/memorial_candle/other)',
+                'Optional',
+            ]);
 
             // Add sample row
             fputcsv($file, [
                 'John Doe',
                 'יוחנן בן דוד',
                 '2020-01-15',
+                '20',
+                'Tevet',
+                '5780',
                 'standard',
                 'Optional notes about the deceased',
-                'member@example.com',
-                'Father',
             ]);
 
             fclose($file);
@@ -389,6 +444,169 @@ class YahrzeitController extends Controller
             'yahrzeit' => $yahrzeit,
             'members' => $yahrzeit->members,
             'gregorianDate' => $validated['gregorian_date'],
+        ]);
+    }
+
+    /**
+     * Prepare monthly yahrzeit letters data
+     */
+    public function prepareMonthlyLetters(Request $request)
+    {
+        // Get current Hebrew month as default
+        $currentHebrewDate = $this->hebrewCalendar->getCurrentHebrewDate();
+        
+        // Allow month to be specified, default to current month
+        $selectedMonth = $request->get('month', $currentHebrewDate['month']);
+
+        // Get all yahrzeits for the selected Hebrew month
+        $yahrzeits = Yahrzeit::where('hebrew_month_of_death', $selectedMonth)
+            ->with(['members' => function ($query) {
+                $query->withPivot('relationship');
+            }])
+            ->orderBy('hebrew_day_of_death')
+            ->get();
+
+        // Prepare data with Gregorian dates
+        $yahrzeitsData = $yahrzeits->map(function ($yahrzeit) {
+            $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
+                $yahrzeit->hebrew_day_of_death,
+                $yahrzeit->hebrew_month_of_death
+            );
+
+            return [
+                'id' => $yahrzeit->id,
+                'name' => $yahrzeit->name,
+                'hebrew_name' => $yahrzeit->hebrew_name,
+                'hebrew_day_of_death' => $yahrzeit->hebrew_day_of_death,
+                'hebrew_month_of_death' => $yahrzeit->hebrew_month_of_death,
+                'date_of_death' => $yahrzeit->date_of_death,
+                'observance_type' => $yahrzeit->observance_type,
+                'notes' => $yahrzeit->notes,
+                'gregorian_date' => $gregorianDate,
+                'members' => $yahrzeit->members->map(function ($member) {
+                    return [
+                        'id' => $member->id,
+                        'first_name' => $member->first_name,
+                        'last_name' => $member->last_name,
+                        'email' => $member->email,
+                        'relationship' => $member->pivot->relationship,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json([
+            'yahrzeits' => $yahrzeitsData,
+            'hebrew_month' => $selectedMonth,
+            'hebrew_date' => $currentHebrewDate,
+        ]);
+    }
+
+    /**
+     * Send monthly yahrzeit reminder emails
+     */
+    public function sendMonthlyReminders(Request $request)
+    {
+        $validated = $request->validate([
+            'yahrzeit_ids' => 'required|array',
+            'yahrzeit_ids.*' => 'exists:yahrzeit,id',
+            'month' => 'nullable|integer|min:1|max:12',
+        ]);
+
+        $successCount = 0;
+        $failedCount = 0;
+        $errors = [];
+
+        foreach ($validated['yahrzeit_ids'] as $yahrzeitId) {
+            $yahrzeit = Yahrzeit::with('members')->find($yahrzeitId);
+
+            if (!$yahrzeit) {
+                continue;
+            }
+
+            // Calculate Gregorian date
+            $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
+                $yahrzeit->hebrew_day_of_death,
+                $yahrzeit->hebrew_month_of_death
+            );
+
+            // Send email to each member with an email address
+            foreach ($yahrzeit->members as $member) {
+                if ($member->email) {
+                    try {
+                        Mail::to($member->email)->send(
+                            new YahrzeitReminderMail(
+                                $yahrzeit,
+                                $gregorianDate,
+                                $member->first_name.' '.$member->last_name
+                            )
+                        );
+                        $successCount++;
+                    } catch (\Exception $e) {
+                        $failedCount++;
+                        $errors[] = "Failed to send to {$member->email}: {$e->getMessage()}";
+                    }
+                }
+            }
+        }
+
+        if ($failedCount > 0) {
+            return back()->with('warning', "Sent {$successCount} emails. {$failedCount} failed. ".implode(' ', $errors));
+        }
+
+        return back()->with('success', "Successfully sent {$successCount} yahrzeit reminder emails.");
+    }
+
+    /**
+     * Print monthly yahrzeit letters (all in one PDF)
+     */
+    public function printMonthlyLetters(Request $request)
+    {
+        $validated = $request->validate([
+            'yahrzeit_ids' => 'required|array',
+            'yahrzeit_ids.*' => 'exists:yahrzeit,id',
+            'month' => 'nullable|integer|min:1|max:12',
+        ]);
+
+        // Get Hebrew month for the title
+        $currentHebrewDate = $this->hebrewCalendar->getCurrentHebrewDate();
+        $selectedMonth = $validated['month'] ?? $currentHebrewDate['month'];
+        
+        $hebrewMonthNames = [
+            1 => 'Tishrei', 2 => 'Cheshvan', 3 => 'Kislev', 4 => 'Tevet',
+            5 => 'Shevat', 6 => 'Adar', 7 => 'Nisan', 8 => 'Iyar',
+            9 => 'Sivan', 10 => 'Tammuz', 11 => 'Av', 12 => 'Elul'
+        ];
+
+        // Get all yahrzeits with their members
+        $yahrzeits = Yahrzeit::whereIn('id', $validated['yahrzeit_ids'])
+            ->with(['members' => function ($query) {
+                $query->withPivot('relationship');
+            }])
+            ->orderBy('hebrew_day_of_death')
+            ->get();
+
+        // Prepare data with Gregorian dates
+        $lettersData = [];
+
+        foreach ($yahrzeits as $yahrzeit) {
+            $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
+                $yahrzeit->hebrew_day_of_death,
+                $yahrzeit->hebrew_month_of_death
+            );
+
+            foreach ($yahrzeit->members as $member) {
+                $lettersData[] = [
+                    'member' => $member,
+                    'yahrzeit' => $yahrzeit,
+                    'gregorianDate' => $gregorianDate,
+                ];
+            }
+        }
+
+        return view('yahrzeits.print-monthly-letters', [
+            'lettersData' => $lettersData,
+            'hebrewMonth' => $hebrewMonthNames[$selectedMonth] ?? 'Unknown',
         ]);
     }
 }

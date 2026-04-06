@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Banner;
 use App\Models\Note;
 use App\Services\HebrewCalendarService;
 use App\Services\SettingsService;
@@ -60,6 +61,60 @@ class HandleInertiaRequests extends Middleware
         $settingsService = app(SettingsService::class);
         $currency = $settingsService->getCurrency();
 
+        // Get active login banners (for login/register pages)
+        $loginBanners = Banner::active()
+            ->showOnLogin()
+            ->when($user, function ($query) use ($user) {
+                $query->notDismissedBy($user);
+            })
+            ->get()
+            ->map(function ($banner) {
+                return [
+                    'id' => $banner->id,
+                    'title' => $banner->title,
+                    'message' => $banner->message,
+                    'type' => $banner->type,
+                    'is_dismissible' => $banner->is_dismissible,
+                    'action_url' => $banner->action_url,
+                    'action_text' => $banner->action_text,
+                    'display_duration_seconds' => $banner->display_duration_seconds,
+                ];
+            })
+            ->toArray();
+
+        // Get active dashboard banners (for authenticated users)
+        $dashboardBanners = [];
+        if ($user) {
+            // Determine the user's primary audience type
+            $audience = 'members'; // default
+            if ($user->isStudent()) {
+                $audience = 'students';
+            } elseif ($user->isParent()) {
+                $audience = 'parents';
+            } elseif ($user->isMember()) {
+                $audience = 'members';
+            }
+
+            $dashboardBanners = Banner::active()
+                ->showOnDashboard()
+                ->forAudience($audience)
+                ->notDismissedBy($user)
+                ->get()
+                ->map(function ($banner) {
+                    return [
+                        'id' => $banner->id,
+                        'title' => $banner->title,
+                        'message' => $banner->message,
+                        'type' => $banner->type,
+                        'is_dismissible' => $banner->is_dismissible,
+                        'action_url' => $banner->action_url,
+                        'action_text' => $banner->action_text,
+                        'display_duration_seconds' => $banner->display_duration_seconds,
+                    ];
+                })
+                ->toArray();
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -88,6 +143,13 @@ class HandleInertiaRequests extends Middleware
             'currentDate' => [
                 'gregorian' => $gregorianDate,
                 'hebrew' => $hebrewDate['formatted'],
+            ],
+            'loginBanners' => $loginBanners,
+            'dashboardBanners' => $dashboardBanners,
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'import_errors' => $request->session()->get('import_errors'),
             ],
         ];
     }
