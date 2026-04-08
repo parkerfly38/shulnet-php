@@ -620,10 +620,8 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
     const handleBack = () => setStep(step - 1);
 
     const handleSubmit = () => {
-        console.log('Member onboarding - submitting with data:', formData);
         router.post('/onboarding/member', formData, {
             onSuccess: () => {
-                console.log('Member onboarding - success!');
                 onClose();
                 setStep(1);
                 setFormData({
@@ -652,9 +650,6 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                     create_invoice: true,
                     email_invoice: false,
                 });
-            },
-            onError: (errors) => {
-                console.error('Onboarding errors:', errors);
             },
         });
     };
@@ -828,8 +823,9 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 >
                                     <option value="">Select type</option>
                                     <option value="member">Member</option>
-                                    <option value="congregant">Congregant</option>
-                                    <option value="guest">Guest</option>
+                                    <option value="contact">Contact</option>
+                                    <option value="prospect">Prospect</option>
+                                    <option value="former">Former Member</option>
                                 </select>
                             </div>
                             <div>
@@ -1099,7 +1095,6 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                 setLoading(false);
             })
             .catch(err => {
-                console.error('Failed to load yahrzeits:', err);
                 setLoading(false);
             });
     }, [selectedMonth]);
@@ -1474,14 +1469,12 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
     };
 
     const handleSubmit = () => {
-        console.log('Student onboarding - submitting with data:', { students, parent_data: parentData, tuition_data: tuitionData });
         router.post('/onboarding/student', {
             students: students as any,
             parent_data: parentData,
             tuition_data: tuitionData,
         }, {
             onSuccess: () => {
-                console.log('Student onboarding - success!');
                 onClose();
                 setStep(1);
                 setStudents([{
@@ -1511,9 +1504,6 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                     create_invoice: true,
                     email_invoice: false,
                 });
-            },
-            onError: (errors) => {
-                console.error('Onboarding errors:', errors);
             },
         });
     };
