@@ -270,11 +270,23 @@ class DashboardController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:50',
             'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:50',
-            'address' => 'nullable|string',
-            'date_of_birth' => 'nullable|date',
+            'phone1' => 'nullable|string|max:50',
+            'phone2' => 'nullable|string|max:50',
+            'address_line_1' => 'nullable|string|max:255',
+            'address_line_2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'zip' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
+            'member_type' => 'nullable|string|in:member,contact,prospect,former',
             'gender' => 'nullable|string|in:male,female,other',
+            'dob' => 'nullable|date',
+            'hebrew_name' => 'nullable|string|max:255',
+            'father_hebrew_name' => 'nullable|string|max:255',
+            'mother_hebrew_name' => 'nullable|string|max:255',
+            'anniversary_date' => 'nullable|date',
             'membership_tier_id' => 'required|exists:membership_tiers,id',
             'start_date' => 'required|date',
             'create_invoice' => 'boolean',
@@ -288,33 +300,42 @@ class DashboardController extends Controller
                 'first_name' => $validated['first_name'],
                 'last_name' => $validated['last_name'],
                 'middle_name' => $validated['middle_name'] ?? null,
+                'title' => $validated['title'] ?? null,
                 'email' => $validated['email'],
-                'phone' => $validated['phone'] ?? null,
-                'address' => $validated['address'] ?? null,
-                'date_of_birth' => $validated['date_of_birth'] ?? null,
+                'phone1' => $validated['phone1'] ?? null,
+                'phone2' => $validated['phone2'] ?? null,
+                'address_line_1' => $validated['address_line_1'] ?? null,
+                'address_line_2' => $validated['address_line_2'] ?? null,
+                'city' => $validated['city'] ?? null,
+                'state' => $validated['state'] ?? null,
+                'zip' => $validated['zip'] ?? null,
+                'country' => $validated['country'] ?? null,
+                'member_type' => $validated['member_type'] ?? 'member',
+                'dob' => $validated['dob'] ?? null,
                 'gender' => $validated['gender'] ?? null,
-                'status' => 'active',
+                'hebrew_name' => $validated['hebrew_name'] ?? null,
+                'father_hebrew_name' => $validated['father_hebrew_name'] ?? null,
+                'mother_hebrew_name' => $validated['mother_hebrew_name'] ?? null,
+                'anniversary_date' => $validated['anniversary_date'] ?? null,
             ]);
 
             // Create membership period
             $tier = MembershipTier::findOrFail($validated['membership_tier_id']);
             $startDate = $validated['start_date'];
 
-            // Calculate end date based on billing period
+            // Calculate end date based on billing period using Carbon
             $endDate = match ($tier->billing_period) {
-                'annual' => date('Y-m-d', strtotime($startDate.' +1 year -1 day')),
-                'monthly' => date('Y-m-d', strtotime($startDate.' +1 month -1 day')),
+                'annual' => \Carbon\Carbon::parse($startDate)->addYear()->subDay()->format('Y-m-d'),
+                'monthly' => \Carbon\Carbon::parse($startDate)->addMonth()->subDay()->format('Y-m-d'),
                 'lifetime' => null,
-                default => date('Y-m-d', strtotime($startDate.' +1 year -1 day')),
+                default => \Carbon\Carbon::parse($startDate)->addYear()->subDay()->format('Y-m-d'),
             };
 
-            $membershipPeriod = MembershipPeriod::create([
+            MembershipPeriod::create([
                 'member_id' => $member->id,
                 'membership_tier_id' => $tier->id,
                 'begin_date' => $startDate,
                 'end_date' => $endDate,
-                'price' => $tier->price,
-                'status' => 'active',
             ]);
 
             // Create invoice if requested
@@ -323,12 +344,13 @@ class DashboardController extends Controller
                     'member_id' => $member->id,
                     'invoiceable_type' => Member::class,
                     'invoiceable_id' => $member->id,
-                    'invoice_number' => 'INV-'.date('Y').'-'.str_pad(Invoice::max('id') + 1, 6, '0', STR_PAD_LEFT),
-                    'invoice_date' => now(),
-                    'due_date' => date('Y-m-d', strtotime('+30 days')),
+                    'invoice_number' => 'INV-'.date('Y').'-'.str_pad((Invoice::max('id') ?? 0) + 1, 6, '0', STR_PAD_LEFT),
+                    'invoice_date' => now()->toDateString(),
+                    'due_date' => now()->addDays(30)->toDateString(),
                     'subtotal' => $tier->price,
-                    'tax' => 0,
+                    'tax_amount' => 0,
                     'total' => $tier->price,
+                    'amount_paid' => 0,
                     'status' => 'open',
                     'notes' => 'Membership: '.$tier->name,
                 ]);
