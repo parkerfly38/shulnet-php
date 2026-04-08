@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,8 @@ interface Props {
 }
 
 export default function Show({ template }: Props) {
+    const { csrf_token } = usePage<{ csrf_token: string }>().props;
+    
     const [fieldValues, setFieldValues] = useState<Record<string, string>>(
         template.available_fields.reduce((acc, field) => ({
             ...acc,
@@ -42,6 +44,11 @@ export default function Show({ template }: Props) {
     };
 
     const handleGenerate = () => {
+        if (!csrf_token) {
+            alert('Session error. Please refresh the page and try again.');
+            return;
+        }
+        
         // Create form and submit
         const form = document.createElement('form');
         form.method = 'POST';
@@ -52,7 +59,7 @@ export default function Show({ template }: Props) {
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = '_token';
-        csrfInput.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        csrfInput.value = csrf_token;
         form.appendChild(csrfInput);
 
         // Add field values
