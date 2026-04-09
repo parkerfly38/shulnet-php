@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventTicketType;
 use App\Models\GabbaiAssignment;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -125,9 +126,10 @@ class MemberDashboardController extends Controller
                 ];
             });
 
-        // Get upcoming events (next 60 days)
+        // Get upcoming events (next 90 days)
+        $eventsEndDate = Carbon::today()->addDays(90);
         $events = Event::where('event_start', '>=', $startDate->toDateString())
-            ->where('event_start', '<=', $endDate->toDateString())
+            ->where('event_start', '<=', $eventsEndDate->toDateString())
             ->orderBy('event_start', 'asc')
             ->limit(10)
             ->get()
@@ -945,9 +947,10 @@ class MemberDashboardController extends Controller
                 ];
             });
 
-        // Get upcoming events (next 60 days)
+        // Get upcoming events (next 90 days)
+        $eventsEndDate = Carbon::today()->addDays(90);
         $events = Event::where('event_start', '>=', $startDate->toDateString())
-            ->where('event_start', '<=', $endDate->toDateString())
+            ->where('event_start', '<=', $eventsEndDate->toDateString())
             ->orderBy('event_start', 'asc')
             ->limit(10)
             ->get()

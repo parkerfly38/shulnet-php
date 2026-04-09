@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EventRSVPExport;
 use App\Models\Calendar;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Dedoc\Scramble\Attributes\Group;
 
 #[Group(name: 'Synagogue Management')]
@@ -122,7 +124,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['calendar', 'rsvps.member']);
+        $event->load(['calendar', 'rsvps.member', 'rsvps.ticketType', 'ticketTypes']);
 
         // Map database fields to frontend expected fields
         $eventData = [
@@ -138,6 +140,14 @@ class EventController extends Controller
             'calendar' => $event->calendar,
             'created_at' => $event->created_at,
             'updated_at' => $event->updated_at,
+            'ticket_types' => $event->ticketTypes->map(function ($ticketType) {
+                return [
+                    'id' => $ticketType->id,
+                    'name' => $ticketType->name,
+                    'price' => $ticketType->price,
+                    'description' => $ticketType->description,
+                ];
+            }),
             'rsvps' => $event->rsvps->map(function ($rsvp) {
                 return [
                     'id' => $rsvp->id,
@@ -145,13 +155,22 @@ class EventController extends Controller
                     'email' => $rsvp->email,
                     'phone' => $rsvp->phone,
                     'guests' => $rsvp->guests,
+                    'quantity' => $rsvp->quantity,
+                    'ticket_price' => $rsvp->ticket_price,
+                    'total_amount' => $rsvp->total_amount,
                     'status' => $rsvp->status,
                     'notes' => $rsvp->notes,
+                    'event_ticket_type_id' => $rsvp->event_ticket_type_id,
                     'created_at' => $rsvp->created_at,
                     'member' => $rsvp->member ? [
                         'id' => $rsvp->member->id,
                         'first_name' => $rsvp->member->first_name,
                         'last_name' => $rsvp->member->last_name,
+                    ] : null,
+                    'ticketType' => $rsvp->ticketType ? [
+                        'id' => $rsvp->ticketType->id,
+                        'name' => $rsvp->ticketType->name,
+                        'price' => $rsvp->ticketType->price,
                     ] : null,
                 ];
             }),
@@ -235,6 +254,19 @@ class EventController extends Controller
 
         return redirect('/admin/events')
             ->with('success', 'Event deleted successfully.');
+    }
+
+    /**
+     * Export RSVPs for a specific event to Excel.
+     */
+    public function exportRsvps(Event $event)
+    {
+        $eventName = preg_replace('/[^A-Za-z0-9\-]/', '_', $event->name);
+        
+        return Excel::download(
+            new EventRSVPExport($event->id),
+            'rsvps-' . $eventName . '-' . now()->format('Y-m-d') . '.xlsx'
+        );
     }
 
     /**
