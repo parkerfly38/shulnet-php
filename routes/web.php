@@ -328,6 +328,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
 
         // Event management routes
+        Route::get('admin/events/{event}/export-rsvps', [EventController::class, 'exportRsvps'])->name('events.export-rsvps');
         Route::resource('admin/events', EventController::class, [
             'names' => [
                 'index' => 'events.index',
