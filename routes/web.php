@@ -159,7 +159,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{meeting}/send-invitations', [MeetingController::class, 'sendInvitations'])->name('meetings.send-invitations');
         });
 
-        // Report management routes (for both committees and boards)
+        // Data Reports routes (exports and analytics) - MUST come BEFORE wildcard routes
+        Route::get('admin/reports', [ReportsController::class, 'index'])->name('admin.reports.list');
+        Route::get('admin/reports/financial', function () {
+            return Inertia::render('admin/reports/financial');
+        })->name('admin.reports.financial');
+        Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('admin.reports.export.members');
+        Route::post('admin/reports/export/invoices', [ReportsController::class, 'exportInvoices'])->name('admin.reports.export.invoices');
+        Route::post('admin/reports/export/students', [ReportsController::class, 'exportStudents'])->name('admin.reports.export.students');
+        Route::post('admin/reports/export/financial-summary', [ReportsController::class, 'exportFinancialSummary'])->name('admin.reports.export.financial-summary');
+        Route::post('admin/reports/export/yahrzeit', [ReportsController::class, 'exportYahrzeit'])->name('admin.reports.export.yahrzeit');
+        
+        // Financial Reports API
+        Route::get('admin/reports/income-summary', [ReportsController::class, 'getIncomeSummary'])->name('admin.reports.income-summary');
+        Route::get('admin/reports/outstanding-balances', [ReportsController::class, 'getOutstandingBalances'])->name('admin.reports.outstanding-balances');
+        Route::get('admin/reports/aging', [ReportsController::class, 'getAgingReport'])->name('admin.reports.aging');
+        Route::get('admin/reports/event-revenue', [ReportsController::class, 'getEventRevenue'])->name('admin.reports.event-revenue');
+        Route::get('admin/reports/revenue-by-source', [ReportsController::class, 'getRevenueBySource'])->name('admin.reports.revenue-by-source');
+        Route::get('admin/reports/member-growth', [ReportsController::class, 'getMemberGrowth'])->name('admin.reports.member-growth');
+        Route::get('admin/reports/tuition-revenue', [ReportsController::class, 'getTuitionRevenue'])->name('admin.reports.tuition-revenue');
+        Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('admin.reports.payment-methods');
+        Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('admin.reports.budget-vs-actual');
+
+        // Report management routes (for both committees and boards) - wildcard route AFTER specific routes
         Route::prefix('admin/reports/{type}/{id}')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('reports.index');
             Route::get('/create', [ReportController::class, 'create'])->name('reports.create');
@@ -306,6 +328,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
 
         // Event management routes
+        Route::get('admin/events/{event}/export-rsvps', [EventController::class, 'exportRsvps'])->name('events.export-rsvps');
         Route::resource('admin/events', EventController::class, [
             'names' => [
                 'index' => 'events.index',
@@ -457,28 +480,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // API Tokens management
         Route::get('admin/api-tokens', [\App\Http\Controllers\Api\TokenController::class, 'page'])->name('admin.api-tokens');
-
-        // Data Reports routes (exports and analytics)
-        Route::get('admin/reports', [ReportsController::class, 'index'])->name('admin.reports.list');
-        Route::get('admin/reports/financial', function () {
-            return Inertia::render('admin/reports/financial');
-        })->name('admin.reports.financial');
-        Route::post('admin/reports/export/members', [ReportsController::class, 'exportMembers'])->name('admin.reports.export.members');
-        Route::post('admin/reports/export/invoices', [ReportsController::class, 'exportInvoices'])->name('admin.reports.export.invoices');
-        Route::post('admin/reports/export/students', [ReportsController::class, 'exportStudents'])->name('admin.reports.export.students');
-        Route::post('admin/reports/export/financial-summary', [ReportsController::class, 'exportFinancialSummary'])->name('admin.reports.export.financial-summary');
-        Route::post('admin/reports/export/yahrzeit', [ReportsController::class, 'exportYahrzeit'])->name('admin.reports.export.yahrzeit');
-        
-        // Financial Reports API
-        Route::get('admin/reports/income-summary', [ReportsController::class, 'getIncomeSummary'])->name('admin.reports.income-summary');
-        Route::get('admin/reports/outstanding-balances', [ReportsController::class, 'getOutstandingBalances'])->name('admin.reports.outstanding-balances');
-        Route::get('admin/reports/aging', [ReportsController::class, 'getAgingReport'])->name('admin.reports.aging');
-        Route::get('admin/reports/event-revenue', [ReportsController::class, 'getEventRevenue'])->name('admin.reports.event-revenue');
-        Route::get('admin/reports/revenue-by-source', [ReportsController::class, 'getRevenueBySource'])->name('admin.reports.revenue-by-source');
-        Route::get('admin/reports/member-growth', [ReportsController::class, 'getMemberGrowth'])->name('admin.reports.member-growth');
-        Route::get('admin/reports/tuition-revenue', [ReportsController::class, 'getTuitionRevenue'])->name('admin.reports.tuition-revenue');
-        Route::get('admin/reports/payment-methods', [ReportsController::class, 'getPaymentMethodAnalysis'])->name('admin.reports.payment-methods');
-        Route::post('admin/reports/budget-vs-actual', [ReportsController::class, 'getBudgetVsActual'])->name('admin.reports.budget-vs-actual');
 
         // GL Batch Export routes
         Route::get('admin/gl-batch', [GLBatchController::class, 'index'])->name('admin.gl-batch.index');

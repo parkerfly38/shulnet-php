@@ -65,7 +65,7 @@ export default function EventRegistrationDialog({ event, isOpen, onClose }: Prop
     if (!event) return null;
 
     const selectedTicket = event.ticket_types?.find(t => t.id === data.ticket_type_id);
-    const totalCost = selectedTicket ? selectedTicket.price * data.quantity : 0;
+    const totalCost = selectedTicket ? Number(selectedTicket.price) * data.quantity : 0;
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -93,7 +93,7 @@ export default function EventRegistrationDialog({ event, isOpen, onClose }: Prop
                                 <option value="">Select a ticket type</option>
                                 {event.ticket_types.map((ticket) => (
                                     <option key={ticket.id} value={ticket.id}>
-                                        {ticket.name} - ${ticket.price.toFixed(2)}
+                                        {ticket.name} - ${Number(ticket.price).toFixed(2)}
                                         {ticket.remaining_quantity !== null && ` (${ticket.remaining_quantity} left)`}
                                     </option>
                                 ))}

@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Download, FileSpreadsheet, DollarSign } from 'lucide-react';
 import { useState } from 'react';
 
@@ -17,6 +17,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ReportsIndex() {
+    const { csrf_token } = usePage<{ csrf_token: string }>().props;
+    
     const [memberFilters, setMemberFilters] = useState({
         search: '',
         member_type: '',
@@ -50,6 +52,13 @@ export default function ReportsIndex() {
     });
 
     const handleExport = (endpoint: string, filters: Record<string, any>) => {
+        // Use the fresh CSRF token from Inertia shared props
+        if (!csrf_token) {
+            console.error('CSRF token not available');
+            alert('Session error. Please refresh the page and try again.');
+            return;
+        }
+
         // Create a form element
         const form = document.createElement('form');
         form.method = 'POST';
@@ -57,14 +66,11 @@ export default function ReportsIndex() {
         form.style.display = 'none';
 
         // Add CSRF token
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        if (csrfToken) {
-            const csrfInput = document.createElement('input');
-            csrfInput.type = 'hidden';
-            csrfInput.name = '_token';
-            csrfInput.value = csrfToken;
-            form.appendChild(csrfInput);
-        }
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = csrf_token;
+        form.appendChild(csrfInput);
 
         // Add filters as hidden inputs
         Object.entries(filters).forEach(([key, value]) => {
@@ -80,7 +86,9 @@ export default function ReportsIndex() {
         // Submit form
         document.body.appendChild(form);
         form.submit();
-        form.remove();
+        
+        // Remove form after a delay to ensure submission completes
+        setTimeout(() => form.remove(), 1000);
     };
 
     return (
