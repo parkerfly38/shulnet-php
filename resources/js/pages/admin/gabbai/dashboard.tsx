@@ -172,7 +172,7 @@ export default function GabbaiDashboard() {
                                     )}
                                     {upcomingParsha.name?.en && (
                                         <a 
-                                            href={`https://www.sefaria.org/Parashat_${upcomingParsha.name.en.replace(/\s+/g, '_')}`}
+                                            href={`https://www.sefaria.org/Parashat_${upcomingParsha.name.en.replaceAll(/\s+/g, '_')}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-sm text-blue-600 hover:underline mt-2 inline-block"

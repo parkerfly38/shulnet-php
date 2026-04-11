@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Type, FileText } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, Type } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

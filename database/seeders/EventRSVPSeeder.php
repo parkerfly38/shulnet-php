@@ -201,12 +201,6 @@ class EventRSVPSeeder extends Seeder
             $adultTicket = EventTicketType::where('event_id', $passover->id)
                 ->where('name', 'Adult')
                 ->first();
-            $childTicket = EventTicketType::where('event_id', $passover->id)
-                ->where('name', 'Child (5-12)')
-                ->first();
-            $youngChildTicket = EventTicketType::where('event_id', $passover->id)
-                ->where('name', 'Young Child (Under 5)')
-                ->first();
 
             if ($adultTicket && $members->count() > 4) {
                 EventRSVP::create([
