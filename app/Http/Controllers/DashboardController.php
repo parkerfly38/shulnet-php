@@ -364,17 +364,15 @@ class DashboardController extends Controller
                 ]);
 
                 // Send email if requested
-                if ($validated['email_invoice'] ?? false) {
-                    if ($member->email) {
-                        try {
-                            // Generate PDF path (you may need to implement PDF generation)
-                            $pdfPath = storage_path('app/invoices/invoice-'.$invoice->invoice_number.'.pdf');
+                if (($validated['email_invoice'] ?? false) && $member->email) {
+                    try {
+                        // Generate PDF path (you may need to implement PDF generation)
+                        $pdfPath = storage_path('app/invoices/invoice-'.$invoice->invoice_number.'.pdf');
 
-                            Mail::to($member->email)->send(new InvoiceMail($invoice->load('member', 'items'), $pdfPath));
-                        } catch (\Exception $e) {
-                            // Log error but don't fail the onboarding
-                            \Log::warning('Failed to send invoice email: '.$e->getMessage());
-                        }
+                        Mail::to($member->email)->send(new InvoiceMail($invoice->load('member', 'items'), $pdfPath));
+                    } catch (\Exception $e) {
+                        // Log error but don't fail the onboarding
+                        \Log::warning('Failed to send invoice email: '.$e->getMessage());
                     }
                 }
             }
