@@ -33,7 +33,7 @@ class MemberController extends Controller
         $query = Member::query()
             ->select([
                 'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1',
-                'city', 'state', 'user_id', 'created_at', 'updated_at',
+                'city', 'state', 'user_id', 'parent_member_id', 'created_at', 'updated_at',
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
@@ -53,10 +53,7 @@ class MemberController extends Controller
         }
 
         if ($primaryOnly) {
-            // Exclude members who have a 'parent' relationship (they're children of another member)
-            $query->whereDoesntHave('inverseRelationships', function ($q) {
-                $q->where('relationship_type', 'parent');
-            });
+            $query->whereNull('parent_member_id');
         }
 
         $members = $query->paginate($perPage);
@@ -125,6 +122,7 @@ class MemberController extends Controller
             'title' => 'nullable|string|max:100',
             'gender' => 'nullable|in:male,female,other',
             'parent_id' => 'nullable|exists:parents,id',
+            'parent_member_id' => 'nullable|exists:members,id',
             'aliyah' => 'nullable|boolean',
             'bnaimitzvahdate' => 'nullable|date',
             'chazanut' => 'nullable|boolean',

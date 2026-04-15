@@ -46,6 +46,7 @@ class Member extends Model
         'maftir',
         'anniversary_date',
         'parent_id',
+        'parent_member_id',
         'user_id',
     ];
 
