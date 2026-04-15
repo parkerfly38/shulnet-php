@@ -57,11 +57,11 @@ class EventSeeder extends Seeder
         // Create ticket types for the gala
         EventTicketType::create([
             'event_id' => $gala->id,
-            'name' => 'Member - Individual',
-            'description' => 'Single member ticket with dinner and open bar',
+            'name' => 'Member',
+            'description' => 'Individual member ticket with dinner and open bar',
             'category' => 'member',
             'price' => 75.00,
-            'quantity_available' => 100,
+            'quantity_available' => 150,
             'quantity_sold' => 0,
             'sale_starts' => now()->subWeek(),
             'sale_ends' => now()->addMonths(2)->subDay(),
@@ -71,11 +71,11 @@ class EventSeeder extends Seeder
 
         EventTicketType::create([
             'event_id' => $gala->id,
-            'name' => 'Member - Couple',
-            'description' => 'Two member tickets with dinner and open bar',
-            'category' => 'member',
-            'price' => 135.00,
-            'quantity_available' => 50,
+            'name' => 'Non-Member',
+            'description' => 'Individual ticket with dinner and open bar',
+            'category' => 'nonmember',
+            'price' => 95.00,
+            'quantity_available' => 40,
             'quantity_sold' => 0,
             'sale_starts' => now()->subWeek(),
             'sale_ends' => now()->addMonths(2)->subDay(),
@@ -85,30 +85,16 @@ class EventSeeder extends Seeder
 
         EventTicketType::create([
             'event_id' => $gala->id,
-            'name' => 'Non-Member - Individual',
-            'description' => 'Single ticket with dinner and open bar',
-            'category' => 'nonmember',
-            'price' => 95.00,
-            'quantity_available' => 40,
+            'name' => 'VIP Seat',
+            'description' => 'Individual VIP seat with premium seating and champagne service',
+            'category' => 'vip',
+            'price' => 125.00,
+            'quantity_available' => 50,
             'quantity_sold' => 0,
             'sale_starts' => now()->subWeek(),
             'sale_ends' => now()->addMonths(2)->subDay(),
             'active' => true,
             'sort_order' => 3,
-        ]);
-
-        EventTicketType::create([
-            'event_id' => $gala->id,
-            'name' => 'VIP Table (10 seats)',
-            'description' => 'Reserved table for 10 with premium seating and champagne service',
-            'category' => 'vip',
-            'price' => 1000.00,
-            'quantity_available' => 5,
-            'quantity_sold' => 0,
-            'sale_starts' => now()->subWeek(),
-            'sale_ends' => now()->addMonths(2)->subDay(),
-            'active' => true,
-            'sort_order' => 4,
         ]);
 
         EventTicketType::create([
@@ -122,7 +108,7 @@ class EventSeeder extends Seeder
             'sale_starts' => now()->subWeek(),
             'sale_ends' => now()->addMonths(2)->subDay(),
             'active' => true,
-            'sort_order' => 5,
+            'sort_order' => 4,
         ]);
 
         // Create a past event with registration
