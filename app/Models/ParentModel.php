@@ -17,6 +17,7 @@ class ParentModel extends Model
         'address',
         'picture_url',
         'email',
+        'phone',
     ];
 
     public function students(): HasMany

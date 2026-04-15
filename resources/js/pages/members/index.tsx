@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download, KeyRound, CheckCircle, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { type Member, type BreadcrumbItem } from '@/types';
 import {
   Dialog,
@@ -53,6 +54,8 @@ interface Stats {
   contact: number;
   prospect: number;
   former: number;
+  primary_accounts: number;
+  family_members: number;
 }
 
 interface Props {
@@ -61,12 +64,14 @@ interface Props {
   filters: {
     search?: string;
     member_type?: string;
+    primary_only?: boolean;
   };
 }
 
 export default function MembersIndex({ members, stats, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
   const [memberType, setMemberType] = useState(filters.member_type || '');
+  const [primaryOnly, setPrimaryOnly] = useState(filters.primary_only || false);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [showCreateUserDialog, setShowCreateUserDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -115,7 +120,11 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.get('/admin/members', { search, member_type: memberType || undefined }, {
+    router.get('/admin/members', { 
+      search, 
+      member_type: memberType || undefined,
+      primary_only: primaryOnly || undefined 
+    }, {
       preserveState: true,
       replace: true,
     });
@@ -123,7 +132,23 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
 
   const handleMemberTypeChange = (value: string) => {
     setMemberType(value);
-    router.get('/admin/members', { search, member_type: value || undefined }, {
+    router.get('/admin/members', { 
+      search, 
+      member_type: value || undefined,
+      primary_only: primaryOnly || undefined 
+    }, {
+      preserveState: true,
+      replace: true,
+    });
+  };
+
+  const handlePrimaryOnlyChange = (checked: boolean) => {
+    setPrimaryOnly(checked);
+    router.get('/admin/members', { 
+      search, 
+      member_type: memberType || undefined,
+      primary_only: checked || undefined 
+    }, {
       preserveState: true,
       replace: true,
     });
@@ -215,6 +240,22 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
       color: 'bg-green-500',
       textColor: 'text-green-600 dark:text-green-400',
       bgColor: 'bg-green-50 dark:bg-green-900/20',
+    },
+    {
+      title: 'Primary Accounts',
+      value: stats.primary_accounts,
+      icon: Users,
+      color: 'bg-purple-500',
+      textColor: 'text-purple-600 dark:text-purple-400',
+      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+    },
+    {
+      title: 'Family Members',
+      value: stats.family_members,
+      icon: Users,
+      color: 'bg-indigo-500',
+      textColor: 'text-indigo-600 dark:text-indigo-400',
+      bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
     },
     {
       title: 'Contacts',
@@ -486,7 +527,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
         </Dialog>
 
         {/* Stats Dashboard */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4">
           {statCards.map((stat) => (
             <div
               key={stat.title}
@@ -509,8 +550,8 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
           ))}
         </div>
 
-        {/* Search */}
-        <div className="flex gap-4 items-end">
+        {/* Search and Filters */}
+        <div className="flex gap-4 items-end flex-wrap">
           <form onSubmit={handleSearch} className="flex gap-2 flex-1">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -540,12 +581,26 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
               </SelectContent>
             </Select>
           </div>
-          {(filters.search || filters.member_type) && (
+          <div className="flex items-center space-x-2 bg-white dark:bg-black border border-gray-200 dark:border-gray-700 rounded-md px-3 py-2">
+            <Checkbox
+              id="primary-only"
+              checked={primaryOnly}
+              onCheckedChange={handlePrimaryOnlyChange}
+            />
+            <Label
+              htmlFor="primary-only"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            >
+              Show only primary accounts
+            </Label>
+          </div>
+          {(filters.search || filters.member_type || filters.primary_only) && (
             <Button
               variant="outline"
               onClick={() => {
                 setSearch('');
                 setMemberType('');
+                setPrimaryOnly(false);
                 router.get('/admin/members');
               }}
             >

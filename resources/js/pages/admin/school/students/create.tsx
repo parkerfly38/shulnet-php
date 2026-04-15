@@ -3,6 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, useForm, Link } from '@inertiajs/react';
 import { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
+import ParentSelector from '@/components/parent-selector';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
@@ -74,10 +75,11 @@ export default function StudentsCreate() {
                         <input type="checkbox" checked={form.data.is_parent_email} onChange={(e) => form.setData('is_parent_email', e.target.checked)} className="rounded" />
                         <label className="text-sm font-medium">Is Parent Email</label>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium">Parent ID</label>
-                        <input type="number" value={form.data.parent_id} onChange={(e) => form.setData('parent_id', e.target.value)} className="w-full rounded border p-2" />
-                    </div>
+                    <ParentSelector
+                        value={form.data.parent_id}
+                        onChange={(value) => form.setData('parent_id', value)}
+                        error={form.errors.parent_id}
+                    />
                     <div>
                         <label className="block text-sm font-medium">Address</label>
                         <textarea value={form.data.address} onChange={(e) => form.setData('address', e.target.value)} className="w-full rounded border p-2" rows={3} />
