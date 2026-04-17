@@ -22,17 +22,14 @@ class EventRSVPSeeder extends Seeder
         }
 
         // Get ticket types
-        $memberIndividual = EventTicketType::where('event_id', $gala->id)
-            ->where('name', 'Member - Individual')
-            ->first();
-        $memberCouple = EventTicketType::where('event_id', $gala->id)
-            ->where('name', 'Member - Couple')
+        $member = EventTicketType::where('event_id', $gala->id)
+            ->where('name', 'Member')
             ->first();
         $nonMember = EventTicketType::where('event_id', $gala->id)
-            ->where('name', 'Non-Member - Individual')
+            ->where('name', 'Non-Member')
             ->first();
-        $vipTable = EventTicketType::where('event_id', $gala->id)
-            ->where('name', 'VIP Table (10 seats)')
+        $vip = EventTicketType::where('event_id', $gala->id)
+            ->where('name', 'VIP Seat')
             ->first();
         $student = EventTicketType::where('event_id', $gala->id)
             ->where('name', 'Student/Young Professional')
@@ -42,52 +39,69 @@ class EventRSVPSeeder extends Seeder
         $members = Member::limit(10)->get();
 
         // Create RSVPs for the Gala
-        if ($memberIndividual && $members->count() > 0) {
+        if ($member && $members->count() > 0) {
             EventRSVP::create([
                 'event_id' => $gala->id,
                 'member_id' => $members[0]->id ?? null,
-                'event_ticket_type_id' => $memberIndividual->id,
+                'event_ticket_type_id' => $member->id,
                 'name' => $members[0]->first_name . ' ' . $members[0]->last_name ?? 'Sarah Cohen',
                 'email' => $members[0]->email ?? 'sarah.cohen@example.com',
                 'phone' => $members[0]->phone_home ?? '(207) 555-0101',
                 'guests' => 0,
                 'quantity' => 1,
-                'ticket_price' => $memberIndividual->price,
-                'total_amount' => $memberIndividual->price,
+                'ticket_price' => $member->price,
+                'total_amount' => $member->price,
                 'status' => 'confirmed',
                 'notes' => null,
             ]);
         }
 
-        if ($memberCouple && $members->count() > 1) {
+        if ($member && $members->count() > 1) {
+            // First person in couple
             EventRSVP::create([
                 'event_id' => $gala->id,
                 'member_id' => $members[1]->id ?? null,
-                'event_ticket_type_id' => $memberCouple->id,
-                'name' => isset($members[1]) ? $members[1]->first_name . ' & ' . $members[1]->spouse_first_name . ' ' . $members[1]->last_name : 'David & Rachel Levy',
+                'event_ticket_type_id' => $member->id,
+                'name' => isset($members[1]) ? $members[1]->first_name . ' ' . $members[1]->last_name : 'David Levy',
                 'email' => $members[1]->email ?? 'david.levy@example.com',
                 'phone' => $members[1]->phone_home ?? '(207) 555-0102',
-                'guests' => 1,
-                'quantity' => 2,
-                'ticket_price' => $memberCouple->price,
-                'total_amount' => $memberCouple->price,
+                'guests' => 0,
+                'quantity' => 1,
+                'ticket_price' => $member->price,
+                'total_amount' => $member->price,
                 'status' => 'confirmed',
-                'notes' => 'Vegetarian meal for both, please.',
+                'notes' => 'Vegetarian meal, please.',
+            ]);
+            
+            // Second person in couple
+            EventRSVP::create([
+                'event_id' => $gala->id,
+                'member_id' => $members[1]->id ?? null,
+                'event_ticket_type_id' => $member->id,
+                'name' => isset($members[1]->spouse_first_name) ? $members[1]->spouse_first_name . ' ' . $members[1]->last_name : 'Rachel Levy',
+                'email' => $members[1]->email ?? 'rachel.levy@example.com',
+                'phone' => $members[1]->phone_home ?? '(207) 555-0102',
+                'guests' => 0,
+                'quantity' => 1,
+                'ticket_price' => $member->price,
+                'total_amount' => $member->price,
+                'status' => 'confirmed',
+                'notes' => 'Vegetarian meal, please.',
             ]);
         }
 
-        if ($memberIndividual && $members->count() > 2) {
+        if ($member && $members->count() > 2) {
             EventRSVP::create([
                 'event_id' => $gala->id,
                 'member_id' => $members[2]->id ?? null,
-                'event_ticket_type_id' => $memberIndividual->id,
+                'event_ticket_type_id' => $member->id,
                 'name' => isset($members[2]) ? $members[2]->first_name . ' ' . $members[2]->last_name : 'Rebecca Goldstein',
                 'email' => $members[2]->email ?? 'rebecca.goldstein@example.com',
                 'phone' => $members[2]->phone_home ?? '(207) 555-0103',
                 'guests' => 2,
                 'quantity' => 1,
-                'ticket_price' => $memberIndividual->price,
-                'total_amount' => $memberIndividual->price,
+                'ticket_price' => $member->price,
+                'total_amount' => $member->price,
                 'status' => 'confirmed',
                 'notes' => 'Bringing two guests - will purchase additional tickets.',
             ]);
@@ -126,22 +140,25 @@ class EventRSVPSeeder extends Seeder
             ]);
         }
 
-        // VIP Table RSVP
-        if ($vipTable && $members->count() > 3) {
-            EventRSVP::create([
-                'event_id' => $gala->id,
-                'member_id' => $members[3]->id ?? null,
-                'event_ticket_type_id' => $vipTable->id,
-                'name' => isset($members[3]) ? $members[3]->first_name . ' ' . $members[3]->last_name : 'Dr. Joshua Silverman',
-                'email' => $members[3]->email ?? 'josh.silverman@example.com',
-                'phone' => $members[3]->phone_home ?? '(207) 555-0104',
-                'guests' => 9,
-                'quantity' => 1,
-                'ticket_price' => $vipTable->price,
-                'total_amount' => $vipTable->price,
-                'status' => 'confirmed',
-                'notes' => 'Table for our family foundation. Guest list to follow.',
-            ]);
+        // VIP Seat RSVPs
+        if ($vip && $members->count() > 3) {
+            // Create 3 VIP seat reservations
+            for ($i = 0; $i < 3; $i++) {
+                EventRSVP::create([
+                    'event_id' => $gala->id,
+                    'member_id' => $members[3]->id ?? null,
+                    'event_ticket_type_id' => $vip->id,
+                    'name' => isset($members[3]) ? $members[3]->first_name . ' ' . $members[3]->last_name : 'Dr. Joshua Silverman',
+                    'email' => $members[3]->email ?? 'josh.silverman@example.com',
+                    'phone' => $members[3]->phone_home ?? '(207) 555-0104',
+                    'guests' => 0,
+                    'quantity' => 1,
+                    'ticket_price' => $vip->price,
+                    'total_amount' => $vip->price,
+                    'status' => 'confirmed',
+                    'notes' => $i === 0 ? 'VIP seating for family foundation.' : null,
+                ]);
+            }
         }
 
         // Student tickets
@@ -178,18 +195,18 @@ class EventRSVPSeeder extends Seeder
         }
 
         // Cancelled RSVP
-        if ($memberIndividual) {
+        if ($member) {
             EventRSVP::create([
                 'event_id' => $gala->id,
                 'member_id' => null,
-                'event_ticket_type_id' => $memberIndividual->id,
+                'event_ticket_type_id' => $member->id,
                 'name' => 'Lisa Thompson',
                 'email' => 'lisa.thompson@example.com',
                 'phone' => '(207) 555-0401',
                 'guests' => 0,
                 'quantity' => 1,
-                'ticket_price' => $memberIndividual->price,
-                'total_amount' => $memberIndividual->price,
+                'ticket_price' => $member->price,
+                'total_amount' => $member->price,
                 'status' => 'cancelled',
                 'notes' => 'Cancelled due to schedule conflict - refund issued.',
             ]);

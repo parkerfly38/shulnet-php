@@ -121,6 +121,32 @@ export default function EventShow({ event }: EventShowProps) {
         // Refresh the page to show updated data
         router.reload({ only: ['event'] });
     };
+    
+    const handleDeleteRsvp = (rsvp: RSVP) => {
+        if (confirm(`Are you sure you want to delete the RSVP for "${rsvp.name}"?`)) {
+            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            fetch(`/api/admin/event-rsvps/${rsvp.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token || '',
+                },
+                credentials: 'include',
+            })
+            .then(response => {
+                if (response.ok) {
+                    router.reload({ only: ['event'] });
+                } else {
+                    alert('Failed to delete RSVP');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting RSVP:', error);
+                alert('Failed to delete RSVP');
+            });
+        }
+    };
 
     const getStatusBadge = (status: string) => {
         const colors = {
@@ -446,13 +472,25 @@ export default function EventShow({ event }: EventShowProps) {
                                                     {new Date(rsvp.created_at).toLocaleDateString()}
                                                 </td>
                                                 <td className="py-3">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => handleEditRsvp(rsvp)}
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
+                                                    <div className="flex items-center gap-1">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleEditRsvp(rsvp)}
+                                                            title="Edit RSVP"
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleDeleteRsvp(rsvp)}
+                                                            className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-950"
+                                                            title="Delete RSVP"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}

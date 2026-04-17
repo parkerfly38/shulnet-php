@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Save } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types'
+import ParentSelector from '@/components/parent-selector';
 
 interface MemberForm {
   member_type: 'member' | 'contact' | 'prospect' | 'former';
@@ -25,6 +26,7 @@ interface MemberForm {
   country: string;
   dob: string;
   gender: string;
+  parent_id: string;
   aliyah: boolean;
   bnaimitzvahdate: Date | null;
   chazanut: boolean;
@@ -57,6 +59,7 @@ export default function MembersCreate() {
     country: '',
     dob: '',
     gender: '',
+    parent_id: '',
     aliyah: false,
     bnaimitzvahdate: null,
     chazanut: false,
@@ -209,6 +212,17 @@ export default function MembersCreate() {
               {errors.dob && (
                 <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.dob}</p>
               )}
+            </div>
+
+            <div className="mt-6">
+              <ParentSelector
+                value={data.parent_id}
+                onChange={(value) => setData('parent_id', value)}
+                error={errors.parent_id}
+              />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Link this member to a parent account if applicable (e.g., for children)
+              </p>
             </div>
           </div>
 

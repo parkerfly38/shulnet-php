@@ -60,6 +60,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
         'destroy' => 'members.destroy',
     ]);
     Route::post('members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
+    Route::post('members/{member}/create-parent', [MemberController::class, 'createParentFromMember'])->name('members.create-parent');
+    Route::post('members/{member}/convert-to-student', [MemberController::class, 'convertToStudent'])->name('members.convert-to-student');
+    Route::post('members/{member}/family-members', [MemberController::class, 'storeFamilyMember'])->name('members.family-members.store');
 
     // Membership Periods (nested under members)
     Route::resource('members.membership-periods', MembershipPeriodController::class)->except(['index', 'show'])->names([

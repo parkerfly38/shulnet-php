@@ -17,6 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Trash2 } from 'lucide-react';
 
 interface RSVP {
     id: number;
@@ -181,6 +182,42 @@ export default function EditRsvpDialog({ rsvp, ticketTypes, isOpen, onClose, onS
             quantity,
             total_amount: prev.ticket_price * quantity,
         }));
+    };
+    
+    const handleDelete = async () => {
+        if (!rsvp) return;
+        
+        if (!confirm(`Are you sure you want to delete the RSVP for "${rsvp.name}"? This action cannot be undone.`)) {
+            return;
+        }
+        
+        setProcessing(true);
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+        try {
+            const response = await fetch(`/api/admin/event-rsvps/${rsvp.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token || '',
+                },
+                credentials: 'include',
+            });
+            
+            if (response.ok) {
+                handleClose();
+                if (onSuccess) {
+                    onSuccess();
+                }
+            } else {
+                alert('Failed to delete RSVP');
+            }
+        } catch (error) {
+            console.error('Error deleting RSVP:', error);
+            alert('Failed to delete RSVP');
+        } finally {
+            setProcessing(false);
+        }
     };
 
     if (!rsvp) return null;
@@ -374,18 +411,29 @@ export default function EditRsvpDialog({ rsvp, ticketTypes, isOpen, onClose, onS
                     </div>
 
                     {/* Actions */}
-                    <div className="flex justify-end gap-3 pt-4">
+                    <div className="flex justify-between pt-4">
                         <Button
                             type="button"
-                            variant="outline"
-                            onClick={handleClose}
+                            variant="destructive"
+                            onClick={handleDelete}
                             disabled={processing}
                         >
-                            Cancel
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete RSVP
                         </Button>
-                        <Button type="submit" disabled={processing}>
-                            {processing ? 'Saving...' : 'Save Changes'}
-                        </Button>
+                        <div className="flex gap-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleClose}
+                                disabled={processing}
+                            >
+                                Cancel
+                            </Button>
+                            <Button type="submit" disabled={processing}>
+                                {processing ? 'Saving...' : 'Save Changes'}
+                            </Button>
+                        </div>
                     </div>
                 </form>
             </DialogContent>
