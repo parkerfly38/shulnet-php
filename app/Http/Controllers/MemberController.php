@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Imports\MembersImport;
 use App\Mail\TemporaryPasswordMail;
 use App\Models\Member;
+use App\Models\ParentModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -26,12 +27,13 @@ class MemberController extends Controller
     {
         $search = $request->get('search');
         $memberType = $request->get('member_type');
+        $primaryOnly = $request->get('primary_only', false);
         $perPage = $request->get('per_page', 15);
 
         $query = Member::query()
             ->select([
                 'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1',
-                'city', 'state', 'user_id', 'created_at', 'updated_at',
+                'city', 'state', 'user_id', 'parent_member_id', 'created_at', 'updated_at',
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
@@ -50,6 +52,10 @@ class MemberController extends Controller
             $query->where('member_type', $memberType);
         }
 
+        if ($primaryOnly) {
+            $query->whereNull('parent_member_id');
+        }
+
         $members = $query->paginate($perPage);
 
         // Calculate member statistics
@@ -59,6 +65,8 @@ class MemberController extends Controller
             'contact' => Member::where('member_type', 'contact')->count(),
             'prospect' => Member::where('member_type', 'prospect')->count(),
             'former' => Member::where('member_type', 'former')->count(),
+            'primary_accounts' => Member::whereNull('parent_member_id')->count(),
+            'family_members' => Member::whereNotNull('parent_member_id')->count(),
         ];
 
         return Inertia::render('members/index', [
@@ -67,6 +75,7 @@ class MemberController extends Controller
             'filters' => [
                 'search' => $search,
                 'member_type' => $memberType,
+                'primary_only' => $primaryOnly,
             ],
         ]);
     }
@@ -101,6 +110,8 @@ class MemberController extends Controller
             'middle_name' => 'nullable|string|max:255',
             'title' => 'nullable|string|max:100',
             'gender' => 'nullable|in:male,female,other',
+            'parent_id' => 'nullable|exists:parents,id',
+            'parent_member_id' => 'nullable|exists:members,id',
             'aliyah' => 'nullable|boolean',
             'bnaimitzvahdate' => 'nullable|date',
             'chazanut' => 'nullable|boolean',
@@ -127,6 +138,9 @@ class MemberController extends Controller
     public function show(Member $member)
     {
         $member->load([
+            'parent',
+            'parentMember:id,first_name,last_name,email,phone1',
+            'familyMembers:id,first_name,last_name,email,phone1,parent_member_id,member_type,dob',
             'membershipPeriods' => function ($query) {
                 $query->with('invoice:id,invoice_number,invoice_date,total,status')
                     ->orderBy('begin_date', 'desc');
@@ -209,6 +223,8 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
+        $member->load(['parent', 'parentMember:id,first_name,last_name']);
+        
         return Inertia::render('members/edit', [
             'member' => $member,
         ]);
@@ -236,6 +252,12 @@ class MemberController extends Controller
             'middle_name' => 'nullable|string|max:255',
             'title' => 'nullable|string|max:100',
             'gender' => 'nullable|in:male,female,other',
+            'parent_id' => 'nullable|exists:parents,id',
+            'parent_member_id' => ['nullable', 'exists:members,id', function ($_attribute, $value, $fail) use ($member) {
+                if ($value == $member->id) {
+                    $fail('A member cannot be their own parent member.');
+                }
+            }],
             'aliyah' => 'nullable|boolean',
             'bnaimitzvahdate' => 'nullable|date',
             'chazanut' => 'nullable|boolean',
@@ -265,6 +287,53 @@ class MemberController extends Controller
 
         return redirect()->route('members.index')
             ->with('success', 'Member deleted successfully.');
+    }
+
+    /**
+     * Store a family member for a given member.
+     */
+    public function storeFamilyMember(Request $request, Member $member)
+    {
+        $validated = $request->validate([
+            'member_type' => ['required', Rule::in(['member', 'contact', 'prospect', 'former'])],
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'nullable|email|unique:members,email',
+            'phone1' => 'nullable|string|max:20',
+            'phone2' => 'nullable|string|max:20',
+            'dob' => 'nullable|date',
+            'middle_name' => 'nullable|string|max:255',
+            'title' => 'nullable|string|max:100',
+            'gender' => 'nullable|in:male,female,other',
+            'aliyah' => 'nullable|boolean',
+            'bnaimitzvahdate' => 'nullable|date',
+            'chazanut' => 'nullable|boolean',
+            'tribe' => 'nullable|in:israel,kohein,levi',
+            'dvartorah' => 'nullable|boolean',
+            'deceased' => 'nullable|boolean',
+            'father_hebrew_name' => 'nullable|string|max:255',
+            'mother_hebrew_name' => 'nullable|string|max:255',
+            'hebrew_name' => 'nullable|string|max:255',
+            'brianbatorah' => 'nullable|boolean',
+            'maftir' => 'nullable|boolean',
+            'anniversary_date' => 'nullable|date',
+        ]);
+
+        // Set parent member and inherit address if not provided
+        $validated['parent_member_id'] = $member->id;
+        
+        // Inherit address from parent member if not provided
+        $validated['address_line_1'] = $validated['address_line_1'] ?? $member->address_line_1;
+        $validated['address_line_2'] = $validated['address_line_2'] ?? $member->address_line_2;
+        $validated['city'] = $validated['city'] ?? $member->city;
+        $validated['state'] = $validated['state'] ?? $member->state;
+        $validated['zip'] = $validated['zip'] ?? $member->zip;
+        $validated['country'] = $validated['country'] ?? $member->country;
+
+        Member::create($validated);
+
+        return redirect()->route('members.show', $member)
+            ->with('success', 'Family member added successfully.');
     }
 
     /**
@@ -457,6 +526,81 @@ class MemberController extends Controller
         }
 
         return back()->with('success', 'User account created successfully for '.$member->first_name.' '.$member->last_name);
+    }
+
+    /**
+     * Create a parent account from a member and link them.
+     */
+    public function createParentFromMember(Member $member)
+    {
+        // Check if member already has a parent
+        if ($member->parent_id) {
+            return back()->with('error', 'This member is already linked to a parent account.');
+        }
+
+        // Create parent from member data
+        $parent = ParentModel::create([
+            'first_name' => $member->first_name,
+            'last_name' => $member->last_name,
+            'email' => $member->email,
+            'phone' => $member->phone1,
+            'date_of_birth' => $member->dob,
+            'address' => trim(implode("\n", array_filter([
+                $member->address_line_1,
+                $member->address_line_2,
+                implode(', ', array_filter([$member->city, $member->state, $member->zip])),
+                $member->country,
+            ]))),
+        ]);
+
+        // Link member to parent
+        $member->parent_id = $parent->id;
+        $member->save();
+
+        return back()->with('success', 'Parent account created and linked successfully.');
+    }
+
+    /**
+     * Convert a member to a student.
+     */
+    public function convertToStudent(Member $member)
+    {
+        // Load the parent member relationship if it exists
+        $member->load('parentMember');
+
+        // Determine the parent_id for the student
+        $parentId = null;
+        
+        if ($member->parent_member_id && $member->parentMember) {
+            // If this is a family member, use the parent member's parent_id
+            $parentId = $member->parentMember->parent_id;
+        } else {
+            // Otherwise use the member's own parent_id
+            $parentId = $member->parent_id;
+        }
+
+        // Build the address string
+        $address = trim(implode("\n", array_filter([
+            $member->address_line_1,
+            $member->address_line_2,
+            implode(', ', array_filter([$member->city, $member->state, $member->zip])),
+            $member->country,
+        ])));
+
+        // Create the student
+        $student = \App\Models\Student::create([
+            'first_name' => $member->first_name,
+            'last_name' => $member->last_name,
+            'middle_name' => $member->middle_name,
+            'gender' => $member->gender,
+            'date_of_birth' => $member->dob,
+            'dob' => $member->dob,
+            'address' => $address ?: null,
+            'email' => $member->email,
+            'parent_id' => $parentId,
+        ]);
+
+        return back()->with('success', "Member successfully converted to student. Student ID: {$student->id}");
     }
 
     // ==================== API Methods ====================

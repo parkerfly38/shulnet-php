@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventRSVP;
+use App\Models\EventTicketType;
 use App\Models\GabbaiAssignment;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
@@ -125,9 +127,10 @@ class MemberDashboardController extends Controller
                 ];
             });
 
-        // Get upcoming events (next 60 days)
+        // Get upcoming events (next 90 days)
+        $eventsEndDate = Carbon::today()->addDays(90);
         $events = Event::where('event_start', '>=', $startDate->toDateString())
-            ->where('event_start', '<=', $endDate->toDateString())
+            ->where('event_start', '<=', $eventsEndDate->toDateString())
             ->orderBy('event_start', 'asc')
             ->limit(10)
             ->get()
@@ -696,6 +699,10 @@ class MemberDashboardController extends Controller
             'ticket_type_id' => 'nullable|exists:event_ticket_types,id',
             'quantity' => 'required|integer|min:1',
             'payment_option' => 'required|in:invoice,pay_now',
+            'registrants' => 'nullable|array',
+            'registrants.*.name' => 'required|string|max:255',
+            'registrants.*.email' => 'required|email|max:255',
+            'registrants.*.phone' => 'required|string|max:50',
         ];
 
         if ($event->allow_guests && $event->max_guests > 0) {
@@ -750,21 +757,49 @@ class MemberDashboardController extends Controller
             ]);
         }
 
-        // Create RSVP
-        $rsvp = $member->rsvps()->create([
-            'event_id' => $event->id,
-            'event_ticket_type_id' => $validated['ticket_type_id'],
-            'invoice_id' => $invoice?->id,
-            'name' => $member->first_name.' '.$member->last_name,
-            'email' => $member->email,
-            'phone' => $member->phone1,
-            'guests' => $event->allow_guests ? ($validated['guests'] ?? 0) : 0,
-            'quantity' => $validated['quantity'],
-            'ticket_price' => $ticketPrice,
-            'total_amount' => $totalAmount,
-            'notes' => $validated['notes'] ?? null,
-            'status' => 'confirmed',
-        ]);
+        // Calculate total number of attendees
+        $totalPeople = $validated['quantity'] + ($validated['guests'] ?? 0);
+        $registrants = $validated['registrants'] ?? [];
+
+        // If we have registrant details, create individual RSVPs
+        if (count($registrants) > 0 && $totalPeople > 1) {
+            foreach ($registrants as $index => $registrant) {
+                // Determine if this is a ticketed attendee or a guest
+                $isGuest = $index >= $validated['quantity'];
+                
+                EventRSVP::create([
+                    'event_id' => $event->id,
+                    'member_id' => $member->id,
+                    'event_ticket_type_id' => $isGuest ? null : $validated['ticket_type_id'],
+                    'invoice_id' => $invoice?->id,
+                    'name' => $registrant['name'],
+                    'email' => $registrant['email'],
+                    'phone' => $registrant['phone'],
+                    'guests' => 0,
+                    'quantity' => $isGuest ? 0 : 1,
+                    'ticket_price' => $isGuest ? 0 : $ticketPrice,
+                    'total_amount' => $isGuest ? 0 : $ticketPrice,
+                    'notes' => $validated['notes'] ?? null,
+                    'status' => 'confirmed',
+                ]);
+            }
+        } else {
+            // Single RSVP (legacy behavior for single person registration)
+            $member->rsvps()->create([
+                'event_id' => $event->id,
+                'event_ticket_type_id' => $validated['ticket_type_id'],
+                'invoice_id' => $invoice?->id,
+                'name' => $member->first_name.' '.$member->last_name,
+                'email' => $member->email,
+                'phone' => $member->phone1,
+                'guests' => $event->allow_guests ? ($validated['guests'] ?? 0) : 0,
+                'quantity' => $validated['quantity'],
+                'ticket_price' => $ticketPrice,
+                'total_amount' => $totalAmount,
+                'notes' => $validated['notes'] ?? null,
+                'status' => 'confirmed',
+            ]);
+        }
 
         // Update ticket sold count
         if ($ticketType) {
@@ -945,9 +980,10 @@ class MemberDashboardController extends Controller
                 ];
             });
 
-        // Get upcoming events (next 60 days)
+        // Get upcoming events (next 90 days)
+        $eventsEndDate = Carbon::today()->addDays(90);
         $events = Event::where('event_start', '>=', $startDate->toDateString())
-            ->where('event_start', '<=', $endDate->toDateString())
+            ->where('event_start', '<=', $eventsEndDate->toDateString())
             ->orderBy('event_start', 'asc')
             ->limit(10)
             ->get()

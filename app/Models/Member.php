@@ -46,6 +46,7 @@ class Member extends Model
         'maftir',
         'anniversary_date',
         'parent_id',
+        'parent_member_id',
         'user_id',
     ];
 
@@ -121,6 +122,22 @@ class Member extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get the parent member (primary account) for this family member.
+     */
+    public function parentMember(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'parent_member_id');
+    }
+
+    /**
+     * Get all family members (children members) for this primary account.
+     */
+    public function familyMembers(): HasMany
+    {
+        return $this->hasMany(Member::class, 'parent_member_id');
     }
 
     /**

@@ -359,6 +359,118 @@
         <li>One invoice for the family unit</li>
       </ul>
 
+      <h2>Converting Members to Parents and Students</h2>
+
+      <p>ShulNET's school management features are designed to be <strong>standalone</strong>, allowing synagogues without membership systems to use only the school features. However, when both systems are in use, you can link them together.</p>
+
+      <h3>Understanding Parent Accounts</h3>
+      <p>Parent accounts in the school system are separate from member accounts. This allows:</p>
+      <ul>
+        <li>Schools to operate independently of the synagogue membership database</li>
+        <li>Non-member families to enroll children in the school</li>
+        <li>Member families to connect their existing account to student records</li>
+      </ul>
+
+      <h3>Converting a Member to a Parent Account</h3>
+      <p>When a member enrolls their child in the school, create a parent account from their member record:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Open Member Profile</h4>
+          <p>Navigate to the member's profile page.</p>
+        </li>
+
+        <li>
+          <h4>Click "Create Parent Account"</h4>
+          <p>Button appears in the Personal Information section.</p>
+        </li>
+
+        <li>
+          <h4>Parent Account Created</h4>
+          <p>System automatically creates a parent account using the member's information:</p>
+          <ul>
+            <li>Name and contact details are copied</li>
+            <li>Address is formatted for the parent record</li>
+            <li>Member and parent accounts are linked</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Add Students</h4>
+          <p>Navigate to School → Students to add the member's children using the new parent account.</p>
+        </li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Note:</strong> The member record and parent account remain separate. Changes to one don't automatically update the other.
+      </div>
+
+      <h3>Attaching an Existing Parent Account</h3>
+      <p>If a parent account already exists in the school system, you can link it to a member record:</p>
+
+      <ol>
+        <li>Open the member's profile and click "Edit Member"</li>
+        <li>In the Personal Information section, find the "Parent Account" field</li>
+        <li>Search for and select the existing parent account</li>
+        <li>Save the member record</li>
+      </ol>
+
+      <p>Once linked, the member profile will show the connected parent account and allow quick navigation to their student records.</p>
+
+      <h3>Converting a Member to a Student</h3>
+      <p>For religious school students who are also members (common for bar/bat mitzvah students), convert their member record to a student:</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Open Member Profile</h4>
+          <p>Navigate to the member's profile page.</p>
+        </li>
+
+        <li>
+          <h4>Click "Convert to Student"</h4>
+          <p>Button appears in the Quick Actions sidebar.</p>
+        </li>
+
+        <li>
+          <h4>Parent Account Assignment</h4>
+          <p>The system automatically determines the parent account:</p>
+          <ul>
+            <li>If the member is a family member (linked to a primary member), uses that parent member's parent account</li>
+            <li>If the member has their own parent account, uses that</li>
+            <li>If no parent account exists, student is created without a parent link</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Student Record Created</h4>
+          <p>A new student record is created with:</p>
+          <ul>
+            <li>All personal information copied from member record</li>
+            <li>Address inherited from the member</li>
+            <li>Parent account automatically linked</li>
+          </ul>
+        </li>
+
+        <li>
+          <h4>Original Member Record Preserved</h4>
+          <p>The member record remains intact - this creates a <em>copy</em> as a student.</p>
+        </li>
+      </ol>
+
+      <div class="alert alert-warning">
+        <strong>Family Member Example:</strong> If you have a child member (Sarah) linked to a primary member (her father David), and David has a parent account, when you convert Sarah to a student, she will automatically use David's parent account. This keeps the family structure intact across both systems.
+      </div>
+
+      <h3>Why Separate Systems?</h3>
+      <p>The standalone design provides flexibility:</p>
+      <ul>
+        <li><strong>School-Only Organizations:</strong> Day schools or religious schools not affiliated with a synagogue can use just the school features</li>
+        <li><strong>Non-Member Families:</strong> Families who aren't members can still enroll children in the school</li>
+        <li><strong>Privacy:</strong> School records can be managed separately from membership records</li>
+        <li><strong>Different Staff:</strong> School administrators and synagogue administrators can have separate access</li>
+        <li><strong>Simplified Data:</strong> Each system focuses on its specific needs without unnecessary complexity</li>
+      </ul>
+
       <h2>Best Practices</h2>
 
       <div class="card">

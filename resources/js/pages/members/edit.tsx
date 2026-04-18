@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Save, X, Search } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
+import ParentSelector from '@/components/parent-selector';
 
 interface Props {
   member: Member;
@@ -29,6 +30,8 @@ interface MemberForm {
   country: string;
   dob: string;
   gender: string;
+  parent_id: string;
+  parent_member_id: string;
   aliyah: boolean;
   bnaimitzvahdate: Date | null;
   chazanut: boolean;
@@ -44,6 +47,32 @@ interface MemberForm {
 }
 
 export default function MembersEdit({ member }: Readonly<Props>) {
+  const [memberSearch, setMemberSearch] = useState('');
+  const [memberSearchResults, setMemberSearchResults] = useState<any[]>([]);
+  const [selectedParentMember, setSelectedParentMember] = useState<any>(null);
+
+  // Load initial parent member if exists
+  useEffect(() => {
+    if ((member as any).parent_member) {
+      setSelectedParentMember((member as any).parent_member);
+    }
+  }, [member]);
+
+  // Search for members
+  useEffect(() => {
+    if (memberSearch.length >= 2) {
+      const timer = setTimeout(() => {
+        fetch(`/api/admin/members/search?q=${encodeURIComponent(memberSearch)}`)
+          .then(res => res.json())
+          .then(data => setMemberSearchResults(data))
+          .catch(err => console.error('Failed to search members:', err));
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setMemberSearchResults([]);
+    }
+  }, [memberSearch]);
+
   // Format date for HTML date input (YYYY-MM-DD)
   const formatDateForInput = (dateValue: any): string => {
     if (!dateValue) return '';
@@ -70,6 +99,8 @@ export default function MembersEdit({ member }: Readonly<Props>) {
     country: member.country || '',
     dob: formatDateForInput(member.dob),
     gender: member.gender || '',
+    parent_id: member.parent_id?.toString() || '',
+    parent_member_id: (member as any).parent_member_id?.toString() || '',
     aliyah: (member as any).aliyah || false,
     bnaimitzvahdate: (member as any).bnaimitzvahdate ? new Date((member as any).bnaimitzvahdate) : null,
     chazanut: (member as any).chazanut || false,
@@ -231,6 +262,97 @@ export default function MembersEdit({ member }: Readonly<Props>) {
               {errors.dob && (
                 <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.dob}</p>
               )}
+            </div>
+
+            <div className="mt-6">
+              <Label htmlFor="parent_id">Parent Account</Label>
+              <ParentSelector
+                value={data.parent_id}
+                onChange={(value) => setData('parent_id', value)}
+                error={errors.parent_id}
+              />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Optional - link this member to a parent account
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <Label htmlFor="parent_member_id">Family Account (Primary Member)</Label>
+              <div className="space-y-2">
+                {selectedParentMember ? (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
+                        {selectedParentMember.first_name} {selectedParentMember.last_name}
+                      </p>
+                      {selectedParentMember.email && (
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{selectedParentMember.email}</p>
+                      )}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedParentMember(null);
+                        setData('parent_member_id', '');
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        type="text"
+                        placeholder="Search for primary member..."
+                        value={memberSearch}
+                        onChange={(e) => setMemberSearch(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                    {memberSearchResults.length > 0 && (
+                      <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+                        {memberSearchResults
+                          .filter(m => m.id !== member.id) // Don't allow selecting self
+                          .map((result) => (
+                            <button
+                              key={result.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedParentMember(result);
+                                setData('parent_member_id', result.id.toString());
+                                setMemberSearch('');
+                                setMemberSearchResults([]);
+                              }}
+                              className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700 last:border-0"
+                            >
+                              <p className="font-medium text-gray-900 dark:text-gray-100">
+                                {result.first_name} {result.last_name}
+                              </p>
+                              {result.email && (
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{result.email}</p>
+                              )}
+                              {result.city && result.state && (
+                                <p className="text-xs text-gray-400 dark:text-gray-500">
+                                  {result.city}, {result.state}
+                                </p>
+                              )}
+                            </button>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+              {errors.parent_member_id && (
+                <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.parent_member_id}</p>
+              )}
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Optional - set this member as a family member of another primary account. The address will be inherited from the primary member.
+              </p>
             </div>
           </div>
 

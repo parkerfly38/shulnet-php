@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\EventRSVPExport;
 use App\Models\Calendar;
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Dedoc\Scramble\Attributes\Group;
+use Illuminate\Support\Facades\Log;
 
 #[Group(name: 'Synagogue Management')]
 class EventController extends Controller
@@ -88,28 +92,39 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info('Storing new event', $request->all());
         $validated = $request->validate([
             'calendar_id' => 'required|exists:calendars,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'required|string',
+            'start_time' => 'nullable|string',
+            'end_date' => 'nullable|string',
+            'end_time' => 'nullable|string',
             'all_day' => 'boolean',
             'location' => 'nullable|string|max:255',
             'members_only' => 'boolean',
         ]);
+
+        // Combine date and time
+        $startDateTime = $validated['start_date'] . ' ' . ($validated['start_time'] ?? '00:00');
+        $endDateTime = $validated['end_date'] ? $validated['end_date'] . ' ' . ($validated['end_time'] ?? '23:59') : null;
 
         // Map frontend field names to model field names
         $eventData = [
             'calendar_id' => $validated['calendar_id'],
             'name' => $validated['title'],
             'description' => $validated['description'],
-            'event_start' => $validated['start_date'],
-            'event_end' => $validated['end_date'],
+            'event_start' => Carbon::parse($startDateTime),
+            'event_end' => $endDateTime ? Carbon::parse($endDateTime) : null,
             'all_day' => $validated['all_day'],
             'members_only' => $validated['members_only'],
-            // Note: location field doesn't exist in the model, so we skip it
         ];
+
+        Log::info('Event data to save', [
+            'event_start' => $eventData['event_start']->toDateTimeString(),
+            'event_end' => $eventData['event_end'] ? $eventData['event_end']->toDateTimeString() : null,
+        ]);
 
         Event::create($eventData);
 
@@ -122,7 +137,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['calendar', 'rsvps.member']);
+        $event->load(['calendar', 'rsvps.member', 'rsvps.ticketType', 'ticketTypes']);
 
         // Map database fields to frontend expected fields
         $eventData = [
@@ -138,6 +153,14 @@ class EventController extends Controller
             'calendar' => $event->calendar,
             'created_at' => $event->created_at,
             'updated_at' => $event->updated_at,
+            'ticket_types' => $event->ticketTypes->map(function ($ticketType) {
+                return [
+                    'id' => $ticketType->id,
+                    'name' => $ticketType->name,
+                    'price' => $ticketType->price,
+                    'description' => $ticketType->description,
+                ];
+            }),
             'rsvps' => $event->rsvps->map(function ($rsvp) {
                 return [
                     'id' => $rsvp->id,
@@ -145,13 +168,22 @@ class EventController extends Controller
                     'email' => $rsvp->email,
                     'phone' => $rsvp->phone,
                     'guests' => $rsvp->guests,
+                    'quantity' => $rsvp->quantity,
+                    'ticket_price' => $rsvp->ticket_price,
+                    'total_amount' => $rsvp->total_amount,
                     'status' => $rsvp->status,
                     'notes' => $rsvp->notes,
+                    'event_ticket_type_id' => $rsvp->event_ticket_type_id,
                     'created_at' => $rsvp->created_at,
                     'member' => $rsvp->member ? [
                         'id' => $rsvp->member->id,
                         'first_name' => $rsvp->member->first_name,
                         'last_name' => $rsvp->member->last_name,
+                    ] : null,
+                    'ticketType' => $rsvp->ticketType ? [
+                        'id' => $rsvp->ticketType->id,
+                        'name' => $rsvp->ticketType->name,
+                        'price' => $rsvp->ticketType->price,
                     ] : null,
                 ];
             }),
@@ -197,28 +229,39 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        Log::info("Updating event", $request->all());
         $validated = $request->validate([
             'calendar_id' => 'required|exists:calendars,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'start_date' => 'required|string',
+            'start_time' => 'nullable|string',
+            'end_date' => 'nullable|string',
+            'end_time' => 'nullable|string',
             'all_day' => 'boolean',
             'location' => 'nullable|string|max:255',
             'members_only' => 'boolean',
         ]);
+
+        // Combine date and time
+        $startDateTime = $validated['start_date'] . ' ' . ($validated['start_time'] ?? '00:00');
+        $endDateTime = $validated['end_date'] ? $validated['end_date'] . ' ' . ($validated['end_time'] ?? '23:59') : null;
 
         // Map frontend field names to model field names
         $eventData = [
             'calendar_id' => $validated['calendar_id'],
             'name' => $validated['title'],
             'description' => $validated['description'],
-            'event_start' => $validated['start_date'],
-            'event_end' => $validated['end_date'],
+            'event_start' => Carbon::parse($startDateTime),
+            'event_end' => $endDateTime ? Carbon::parse($endDateTime) : null,
             'all_day' => $validated['all_day'],
             'members_only' => $validated['members_only'],
-            // Note: location field doesn't exist in the model, so we skip it
         ];
+
+        Log::info('Event data to save', [
+            'event_start' => $eventData['event_start']->toDateTimeString(),
+            'event_end' => $eventData['event_end'] ? $eventData['event_end']->toDateTimeString() : null,
+        ]);
 
         $event->update($eventData);
 
@@ -235,6 +278,19 @@ class EventController extends Controller
 
         return redirect('/admin/events')
             ->with('success', 'Event deleted successfully.');
+    }
+
+    /**
+     * Export RSVPs for a specific event to Excel.
+     */
+    public function exportRsvps(Event $event)
+    {
+        $eventName = preg_replace('/[^A-Za-z0-9\-]/', '_', $event->name);
+        
+        return Excel::download(
+            new EventRSVPExport($event->id),
+            'rsvps-' . $eventName . '-' . now()->format('Y-m-d') . '.xlsx'
+        );
     }
 
     /**

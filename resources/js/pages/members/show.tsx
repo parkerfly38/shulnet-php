@@ -1,10 +1,22 @@
-import React, { useMemo } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import React, { useMemo, useState } from 'react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard, TrendingUp, Users, DollarSign, Award, ShoppingCart } from 'lucide-react';
+import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard, TrendingUp, Users, DollarSign, Award, ShoppingCart, GraduationCap } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ContributionData {
   boards_count: number;
@@ -20,6 +32,33 @@ interface Props {
 }
 
 export default function MembersShow({ member, contributionData }: Readonly<Props>) {
+  const [showAddFamilyMember, setShowAddFamilyMember] = useState(false);
+  
+  const { data, setData, post, processing, errors, reset } = useForm({
+    member_type: 'member',
+    first_name: '',
+    last_name: '',
+    middle_name: '',
+    email: '',
+    phone1: '',
+    dob: '',
+    gender: '',
+    title: '',
+    hebrew_name: '',
+    father_hebrew_name: '',
+    mother_hebrew_name: '',
+  });
+
+  const handleSubmitFamilyMember = (e: React.FormEvent) => {
+    e.preventDefault();
+    post(`/admin/members/${member.id}/family-members`, {
+      onSuccess: () => {
+        setShowAddFamilyMember(false);
+        reset();
+      },
+    });
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -161,6 +200,50 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
                     <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
                       {formatDate(member.dob)}
+                    </dd>
+                  </div>
+                )}
+                
+                {member.parent ? (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Parent Account</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">
+                      <Link 
+                        href={`/admin/parents/${member.parent.id}`}
+                        className="text-blue-600 dark:text-blue-400 hover:underline flex items-center"
+                      >
+                        <User className="h-4 w-4 mr-1" />
+                        {member.parent.first_name} {member.parent.last_name}
+                        {member.parent.email && ` (${member.parent.email})`}
+                      </Link>
+                    </dd>
+                  </div>
+                ) : (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Parent Account</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">
+                      <form 
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          if (confirm('Create a parent account from this member\'s information?')) {
+                            router.post(`/admin/members/${member.id}/create-parent`);
+                          }
+                        }}
+                        className="inline"
+                      >
+                        <Button 
+                          type="submit" 
+                          size="sm" 
+                          variant="outline"
+                          className="flex items-center gap-1"
+                        >
+                          <Plus className="h-3 w-3" />
+                          Create Parent Account
+                        </Button>
+                      </form>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Creates a parent account using this member's information
+                      </p>
                     </dd>
                   </div>
                 )}
@@ -388,6 +471,257 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
                 </div>
               )}
             </div>
+
+            {/* Family Members Section */}
+            <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
+                  <Users className="h-5 w-5 mr-2" />
+                  Family Members
+                  {member.family_members && member.family_members.length > 0 && (
+                    <Badge variant="secondary" className="ml-2">
+                      {member.family_members.length}
+                    </Badge>
+                  )}
+                </h2>
+                <Dialog open={showAddFamilyMember} onOpenChange={setShowAddFamilyMember}>
+                  <DialogTrigger asChild>
+                    <Button size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Family Member
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Add Family Member</DialogTitle>
+                      <DialogDescription>
+                        Add a new family member under {member.first_name} {member.last_name}'s account.
+                        The address will be automatically inherited from the primary account.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmitFamilyMember} className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="first_name">First Name *</Label>
+                          <Input
+                            id="first_name"
+                            value={data.first_name}
+                            onChange={(e) => setData('first_name', e.target.value)}
+                            required
+                          />
+                          {errors.first_name && <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>}
+                        </div>
+                        <div>
+                          <Label htmlFor="last_name">Last Name *</Label>
+                          <Input
+                            id="last_name"
+                            value={data.last_name}
+                            onChange={(e) => setData('last_name', e.target.value)}
+                            required
+                          />
+                          {errors.last_name && <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>}
+                        </div>
+                        <div>
+                          <Label htmlFor="middle_name">Middle Name</Label>
+                          <Input
+                            id="middle_name"
+                            value={data.middle_name}
+                            onChange={(e) => setData('middle_name', e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="title">Title</Label>
+                          <Input
+                            id="title"
+                            value={data.title}
+                            onChange={(e) => setData('title', e.target.value)}
+                            placeholder="Mr., Mrs., Dr., etc."
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email">Email</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                          />
+                          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                        </div>
+                        <div>
+                          <Label htmlFor="phone1">Phone</Label>
+                          <Input
+                            id="phone1"
+                            value={data.phone1}
+                            onChange={(e) => setData('phone1', e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="dob">Date of Birth</Label>
+                          <Input
+                            id="dob"
+                            type="date"
+                            value={data.dob}
+                            onChange={(e) => setData('dob', e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="gender">Gender</Label>
+                          <Select value={data.gender} onValueChange={(value) => setData('gender', value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select gender" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="member_type">Member Type *</Label>
+                          <Select value={data.member_type} onValueChange={(value) => setData('member_type', value)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="member">Member</SelectItem>
+                              <SelectItem value="contact">Contact</SelectItem>
+                              <SelectItem value="prospect">Prospect</SelectItem>
+                              <SelectItem value="former">Former</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      
+                      <div className="border-t pt-4">
+                        <h3 className="text-sm font-medium mb-3">Jewish Details (Optional)</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="hebrew_name">Hebrew Name</Label>
+                            <Input
+                              id="hebrew_name"
+                              value={data.hebrew_name}
+                              onChange={(e) => setData('hebrew_name', e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="father_hebrew_name">Father's Hebrew Name</Label>
+                            <Input
+                              id="father_hebrew_name"
+                              value={data.father_hebrew_name}
+                              onChange={(e) => setData('father_hebrew_name', e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="mother_hebrew_name">Mother's Hebrew Name</Label>
+                            <Input
+                              id="mother_hebrew_name"
+                              value={data.mother_hebrew_name}
+                              onChange={(e) => setData('mother_hebrew_name', e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => setShowAddFamilyMember(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={processing}>
+                          {processing ? 'Adding...' : 'Add Family Member'}
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              {/* Show parent member if this is a family member */}
+              {member.parent_member && (
+                <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <p className="text-sm text-blue-900 dark:text-blue-200 mb-2">
+                    This is a family member of:
+                  </p>
+                  <Link 
+                    href={`/admin/members/${member.parent_member.id}`}
+                    className="flex items-center text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    <span className="font-medium">
+                      {member.parent_member.first_name} {member.parent_member.last_name}
+                    </span>
+                    {member.parent_member.email && (
+                      <span className="ml-2 text-sm">({member.parent_member.email})</span>
+                    )}
+                  </Link>
+                </div>
+              )}
+
+              {member.family_members && member.family_members.length > 0 ? (
+                <div className="space-y-3">
+                  {member.family_members.map((familyMember: any) => (
+                    <div 
+                      key={familyMember.id} 
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Link 
+                              href={`/admin/members/${familyMember.id}`}
+                              className="text-base font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
+                            >
+                              {familyMember.first_name} {familyMember.last_name}
+                            </Link>
+                            <Badge variant="secondary" className="text-xs capitalize">
+                              {familyMember.member_type}
+                            </Badge>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            {familyMember.email && (
+                              <div className="flex items-center">
+                                <Mail className="h-3 w-3 mr-1" />
+                                <a href={`mailto:${familyMember.email}`} className="hover:underline">
+                                  {familyMember.email}
+                                </a>
+                              </div>
+                            )}
+                            {familyMember.phone1 && (
+                              <div className="flex items-center">
+                                <Phone className="h-3 w-3 mr-1" />
+                                <a href={`tel:${familyMember.phone1}`} className="hover:underline">
+                                  {familyMember.phone1}
+                                </a>
+                              </div>
+                            )}
+                            {familyMember.dob && (
+                              <div className="flex items-center">
+                                <Calendar className="h-3 w-3 mr-1" />
+                                {formatDate(familyMember.dob)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <Link href={`/admin/members/${familyMember.id}/edit`}>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                  <p>No family members added yet.</p>
+                  <p className="text-sm mt-1">Family members will share the same address and be linked to this primary account.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Sidebar */}
@@ -448,6 +782,26 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
                     </Button>
                   </a>
                 )}
+                
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (confirm(`Convert ${member.first_name} ${member.last_name} to a student?${member.parent_member ? `\n\nThis will use the parent account from ${member.parent_member.first_name} ${member.parent_member.last_name}.` : member.parent_id ? '\n\nThis will use the existing parent account.' : '\n\nNote: No parent account is linked. The student will be created without a parent.'}`))
+                    {
+                      router.post(`/admin/members/${member.id}/convert-to-student`);
+                    }
+                  }}
+                  className="block"
+                >
+                  <Button 
+                    type="submit" 
+                    variant="outline" 
+                    className="w-full justify-start"
+                  >
+                    <GraduationCap className="h-4 w-4 mr-2" />
+                    Convert to Student
+                  </Button>
+                </form>
               </div>
             </div>
           </div>

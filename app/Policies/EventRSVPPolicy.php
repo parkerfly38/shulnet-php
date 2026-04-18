@@ -12,7 +12,7 @@ class EventRSVPPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -20,7 +20,7 @@ class EventRSVPPolicy
      */
     public function view(User $user, EventRSVP $eventRSVP): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -28,7 +28,7 @@ class EventRSVPPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -36,7 +36,7 @@ class EventRSVPPolicy
      */
     public function update(User $user, EventRSVP $eventRSVP): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -44,7 +44,7 @@ class EventRSVPPolicy
      */
     public function delete(User $user, EventRSVP $eventRSVP): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -52,7 +52,7 @@ class EventRSVPPolicy
      */
     public function restore(User $user, EventRSVP $eventRSVP): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -60,6 +60,6 @@ class EventRSVPPolicy
      */
     public function forceDelete(User $user, EventRSVP $eventRSVP): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 }

@@ -57,27 +57,27 @@ class EventRSVPController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(EventRSVP $eventRSVP)
+    public function show(EventRSVP $event_rsvp)
     {
-        return $eventRSVP->load(['event', 'member', 'ticketType']);
+        return $event_rsvp->load(['event', 'member', 'ticketType']);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEventRSVPRequest $request, EventRSVP $eventRSVP)
+    public function update(UpdateEventRSVPRequest $request, EventRSVP $event_rsvp)
     {
-        $eventRSVP->update($request->validated());
+        $event_rsvp->update($request->validated());
 
-        return response()->json($eventRSVP->load(['event', 'member', 'ticketType']));
+        return response()->json($event_rsvp->load(['event', 'member', 'ticketType']));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EventRSVP $eventRSVP)
+    public function destroy(EventRSVP $event_rsvp)
     {
-        $eventRSVP->delete();
+        $event_rsvp->delete();
 
         return response()->json(['message' => 'RSVP deleted successfully']);
     }

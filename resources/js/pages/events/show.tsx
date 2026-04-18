@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Edit, Trash2, Globe, Ticket } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Users, Edit, Trash2, Globe, Ticket, Download, Pencil } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreadcrumbItem } from '@/types';
+import EditRsvpDialog from '@/components/edit-rsvp-dialog';
 
 const baseBreadcrumbs: BreadcrumbItem[] = [
   {
@@ -25,19 +26,35 @@ interface Calendar {
     public: boolean;
 }
 
+interface TicketType {
+    id: number;
+    name: string;
+    price: number;
+    description?: string;
+}
+
 interface RSVP {
     id: number;
     name: string;
     email: string;
     phone: string | null;
     guests: number;
+    quantity: number;
+    ticket_price: number;
+    total_amount: number;
     status: string;
     notes: string | null;
     created_at: string;
+    event_ticket_type_id: number | null;
     member: {
         id: number;
         first_name: string;
         last_name: string;
+    } | null;
+    ticketType?: {
+        id: number;
+        name: string;
+        price: number;
     } | null;
 }
 
@@ -54,6 +71,7 @@ interface Event {
     created_at: string;
     updated_at: string;
     rsvps: RSVP[];
+    ticket_types: TicketType[];
 }
 
 interface EventShowProps {
@@ -61,6 +79,9 @@ interface EventShowProps {
 }
 
 export default function EventShow({ event }: EventShowProps) {
+    const [editingRsvp, setEditingRsvp] = useState<RSVP | null>(null);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
         {
             title: 'Dashboard',
@@ -81,6 +102,52 @@ export default function EventShow({ event }: EventShowProps) {
             router.delete(`/admin/events/${event.id}`);
         }
     };
+
+    const handleExportRsvps = () => {
+        window.location.href = `/admin/events/${event.id}/export-rsvps`;
+    };
+    
+    const handleEditRsvp = (rsvp: RSVP) => {
+        setEditingRsvp(rsvp);
+        setIsEditDialogOpen(true);
+    };
+    
+    const handleCloseEditDialog = () => {
+        setIsEditDialogOpen(false);
+        setEditingRsvp(null);
+    };
+    
+    const handleRsvpUpdated = () => {
+        // Refresh the page to show updated data
+        router.reload({ only: ['event'] });
+    };
+    
+    const handleDeleteRsvp = (rsvp: RSVP) => {
+        if (confirm(`Are you sure you want to delete the RSVP for "${rsvp.name}"?`)) {
+            const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            fetch(`/api/admin/event-rsvps/${rsvp.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': token || '',
+                },
+                credentials: 'include',
+            })
+            .then(response => {
+                if (response.ok) {
+                    router.reload({ only: ['event'] });
+                } else {
+                    alert('Failed to delete RSVP');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting RSVP:', error);
+                alert('Failed to delete RSVP');
+            });
+        }
+    };
+
     const getStatusBadge = (status: string) => {
         const colors = {
             confirmed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
@@ -336,10 +403,22 @@ export default function EventShow({ event }: EventShowProps) {
                 {event.rsvps && event.rsvps.length > 0 && (
                     <Card>
                         <CardHeader>
-                            <CardTitle>Event RSVPs ({event.rsvps.length})</CardTitle>
-                            <CardDescription>
-                                Registered attendees for this event
-                            </CardDescription>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle>Event RSVPs ({event.rsvps.length})</CardTitle>
+                                    <CardDescription>
+                                        Registered attendees for this event
+                                    </CardDescription>
+                                </div>
+                                <Button
+                                    onClick={handleExportRsvps}
+                                    variant="outline"
+                                    size="sm"
+                                >
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Export to Excel
+                                </Button>
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <div className="overflow-x-auto">
@@ -352,6 +431,7 @@ export default function EventShow({ event }: EventShowProps) {
                                             <th className="pb-3 text-sm font-medium text-gray-500">Guests</th>
                                             <th className="pb-3 text-sm font-medium text-gray-500">Status</th>
                                             <th className="pb-3 text-sm font-medium text-gray-500">Registered</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y">
@@ -365,6 +445,11 @@ export default function EventShow({ event }: EventShowProps) {
                                                         {rsvp.member && (
                                                             <p className="text-xs text-gray-500">
                                                                 Member: {rsvp.member.first_name} {rsvp.member.last_name}
+                                                            </p>
+                                                        )}
+                                                        {rsvp.ticketType && (
+                                                            <p className="text-xs text-gray-500">
+                                                                {rsvp.ticketType.name}
                                                             </p>
                                                         )}
                                                     </div>
@@ -385,6 +470,27 @@ export default function EventShow({ event }: EventShowProps) {
                                                 </td>
                                                 <td className="py-3 text-sm text-gray-500">
                                                     {new Date(rsvp.created_at).toLocaleDateString()}
+                                                </td>
+                                                <td className="py-3">
+                                                    <div className="flex items-center gap-1">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleEditRsvp(rsvp)}
+                                                            title="Edit RSVP"
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleDeleteRsvp(rsvp)}
+                                                            className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-950"
+                                                            title="Delete RSVP"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -411,6 +517,15 @@ export default function EventShow({ event }: EventShowProps) {
                     </Card>
                 )}
             </div>
+            
+            {/* Edit RSVP Dialog */}
+            <EditRsvpDialog
+                rsvp={editingRsvp}
+                ticketTypes={event.ticket_types || []}
+                isOpen={isEditDialogOpen}
+                onClose={handleCloseEditDialog}
+                onSuccess={handleRsvpUpdated}
+            />
         </AppLayout>
     );
 }

@@ -27,10 +27,14 @@ class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, Wi
         $query = Yahrzeit::with('members');
 
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('hebrew_date', [$this->startDate, $this->endDate]);
+            // Convert dates to Hebrew month/day for filtering
+            // For now, filter by Gregorian date_of_death if provided
+            $query->whereBetween('date_of_death', [$this->startDate, $this->endDate]);
         }
 
-        return $query->orderBy('hebrew_date')->get();
+        return $query->orderBy('hebrew_month_of_death')
+            ->orderBy('hebrew_day_of_death')
+            ->get();
     }
 
     public function headings(): array
@@ -39,11 +43,14 @@ class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, Wi
             'ID',
             'Name',
             'Hebrew Name',
-            'Hebrew Date',
+            'Hebrew Day',
+            'Hebrew Month',
+            'Hebrew Year',
             'Gregorian Date',
             'Observance Type',
-            'Relationship',
             'Associated Members',
+            'Relationships',
+            'Notes',
             'Created At',
         ];
     }
@@ -54,15 +61,22 @@ class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, Wi
             return $member->first_name.' '.$member->last_name;
         })->join(', ');
 
+        $relationships = $yahrzeit->members->map(function ($member) {
+            return $member->pivot->relationship ?? '';
+        })->filter()->join(', ');
+
         return [
             $yahrzeit->id,
             $yahrzeit->name,
             $yahrzeit->hebrew_name,
-            $yahrzeit->hebrew_date,
-            $yahrzeit->gregorian_date ? $yahrzeit->gregorian_date->format('Y-m-d') : '',
+            $yahrzeit->hebrew_day_of_death,
+            $yahrzeit->hebrew_month_of_death,
+            $yahrzeit->hebrew_year_of_death,
+            $yahrzeit->date_of_death ? $yahrzeit->date_of_death->format('Y-m-d') : '',
             $yahrzeit->observance_type,
-            $yahrzeit->relationship,
             $memberNames,
+            $relationships,
+            $yahrzeit->notes,
             $yahrzeit->created_at ? $yahrzeit->created_at->format('Y-m-d H:i:s') : '',
         ];
     }

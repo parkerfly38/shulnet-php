@@ -66,6 +66,13 @@ export interface Member {
     country?: string;
     dob?: string;
     gender?: string;
+    parent_id?: number;
+    parent?: {
+        id: number;
+        first_name: string;
+        last_name: string;
+        email: string;
+    };
     aliyah?: boolean;
     bnaimitzvahdate?: string;
     chazanut?: boolean;
