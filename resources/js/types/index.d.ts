@@ -89,9 +89,18 @@ export interface Member {
     committees?: CommitteeMembership[];
     boards?: BoardMembership[];
     email_records?: EmailRecord[];
+    related_members?: RelatedMember[];
+    related_by?: RelatedMember[];
     created_at: string;
     updated_at: string;
     user_id?: number;
+}
+
+export interface RelatedMember extends Omit<Member, 'related_members' | 'related_by'> {
+    pivot: {
+        id: number;
+        relationship_type: string;
+    };
 }
 
 export interface MembershipPeriod {
