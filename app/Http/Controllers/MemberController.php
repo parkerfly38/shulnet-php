@@ -33,7 +33,7 @@ class MemberController extends Controller
         $query = Member::query()
             ->select([
                 'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1',
-                'city', 'state', 'user_id', 'parent_member_id', 'created_at', 'updated_at',
+                'city', 'state', 'user_id', 'created_at', 'updated_at',
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
