@@ -196,11 +196,11 @@ export function GlobalSearchDialog({
                                         {student.name}
                                     </div>
                                     <div className="text-xs text-muted-foreground">
-                                        {student.parent && (
-                                            <span>Parent: {student.parent}</span>
+                                        {student.parents && student.parents.length > 0 && (
+                                            <span>Parent{student.parents.length > 1 ? 's' : ''}: {student.parents}</span>
                                         )}
                                         {student.email &&
-                                            student.parent && <span> • </span>}
+                                            student.parents && student.parents.length > 0 && <span> • </span>}
                                         {student.email && (
                                             <span>{student.email}</span>
                                         )}

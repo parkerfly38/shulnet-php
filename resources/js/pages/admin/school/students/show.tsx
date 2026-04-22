@@ -36,7 +36,21 @@ export default function StudentsShow() {
                         <div><strong>Date of Birth:</strong> {data.date_of_birth || data.dob}</div>
                         <div><strong>Email:</strong> {data.email}</div>
                         <div><strong>Parent Email:</strong> {data.is_parent_email ? 'Yes' : 'No'}</div>
-                        <div><strong>Parent:</strong> {data.parent?.first_name} {data.parent?.last_name}</div>
+                        <div className="col-span-1 md:col-span-2">
+                            <strong>Parents:</strong>{' '}
+                            {data.parents && data.parents.length > 0 ? (
+                                <div className="mt-1 space-y-1">
+                                    {data.parents.map((parent: any) => (
+                                        <div key={parent.id} className="inline-block mr-2 mb-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded">
+                                            {parent.first_name} {parent.last_name}
+                                            {parent.email && <span className="text-sm ml-2">({parent.email})</span>}
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <span className="text-gray-500">No parents assigned</span>
+                            )}
+                        </div>
                         <div className="col-span-1 md:col-span-2"><strong>Address:</strong> {data.address}</div>
                         {data.picture_url && (
                             <div className="col-span-1 md:col-span-2">

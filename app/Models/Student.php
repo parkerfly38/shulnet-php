@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
@@ -19,12 +19,11 @@ class Student extends Model
         'picture_url',
         'email',
         'is_parent_email',
-        'parent_id',
     ];
 
-    public function parent(): BelongsTo
+    public function parents(): BelongsToMany
     {
-        return $this->belongsTo(ParentModel::class, 'parent_id');
+        return $this->belongsToMany(ParentModel::class, 'parent_student', 'student_id', 'parent_id');
     }
 
     public function classGrades(): HasMany

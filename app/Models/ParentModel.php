@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ParentModel extends Model
@@ -20,9 +20,9 @@ class ParentModel extends Model
         'phone',
     ];
 
-    public function students(): HasMany
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(Student::class, 'parent_id');
+        return $this->belongsToMany(Student::class, 'parent_student', 'parent_id', 'student_id');
     }
 
     public function member(): HasOne
