@@ -17,7 +17,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
                 'exams' => \App\Models\Exam::count(),
                 'parents' => \App\Models\ParentModel::count(),
             ],
-            'recentStudents' => \App\Models\Student::with('parent')->latest()->take(5)->get(),
+            'recentStudents' => \App\Models\Student::with('parents')->latest()->take(5)->get(),
             'upcomingExams' => \App\Models\Exam::with('subject')
                 ->where('start_date', '>=', now())
                 ->orderBy('start_date')
@@ -68,11 +68,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
     Route::get('parents', fn() => Inertia::render('admin/school/parents/index'))->name('admin.school.parents.index');
     Route::get('parents/create', fn() => Inertia::render('admin/school/parents/create'))->name('admin.school.parents.create');
     Route::get('parents/{id}', function ($id) {
-        $model = \App\Models\ParentModel::findOrFail($id);
+        $model = \App\Models\ParentModel::with('students')->findOrFail($id);
         return Inertia::render('admin/school/parents/show', ['item' => $model]);
     })->name('admin.school.parents.show');
     Route::get('parents/{id}/edit', function ($id) {
-        $model = \App\Models\ParentModel::findOrFail($id);
+        $model = \App\Models\ParentModel::with('students')->findOrFail($id);
         return Inertia::render('admin/school/parents/edit', ['item' => $model]);
     })->name('admin.school.parents.edit');
 
@@ -80,11 +80,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
     Route::get('students', fn() => Inertia::render('admin/school/students/index'))->name('admin.school.students.index');
     Route::get('students/create', fn() => Inertia::render('admin/school/students/create'))->name('admin.school.students.create');
     Route::get('students/{id}', function ($id) {
-        $model = \App\Models\Student::with('parent')->findOrFail($id);
+        $model = \App\Models\Student::with('parents')->findOrFail($id);
         return Inertia::render('admin/school/students/show', ['item' => $model]);
     })->name('admin.school.students.show');
     Route::get('students/{id}/edit', function ($id) {
-        $model = \App\Models\Student::with('parent')->findOrFail($id);
+        $model = \App\Models\Student::with('parents')->findOrFail($id);
         return Inertia::render('admin/school/students/edit', ['item' => $model]);
     })->name('admin.school.students.edit');
     Route::post('students/import', [\App\Http\Controllers\StudentController::class, 'import'])->name('admin.school.students.import');

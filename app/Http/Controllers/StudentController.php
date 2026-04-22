@@ -23,7 +23,7 @@ class StudentController extends Controller
         $perPage = (int) $request->input('per_page', 25);
         $q = $request->input('q');
 
-        $query = Student::query();
+        $query = Student::with('parents');
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('first_name', 'like', "%{$q}%")
@@ -44,7 +44,8 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Student::findOrFail($id));
+        $student = Student::with('parents')->findOrFail($id);
+        return response()->json($student);
     }
 
     /**
@@ -56,8 +57,31 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'dob' => 'nullable|date', 'parent_id' => 'nullable|integer', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
+        $data = $request->validate([
+            'first_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'middle_name' => 'nullable|string',
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'dob' => 'nullable|date',
+            'address' => 'nullable|string',
+            'picture_url' => 'nullable|string',
+            'email' => 'nullable|email',
+            'is_parent_email' => 'nullable|boolean',
+            'parent_ids' => 'nullable|array',
+            'parent_ids.*' => 'integer|exists:parents,id',
+        ]);
+        
+        $parentIds = $data['parent_ids'] ?? [];
+        unset($data['parent_ids']);
+        
         $model = Student::create($data);
+        
+        if (!empty($parentIds)) {
+            $model->parents()->sync($parentIds);
+        }
+        
+        $model->load('parents');
 
         return response()->json($model, 201);
     }
@@ -72,8 +96,28 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $model = Student::findOrFail($id);
-        $data = $request->validate(['first_name' => 'nullable|string', 'last_name' => 'nullable|string', 'dob' => 'nullable|date', 'parent_id' => 'nullable|integer', 'email' => 'nullable|email', 'phone' => 'nullable|string']);
+        $data = $request->validate([
+            'first_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'middle_name' => 'nullable|string',
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'dob' => 'nullable|date',
+            'address' => 'nullable|string',
+            'picture_url' => 'nullable|string',
+            'email' => 'nullable|email',
+            'is_parent_email' => 'nullable|boolean',
+            'parent_ids' => 'nullable|array',
+            'parent_ids.*' => 'integer|exists:parents,id',
+        ]);
+        
+        $parentIds = $data['parent_ids'] ?? [];
+        unset($data['parent_ids']);
+        
         $model->update($data);
+        
+        $model->parents()->sync($parentIds);
+        $model->load('parents');
 
         return response()->json($model);
     }

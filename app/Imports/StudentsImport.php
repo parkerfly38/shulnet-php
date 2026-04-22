@@ -20,6 +20,8 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
     protected $updated = 0;
 
     protected $errors = [];
+    
+    protected $pendingParentSyncs = [];
 
     public function model(array $row)
     {
@@ -58,8 +60,13 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
                 'address' => $row['address'] ?? $student->address,
                 'picture_url' => $row['picture_url'] ?? $student->picture_url,
                 'is_parent_email' => isset($row['is_parent_email']) ? (bool) $row['is_parent_email'] : $student->is_parent_email,
-                'parent_id' => $row['parent_id'] ?? $student->parent_id,
             ]);
+            
+            // Sync parent relationship if parent_id is provided
+            if (!empty($row['parent_id'])) {
+                $student->parents()->sync([$row['parent_id']]);
+            }
+            
             $this->updated++;
 
             return null;
@@ -68,7 +75,7 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
         // Create new student
         $this->imported++;
 
-        return new Student([
+        $newStudent = Student::create([
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
             'middle_name' => $row['middle_name'] ?? null,
@@ -79,8 +86,14 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
             'address' => $row['address'] ?? null,
             'picture_url' => $row['picture_url'] ?? null,
             'is_parent_email' => isset($row['is_parent_email']) ? (bool) $row['is_parent_email'] : false,
-            'parent_id' => $row['parent_id'] ?? null,
         ]);
+        
+        // Sync parent relationship if parent_id is provided
+        if (!empty($row['parent_id'])) {
+            $newStudent->parents()->sync([$row['parent_id']]);
+        }
+        
+        return null;
     }
 
     public function rules(): array
