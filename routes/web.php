@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,10 @@ use Illuminate\Support\Facades\Route;
 // Main dashboard (authenticated users)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Role switching routes
+    Route::post('switch-role', [RoleSwitchController::class, 'switch'])->name('role.switch');
+    Route::get('available-roles', [RoleSwitchController::class, 'availableRoles'])->name('role.available');
 });
 
 // Include modular route files

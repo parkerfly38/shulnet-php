@@ -50,6 +50,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     // Member Management
     Route::post('members/import', [MemberController::class, 'import'])->name('members.import');
     Route::get('members/template/download', [MemberController::class, 'downloadTemplate'])->name('members.template.download');
+    Route::get('members/search-users', [MemberController::class, 'searchUsers'])->name('members.search-users');
     Route::resource('members', MemberController::class)->names([
         'index' => 'members.index',
         'create' => 'members.create',
@@ -60,6 +61,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
         'destroy' => 'members.destroy',
     ]);
     Route::post('members/{member}/create-user', [MemberController::class, 'createUser'])->name('members.create-user');
+    Route::post('members/{member}/link-user', [MemberController::class, 'linkUser'])->name('members.link-user');
     Route::post('members/{member}/create-parent', [MemberController::class, 'createParentFromMember'])->name('members.create-parent');
     Route::post('members/{member}/convert-to-student', [MemberController::class, 'convertToStudent'])->name('members.convert-to-student');
     Route::post('members/{member}/family-members', [MemberController::class, 'storeFamilyMember'])->name('members.family-members.store');

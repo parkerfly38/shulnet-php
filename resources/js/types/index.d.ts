@@ -33,6 +33,7 @@ export interface SharedData {
         hebrew: string;
     };
     currency: string;
+    roleSwitch?: RoleSwitch;
     [key: string]: unknown;
 }
 
@@ -528,3 +529,17 @@ export interface TorahReadingResponse {
     };
     items: TorahReadingItem[];
 }
+
+// Role Switching
+export interface RoleInfo {
+    value: string;
+    label: string;
+    route: string;
+}
+
+export interface RoleSwitch {
+    enabled: boolean;
+    activeRole: string;
+    roles: RoleInfo[];
+}
+

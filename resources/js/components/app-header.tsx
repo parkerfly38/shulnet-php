@@ -35,6 +35,7 @@ import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search, Receipt } from 'lucide-react';
 import AppLogo from './app-logo';
+import { useState } from 'react';
 
 const mainNavItems: NavItem[] = [
     {
@@ -74,6 +75,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const { auth } = page.props;
     const getInitials = useInitials();
     const avatarUrl = auth.user.avatar || (auth.user.email ? getGravatarUrlSync(auth.user.email, 200) : undefined);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const handleSearchClick = () => {
         // Trigger the global search by dispatching a custom event
@@ -254,8 +256,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                     </TooltipProvider>
                                 ))}
                             </div>
-                        </div>
-                        <DropdownMenu>
+                        </div> open={dropdownOpen} onOpenChange={setDropdownOpen}>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
@@ -273,6 +274,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56" align="end">
+                                <UserMenuContent user={auth.user} onClose={() => setDropdownOpen(false)" align="end">
                                 <UserMenuContent user={auth.user} />
                             </DropdownMenuContent>
                         </DropdownMenu>
