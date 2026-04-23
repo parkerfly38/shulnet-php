@@ -10,12 +10,18 @@ return new class extends Migration
     public function up()
     {
         // Migrate existing parent_id data to the pivot table
-        DB::statement('
-            INSERT INTO parent_student (parent_id, student_id, created_at, updated_at)
-            SELECT parent_id, id, NOW(), NOW()
-            FROM students
-            WHERE parent_id IS NOT NULL
-        ');
+        $students = DB::table('students')
+            ->whereNotNull('parent_id')
+            ->get(['id', 'parent_id']);
+        
+        foreach ($students as $student) {
+            DB::table('parent_student')->insert([
+                'parent_id' => $student->parent_id,
+                'student_id' => $student->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
         
         Schema::table('students', function (Blueprint $table) {
             $table->dropForeign(['parent_id']);
@@ -30,14 +36,15 @@ return new class extends Migration
         });
         
         // Migrate first parent back to parent_id column (best effort)
-        DB::statement('
-            UPDATE students s
-            INNER JOIN (
-                SELECT student_id, MIN(parent_id) as parent_id
-                FROM parent_student
-                GROUP BY student_id
-            ) ps ON s.id = ps.student_id
-            SET s.parent_id = ps.parent_id
-        ');
+        $parentStudents = DB::table('parent_student')
+            ->select('student_id', DB::raw('MIN(parent_id) as parent_id'))
+            ->groupBy('student_id')
+            ->get();
+        
+        foreach ($parentStudents as $ps) {
+            DB::table('students')
+                ->where('id', $ps->student_id)
+                ->update(['parent_id' => $ps->parent_id]);
+        }
     }
 };
