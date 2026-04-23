@@ -616,6 +616,69 @@ class MemberController extends Controller
     }
 
     /**
+     * Link an existing user to a member
+     */
+    public function linkUser(Request $request, Member $member)
+    {
+        // Check if member already has a user
+        if ($member->user_id) {
+            return back()->with('error', 'This member already has an associated user account.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::findOrFail($validated['user_id']);
+
+        // Check if this user is already linked to another member
+        $existingMember = Member::where('user_id', $user->id)->first();
+        if ($existingMember) {
+            return back()->with('error', 'This user is already linked to another member: '.$existingMember->first_name.' '.$existingMember->last_name);
+        }
+
+        // Link the user to the member
+        $member->user_id = $user->id;
+        $member->save();
+
+        // Add member role if not already present
+        if (!$user->hasRole(UserRole::Member)) {
+            $user->addRole(UserRole::Member);
+        }
+
+        return back()->with('success', 'User account linked successfully to '.$member->first_name.' '.$member->last_name);
+    }
+
+    /**
+     * Search for users to link to a member
+     */
+    public function searchUsers(Request $request)
+    {
+        $query = $request->input('query', '');
+        
+        // Search for users by name or email, exclude users already linked to members
+        $users = User::query()
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('email', 'LIKE', "%{$query}%");
+            })
+            ->whereDoesntHave('member') // Only show users not already linked to a member
+            ->limit(10)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'roles' => array_map(fn ($role) => $role->value, $user->roles ?? []),
+                ];
+            });
+
+        return response()->json($users);
+    }
+
+    /**
      * Create a parent account from a member and link them.
      */
     public function createParentFromMember(Member $member)

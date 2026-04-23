@@ -117,4 +117,58 @@ class User extends Authenticatable
     {
         return $this->hasMany(DeviceToken::class)->where('is_active', true);
     }
+
+    /**
+     * Get the user's active role from session
+     * Defaults to the highest priority role if not set
+     */
+    public function getActiveRole(): \App\Enums\UserRole
+    {
+        $sessionRole = session('active_role');
+        
+        if ($sessionRole && $this->hasRole($sessionRole)) {
+            return \App\Enums\UserRole::from($sessionRole);
+        }
+
+        // Default priority: Admin > Member > Teacher > Parent > Student
+        $roles = $this->roles ?? [];
+        
+        if (empty($roles)) {
+            return \App\Enums\UserRole::Member; // Default fallback
+        }
+
+        // Return highest priority role
+        $priorityOrder = [
+            \App\Enums\UserRole::Admin,
+            \App\Enums\UserRole::Member,
+            \App\Enums\UserRole::Teacher,
+            \App\Enums\UserRole::Parent,
+            \App\Enums\UserRole::Student,
+        ];
+
+        foreach ($priorityOrder as $role) {
+            if ($this->hasRole($role)) {
+                return $role;
+            }
+        }
+
+        return $roles[0];
+    }
+
+    /**
+     * Check if user has multiple roles (can switch between dashboards)
+     */
+    public function hasMultipleRoles(): bool
+    {
+        $roles = $this->roles ?? [];
+        return count($roles) > 1;
+    }
+
+    /**
+     * Check if user can switch to a specific role
+     */
+    public function canSwitchToRole(\App\Enums\UserRole|string $role): bool
+    {
+        return $this->hasRole($role) && $this->hasMultipleRoles();
+    }
 }

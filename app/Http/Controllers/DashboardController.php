@@ -29,18 +29,19 @@ class DashboardController extends Controller
     public function index(HebrewCalendarService $hebrewCalendarService, Request $request)
     {
         $user = $request->user();
+        $activeRole = $user->getActiveRole();
 
-        // Check if user is an admin
-        if ($user->hasRole('admin')) {
+        // Route to appropriate dashboard based on active role
+        if ($activeRole === UserRole::Admin) {
             return $this->adminDashboard($hebrewCalendarService);
         }
 
-        // Check if user has a member profile
-        if ($user->member) {
+        // Check if user has a member profile and active role is Member
+        if ($activeRole === UserRole::Member && $user->member) {
             return redirect()->route('member.dashboard');
         }
 
-        // Default user dashboard (no member profile)
+        // Default user dashboard (no member profile or other roles)
         return $this->defaultDashboard($user);
     }
 
@@ -66,6 +67,7 @@ class DashboardController extends Controller
                     'action_text' => $banner->action_text,
                 ];
             }),
+            'roleSwitch' => $this->getRoleSwitchData($user),
         ]);
     }
 
@@ -261,6 +263,7 @@ class DashboardController extends Controller
             'parents' => $parents,
             'members' => $members,
             'banners' => $banners,
+            'roleSwitch' => $this->getRoleSwitchData(auth()->user()),
         ]);
     }
 
@@ -778,5 +781,44 @@ class DashboardController extends Controller
             'active_classes' => $activeClasses,
             'recent_attendance' => $recentAttendance,
         ]);
+    }
+
+    /**
+     * Get role switch data for the user
+     */
+    private function getRoleSwitchData($user): array
+    {
+        if (!$user->hasMultipleRoles()) {
+            return [
+                'enabled' => false,
+                'roles' => [],
+                'activeRole' => null,
+            ];
+        }
+
+        $roles = $user->roles ?? [];
+        $activeRole = $user->getActiveRole();
+
+        return [
+            'enabled' => true,
+            'activeRole' => $activeRole->value,
+            'roles' => array_map(fn($role) => [
+                'value' => $role->value,
+                'label' => ucfirst($role->value),
+                'route' => $this->getRoleRoute($role),
+            ], $roles),
+        ];
+    }
+
+    /**
+     * Get the route name for a specific role
+     */
+    private function getRoleRoute(UserRole $role): string
+    {
+        return match($role) {
+            UserRole::Admin => 'dashboard',
+            UserRole::Member => 'member.dashboard',
+            default => 'dashboard',
+        };
     }
 }
