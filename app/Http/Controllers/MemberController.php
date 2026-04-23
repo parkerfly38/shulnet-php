@@ -33,7 +33,7 @@ class MemberController extends Controller
         $query = Member::query()
             ->select([
                 'id', 'member_type', 'first_name', 'last_name', 'email', 'phone1',
-                'city', 'state', 'user_id', 'parent_member_id', 'created_at', 'updated_at',
+                'city', 'state', 'user_id', 'created_at', 'updated_at',
             ])
             ->orderBy('last_name')
             ->orderBy('first_name');
@@ -53,20 +53,31 @@ class MemberController extends Controller
         }
 
         if ($primaryOnly) {
-            $query->whereNull('parent_member_id');
+            // Exclude members who have a 'parent' relationship (they're children of another member)
+            $query->whereDoesntHave('inverseRelationships', function ($q) {
+                $q->where('relationship_type', 'parent');
+            });
         }
 
         $members = $query->paginate($perPage);
 
         // Calculate member statistics
+        $primaryAccountsCount = Member::whereDoesntHave('inverseRelationships', function ($q) {
+            $q->where('relationship_type', 'parent');
+        })->count();
+        
+        $familyMembersCount = Member::whereHas('inverseRelationships', function ($q) {
+            $q->where('relationship_type', 'parent');
+        })->count();
+        
         $stats = [
             'total' => Member::count(),
             'member' => Member::where('member_type', 'member')->count(),
             'contact' => Member::where('member_type', 'contact')->count(),
             'prospect' => Member::where('member_type', 'prospect')->count(),
             'former' => Member::where('member_type', 'former')->count(),
-            'primary_accounts' => Member::whereNull('parent_member_id')->count(),
-            'family_members' => Member::whereNotNull('parent_member_id')->count(),
+            'primary_accounts' => $primaryAccountsCount,
+            'family_members' => $familyMembersCount,
         ];
 
         return Inertia::render('members/index', [
@@ -111,7 +122,6 @@ class MemberController extends Controller
             'title' => 'nullable|string|max:100',
             'gender' => 'nullable|in:male,female,other',
             'parent_id' => 'nullable|exists:parents,id',
-            'parent_member_id' => 'nullable|exists:members,id',
             'aliyah' => 'nullable|boolean',
             'bnaimitzvahdate' => 'nullable|date',
             'chazanut' => 'nullable|boolean',
@@ -139,8 +149,12 @@ class MemberController extends Controller
     {
         $member->load([
             'parent',
-            'parentMember:id,first_name,last_name,email,phone1',
-            'familyMembers:id,first_name,last_name,email,phone1,parent_member_id,member_type,dob',
+            'relatedMembers' => function ($query) {
+                $query->select('members.id', 'first_name', 'last_name', 'email', 'phone1', 'member_type', 'dob');
+            },
+            'relatedBy' => function ($query) {
+                $query->select('members.id', 'first_name', 'last_name', 'email', 'phone1');
+            },
             'membershipPeriods' => function ($query) {
                 $query->with('invoice:id,invoice_number,invoice_date,total,status')
                     ->orderBy('begin_date', 'desc');
@@ -162,6 +176,7 @@ class MemberController extends Controller
         return Inertia::render('members/show', [
             'member' => $member,
             'contributionData' => $contributionData,
+            'relationshipTypes' => \App\Models\MemberRelationship::RELATIONSHIP_TYPES,
         ]);
     }
 
@@ -223,10 +238,19 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
-        $member->load(['parent', 'parentMember:id,first_name,last_name']);
+        $member->load([
+            'parent',
+            'relatedMembers' => function ($query) {
+                $query->select('members.id', 'first_name', 'last_name', 'email');
+            },
+            'relatedBy' => function ($query) {
+                $query->select('members.id', 'first_name', 'last_name', 'email');
+            },
+        ]);
         
         return Inertia::render('members/edit', [
             'member' => $member,
+            'relationshipTypes' => \App\Models\MemberRelationship::RELATIONSHIP_TYPES,
         ]);
     }
 
@@ -253,11 +277,6 @@ class MemberController extends Controller
             'title' => 'nullable|string|max:100',
             'gender' => 'nullable|in:male,female,other',
             'parent_id' => 'nullable|exists:parents,id',
-            'parent_member_id' => ['nullable', 'exists:members,id', function ($_attribute, $value, $fail) use ($member) {
-                if ($value == $member->id) {
-                    $fail('A member cannot be their own parent member.');
-                }
-            }],
             'aliyah' => 'nullable|boolean',
             'bnaimitzvahdate' => 'nullable|date',
             'chazanut' => 'nullable|boolean',
@@ -317,10 +336,8 @@ class MemberController extends Controller
             'brianbatorah' => 'nullable|boolean',
             'maftir' => 'nullable|boolean',
             'anniversary_date' => 'nullable|date',
+            'relationship_type' => ['required', Rule::in(array_keys(\App\Models\MemberRelationship::RELATIONSHIP_TYPES))],
         ]);
-
-        // Set parent member and inherit address if not provided
-        $validated['parent_member_id'] = $member->id;
         
         // Inherit address from parent member if not provided
         $validated['address_line_1'] = $validated['address_line_1'] ?? $member->address_line_1;
@@ -330,10 +347,80 @@ class MemberController extends Controller
         $validated['zip'] = $validated['zip'] ?? $member->zip;
         $validated['country'] = $validated['country'] ?? $member->country;
 
-        Member::create($validated);
+        // Extract relationship type before creating member
+        $relationshipType = $validated['relationship_type'];
+        unset($validated['relationship_type']);
+
+        // Create the family member
+        $familyMember = Member::create($validated);
+
+        // Create the relationship
+        \App\Models\MemberRelationship::create([
+            'member_id' => $member->id,
+            'related_member_id' => $familyMember->id,
+            'relationship_type' => $relationshipType,
+        ]);
 
         return redirect()->route('members.show', $member)
             ->with('success', 'Family member added successfully.');
+    }
+
+    /**
+     * Add a relationship between an existing member and another member.
+     */
+    public function addRelationship(Request $request, Member $member)
+    {
+        $validated = $request->validate([
+            'related_member_id' => [
+                'required',
+                'exists:members,id',
+                function ($attribute, $value, $fail) use ($member) {
+                    if ($value == $member->id) {
+                        $fail('A member cannot have a relationship with themselves.');
+                    }
+                }
+            ],
+            'relationship_type' => ['required', Rule::in(array_keys(\App\Models\MemberRelationship::RELATIONSHIP_TYPES))],
+        ]);
+
+        // Check if relationship already exists
+        $existing = \App\Models\MemberRelationship::where('member_id', $member->id)
+            ->where('related_member_id', $validated['related_member_id'])
+            ->where('relationship_type', $validated['relationship_type'])
+            ->exists();
+
+        if ($existing) {
+            return back()->with('error', 'This relationship already exists.');
+        }
+
+        \App\Models\MemberRelationship::create([
+            'member_id' => $member->id,
+            'related_member_id' => $validated['related_member_id'],
+            'relationship_type' => $validated['relationship_type'],
+        ]);
+
+        return back()->with('success', 'Relationship added successfully.');
+    }
+
+    /**
+     * Remove a relationship between members.
+     */
+    public function removeRelationship(Request $request, Member $member)
+    {
+        $validated = $request->validate([
+            'relationship_id' => 'required|exists:member_relationships,id',
+        ]);
+
+        $relationship = \App\Models\MemberRelationship::findOrFail($validated['relationship_id']);
+        
+        // Ensure the relationship belongs to this member
+        if ($relationship->member_id !== $member->id) {
+            return back()->with('error', 'Unauthorized action.');
+        }
+
+        $relationship->delete();
+
+        return back()->with('success', 'Relationship removed successfully.');
     }
 
     /**
@@ -529,6 +616,69 @@ class MemberController extends Controller
     }
 
     /**
+     * Link an existing user to a member
+     */
+    public function linkUser(Request $request, Member $member)
+    {
+        // Check if member already has a user
+        if ($member->user_id) {
+            return back()->with('error', 'This member already has an associated user account.');
+        }
+
+        // Validate the request
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::findOrFail($validated['user_id']);
+
+        // Check if this user is already linked to another member
+        $existingMember = Member::where('user_id', $user->id)->first();
+        if ($existingMember) {
+            return back()->with('error', 'This user is already linked to another member: '.$existingMember->first_name.' '.$existingMember->last_name);
+        }
+
+        // Link the user to the member
+        $member->user_id = $user->id;
+        $member->save();
+
+        // Add member role if not already present
+        if (!$user->hasRole(UserRole::Member)) {
+            $user->addRole(UserRole::Member);
+        }
+
+        return back()->with('success', 'User account linked successfully to '.$member->first_name.' '.$member->last_name);
+    }
+
+    /**
+     * Search for users to link to a member
+     */
+    public function searchUsers(Request $request)
+    {
+        $query = $request->input('query', '');
+        
+        // Search for users by name or email, exclude users already linked to members
+        $users = User::query()
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('email', 'LIKE', "%{$query}%");
+            })
+            ->whereDoesntHave('member') // Only show users not already linked to a member
+            ->limit(10)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'roles' => array_map(fn ($role) => $role->value, $user->roles ?? []),
+                ];
+            });
+
+        return response()->json($users);
+    }
+
+    /**
      * Create a parent account from a member and link them.
      */
     public function createParentFromMember(Member $member)
@@ -565,15 +715,20 @@ class MemberController extends Controller
      */
     public function convertToStudent(Member $member)
     {
-        // Load the parent member relationship if it exists
-        $member->load('parentMember');
+        // Load relationships where this member is the related member (child)
+        $member->load(['relatedBy' => function ($query) {
+            $query->wherePivot('relationship_type', 'parent');
+        }]);
 
         // Determine the parent_id for the student
         $parentId = null;
         
-        if ($member->parent_member_id && $member->parentMember) {
-            // If this is a family member, use the parent member's parent_id
-            $parentId = $member->parentMember->parent_id;
+        // Check if this member has a parent relationship
+        $parentMember = $member->relatedBy->first();
+        
+        if ($parentMember && $parentMember->parent_id) {
+            // If this is a family member (has a parent relationship), use the parent member's parent_id
+            $parentId = $parentMember->parent_id;
         } else {
             // Otherwise use the member's own parent_id
             $parentId = $member->parent_id;

@@ -46,7 +46,6 @@ class Member extends Model
         'maftir',
         'anniversary_date',
         'parent_id',
-        'parent_member_id',
         'user_id',
     ];
 
@@ -125,19 +124,57 @@ class Member extends Model
     }
 
     /**
-     * Get the parent member (primary account) for this family member.
+     * Get all relationships where this member is the primary member.
      */
-    public function parentMember(): BelongsTo
+    public function relationships(): HasMany
     {
-        return $this->belongsTo(Member::class, 'parent_member_id');
+        return $this->hasMany(MemberRelationship::class, 'member_id');
     }
 
     /**
-     * Get all family members (children members) for this primary account.
+     * Get all relationships where this member is the related member.
      */
-    public function familyMembers(): HasMany
+    public function inverseRelationships(): HasMany
     {
-        return $this->hasMany(Member::class, 'parent_member_id');
+        return $this->hasMany(MemberRelationship::class, 'related_member_id');
+    }
+
+    /**
+     * Get all related members (children, spouses, siblings, etc.).
+     */
+    public function relatedMembers(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class, 'member_relationships', 'member_id', 'related_member_id')
+            ->withPivot('id', 'relationship_type')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get all members who have a relationship to this member.
+     */
+    public function relatedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class, 'member_relationships', 'related_member_id', 'member_id')
+            ->withPivot('id', 'relationship_type')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get family members (children) - convenience method for backward compatibility.
+     */
+    public function familyMembers()
+    {
+        return $this->relatedMembers()->wherePivot('relationship_type', 'child')
+            ->orWherePivot('relationship_type', 'son')
+            ->orWherePivot('relationship_type', 'daughter');
+    }
+
+    /**
+     * Get parent member - convenience method for backward compatibility.
+     */
+    public function parentMember()
+    {
+        return $this->relatedBy()->wherePivot('relationship_type', 'parent');
     }
 
     /**

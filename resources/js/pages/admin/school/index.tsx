@@ -211,7 +211,9 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                                                     {student.first_name} {student.last_name}
                                                 </p>
                                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                    {student.parent ? `Parent: ${student.parent.first_name} ${student.parent.last_name}` : student.email}
+                                                    {student.parents && student.parents.length > 0 
+                                                        ? `Parent${student.parents.length > 1 ? 's' : ''}: ${student.parents.map((p: any) => `${p.first_name} ${p.last_name}`).join(', ')}` 
+                                                        : student.email}
                                                 </p>
                                             </div>
                                         </div>

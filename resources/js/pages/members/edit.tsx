@@ -1,16 +1,18 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, X, Search } from 'lucide-react';
+import { Save, X, Search, Trash2, UserPlus } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
 import ParentSelector from '@/components/parent-selector';
+import { Badge } from '@/components/ui/badge';
 
 interface Props {
   member: Member;
+  relationshipTypes: Record<string, string>;
 }
 
 interface MemberForm {
@@ -31,7 +33,6 @@ interface MemberForm {
   dob: string;
   gender: string;
   parent_id: string;
-  parent_member_id: string;
   aliyah: boolean;
   bnaimitzvahdate: Date | null;
   chazanut: boolean;
@@ -46,17 +47,11 @@ interface MemberForm {
   anniversary_date: Date | null;
 }
 
-export default function MembersEdit({ member }: Readonly<Props>) {
+export default function MembersEdit({ member, relationshipTypes }: Readonly<Props>) {
   const [memberSearch, setMemberSearch] = useState('');
-  const [memberSearchResults, setMemberSearchResults] = useState<any[]>([]);
-  const [selectedParentMember, setSelectedParentMember] = useState<any>(null);
-
-  // Load initial parent member if exists
-  useEffect(() => {
-    if ((member as any).parent_member) {
-      setSelectedParentMember((member as any).parent_member);
-    }
-  }, [member]);
+  const [memberSearchResults, setMemberSearchResults] = useState<Member[]>([]);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [relationshipType, setRelationshipType] = useState('child');
 
   // Search for members
   useEffect(() => {
@@ -64,14 +59,40 @@ export default function MembersEdit({ member }: Readonly<Props>) {
       const timer = setTimeout(() => {
         fetch(`/api/admin/members/search?q=${encodeURIComponent(memberSearch)}`)
           .then(res => res.json())
-          .then(data => setMemberSearchResults(data))
+          .then(data => setMemberSearchResults(data.filter((m: Member) => m.id !== member.id)))
           .catch(err => console.error('Failed to search members:', err));
       }, 300);
       return () => clearTimeout(timer);
     } else {
       setMemberSearchResults([]);
     }
-  }, [memberSearch]);
+  }, [memberSearch, member.id]);
+
+  const handleAddRelationship = () => {
+    if (!selectedMember) return;
+    
+    router.post(`/admin/members/${member.id}/relationships`, {
+      related_member_id: selectedMember.id,
+      relationship_type: relationshipType,
+    }, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setSelectedMember(null);
+        setMemberSearch('');
+        setRelationshipType('child');
+      },
+    });
+  };
+
+  const handleRemoveRelationship = (relationshipId: number) => {
+    if (confirm('Are you sure you want to remove this relationship?')) {
+      router.delete(`/admin/members/${member.id}/relationships`, {
+        data: { relationship_id: relationshipId },
+        preserveScroll: true,
+        preserveState: true,
+      });
+    }
+  };
 
   // Format date for HTML date input (YYYY-MM-DD)
   const formatDateForInput = (dateValue: any): string => {
@@ -100,7 +121,6 @@ export default function MembersEdit({ member }: Readonly<Props>) {
     dob: formatDateForInput(member.dob),
     gender: member.gender || '',
     parent_id: member.parent_id?.toString() || '',
-    parent_member_id: (member as any).parent_member_id?.toString() || '',
     aliyah: (member as any).aliyah || false,
     bnaimitzvahdate: (member as any).bnaimitzvahdate ? new Date((member as any).bnaimitzvahdate) : null,
     chazanut: (member as any).chazanut || false,
@@ -275,84 +295,159 @@ export default function MembersEdit({ member }: Readonly<Props>) {
                 Optional - link this member to a parent account
               </p>
             </div>
+          </div>
 
-            <div className="mt-6">
-              <Label htmlFor="parent_member_id">Family Account (Primary Member)</Label>
-              <div className="space-y-2">
-                {selectedParentMember ? (
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
+          {/* Relationships Section */}
+          <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
+              Relationships
+            </h2>
+
+            {/* Relationships TO this member (related_by) */}
+            {member.related_by && member.related_by.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Related By</h3>
+                <div className="space-y-2">
+                  {member.related_by.map((relatedMember) => (
+                    <div key={relatedMember.id} className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {relatedMember.first_name} {relatedMember.last_name}
+                        </span>
+                        <Badge variant="outline" className="text-xs capitalize">
+                          {relatedMember.pivot.relationship_type}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Existing relationships FROM this member */}
+            {member.related_members && member.related_members.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Current Relationships</h3>
+                <div className="space-y-2">
+                  {member.related_members.map((relatedMember) => (
+                    <div key={relatedMember.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900 dark:text-gray-100">
+                          {relatedMember.first_name} {relatedMember.last_name}
+                        </span>
+                        <Badge variant="default" className="text-xs capitalize">
+                          {relatedMember.pivot.relationship_type}
+                        </Badge>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveRelationship(relatedMember.pivot.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Add new relationship */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Add New Relationship</h3>
+              
+              {selectedMember ? (
+                <div className="space-y-3">
+                  <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">
+                          {selectedMember.first_name} {selectedMember.last_name}
+                        </p>
+                        {selectedMember.email && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{selectedMember.email}</p>
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedMember(null);
+                          setMemberSearch('');
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-gray-100">
-                        {selectedParentMember.first_name} {selectedParentMember.last_name}
-                      </p>
-                      {selectedParentMember.email && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{selectedParentMember.email}</p>
-                      )}
+                      <Label htmlFor="relationship_type">Relationship Type</Label>
+                      <Select value={relationshipType} onValueChange={setRelationshipType}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(relationshipTypes).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <Button
                       type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedParentMember(null);
-                        setData('parent_member_id', '');
-                      }}
+                      onClick={handleAddRelationship}
+                      className="w-full mt-3"
                     >
-                      <X className="h-4 w-4" />
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Add Relationship
                     </Button>
                   </div>
-                ) : (
+                </div>
+              ) : (
+                <div className="relative">
                   <div className="relative">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                      <Input
-                        type="text"
-                        placeholder="Search for primary member..."
-                        value={memberSearch}
-                        onChange={(e) => setMemberSearch(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-                    {memberSearchResults.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
-                        {memberSearchResults
-                          .filter(m => m.id !== member.id) // Don't allow selecting self
-                          .map((result) => (
-                            <button
-                              key={result.id}
-                              type="button"
-                              onClick={() => {
-                                setSelectedParentMember(result);
-                                setData('parent_member_id', result.id.toString());
-                                setMemberSearch('');
-                                setMemberSearchResults([]);
-                              }}
-                              className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700 last:border-0"
-                            >
-                              <p className="font-medium text-gray-900 dark:text-gray-100">
-                                {result.first_name} {result.last_name}
-                              </p>
-                              {result.email && (
-                                <p className="text-sm text-gray-500 dark:text-gray-400">{result.email}</p>
-                              )}
-                              {result.city && result.state && (
-                                <p className="text-xs text-gray-400 dark:text-gray-500">
-                                  {result.city}, {result.state}
-                                </p>
-                              )}
-                            </button>
-                          ))}
-                      </div>
-                    )}
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Search for member..."
+                      value={memberSearch}
+                      onChange={(e) => setMemberSearch(e.target.value)}
+                      className="pl-10"
+                    />
                   </div>
-                )}
-              </div>
-              {errors.parent_member_id && (
-                <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.parent_member_id}</p>
+                  {memberSearchResults.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
+                      {memberSearchResults.map((result) => (
+                        <button
+                          key={result.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedMember(result);
+                            setMemberSearch('');
+                            setMemberSearchResults([]);
+                          }}
+                          className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700 last:border-0"
+                        >
+                          <p className="font-medium text-gray-900 dark:text-gray-100">
+                            {result.first_name} {result.last_name}
+                          </p>
+                          {result.email && (
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{result.email}</p>
+                          )}
+                          {result.city && result.state && (
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
+                              {result.city}, {result.state}
+                            </p>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Optional - set this member as a family member of another primary account. The address will be inherited from the primary member.
-              </p>
             </div>
           </div>
 

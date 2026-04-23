@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download, KeyRound, CheckCircle, XCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Trash2, Edit, Plus, Search, Eye, Users, UserCheck, UserPlus, UserMinus, UserX, Upload, Download, KeyRound, CheckCircle, XCircle, AlertCircle, Loader2, Link as LinkIcon } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { type Member, type BreadcrumbItem } from '@/types';
@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -75,9 +76,14 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [showCreateUserDialog, setShowCreateUserDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [userAction, setUserAction] = useState<'create' | 'link'>('create');
   const [passwordMethod, setPasswordMethod] = useState<'email' | 'manual'>('email');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [userSearch, setUserSearch] = useState('');
+  const [searchResults, setSearchResults] = useState<Array<{id: number; name: string; email: string; roles: string[]}>>([]);
+  const [selectedUser, setSelectedUser] = useState<{id: number; name: string; email: string; roles: string[]} | null>(null);
+  const [searchingUsers, setSearchingUsers] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
   const [showResultsDialog, setShowResultsDialog] = useState(false);
@@ -196,32 +202,75 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
   const handleCreateUser = (member: Member) => {
     setSelectedMember(member);
     setShowCreateUserDialog(true);
+    setUserAction('create');
     setPasswordMethod('email');
     setPassword('');
     setPasswordConfirmation('');
+    setUserSearch('');
+    setSearchResults([]);
+    setSelectedUser(null);
+  };
+
+  const handleUserSearch = async (query: string) => {
+    setUserSearch(query);
+    
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    setSearchingUsers(true);
+    
+    try {
+      const response = await fetch(`/admin/members/search-users?query=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error('Error searching users:', error);
+      setSearchResults([]);
+    } finally {
+      setSearchingUsers(false);
+    }
   };
 
   const submitCreateUser = () => {
     if (!selectedMember) return;
 
-    const data: any = {
-      method: passwordMethod,
-    };
+    if (userAction === 'create') {
+      const data: any = {
+        method: passwordMethod,
+      };
 
-    if (passwordMethod === 'manual') {
-      data.password = password;
-      data.password_confirmation = passwordConfirmation;
+      if (passwordMethod === 'manual') {
+        data.password = password;
+        data.password_confirmation = passwordConfirmation;
+      }
+
+      router.post(`/admin/members/${selectedMember.id}/create-user`, data, {
+        onSuccess: () => {
+          setShowCreateUserDialog(false);
+          setSelectedMember(null);
+          setPasswordMethod('email');
+          setPassword('');
+          setPasswordConfirmation('');
+        },
+      });
+    } else {
+      // Link to existing user
+      if (!selectedUser) return;
+
+      router.post(`/admin/members/${selectedMember.id}/link-user`, {
+        user_id: selectedUser.id,
+      }, {
+        onSuccess: () => {
+          setShowCreateUserDialog(false);
+          setSelectedMember(null);
+          setUserSearch('');
+          setSearchResults([]);
+          setSelectedUser(null);
+        },
+      });
     }
-
-    router.post(`/admin/members/${selectedMember.id}/create-user`, data, {
-      onSuccess: () => {
-        setShowCreateUserDialog(false);
-        setSelectedMember(null);
-        setPasswordMethod('email');
-        setPassword('');
-        setPasswordConfirmation('');
-      },
-    });
   };
 
   const statCards = [
@@ -763,109 +812,213 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
           </div>
         )}
 
-        {/* Create User Dialog */}
+        {/* Create/Link User Dialog */}
         <Dialog open={showCreateUserDialog} onOpenChange={setShowCreateUserDialog}>
-          <DialogContent>
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Create User Account</DialogTitle>
+              <DialogTitle>User Account for {selectedMember?.first_name} {selectedMember?.last_name}</DialogTitle>
               <DialogDescription>
-                Create a user account for {selectedMember?.first_name} {selectedMember?.last_name}
+                Create a new user account or link to an existing user
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <div>
-                <Label htmlFor="email">Email (from member record)</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={selectedMember?.email || ''}
-                  disabled
-                  className="bg-gray-50 dark:bg-gray-800"
-                />
-              </div>
+            
+            <Tabs value={userAction} onValueChange={(value) => setUserAction(value as 'create' | 'link')} className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="create">Create New User</TabsTrigger>
+                <TabsTrigger value="link">Link Existing User</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="create" className="space-y-4 pt-4">
+                <div>
+                  <Label htmlFor="email">Email (from member record)</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={selectedMember?.email || ''}
+                    disabled
+                    className="bg-gray-50 dark:bg-gray-800"
+                  />
+                </div>
 
-              <div className="space-y-3">
-                <Label>Password Method</Label>
-                <div className="flex gap-4">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      id="method-email"
-                      name="password-method"
-                      value="email"
-                      checked={passwordMethod === 'email'}
-                      onChange={(e) => setPasswordMethod(e.target.value as 'email' | 'manual')}
-                      className="h-4 w-4 text-blue-600"
-                    />
-                    <Label htmlFor="method-email" className="cursor-pointer font-normal">
-                      Send temporary password via email
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="radio"
-                      id="method-manual"
-                      name="password-method"
-                      value="manual"
-                      checked={passwordMethod === 'manual'}
-                      onChange={(e) => setPasswordMethod(e.target.value as 'email' | 'manual')}
-                      className="h-4 w-4 text-blue-600"
-                    />
-                    <Label htmlFor="method-manual" className="cursor-pointer font-normal">
-                      Enter password manually
-                    </Label>
+                <div className="space-y-3">
+                  <Label>Password Method</Label>
+                  <div className="flex gap-4">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="method-email"
+                        name="password-method"
+                        value="email"
+                        checked={passwordMethod === 'email'}
+                        onChange={(e) => setPasswordMethod(e.target.value as 'email' | 'manual')}
+                        className="h-4 w-4 text-blue-600"
+                      />
+                      <Label htmlFor="method-email" className="cursor-pointer font-normal">
+                        Send temporary password via email
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        id="method-manual"
+                        name="password-method"
+                        value="manual"
+                        checked={passwordMethod === 'manual'}
+                        onChange={(e) => setPasswordMethod(e.target.value as 'email' | 'manual')}
+                        className="h-4 w-4 text-blue-600"
+                      />
+                      <Label htmlFor="method-manual" className="cursor-pointer font-normal">
+                        Enter password manually
+                      </Label>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {passwordMethod === 'manual' && (
-                <>
-                  <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter password"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="password_confirmation">Confirm Password</Label>
-                    <Input
-                      id="password_confirmation"
-                      type="password"
-                      value={passwordConfirmation}
-                      onChange={(e) => setPasswordConfirmation(e.target.value)}
-                      placeholder="Confirm password"
-                    />
-                  </div>
-                </>
-              )}
+                {passwordMethod === 'manual' && (
+                  <>
+                    <div>
+                      <Label htmlFor="password">Password</Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter password"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="password_confirmation">Confirm Password</Label>
+                      <Input
+                        id="password_confirmation"
+                        type="password"
+                        value={passwordConfirmation}
+                        onChange={(e) => setPasswordConfirmation(e.target.value)}
+                        placeholder="Confirm password"
+                      />
+                    </div>
+                  </>
+                )}
 
-              {passwordMethod === 'email' && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    A temporary password will be generated and sent to {selectedMember?.email}
+                {passwordMethod === 'email' && (
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                      A temporary password will be generated and sent to {selectedMember?.email}
+                    </p>
+                  </div>
+                )}
+
+                <div className="flex gap-2 justify-end pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCreateUserDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={submitCreateUser}
+                    disabled={passwordMethod === 'manual' && (!password || !passwordConfirmation || password !== passwordConfirmation)}
+                  >
+                    Create User
+                  </Button>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="link" className="space-y-4 pt-4">
+                <div>
+                  <Label htmlFor="user-search">Search for Existing User</Label>
+                  <div className="relative mt-1">
+                    <Input
+                      id="user-search"
+                      type="text"
+                      placeholder="Search by name or email..."
+                      value={userSearch}
+                      onChange={(e) => handleUserSearch(e.target.value)}
+                      className="pr-10"
+                    />
+                    {searchingUsers && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Type at least 2 characters to search
                   </p>
                 </div>
-              )}
 
-              <div className="flex gap-2 justify-end">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCreateUserDialog(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={submitCreateUser}
-                  disabled={passwordMethod === 'manual' && (!password || !passwordConfirmation || password !== passwordConfirmation)}
-                >
-                  Create User
-                </Button>
-              </div>
-            </div>
+                {searchResults.length > 0 && (
+                  <div className="border rounded-md divide-y max-h-64 overflow-y-auto">
+                    {searchResults.map((user) => (
+                      <button
+                        key={user.id}
+                        type="button"
+                        className={`w-full p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                          selectedUser?.id === user.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                        }`}
+                        onClick={() => setSelectedUser(user)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium">{user.name}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400">{user.email}</div>
+                            {user.roles.length > 0 && (
+                              <div className="flex gap-1 mt-1">
+                                {user.roles.map((role: string) => (
+                                  <span
+                                    key={role}
+                                    className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded"
+                                  >
+                                    {role}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          {selectedUser?.id === user.id && (
+                            <CheckCircle className="h-5 w-5 text-blue-600" />
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {userSearch.length >= 2 && searchResults.length === 0 && !searchingUsers && (
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                    <p>No users found matching "{userSearch}"</p>
+                    <p className="text-sm mt-1">Only users without an existing member link are shown</p>
+                  </div>
+                )}
+
+                {selectedUser && (
+                  <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
+                    <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
+                      <LinkIcon className="h-4 w-4" />
+                      <span className="text-sm font-medium">
+                        Will link {selectedUser.name} ({selectedUser.email}) to this member
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex gap-2 justify-end pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCreateUserDialog(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={submitCreateUser}
+                    disabled={!selectedUser}
+                  >
+                    <LinkIcon className="h-4 w-4 mr-2" />
+                    Link User
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
           </DialogContent>
         </Dialog>
       </div>
