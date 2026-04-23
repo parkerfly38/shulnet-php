@@ -4,24 +4,35 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { RoleSwitcher } from '@/components/role-switcher';
 import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
-import { type User } from '@/types';
-import { Link, router } from '@inertiajs/react';
+import { type User, type RoleSwitch } from '@/types';
+import { Link, router, usePage } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 
 interface UserMenuContentProps {
     user: User;
+    onClose?: () => void;
 }
 
-export function UserMenuContent({ user }: UserMenuContentProps) {
+export function UserMenuContent({ user, onClose }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
+    const { props } = usePage();
+    const roleSwitch = (props as { roleSwitch?: RoleSwitch }).roleSwitch;
 
     const handleLogout = () => {
         cleanup();
         router.flushAll();
+    };
+
+    const handleClose = () => {
+        cleanup();
+        if (onClose) {
+            onClose();
+        }
     };
 
     return (
@@ -32,6 +43,18 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
                 </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {roleSwitch?.enabled && (
+                <>
+                    <div className="px-2 py-1.5">
+                        <RoleSwitcher 
+                            roleSwitch={roleSwitch} 
+                            className="w-full" 
+                            onRoleSwitch={handleClose}
+                        />
+                    </div>
+                    <DropdownMenuSeparator />
+                </>
+            )}
             <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
                     <Link

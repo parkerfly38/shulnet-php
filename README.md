@@ -542,6 +542,41 @@ https://hub.docker.com/repository/docker/parkerfly38/shulnet-php/general
 docker pull parkerfly38/shulnet-php:latest
 ```
 
+### Supply Chain Attestations
+
+All Docker images are built with supply chain attestations for enhanced security and transparency:
+
+- **🔐 Provenance Attestation** - Cryptographic proof of how, when, and where the image was built
+- **📦 SBOM (Software Bill of Materials)** - Complete inventory of all software components and dependencies
+- **🎯 GitHub Artifact Attestations** - Traceability from source code to deployment
+
+**Benefits:**
+- Verify image integrity and authenticity
+- Track vulnerabilities across all dependencies
+- Meet compliance requirements (SLSA, SSDF, SOC 2)
+- Complete transparency into what's inside each image
+
+**View Attestations:**
+```bash
+# View provenance
+docker buildx imagetools inspect <imagename> --format '{{ json .Provenance }}'
+
+# View SBOM
+docker buildx imagetools inspect <imagename> --format '{{ json .SBOM }}'
+```
+
+**Build Locally with Attestations:**
+```bash
+# Local build (single platform, loaded to Docker)
+./scripts/build-docker-with-attestations.sh latest
+
+# Multi-platform build (cached in buildx, not pushed)
+./scripts/build-docker-with-attestations.sh latest --multi-platform
+
+# Multi-platform build and push to registry
+./scripts/build-docker-with-attestations.sh latest --multi-platform --push
+```
+
 ## Contributing
 
 1. Create a feature branch

@@ -42,6 +42,41 @@ export default function ParentsShow() {
                         )}
                     </div>
                 </div>
+
+                {/* Students Section */}
+                <div className="mt-6">
+                    <h2 className="text-xl font-bold mb-4">Students</h2>
+                    <div className="bg-white dark:bg-black p-4 rounded border">
+                        {data.students && data.students.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {data.students.map((student: any) => (
+                                    <Link
+                                        key={student.id}
+                                        href={`/admin/school/students/${student.id}`}
+                                        className="p-4 border rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    >
+                                        <div className="font-semibold">
+                                            {student.first_name} {student.middle_name} {student.last_name}
+                                        </div>
+                                        {student.gender && (
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">Gender: {student.gender}</div>
+                                        )}
+                                        {student.date_of_birth && (
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">DOB: {student.date_of_birth}</div>
+                                        )}
+                                        {student.email && (
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">{student.email}</div>
+                                        )}
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-gray-500 dark:text-gray-400 text-center py-8">
+                                No students assigned to this parent
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
         </AppLayout>
     );

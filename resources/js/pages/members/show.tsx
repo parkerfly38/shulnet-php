@@ -3,7 +3,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard, TrendingUp, Users, DollarSign, Award, ShoppingCart, GraduationCap } from 'lucide-react';
+import { Edit, Mail, Phone, MapPin, Calendar, User, Plus, Trash2, CreditCard, TrendingUp, Users, DollarSign, Award, ShoppingCart, GraduationCap, UserPlus } from 'lucide-react';
 import { type Member, type BreadcrumbItem } from '@/types';
 import {
   Dialog,
@@ -29,10 +29,15 @@ interface ContributionData {
 interface Props {
   member: Member;
   contributionData: ContributionData;
+  relationshipTypes: Record<string, string>;
 }
 
-export default function MembersShow({ member, contributionData }: Readonly<Props>) {
+export default function MembersShow({ member, contributionData, relationshipTypes }: Readonly<Props>) {
   const [showAddFamilyMember, setShowAddFamilyMember] = useState(false);
+  const [showAddRelationship, setShowAddRelationship] = useState(false);
+  const [memberSearch, setMemberSearch] = useState('');
+  const [memberSearchResults, setMemberSearchResults] = useState<Member[]>([]);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   
   const { data, setData, post, processing, errors, reset } = useForm({
     member_type: 'member',
@@ -47,7 +52,34 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
     hebrew_name: '',
     father_hebrew_name: '',
     mother_hebrew_name: '',
+    relationship_type: 'child',
   });
+
+  const relationshipForm = useForm({
+    related_member_id: '',
+    relationship_type: 'child',
+  });
+
+  // Debounced member search
+  React.useEffect(() => {
+    if (memberSearch.length < 2) {
+      setMemberSearchResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/admin/members/search?q=${encodeURIComponent(memberSearch)}`);
+        const data = await response.json();
+        // Filter out the current member
+        setMemberSearchResults(data.filter((m: Member) => m.id !== member.id));
+      } catch (error) {
+        console.error('Search error:', error);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [memberSearch, member.id]);
 
   const handleSubmitFamilyMember = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +89,30 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
         reset();
       },
     });
+  };
+
+  const handleAddRelationship = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedMember) return;
+    
+    relationshipForm.post(`/admin/members/${member.id}/relationships`, {
+      onSuccess: () => {
+        setShowAddRelationship(false);
+        setSelectedMember(null);
+        setMemberSearch('');
+        relationshipForm.reset();
+      },
+    });
+  };
+
+  const handleRemoveRelationship = (relationshipId: number) => {
+    if (confirm('Are you sure you want to remove this relationship?')) {
+      router.delete(`/admin/members/${member.id}/relationships`, {
+        data: { relationship_id: relationshipId },
+        preserveScroll: true,
+        preserveState: true,
+      });
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -477,20 +533,21 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
                   <Users className="h-5 w-5 mr-2" />
-                  Family Members
-                  {member.family_members && member.family_members.length > 0 && (
+                  Relationships
+                  {member.related_members && member.related_members.length > 0 && (
                     <Badge variant="secondary" className="ml-2">
-                      {member.family_members.length}
+                      {member.related_members.length}
                     </Badge>
                   )}
                 </h2>
-                <Dialog open={showAddFamilyMember} onOpenChange={setShowAddFamilyMember}>
-                  <DialogTrigger asChild>
-                    <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Family Member
-                    </Button>
-                  </DialogTrigger>
+                <div className="flex gap-2">
+                  <Dialog open={showAddFamilyMember} onOpenChange={setShowAddFamilyMember}>
+                    <DialogTrigger asChild>
+                      <Button size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Family Member
+                      </Button>
+                    </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Add Family Member</DialogTitle>
@@ -592,6 +649,21 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
                             </SelectContent>
                           </Select>
                         </div>
+                        <div>
+                          <Label htmlFor="relationship_type">Relationship Type *</Label>
+                          <Select value={data.relationship_type} onValueChange={(value) => setData('relationship_type', value)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.entries(relationshipTypes).map(([value, label]) => (
+                                <SelectItem key={value} value={value}>
+                                  {label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                       
                       <div className="border-t pt-4">
@@ -635,81 +707,188 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
                     </form>
                   </DialogContent>
                 </Dialog>
+                <Dialog open={showAddRelationship} onOpenChange={setShowAddRelationship}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Link Existing Member
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add Relationship to Existing Member</DialogTitle>
+                      <DialogDescription>
+                        Link {member.first_name} {member.last_name} to an existing member.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAddRelationship} className="space-y-4">
+                      <div>
+                        <Label htmlFor="member_search">Search for Member</Label>
+                        <Input
+                          id="member_search"
+                          value={memberSearch}
+                          onChange={(e) => setMemberSearch(e.target.value)}
+                          placeholder="Type name to search..."
+                        />
+                        {memberSearchResults.length > 0 && (
+                          <div className="mt-2 border rounded-md max-h-48 overflow-y-auto">
+                            {memberSearchResults.map((searchMember) => (
+                              <button
+                                key={searchMember.id}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedMember(searchMember);
+                                  relationshipForm.setData('related_member_id', searchMember.id.toString());
+                                  setMemberSearch(`${searchMember.first_name} ${searchMember.last_name}`);
+                                  setMemberSearchResults([]);
+                                }}
+                                className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800 border-b last:border-b-0"
+                              >
+                                <div className="font-medium">{searchMember.first_name} {searchMember.last_name}</div>
+                                {searchMember.email && (
+                                  <div className="text-sm text-gray-500">{searchMember.email}</div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {selectedMember && (
+                        <>
+                          <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                            <p className="text-sm font-medium">Selected: {selectedMember.first_name} {selectedMember.last_name}</p>
+                          </div>
+                          <div>
+                            <Label htmlFor="relationship_type_existing">Relationship Type *</Label>
+                            <Select 
+                              value={relationshipForm.data.relationship_type} 
+                              onValueChange={(value) => relationshipForm.setData('relationship_type', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Object.entries(relationshipTypes).map(([value, label]) => (
+                                  <SelectItem key={value} value={value}>
+                                    {label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </>
+                      )}
+                      <DialogFooter>
+                        <Button type="button" variant="outline" onClick={() => {
+                          setShowAddRelationship(false);
+                          setSelectedMember(null);
+                          setMemberSearch('');
+                          relationshipForm.reset();
+                        }}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={relationshipForm.processing || !selectedMember}>
+                          {relationshipForm.processing ? 'Adding...' : 'Add Relationship'}
+                        </Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              </div>
               </div>
 
-              {/* Show parent member if this is a family member */}
-              {member.parent_member && (
+              {/* Show relationships TO this member (related_by) */}
+              {member.related_by && member.related_by.length > 0 && (
                 <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                  <p className="text-sm text-blue-900 dark:text-blue-200 mb-2">
-                    This is a family member of:
+                  <p className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">
+                    Related by:
                   </p>
-                  <Link 
-                    href={`/admin/members/${member.parent_member.id}`}
-                    className="flex items-center text-blue-600 dark:text-blue-400 hover:underline"
-                  >
-                    <User className="h-4 w-4 mr-2" />
-                    <span className="font-medium">
-                      {member.parent_member.first_name} {member.parent_member.last_name}
-                    </span>
-                    {member.parent_member.email && (
-                      <span className="ml-2 text-sm">({member.parent_member.email})</span>
-                    )}
-                  </Link>
+                  <div className="space-y-2">
+                    {member.related_by.map((relatedMember) => (
+                      <div key={relatedMember.id} className="flex items-center justify-between">
+                        <Link 
+                          href={`/admin/members/${relatedMember.id}`}
+                          className="flex items-center text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          <span className="font-medium">
+                            {relatedMember.first_name} {relatedMember.last_name}
+                          </span>
+                          <Badge variant="outline" className="ml-2 text-xs capitalize">
+                            {relatedMember.pivot.relationship_type}
+                          </Badge>
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {member.family_members && member.family_members.length > 0 ? (
+              {/* Show relationships FROM this member (related_members) */}
+              {member.related_members && member.related_members.length > 0 ? (
                 <div className="space-y-3">
-                  {member.family_members.map((familyMember: any) => (
+                  {member.related_members.map((relatedMember) => (
                     <div 
-                      key={familyMember.id} 
+                      key={relatedMember.id} 
                       className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <Link 
-                              href={`/admin/members/${familyMember.id}`}
+                              href={`/admin/members/${relatedMember.id}`}
                               className="text-base font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
                             >
-                              {familyMember.first_name} {familyMember.last_name}
+                              {relatedMember.first_name} {relatedMember.last_name}
                             </Link>
+                            <Badge variant="default" className="text-xs capitalize">
+                              {relatedMember.pivot.relationship_type}
+                            </Badge>
                             <Badge variant="secondary" className="text-xs capitalize">
-                              {familyMember.member_type}
+                              {relatedMember.member_type}
                             </Badge>
                           </div>
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
-                            {familyMember.email && (
+                            {relatedMember.email && (
                               <div className="flex items-center">
                                 <Mail className="h-3 w-3 mr-1" />
-                                <a href={`mailto:${familyMember.email}`} className="hover:underline">
-                                  {familyMember.email}
+                                <a href={`mailto:${relatedMember.email}`} className="hover:underline">
+                                  {relatedMember.email}
                                 </a>
                               </div>
                             )}
-                            {familyMember.phone1 && (
+                            {relatedMember.phone1 && (
                               <div className="flex items-center">
                                 <Phone className="h-3 w-3 mr-1" />
-                                <a href={`tel:${familyMember.phone1}`} className="hover:underline">
-                                  {familyMember.phone1}
+                                <a href={`tel:${relatedMember.phone1}`} className="hover:underline">
+                                  {relatedMember.phone1}
                                 </a>
                               </div>
                             )}
-                            {familyMember.dob && (
+                            {relatedMember.dob && (
                               <div className="flex items-center">
                                 <Calendar className="h-3 w-3 mr-1" />
-                                {formatDate(familyMember.dob)}
+                                {formatDate(relatedMember.dob)}
                               </div>
                             )}
                           </div>
                         </div>
 
-                        <Link href={`/admin/members/${familyMember.id}/edit`}>
-                          <Button variant="outline" size="sm">
-                            <Edit className="h-4 w-4" />
+                        <div className="flex gap-2">
+                          <Link href={`/admin/members/${relatedMember.id}/edit`}>
+                            <Button variant="outline" size="sm">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleRemoveRelationship(relatedMember.pivot.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
                           </Button>
-                        </Link>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -717,8 +896,8 @@ export default function MembersShow({ member, contributionData }: Readonly<Props
               ) : (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p>No family members added yet.</p>
-                  <p className="text-sm mt-1">Family members will share the same address and be linked to this primary account.</p>
+                  <p>No relationships added yet.</p>
+                  <p className="text-sm mt-1">Add family members or link to existing members to create relationships.</p>
                 </div>
               )}
             </div>

@@ -172,6 +172,7 @@ class MemberDashboardController extends Controller
             'events' => $events,
             'isBirthday' => $isBirthday,
             'isAnniversary' => $isAnniversary,
+            'roleSwitch' => $this->getRoleSwitchData($user),
         ]);
     }
 
@@ -1498,5 +1499,44 @@ class MemberDashboardController extends Controller
                 }),
             ],
         ]);
+    }
+
+    /**
+     * Get role switch data for the user
+     */
+    private function getRoleSwitchData($user): array
+    {
+        if (!$user->hasMultipleRoles()) {
+            return [
+                'enabled' => false,
+                'roles' => [],
+                'activeRole' => null,
+            ];
+        }
+
+        $roles = $user->roles ?? [];
+        $activeRole = $user->getActiveRole();
+
+        return [
+            'enabled' => true,
+            'activeRole' => $activeRole->value,
+            'roles' => array_map(fn($role) => [
+                'value' => $role->value,
+                'label' => ucfirst($role->value),
+                'route' => $this->getRoleRoute($role),
+            ], $roles),
+        ];
+    }
+
+    /**
+     * Get the route name for a specific role
+     */
+    private function getRoleRoute(\App\Enums\UserRole $role): string
+    {
+        return match($role) {
+            \App\Enums\UserRole::Admin => 'dashboard',
+            \App\Enums\UserRole::Member => 'member.dashboard',
+            default => 'dashboard',
+        };
     }
 }

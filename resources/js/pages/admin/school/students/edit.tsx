@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, useForm, usePage, Link } from '@inertiajs/react';
 import { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
-import ParentSelector from '@/components/parent-selector';
+import MultiParentSelector from '@/components/multi-parent-selector';
 
 const breadcrumbsBase: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
@@ -25,7 +25,7 @@ export default function StudentsEdit() {
         date_of_birth: item.date_of_birth ?? item.dob ?? '',
         email: item.email ?? '',
         is_parent_email: item.is_parent_email ?? false,
-        parent_id: item.parent_id ?? '',
+        parent_ids: (item.parents || []).map((p: any) => p.id) as (string | number)[],
         address: item.address ?? '',
         picture_url: item.picture_url ?? '',
     });
@@ -80,10 +80,10 @@ export default function StudentsEdit() {
                         <input type="checkbox" checked={form.data.is_parent_email} onChange={(e) => form.setData('is_parent_email', e.target.checked)} className="rounded" />
                         <label className="text-sm font-medium">Is Parent Email</label>
                     </div>
-                    <ParentSelector
-                        value={form.data.parent_id}
-                        onChange={(value) => form.setData('parent_id', value)}
-                        error={form.errors.parent_id}
+                    <MultiParentSelector
+                        value={form.data.parent_ids}
+                        onChange={(value) => form.setData('parent_ids', value)}
+                        error={form.errors.parent_ids}
                     />
                     <div>
                         <label className="block text-sm font-medium">Address</label>
