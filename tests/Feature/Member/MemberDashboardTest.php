@@ -267,6 +267,7 @@ class MemberDashboardTest extends TestCase
             ->post("/member/events/{$event->id}/register", [
                 'ticket_type_id' => $ticketType->id,
                 'quantity' => 2,
+                'guests' => 0,
                 'payment_option' => 'invoice',
             ]);
 

@@ -256,7 +256,8 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                     </TooltipProvider>
                                 ))}
                             </div>
-                        </div> open={dropdownOpen} onOpenChange={setDropdownOpen}>
+                        </div>
+                        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
@@ -274,8 +275,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56" align="end">
-                                <UserMenuContent user={auth.user} onClose={() => setDropdownOpen(false)" align="end">
-                                <UserMenuContent user={auth.user} />
+                                <UserMenuContent user={auth.user} onClose={() => setDropdownOpen(false)} />
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

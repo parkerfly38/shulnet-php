@@ -16,7 +16,7 @@ class RoleSwitchingTest extends TestCase
     {
         // Create a user with both admin and member roles
         $user = User::factory()->create([
-            'roles' => json_encode(['admin', 'member']),
+            'roles' => [UserRole::Admin, UserRole::Member],
         ]);
         
         // Create a member profile for this user
@@ -50,7 +50,7 @@ class RoleSwitchingTest extends TestCase
     {
         // Create a user with only member role
         $user = User::factory()->create([
-            'roles' => json_encode(['member']),
+            'roles' => [UserRole::Member],
         ]);
 
         $this->actingAs($user);
@@ -71,7 +71,7 @@ class RoleSwitchingTest extends TestCase
     {
         // Create a user with only admin role
         $user = User::factory()->create([
-            'roles' => json_encode(['admin']),
+            'roles' => [UserRole::Admin],
         ]);
 
         $this->actingAs($user);
@@ -95,7 +95,7 @@ class RoleSwitchingTest extends TestCase
     {
         // Create a user with multiple roles
         $user = User::factory()->create([
-            'roles' => json_encode(['admin', 'member', 'teacher']),
+            'roles' => [UserRole::Admin, UserRole::Member, UserRole::Teacher],
         ]);
 
         $this->actingAs($user);
@@ -119,11 +119,11 @@ class RoleSwitchingTest extends TestCase
     {
         // Create users with different role combinations
         $adminMemberUser = User::factory()->create([
-            'roles' => json_encode(['member', 'admin']), // Order shouldn't matter
+            'roles' => [UserRole::Member, UserRole::Admin], // Order shouldn't matter
         ]);
         
         $memberTeacherUser = User::factory()->create([
-            'roles' => json_encode(['teacher', 'member']),
+            'roles' => [UserRole::Teacher, UserRole::Member],
         ]);
 
         // Admin should be highest priority
@@ -137,7 +137,7 @@ class RoleSwitchingTest extends TestCase
     {
         // Create user with both roles
         $user = User::factory()->create([
-            'roles' => json_encode(['admin', 'member']),
+            'roles' => [UserRole::Admin, UserRole::Member],
         ]);
         
         $member = Member::factory()->create([
