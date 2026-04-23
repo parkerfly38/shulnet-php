@@ -172,6 +172,7 @@ class MemberDashboardController extends Controller
             'events' => $events,
             'isBirthday' => $isBirthday,
             'isAnniversary' => $isAnniversary,
+            'roleSwitch' => $this->getRoleSwitchData($user),
         ]);
     }
 
