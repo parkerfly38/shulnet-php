@@ -34,6 +34,7 @@ export interface SharedData {
     };
     currency: string;
     roleSwitch?: RoleSwitch;
+    chatConfig?: ChatConfig;
     [key: string]: unknown;
 }
 
@@ -542,4 +543,11 @@ export interface RoleSwitch {
     enabled: boolean;
     activeRole: string;
     roles: RoleInfo[];
+}
+
+export interface ChatConfig {
+    enabled: boolean;
+    url: string;
+    mode: 'popup' | 'fullpage';
+    title: string;
 }

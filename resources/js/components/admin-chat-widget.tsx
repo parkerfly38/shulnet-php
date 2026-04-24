@@ -1,10 +1,13 @@
 import { MessageCircle, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { usePage } from '@inertiajs/react';
+import { type ChatConfig } from '@/types';
 
 export function AdminChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const { chatConfig } = usePage().props as { chatConfig?: ChatConfig };
 
     useEffect(() => {
         // Check initial theme
@@ -25,6 +28,11 @@ export function AdminChatWidget() {
         return () => observer.disconnect();
     }, []);
 
+    // Only show widget if chat is enabled and mode is popup
+    if (!chatConfig?.enabled || chatConfig.mode !== 'popup') {
+        return null;
+    }
+
     return (
         <>
             {/* Toggle Button */}
@@ -43,7 +51,7 @@ export function AdminChatWidget() {
                 <div className="fixed bottom-4 right-4 w-[400px] h-[800px] bg-background border border-border rounded-lg shadow-2xl flex flex-col z-50">
                     {/* Header */}
                     <div className="flex items-center justify-between p-3 border-b border-border">
-                        <h3 className="font-semibold text-sm">Chat</h3>
+                        <h3 className="font-semibold text-sm">{chatConfig.title}</h3>
                         <Button
                             onClick={() => setIsOpen(false)}
                             variant="ghost"
@@ -57,9 +65,9 @@ export function AdminChatWidget() {
                     {/* Iframe Content */}
                     <div className="flex-1 overflow-hidden">
                         <iframe
-                            src={`http://localhost:5001?theme=${theme}`}
+                            src={`${chatConfig.url}?theme=${theme}`}
                             className="w-full h-full border-0"
-                            title="Admin Chat"
+                            title={chatConfig.title}
                         />
                     </div>
                 </div>

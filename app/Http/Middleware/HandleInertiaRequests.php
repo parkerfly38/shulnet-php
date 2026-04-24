@@ -148,6 +148,12 @@ class HandleInertiaRequests extends Middleware
             'loginBanners' => $loginBanners,
             'dashboardBanners' => $dashboardBanners,
             'roleSwitch' => $user ? $this->getRoleSwitchData($user) : null,
+            'chatConfig' => [
+                'enabled' => config('services.chat.enabled'),
+                'url' => config('services.chat.url'),
+                'mode' => config('services.chat.mode'),
+                'title' => config('services.chat.title'),
+            ],
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
