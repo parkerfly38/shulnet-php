@@ -11,9 +11,9 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { type NavItem, type ChatConfig } from '@/types';
+import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone, MessageCircle } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -281,18 +281,16 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth, chatConfig } = usePage().props as any;
+    const { auth, roleSwitch } = usePage().props as any;
     const user = auth.user;
     const isAdmin = user?.is_admin || false;
     const isMember = user?.is_member || false;
-    const chat = chatConfig as ChatConfig | undefined;
 
-    // Build chat nav items if enabled and in fullpage mode
-    const chatNavItems: NavItem[] = chat?.enabled && chat.mode === 'fullpage' ? [{
-        title: chat.title || 'Chat',
-        href: '/chat' as const,
-        icon: MessageCircle,
-    }] : [];
+    // When the user has selected a role via the switcher, honour that choice.
+    // Fall back to actual role flags only when no switcher is active.
+    const activeRole: string | undefined = roleSwitch?.activeRole;
+    const showAdmin = activeRole ? activeRole === 'admin' : isAdmin;
+    const showMember = activeRole ? activeRole === 'member' : isMember;
 
     const handleSearchClick = () => {
         window.dispatchEvent(new CustomEvent('open-search'));
@@ -307,7 +305,7 @@ export function AppSidebar() {
                             <AppLogo />
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    {isAdmin && (
+                    {showAdmin && (
                         <SidebarMenuItem>
                             <SidebarMenuButton
                                 onClick={handleSearchClick}
@@ -331,18 +329,12 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                
-                {/* Chat Section - Show for all authenticated users */}
-                {chatNavItems.length > 0 && (
-                    <NavMain items={chatNavItems} />
-                )}
-                
                 {/* Member Portal Section */}
-                {isMember && (
+                {showMember && (
                     <NavMain items={memberNavItems} />
                 )}
-                
-                {isAdmin && (
+
+                {showAdmin && (
                     <>
                         <NavMain items={mainNavItems} />
                         {/* Admin Section */}

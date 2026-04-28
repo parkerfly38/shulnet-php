@@ -50,8 +50,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with(['classGrades.classDefinition.teacher'])
                 ->get()
                 ->map(function ($student) {
@@ -358,8 +358,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with([
                     'classGrades.classDefinition.teacher',
                     'examGrades.exam',
@@ -904,8 +904,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with(['classGrades.classDefinition.teacher'])
                 ->get()
                 ->map(function ($student) {
@@ -1246,8 +1246,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with([
                     'classGrades.classDefinition.teacher',
                     'examGrades.exam',

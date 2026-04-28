@@ -1,7 +1,7 @@
-import { MessageCircle, X } from 'lucide-react';
+import { MessageCircle, X, Maximize2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { type ChatConfig } from '@/types';
 
 export function AdminChatWidget() {
@@ -10,11 +10,9 @@ export function AdminChatWidget() {
     const { chatConfig } = usePage().props as { chatConfig?: ChatConfig };
 
     useEffect(() => {
-        // Check initial theme
         const isDark = document.documentElement.classList.contains('dark');
         setTheme(isDark ? 'dark' : 'light');
 
-        // Listen for theme changes
         const observer = new MutationObserver(() => {
             const isDark = document.documentElement.classList.contains('dark');
             setTheme(isDark ? 'dark' : 'light');
@@ -28,41 +26,59 @@ export function AdminChatWidget() {
         return () => observer.disconnect();
     }, []);
 
-    // Only show widget if chat is enabled and mode is popup
-    if (!chatConfig?.enabled || chatConfig.mode !== 'popup') {
+    if (!chatConfig?.enabled) {
         return null;
     }
 
+    const openFullScreen = () => {
+        setIsOpen(false);
+        router.visit('/chat');
+    };
+
     return (
         <>
-            {/* Toggle Button */}
+            {/* Toggle Button with subtle ping ring */}
             {!isOpen && (
-                <Button
-                    onClick={() => setIsOpen(true)}
-                    className="fixed bottom-4 right-4 h-12 w-12 rounded-full shadow-lg z-50"
-                    size="icon"
-                >
-                    <MessageCircle className="h-5 w-5" />
-                </Button>
+                <span className="fixed bottom-4 right-4 z-50 flex h-12 w-12">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-10" />
+                    <Button
+                        onClick={() => setIsOpen(true)}
+                        className="relative h-12 w-12 rounded-full shadow-lg"
+                        size="icon"
+                        title={`Open ${chatConfig.title}`}
+                    >
+                        <MessageCircle className="h-5 w-5" />
+                    </Button>
+                </span>
             )}
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-4 right-4 w-[400px] h-[800px] bg-background border border-border rounded-lg shadow-2xl flex flex-col z-50">
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-3 border-b border-border">
+                <div className="fixed bottom-4 right-4 w-96 h-[520px] bg-background border border-border rounded-lg shadow-2xl flex flex-col z-50">
+                    <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                         <h3 className="font-semibold text-sm">{chatConfig.title}</h3>
-                        <Button
-                            onClick={() => setIsOpen(false)}
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                        >
-                            <X className="h-4 w-4" />
-                        </Button>
+                        <div className="flex items-center gap-1">
+                            <Button
+                                onClick={openFullScreen}
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                title="Open full screen"
+                            >
+                                <Maximize2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                onClick={() => setIsOpen(false)}
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                title="Close"
+                            >
+                                <X className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
 
-                    {/* Iframe Content */}
                     <div className="flex-1 overflow-hidden">
                         <iframe
                             src={`${chatConfig.url}?theme=${theme}`}
