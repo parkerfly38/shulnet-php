@@ -275,7 +275,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
 
   const statCards = [
     {
-      title: 'Total Members',
+      title: 'Total',
       value: stats.total,
       icon: Users,
       color: 'bg-blue-500',
