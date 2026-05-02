@@ -41,8 +41,7 @@ export default function ReportsIndex() {
     });
 
     const [yahrzeitFilters, setYahrzeitFilters] = useState({
-        start_date: '',
-        end_date: '',
+        month: ''
     });
 
     const [glBatchFilters, setGlBatchFilters] = useState({
@@ -154,8 +153,10 @@ export default function ReportsIndex() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value=" ">All types</SelectItem>
-                                            <SelectItem value="individual">Individual</SelectItem>
-                                            <SelectItem value="family">Family</SelectItem>
+                                            <SelectItem value="member">Member</SelectItem>
+                                            <SelectItem value="contact">Contact</SelectItem>
+                                            <SelectItem value="prospect">Prospect</SelectItem>
+                                            <SelectItem value="former">Former Member</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -329,32 +330,37 @@ export default function ReportsIndex() {
                                 <CardTitle>Yahrzeit Calendar Export</CardTitle>
                             </div>
                             <CardDescription>
-                                Export yahrzeit dates with member associations
+                                Export yahrzeit dates with member associations by Hebrew month
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="yahrzeit-start-date">Start Date (Optional)</Label>
-                                    <Input
-                                        id="yahrzeit-start-date"
-                                        type="date"
-                                        value={yahrzeitFilters.start_date}
-                                        onChange={(e) =>
-                                            setYahrzeitFilters({ ...yahrzeitFilters, start_date: e.target.value })
+                                    <Label htmlFor="yahrzeit-month">Hebrew Month</Label>
+                                    <Select
+                                        value={yahrzeitFilters.month}
+                                        onValueChange={(value) =>
+                                            setYahrzeitFilters({ ...yahrzeitFilters, month: value })
                                         }
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="yahrzeit-end-date">End Date (Optional)</Label>
-                                    <Input
-                                        id="yahrzeit-end-date"
-                                        type="date"
-                                        value={yahrzeitFilters.end_date}
-                                        onChange={(e) =>
-                                            setYahrzeitFilters({ ...yahrzeitFilters, end_date: e.target.value })
-                                        }
-                                    />
+                                    >
+                                        <SelectTrigger id="yahrzeit-month">
+                                            <SelectValue placeholder="Select month" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Tishrei</SelectItem>
+                                            <SelectItem value="2">Cheshvan</SelectItem>
+                                            <SelectItem value="3">Kislev</SelectItem>
+                                            <SelectItem value="4">Tevet</SelectItem>
+                                            <SelectItem value="5">Shevat</SelectItem>
+                                            <SelectItem value="6">Adar</SelectItem>
+                                            <SelectItem value="7">Nisan</SelectItem>
+                                            <SelectItem value="8">Iyar</SelectItem>
+                                            <SelectItem value="9">Sivan</SelectItem>
+                                            <SelectItem value="10">Tammuz</SelectItem>
+                                            <SelectItem value="11">Av</SelectItem>
+                                            <SelectItem value="12">Elul</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
                             <Button

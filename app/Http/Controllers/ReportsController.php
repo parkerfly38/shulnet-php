@@ -71,11 +71,10 @@ class ReportsController extends Controller
 
     public function exportYahrzeit(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $month = $request->input('month');
 
         return Excel::download(
-            new YahrzeitExport($startDate, $endDate),
+            new YahrzeitExport($month),
             'yahrzeit-'.now()->format('Y-m-d').'.xlsx'
         );
     }

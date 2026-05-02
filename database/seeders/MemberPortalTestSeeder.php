@@ -46,10 +46,16 @@ class MemberPortalTestSeeder extends Seeder
                 // Delete invoices
                 Invoice::where('member_id', $member->id)->delete();
 
-                // Delete students if parent exists
+                // Delete students and parent if they exist
                 if ($member->parent_id) {
-                    Student::where('parent_id', $member->parent_id)->delete();
-                    ParentModel::where('id', $member->parent_id)->delete();
+                    $parentRecord = ParentModel::find($member->parent_id);
+                    if ($parentRecord) {
+                        // Delete students associated with this parent via pivot table
+                        foreach ($parentRecord->students as $student) {
+                            $student->delete();
+                        }
+                        $parentRecord->delete();
+                    }
                 }
 
                 $member->delete();
@@ -98,22 +104,24 @@ class MemberPortalTestSeeder extends Seeder
         $student1 = Student::create([
             'first_name' => 'Rachel',
             'last_name' => 'Cohen',
-            'parent_id' => $parent->id,
             'gender' => 'female',
             'date_of_birth' => '2015-03-15',
             'email' => 'rachel.cohen@test.com',
             'is_parent_email' => true,
         ]);
+        // Associate student with parent via pivot table
+        $student1->parents()->attach($parent->id);
 
         $student2 = Student::create([
             'first_name' => 'Jacob',
             'last_name' => 'Cohen',
-            'parent_id' => $parent->id,
             'gender' => 'male',
             'date_of_birth' => '2017-08-22',
             'email' => 'jacob.cohen@test.com',
             'is_parent_email' => true,
         ]);
+        // Associate student with parent via pivot table
+        $student2->parents()->attach($parent->id);
 
         // Create invoices
         $invoice1 = Invoice::create([

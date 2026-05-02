@@ -12,24 +12,20 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
-    protected $startDate;
+    protected $month;
 
-    protected $endDate;
-
-    public function __construct($startDate = null, $endDate = null)
+    public function __construct($month = null)
     {
-        $this->startDate = $startDate;
-        $this->endDate = $endDate;
+        $this->month = $month;
     }
 
     public function collection()
     {
         $query = Yahrzeit::with('members');
 
-        if ($this->startDate && $this->endDate) {
-            // Convert dates to Hebrew month/day for filtering
-            // For now, filter by Gregorian date_of_death if provided
-            $query->whereBetween('date_of_death', [$this->startDate, $this->endDate]);
+        if ($this->month) {
+            // Filter by Hebrew month of death if provided
+            $query->where('hebrew_month_of_death', $this->month);
         }
 
         return $query->orderBy('hebrew_month_of_death')
