@@ -1,5 +1,6 @@
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { GlobalSearchDialog } from '@/components/global-search-dialog';
+import { AdminChatWidget } from '@/components/admin-chat-widget';
 import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import * as React from 'react';
@@ -44,6 +45,7 @@ export function AppShell({ children, variant = 'header' }: AppShellProps) {
                     open={searchOpen}
                     onOpenChange={setSearchOpen}
                 />
+                <AdminChatWidget />
             </div>
         );
     }
@@ -55,6 +57,7 @@ export function AppShell({ children, variant = 'header' }: AppShellProps) {
                 open={searchOpen}
                 onOpenChange={setSearchOpen}
             />
+            <AdminChatWidget />
         </SidebarProvider>
     );
 }

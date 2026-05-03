@@ -28,7 +28,7 @@ class EventController extends Controller
             ->with(['calendar'])
             ->select([
                 'id', 'calendar_id', 'name', 'description', 'event_start', 'event_end',
-                'all_day', 'members_only', 'created_at', 'updated_at',
+                'all_day', 'location', 'members_only', 'created_at', 'updated_at',
             ])
             ->orderBy('event_start', 'desc');
 
@@ -51,7 +51,7 @@ class EventController extends Controller
                 'start_date' => $event->event_start, // Map event_start to start_date for frontend
                 'end_date' => $event->event_end, // Map event_end to end_date for frontend
                 'all_day' => $event->all_day,
-                'location' => null, // Field doesn't exist in model
+                'location' => $event->location,
                 'members_only' => $event->members_only,
                 'calendar' => $event->calendar,
                 'created_at' => $event->created_at,
@@ -118,6 +118,7 @@ class EventController extends Controller
             'event_start' => Carbon::parse($startDateTime),
             'event_end' => $endDateTime ? Carbon::parse($endDateTime) : null,
             'all_day' => $validated['all_day'],
+            'location' => $validated['location'] ?? null,
             'members_only' => $validated['members_only'],
         ];
 
@@ -214,7 +215,7 @@ class EventController extends Controller
             'start_date' => $event->event_start, // Map event_start to start_date
             'end_date' => $event->event_end, // Map event_end to end_date
             'all_day' => $event->all_day,
-            'location' => null, // Field doesn't exist in model
+            'location' => $event->location,
             'members_only' => $event->members_only,
         ];
 
@@ -255,6 +256,7 @@ class EventController extends Controller
             'event_start' => Carbon::parse($startDateTime),
             'event_end' => $endDateTime ? Carbon::parse($endDateTime) : null,
             'all_day' => $validated['all_day'],
+            'location' => $validated['location'] ?? null,
             'members_only' => $validated['members_only'],
         ];
 

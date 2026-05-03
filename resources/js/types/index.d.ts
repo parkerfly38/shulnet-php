@@ -25,6 +25,7 @@ export interface NavItem {
 
 export interface SharedData {
     name: string;
+    version: string;
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
@@ -34,6 +35,7 @@ export interface SharedData {
     };
     currency: string;
     roleSwitch?: RoleSwitch;
+    chatConfig?: ChatConfig;
     [key: string]: unknown;
 }
 
@@ -543,3 +545,9 @@ export interface RoleSwitch {
     roles: RoleInfo[];
 }
 
+export interface ChatConfig {
+    enabled: boolean;
+    url: string;
+    mode: 'popup' | 'fullpage';
+    title: string;
+}

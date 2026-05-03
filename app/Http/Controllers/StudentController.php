@@ -83,6 +83,17 @@ class StudentController extends Controller
         
         $model->load('parents');
 
+        if (!empty($parentIds)) {
+            $model->parents()->sync($parentIds);
+        }
+
+        $model->load('parents');
+
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.students.index')
+                ->with('success', 'Student created successfully.');
+        }
+
         return response()->json($model, 201);
     }
 
@@ -119,6 +130,14 @@ class StudentController extends Controller
         $model->parents()->sync($parentIds);
         $model->load('parents');
 
+        $model->parents()->sync($parentIds);
+        $model->load('parents');
+
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.students.show', $id)
+                ->with('success', 'Student updated successfully.');
+        }
+
         return response()->json($model);
     }
 
@@ -129,10 +148,15 @@ class StudentController extends Controller
      *
      * @authenticated
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $model = Student::findOrFail($id);
         $model->delete();
+
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.students.index')
+                ->with('success', 'Student deleted successfully.');
+        }
 
         return response()->json(null, 204);
     }

@@ -50,8 +50,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with(['classGrades.classDefinition.teacher'])
                 ->get()
                 ->map(function ($student) {
@@ -358,8 +358,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with([
                     'classGrades.classDefinition.teacher',
                     'examGrades.exam',
@@ -904,8 +904,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with(['classGrades.classDefinition.teacher'])
                 ->get()
                 ->map(function ($student) {
@@ -981,10 +981,9 @@ class MemberDashboardController extends Controller
                 ];
             });
 
-        // Get upcoming events (next 90 days)
-        $eventsEndDate = Carbon::today()->addDays(90);
+        // Get upcoming events (next 60 days)
         $events = Event::where('event_start', '>=', $startDate->toDateString())
-            ->where('event_start', '<=', $eventsEndDate->toDateString())
+            ->where('event_start', '<=', $endDate->toDateString())
             ->orderBy('event_start', 'asc')
             ->limit(10)
             ->get()
@@ -1246,8 +1245,8 @@ class MemberDashboardController extends Controller
 
         // Get students if member is a parent
         $students = [];
-        if ($member->parent_id) {
-            $students = Student::where('parent_id', $member->parent_id)
+        if ($member->parent_id && $member->parent) {
+            $students = $member->parent->students()
                 ->with([
                     'classGrades.classDefinition.teacher',
                     'examGrades.exam',

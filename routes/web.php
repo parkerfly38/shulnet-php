@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Role switching routes
     Route::post('switch-role', [RoleSwitchController::class, 'switch'])->name('role.switch');
     Route::get('available-roles', [RoleSwitchController::class, 'availableRoles'])->name('role.available');
+    
+    // Chat page
+    Route::get('chat', [ChatController::class, 'index'])->name('chat');
 });
 
 // Include modular route files

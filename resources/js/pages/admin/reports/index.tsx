@@ -41,8 +41,7 @@ export default function ReportsIndex() {
     });
 
     const [yahrzeitFilters, setYahrzeitFilters] = useState({
-        start_date: '',
-        end_date: '',
+        month: ''
     });
 
     const [glBatchFilters, setGlBatchFilters] = useState({
@@ -154,8 +153,10 @@ export default function ReportsIndex() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value=" ">All types</SelectItem>
-                                            <SelectItem value="individual">Individual</SelectItem>
-                                            <SelectItem value="family">Family</SelectItem>
+                                            <SelectItem value="member">Member</SelectItem>
+                                            <SelectItem value="contact">Contact</SelectItem>
+                                            <SelectItem value="prospect">Prospect</SelectItem>
+                                            <SelectItem value="former">Former Member</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -329,32 +330,37 @@ export default function ReportsIndex() {
                                 <CardTitle>Yahrzeit Calendar Export</CardTitle>
                             </div>
                             <CardDescription>
-                                Export yahrzeit dates with member associations
+                                Export yahrzeit dates with member associations by Hebrew month
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="yahrzeit-start-date">Start Date (Optional)</Label>
-                                    <Input
-                                        id="yahrzeit-start-date"
-                                        type="date"
-                                        value={yahrzeitFilters.start_date}
-                                        onChange={(e) =>
-                                            setYahrzeitFilters({ ...yahrzeitFilters, start_date: e.target.value })
+                                    <Label htmlFor="yahrzeit-month">Hebrew Month</Label>
+                                    <Select
+                                        value={yahrzeitFilters.month}
+                                        onValueChange={(value) =>
+                                            setYahrzeitFilters({ ...yahrzeitFilters, month: value })
                                         }
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="yahrzeit-end-date">End Date (Optional)</Label>
-                                    <Input
-                                        id="yahrzeit-end-date"
-                                        type="date"
-                                        value={yahrzeitFilters.end_date}
-                                        onChange={(e) =>
-                                            setYahrzeitFilters({ ...yahrzeitFilters, end_date: e.target.value })
-                                        }
-                                    />
+                                    >
+                                        <SelectTrigger id="yahrzeit-month">
+                                            <SelectValue placeholder="Select month" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Tishrei</SelectItem>
+                                            <SelectItem value="2">Cheshvan</SelectItem>
+                                            <SelectItem value="3">Kislev</SelectItem>
+                                            <SelectItem value="4">Tevet</SelectItem>
+                                            <SelectItem value="5">Shevat</SelectItem>
+                                            <SelectItem value="6">Adar</SelectItem>
+                                            <SelectItem value="7">Nisan</SelectItem>
+                                            <SelectItem value="8">Iyar</SelectItem>
+                                            <SelectItem value="9">Sivan</SelectItem>
+                                            <SelectItem value="10">Tammuz</SelectItem>
+                                            <SelectItem value="11">Av</SelectItem>
+                                            <SelectItem value="12">Elul</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
                             <Button
@@ -364,6 +370,166 @@ export default function ReportsIndex() {
                                 <Download className="mr-2 h-4 w-4" />
                                 Export Yahrzeit Calendar
                             </Button>
+                        </CardContent>
+                    </Card>
+
+                    {/* GL Batch Export */}
+                    <Card className="border-green-500">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <DollarSign className="h-5 w-5 text-green-600" />
+                                <CardTitle>GL Batch Export</CardTitle>
+                            </div>
+                            <CardDescription>
+                                Export transactions by date range mapped to your Chart of Accounts for QuickBooks or other accounting software
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-start-date">Start Date *</Label>
+                                    <Input
+                                        id="gl-start-date"
+                                        type="date"
+                                        required
+                                        value={glBatchFilters.start_date}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, start_date: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-end-date">End Date *</Label>
+                                    <Input
+                                        id="gl-end-date"
+                                        type="date"
+                                        required
+                                        value={glBatchFilters.end_date}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, end_date: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-batch-number">Batch Number (Optional)</Label>
+                                    <Input
+                                        id="gl-batch-number"
+                                        placeholder="e.g., 2026-03-001"
+                                        value={glBatchFilters.batch_number}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, batch_number: e.target.value })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <Button
+                                    onClick={() => {
+                                        const params = new URLSearchParams();
+                                        if (glBatchFilters.start_date) params.append('start_date', glBatchFilters.start_date);
+                                        if (glBatchFilters.end_date) params.append('end_date', glBatchFilters.end_date);
+                                        if (glBatchFilters.batch_number) params.append('batch_number', glBatchFilters.batch_number);
+                                        
+                                        globalThis.location.href = `/admin/gl-batch/export?${params.toString()}`;
+                                    }}
+                                    disabled={!glBatchFilters.start_date || !glBatchFilters.end_date}
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Export GL Batch
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => router.visit('/admin/chart-of-accounts')}
+                                    className="w-full sm:w-auto"
+                                >
+                                    Manage Chart of Accounts
+                                </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                                Note: Only transactions with assigned GL account codes will be included in the export.
+                                Configure your Chart of Accounts and assign accounts to invoice items for accurate GL reporting.
+                            </p>
+                        </CardContent>
+                    </Card>
+
+                    {/* GL Batch Export */}
+                    <Card className="border-green-500">
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <DollarSign className="h-5 w-5 text-green-600" />
+                                <CardTitle>GL Batch Export</CardTitle>
+                            </div>
+                            <CardDescription>
+                                Export transactions by date range mapped to your Chart of Accounts for QuickBooks or other accounting software
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid gap-4 md:grid-cols-3">
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-start-date">Start Date *</Label>
+                                    <Input
+                                        id="gl-start-date"
+                                        type="date"
+                                        required
+                                        value={glBatchFilters.start_date}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, start_date: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-end-date">End Date *</Label>
+                                    <Input
+                                        id="gl-end-date"
+                                        type="date"
+                                        required
+                                        value={glBatchFilters.end_date}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, end_date: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="gl-batch-number">Batch Number (Optional)</Label>
+                                    <Input
+                                        id="gl-batch-number"
+                                        placeholder="e.g., 2026-03-001"
+                                        value={glBatchFilters.batch_number}
+                                        onChange={(e) =>
+                                            setGlBatchFilters({ ...glBatchFilters, batch_number: e.target.value })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <Button
+                                    onClick={() => {
+                                        const params = new URLSearchParams();
+                                        if (glBatchFilters.start_date) params.append('start_date', glBatchFilters.start_date);
+                                        if (glBatchFilters.end_date) params.append('end_date', glBatchFilters.end_date);
+                                        if (glBatchFilters.batch_number) params.append('batch_number', glBatchFilters.batch_number);
+                                        
+                                        globalThis.location.href = `/admin/gl-batch/export?${params.toString()}`;
+                                    }}
+                                    disabled={!glBatchFilters.start_date || !glBatchFilters.end_date}
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Export GL Batch
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => router.visit('/admin/chart-of-accounts')}
+                                    className="w-full sm:w-auto"
+                                >
+                                    Manage Chart of Accounts
+                                </Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                                Note: Only transactions with assigned GL account codes will be included in the export.
+                                Configure your Chart of Accounts and assign accounts to invoice items for accurate GL reporting.
+                            </p>
                         </CardContent>
                     </Card>
 

@@ -63,13 +63,13 @@ class SearchController extends Controller
               ->orWhere('email', 'like', "%{$query}%")
               ->orWhereRaw("CONCAT(first_name, ' ', last_name) like ?", ["%{$query}%"]);
         })
-        ->with('parent:id,first_name,last_name')
-        ->select('id', 'first_name', 'last_name', 'email', 'parent_id', 'date_of_birth')
+        ->with('parents:id,first_name,last_name')
+        ->select('id', 'first_name', 'last_name', 'email', 'date_of_birth')
         ->limit($limit)
         ->get()
         ->map(function ($student) {
-            $parentName = $student->parent 
-                ? trim("{$student->parent->first_name} {$student->parent->last_name}")
+            $parentName = $student->parents->isNotEmpty()
+                ? $student->parents->map(fn($p) => trim("{$p->first_name} {$p->last_name}"))->join(', ')
                 : null;
             
             return [
