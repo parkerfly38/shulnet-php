@@ -50,12 +50,6 @@ export default function ReportsIndex() {
         batch_number: '',
     });
 
-    const [glBatchFilters, setGlBatchFilters] = useState({
-        start_date: '',
-        end_date: '',
-        batch_number: '',
-    });
-
     const handleExport = (endpoint: string, filters: Record<string, any>) => {
         // Use the fresh CSRF token from Inertia shared props
         if (!csrf_token) {
