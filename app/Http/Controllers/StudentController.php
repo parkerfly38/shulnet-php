@@ -76,6 +76,12 @@ class StudentController extends Controller
         unset($data['parent_ids']);
         
         $model = Student::create($data);
+        
+        if (!empty($parentIds)) {
+            $model->parents()->sync($parentIds);
+        }
+        
+        $model->load('parents');
 
         if (!empty($parentIds)) {
             $model->parents()->sync($parentIds);
@@ -120,6 +126,9 @@ class StudentController extends Controller
         unset($data['parent_ids']);
         
         $model->update($data);
+        
+        $model->parents()->sync($parentIds);
+        $model->load('parents');
 
         $model->parents()->sync($parentIds);
         $model->load('parents');
