@@ -104,7 +104,7 @@ export function GlobalSearchDialog({
         }
 
         setIsLoading(true);
-        fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`)
+        fetch(`/admin/api/search?q=${encodeURIComponent(debouncedQuery)}`)
             .then((res) => res.json())
             .then((data) => {
                 setResults(data);

@@ -281,7 +281,7 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth, roleSwitch } = usePage().props as any;
+    const { auth, roleSwitch, version } = usePage().props as any;
     const user = auth.user;
     const isAdmin = user?.is_admin || false;
     const isMember = user?.is_member || false;
@@ -362,6 +362,9 @@ export function AppSidebar() {
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
+                <div className="px-2 py-1 text-xs text-muted-foreground">
+                    v{version}
+                </div>
             </SidebarFooter>
         </Sidebar>
     );
