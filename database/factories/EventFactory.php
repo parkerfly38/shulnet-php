@@ -33,7 +33,7 @@ class EventFactory extends Factory
             'registration_starts' => null,
             'registration_ends' => null,
             'earlybird' => false,
-            'registration_closed' => false,
+            'registration_closed' => null,
             'maxrsvp' => null,
             'members_only' => $this->faker->boolean(20),
             'allow_guests' => $this->faker->boolean(50),
