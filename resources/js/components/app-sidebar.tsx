@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -281,10 +281,16 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth } = usePage().props as any;
+    const { auth, roleSwitch, version } = usePage().props as any;
     const user = auth.user;
     const isAdmin = user?.is_admin || false;
     const isMember = user?.is_member || false;
+
+    // When the user has selected a role via the switcher, honour that choice.
+    // Fall back to actual role flags only when no switcher is active.
+    const activeRole: string | undefined = roleSwitch?.activeRole;
+    const showAdmin = activeRole ? activeRole === 'admin' : isAdmin;
+    const showMember = activeRole ? activeRole === 'member' : isMember;
 
     const handleSearchClick = () => {
         window.dispatchEvent(new CustomEvent('open-search'));
@@ -299,7 +305,7 @@ export function AppSidebar() {
                             <AppLogo />
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    {isAdmin && (
+                    {showAdmin && (
                         <SidebarMenuItem>
                             <SidebarMenuButton
                                 onClick={handleSearchClick}
@@ -323,14 +329,12 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                
-                
                 {/* Member Portal Section */}
-                {isMember && (
+                {showMember && (
                     <NavMain items={memberNavItems} />
                 )}
-                
-                {isAdmin && (
+
+                {showAdmin && (
                     <>
                         <NavMain items={mainNavItems} />
                         {/* Admin Section */}
@@ -358,6 +362,9 @@ export function AppSidebar() {
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
+                <div className="px-2 py-1 text-xs text-muted-foreground">
+                    v{version}
+                </div>
             </SidebarFooter>
         </Sidebar>
     );

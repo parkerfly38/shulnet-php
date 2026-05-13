@@ -234,7 +234,7 @@ export default function EventShow({ event }: EventShowProps) {
                                         Public
                                     </Badge>
                                 )}
-                                {event.all_day && (
+                                {!!event.all_day && (
                                     <Badge variant="outline">
                                         All Day
                                     </Badge>

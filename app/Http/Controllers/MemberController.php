@@ -62,13 +62,16 @@ class MemberController extends Controller
         $members = $query->paginate($perPage);
 
         // Calculate member statistics
-        $primaryAccountsCount = Member::whereDoesntHave('inverseRelationships', function ($q) {
-            $q->where('relationship_type', 'parent');
-        })->count();
+        $primaryAccountsCount = Member::where('member_type', 'member')
+            ->whereNotIn('id', function ($query) {
+                $query->select('member_id')
+                    ->from('member_relationships');
+            })
+            ->count();
         
-        $familyMembersCount = Member::whereHas('inverseRelationships', function ($q) {
-            $q->where('relationship_type', 'parent');
-        })->count();
+        $familyMembersCount = \DB::table('member_relationships')
+            ->distinct()
+            ->count('member_id');
         
         $stats = [
             'total' => Member::count(),

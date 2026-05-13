@@ -32,7 +32,7 @@ class MembersExport implements FromCollection, ShouldAutoSize, WithHeadings, Wit
             });
         }
 
-        if (! empty($this->filters['member_type'])) {
+        if (! empty($this->filters['member_type']) && $this->filters['member_type'] !== ' ') {
             $query->where('member_type', $this->filters['member_type']);
         }
 

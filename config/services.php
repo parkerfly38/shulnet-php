@@ -60,4 +60,11 @@ return [
         'user_id' => env('ZOOM_USER_ID', 'me'), // Default Zoom user or 'me' for account owner
     ],
 
+    'chat' => [
+        'enabled' => env('CHAT_ENABLED', false),
+        'url' => env('CHAT_URL', 'http://localhost:5001'),
+        'mode' => env('CHAT_MODE', 'popup'), // 'popup' or 'fullpage'
+        'title' => env('CHAT_TITLE', 'Chat'),
+    ],
+
 ];
