@@ -122,8 +122,11 @@ export default function MembersShow({ member, contributionData, relationshipType
     }).format(amount);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'N/A';
+    // Parse the date string as local date to avoid timezone offset issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -965,7 +968,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                 <form 
                   onSubmit={(e) => {
                     e.preventDefault();
-                    if (confirm(`Convert ${member.first_name} ${member.last_name} to a student?${member.parent_member ? `\n\nThis will use the parent account from ${member.parent_member.first_name} ${member.parent_member.last_name}.` : member.parent_id ? '\n\nThis will use the existing parent account.' : '\n\nNote: No parent account is linked. The student will be created without a parent.'}`))
+                    if (confirm(`Convert ${member.first_name} ${member.last_name} to a student?${member.parent ? `\n\nThis will use the parent account from ${member.parent.first_name} ${member.parent.last_name}.` : member.parent_id ? '\n\nThis will use the existing parent account.' : '\n\nNote: No parent account is linked. The student will be created without a parent.'}`))
                     {
                       router.post(`/admin/members/${member.id}/convert-to-student`);
                     }

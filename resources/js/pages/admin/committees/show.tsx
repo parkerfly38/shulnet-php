@@ -63,8 +63,11 @@ export default function CommitteesShow({ committee, availableMembers }: Readonly
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'N/A';
+    // Parse the date string as local date to avoid timezone offset issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
