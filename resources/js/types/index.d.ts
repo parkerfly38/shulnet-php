@@ -163,11 +163,19 @@ export interface BoardMemberPivot {
     updated_at: string;
 }
 
-export interface CommitteeMembership extends Member {
+export interface CommitteeMembership extends Committee {
     pivot: CommitteeMemberPivot;
 }
 
-export interface BoardMembership extends Member {
+export interface BoardMembership extends Board {
+    pivot: BoardMemberPivot;
+}
+
+export interface CommitteeMember extends Member {
+    pivot: CommitteeMemberPivot;
+}
+
+export interface BoardMember extends Member {
     pivot: BoardMemberPivot;
 }
 
@@ -258,6 +266,7 @@ export interface Note {
     added_by?: string;
     visibility: string;
     priority: string;
+    member_care_alert?: string;
     member_id?: number;
     user_id?: number;
     member?: Member;

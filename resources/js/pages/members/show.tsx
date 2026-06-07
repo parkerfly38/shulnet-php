@@ -122,12 +122,27 @@ export default function MembersShow({ member, contributionData, relationshipType
     }).format(amount);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'N/A';
+    
+    // Extract just the date part (YYYY-MM-DD) from datetime strings like "2006-06-18T00:00:00.000000Z"
+    const datePart = dateString.split('T')[0];
+    
+    // Check if we have a valid date part
+    if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+      // Parse and format manually to avoid any timezone issues
+      const [year, month, day] = datePart.split('-');
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+      return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+    } else {
+      // Fallback for unexpected formats
+      return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
   };
 
   const getDisplayName = () => {
@@ -219,6 +234,17 @@ export default function MembersShow({ member, contributionData, relationshipType
                   </dd>
                 </div>
 
+                {member.deceased && (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100">
+                      <Badge variant="secondary" className="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                        Deceased
+                      </Badge>
+                    </dd>
+                  </div>
+                )}
+
                 {member.title && (
                   <div>
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Title</dt>
@@ -256,6 +282,16 @@ export default function MembersShow({ member, contributionData, relationshipType
                     <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
                       <Calendar className="h-4 w-4 mr-1" />
                       {formatDate(member.dob)}
+                    </dd>
+                  </div>
+                )}
+                
+                {member.anniversary_date && (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Anniversary Date</dt>
+                    <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      {formatDate(member.anniversary_date)}
                     </dd>
                   </div>
                 )}
@@ -392,6 +428,17 @@ export default function MembersShow({ member, contributionData, relationshipType
                   <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Maftir</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.maftir ? (
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                    ) : (
+                      <Badge variant="secondary">No</Badge>
+                    )}
+                  </dd>
+                </div>
+                
+                <div>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Bria Ba'Torah</dt>
+                  <dd className="text-sm text-gray-900 dark:text-gray-100">
+                    {member.brianbatorah ? (
                       <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
                     ) : (
                       <Badge variant="secondary">No</Badge>
@@ -965,7 +1012,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                 <form 
                   onSubmit={(e) => {
                     e.preventDefault();
-                    if (confirm(`Convert ${member.first_name} ${member.last_name} to a student?${member.parent_member ? `\n\nThis will use the parent account from ${member.parent_member.first_name} ${member.parent_member.last_name}.` : member.parent_id ? '\n\nThis will use the existing parent account.' : '\n\nNote: No parent account is linked. The student will be created without a parent.'}`))
+                    if (confirm(`Convert ${member.first_name} ${member.last_name} to a student?${member.parent ? `\n\nThis will use the parent account from ${member.parent.first_name} ${member.parent.last_name}.` : member.parent_id ? '\n\nThis will use the existing parent account.' : '\n\nNote: No parent account is linked. The student will be created without a parent.'}`))
                     {
                       router.post(`/admin/members/${member.id}/convert-to-student`);
                     }

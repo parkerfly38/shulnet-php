@@ -30,6 +30,7 @@ class NoteController extends Controller
                 'deadline_date', 'completed_date',
                 'seen_date', 'note_text', 'added_by',
                 'label', 'visibility', 'priority',
+                'member_care_alert',
                 'member_id', 'user_id',
                 'created_at', 'updated_at',
             ])->orderBy('created_at', 'desc');
@@ -102,6 +103,7 @@ class NoteController extends Controller
             'added_by' => 'nullable|string|max:255',
             'visibility' => 'required|in:Member,Admin,Broadcast',
             'priority' => 'required|in:Low,Medium,High',
+            'member_care_alert' => 'nullable|string|in:hospitalized,mourning,immediate_follow_up,other_emergency',
             'member_id' => 'nullable|exists:members,id',
             'user_id' => 'nullable|exists:users,id',
         ]);
@@ -166,6 +168,7 @@ class NoteController extends Controller
             'added_by' => 'nullable|string|max:255',
             'visibility' => 'required|in:Member,Admin,Broadcast',
             'priority' => 'required|in:Low,Medium,High',
+            'member_care_alert' => 'nullable|string|in:hospitalized,mourning,immediate_follow_up,other_emergency',
             'member_id' => 'nullable|exists:members,id',
             'user_id' => 'nullable|exists:users,id',
         ]);

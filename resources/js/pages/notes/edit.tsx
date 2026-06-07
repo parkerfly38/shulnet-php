@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useForm, Head } from '@inertiajs/react';
-import { ArrowLeft, FileText, Calendar, AlertTriangle, Tag } from 'lucide-react';
+import { FileText, Calendar, Heart } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ interface NoteFormData {
     added_by: string;
     visibility: string;
     priority: string;
+    member_care_alert: string;
     member_id: string;
     user_id: string;
 }
@@ -64,6 +65,7 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
         added_by: note.added_by || '',
         visibility: note.visibility || 'Admin',
         priority: note.priority || 'Medium',
+        member_care_alert: note.member_care_alert || '',
         member_id: note.member_id?.toString() || '',
         user_id: note.user_id?.toString() || ''
     });
@@ -170,6 +172,28 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                     </Select>
                                     {errors.visibility && (
                                         <p className="text-red-500 text-sm">{errors.visibility}</p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="member_care_alert">
+                                        <Heart className="h-4 w-4 inline mr-1" />
+                                        Member Care Alert
+                                    </Label>
+                                    <Select value={data.member_care_alert ?? ''} onValueChange={(value) => setData('member_care_alert', value)}>
+                                        <SelectTrigger className={errors.member_care_alert ? 'border-red-500' : ''}>
+                                            <SelectValue placeholder="Select care alert (optional)" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value=" ">No alert</SelectItem>
+                                            <SelectItem value="hospitalized">Hospitalized</SelectItem>
+                                            <SelectItem value="mourning">Mourning</SelectItem>
+                                            <SelectItem value="immediate_follow_up">Immediate Follow-Up</SelectItem>
+                                            <SelectItem value="other_emergency">Other Emergency</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.member_care_alert && (
+                                        <p className="text-red-500 text-sm">{errors.member_care_alert}</p>
                                     )}
                                 </div>
                             </CardContent>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Edit, ArrowLeft, User, CalendarDays, Plus, Trash2, FileText } from 'lucide-react';
-import { type BreadcrumbItem, type CommitteeMembership } from '@/types';
+import { type BreadcrumbItem, type CommitteeMember } from '@/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -20,7 +20,7 @@ interface Committee {
   id: number;
   name: string;
   description?: string;
-  members?: CommitteeMembership[];
+  members?: CommitteeMember[];
   created_at: string;
   updated_at: string;
 }
@@ -63,8 +63,11 @@ export default function CommitteesShow({ committee, availableMembers }: Readonly
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'N/A';
+    // Parse the date string as local date to avoid timezone offset issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
