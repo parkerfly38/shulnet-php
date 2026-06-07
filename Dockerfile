@@ -59,7 +59,42 @@ COPY vite.config.ts tsconfig.json components.json ./
 # Copy TinyMCE to public directory
 RUN cp -r node_modules/tinymce public/
 
-# Build production assets
+# Wayfinder generation stage - requires both PHP and Node
+FROM base AS wayfinder
+
+WORKDIR /var/www/html
+
+# Install Node.js in the PHP image
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy vendor from vendor stage
+COPY --from=vendor /var/www/html/vendor ./vendor
+
+# Copy application code
+COPY . .
+
+# Get Composer to generate autoloader
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer dump-autoload --optimize \
+    && rm /usr/bin/composer
+
+# Copy node_modules from node stage
+COPY --from=node /var/www/html/node_modules ./node_modules
+
+# Generate wayfinder routes
+RUN php artisan wayfinder:generate --with-form
+
+# Final node build stage
+FROM node AS node-build
+
+# Copy generated routes from wayfinder stage
+COPY --from=wayfinder /var/www/html/resources/js/routes ./resources/js/routes
+
+# Build production assets (skip wayfinder plugin since routes already generated)
+ENV SKIP_WAYFINDER=true
 RUN npm run build
 
 # App stage - final production image
@@ -71,9 +106,9 @@ COPY --from=vendor /var/www/html/vendor ./vendor
 # Copy application code
 COPY --chown=www-data:www-data . /var/www/html
 
-# Copy built frontend assets and TinyMCE from node stage
-COPY --from=node --chown=www-data:www-data /var/www/html/public/build ./public/build
-COPY --from=node --chown=www-data:www-data /var/www/html/public/tinymce ./public/tinymce
+# Copy built frontend assets and TinyMCE from node-build stage
+COPY --from=node-build --chown=www-data:www-data /var/www/html/public/build ./public/build
+COPY --from=node-build --chown=www-data:www-data /var/www/html/public/tinymce ./public/tinymce
 
 # Generate optimized autoloader
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
