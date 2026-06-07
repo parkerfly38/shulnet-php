@@ -4,6 +4,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/tinymce
 /resources/js/actions
 /resources/js/routes
 /resources/js/wayfinder

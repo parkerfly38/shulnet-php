@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { type BreadcrumbItem } from '@/types';
-import { Edit2, Save, X, FileText, Copy, Check } from 'lucide-react';
+import { Edit2, Save, X, FileText, Copy, Check, Trash2 } from 'lucide-react';
 
 interface Member {
   id: number;
@@ -233,6 +233,12 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
     }
   };
 
+  const handleDeleteEmail = (emailId: number) => {
+    if (confirm('Are you sure you want to delete this campaign email?')) {
+      router.delete(`/admin/campaigns/${campaign.id}/emails/${emailId}`);
+    }
+  };
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={campaign.name} />
@@ -331,13 +337,22 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <div className="flex gap-2 justify-end">
                           {email.status === 'pending' && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => router.visit(`/admin/campaigns/${campaign.id}/emails/${email.id}/edit`)}
-                            >
-                              Edit
-                            </Button>
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => router.visit(`/admin/campaigns/${campaign.id}/emails/${email.id}/edit`)}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteEmail(email.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </>
                           )}
                           <Button
                             variant="outline"

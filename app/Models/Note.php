@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MemberCareAlert;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,9 +25,17 @@ class Note extends Model
         'label',
         'visibility',
         'priority',
+        'member_care_alert',
         'member_id',
         'user_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'member_care_alert' => MemberCareAlert::class,
+        ];
+    }
 
     /**
      * Get the member that this note belongs to.

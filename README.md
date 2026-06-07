@@ -196,6 +196,49 @@ npm run lint
 npm run format
 ```
 
+## Deployment
+
+### TinyMCE Installation
+
+TinyMCE is excluded from the repository (listed in `.gitignore`) and must be installed during deployment.
+
+**Copy TinyMCE files to the public directory:**
+
+```bash
+# After running npm install, copy TinyMCE to public directory
+cp -r node_modules/tinymce public/
+```
+
+This copies the complete TinyMCE library (version 8.6.0) to `public/tinymce/`, which is required by the Rich Text Editor component at `/tinymce/tinymce.min.js`.
+
+**Deployment Checklist:**
+1. Run `npm install` to install all dependencies
+2. Copy TinyMCE: `cp -r node_modules/tinymce public/`
+3. Build assets: `npm run build`
+4. Clear caches: `php artisan optimize:clear`
+5. Run migrations: `php artisan migrate --force`
+
+### Production Build
+
+When deploying to production:
+
+```bash
+# Install dependencies
+composer install --no-dev --optimize-autoloader
+npm install
+
+# Copy TinyMCE to public directory
+cp -r node_modules/tinymce public/
+
+# Build frontend assets
+npm run build
+
+# Optimize Laravel
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
 ## Project Structure
 
 ```
