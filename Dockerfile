@@ -40,6 +40,28 @@ RUN composer install \
     --prefer-dist \
     && composer clear-cache
 
+# Node stage - build frontend assets
+FROM node:20-alpine AS node
+
+WORKDIR /var/www/html
+
+# Copy package files
+COPY package*.json ./
+
+# Install node dependencies
+RUN npm ci --prefer-offline --no-audit
+
+# Copy source files needed for build
+COPY resources ./resources
+COPY public ./public
+COPY vite.config.ts tsconfig.json components.json ./
+
+# Copy TinyMCE to public directory
+RUN cp -r node_modules/tinymce public/
+
+# Build production assets
+RUN npm run build
+
 # App stage - final production image
 FROM base AS app
 
@@ -48,6 +70,10 @@ COPY --from=vendor /var/www/html/vendor ./vendor
 
 # Copy application code
 COPY --chown=www-data:www-data . /var/www/html
+
+# Copy built frontend assets and TinyMCE from node stage
+COPY --from=node --chown=www-data:www-data /var/www/html/public/build ./public/build
+COPY --from=node --chown=www-data:www-data /var/www/html/public/tinymce ./public/tinymce
 
 # Generate optimized autoloader
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
