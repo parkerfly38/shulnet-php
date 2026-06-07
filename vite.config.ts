@@ -17,9 +17,12 @@ export default defineConfig({
             },
         }),
         tailwindcss(),
-        wayfinder({
-            formVariants: true,
-        }),
+        // Skip wayfinder during Docker builds (routes already generated in wayfinder stage)
+        ...(process.env.SKIP_WAYFINDER !== 'true' ? [
+            wayfinder({
+                formVariants: true,
+            }),
+        ] : []),
     ],
     esbuild: {
         jsx: 'automatic',
