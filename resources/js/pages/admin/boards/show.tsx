@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Edit, ArrowLeft, User, CalendarDays, Plus, Trash2, FileText } from 'lucide-react';
-import { type BreadcrumbItem, type BoardMembership } from '@/types';
+import { type BreadcrumbItem, type BoardMember } from '@/types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -20,7 +20,7 @@ interface Board {
   id: number;
   name: string;
   description?: string;
-  members?: BoardMembership[];
+  members?: BoardMember[];
   created_at: string;
   updated_at: string;
 }

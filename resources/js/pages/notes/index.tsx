@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Edit, Trash2, Eye, Calendar, CalendarPlus, FileText, AlertTriangle, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Calendar, CalendarPlus, FileText, AlertTriangle, CheckCircle, Clock, AlertCircle, Heart } from 'lucide-react';
 import { type Note, type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -262,6 +262,17 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                             <div className="mt-1">
                               <Badge variant="outline" className="text-xs">
                                 {note.label}
+                              </Badge>
+                            </div>
+                          )}
+                          {note.member_care_alert && (
+                            <div className="mt-1">
+                              <Badge variant="destructive" className="text-xs">
+                                <Heart className="h-3 w-3 mr-1 inline" />
+                                {note.member_care_alert === 'hospitalized' && 'Hospitalized'}
+                                {note.member_care_alert === 'mourning' && 'Mourning'}
+                                {note.member_care_alert === 'immediate_follow_up' && 'Immediate Follow-Up'}
+                                {note.member_care_alert === 'other_emergency' && 'Other Emergency'}
                               </Badge>
                             </div>
                           )}

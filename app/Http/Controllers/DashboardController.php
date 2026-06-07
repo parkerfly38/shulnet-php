@@ -250,6 +250,112 @@ class DashboardController extends Controller
                 ];
             });
 
+        // Get open notes with member care alerts
+        $careAlertNotes = DB::table('notes')
+            ->select('notes.id', 'notes.name', 'notes.member_care_alert', 'notes.priority', 'notes.deadline_date',
+                     'members.id as member_id', 'members.first_name', 'members.last_name')
+            ->leftJoin('members', 'notes.member_id', '=', 'members.id')
+            ->whereNotNull('notes.member_care_alert')
+            ->whereNull('notes.completed_date')
+            ->orderByRaw("CASE notes.member_care_alert
+                WHEN 'hospitalized' THEN 1
+                WHEN 'mourning' THEN 2
+                WHEN 'immediate_follow_up' THEN 3
+                WHEN 'other_emergency' THEN 4
+                ELSE 5 END")
+            ->orderBy('notes.created_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($note) {
+                return [
+                    'id' => $note->id,
+                    'name' => $note->name,
+                    'member_care_alert' => $note->member_care_alert,
+                    'priority' => $note->priority,
+                    'deadline_date' => $note->deadline_date,
+                    'member' => $note->member_id ? [
+                        'id' => $note->member_id,
+                        'first_name' => $note->first_name,
+                        'last_name' => $note->last_name,
+                    ] : null,
+                ];
+            });
+
+        // Get upcoming lifecycle events (next 30 days)
+        $today = now();
+        $thirtyDaysOut = now()->addDays(30);
+        $currentYear = $today->year;
+        
+        $upcomingLifecycleEvents = Member::select('id', 'first_name', 'last_name', 'dob', 'anniversary_date')
+            ->where(function ($query) {
+                $query->whereNotNull('dob')
+                    ->orWhereNotNull('anniversary_date');
+            })
+            ->get()
+            ->flatMap(function ($member) use ($today, $thirtyDaysOut, $currentYear) {
+                $events = [];
+                
+                // Check birthday
+                if ($member->dob) {
+                    $birthDate = \Carbon\Carbon::parse($member->dob);
+                    $thisBirthday = $birthDate->copy()->year($currentYear);
+                    $nextBirthday = $birthDate->copy()->year($currentYear + 1);
+                    
+                    $birthday = $thisBirthday->isFuture() ? $thisBirthday : $nextBirthday;
+                    
+                    if ($birthday->between($today, $thirtyDaysOut)) {
+                        $events[] = [
+                            'member_id' => $member->id,
+                            'member_name' => $member->first_name . ' ' . $member->last_name,
+                            'event_type' => 'birthday',
+                            'event_date' => $birthday->format('Y-m-d'),
+                            'days_until' => $today->diffInDays($birthday),
+                        ];
+                    }
+                }
+                
+                // Check anniversary
+                if ($member->anniversary_date) {
+                    $anniversaryDate = \Carbon\Carbon::parse($member->anniversary_date);
+                    $thisAnniversary = $anniversaryDate->copy()->year($currentYear);
+                    $nextAnniversary = $anniversaryDate->copy()->year($currentYear + 1);
+                    
+                    $anniversary = $thisAnniversary->isFuture() ? $thisAnniversary : $nextAnniversary;
+                    
+                    if ($anniversary->between($today, $thirtyDaysOut)) {
+                        $events[] = [
+                            'member_id' => $member->id,
+                            'member_name' => $member->first_name . ' ' . $member->last_name,
+                            'event_type' => 'anniversary',
+                            'event_date' => $anniversary->format('Y-m-d'),
+                            'days_until' => $today->diffInDays($anniversary),
+                        ];
+                    }
+                }
+                
+                return $events;
+            })
+            ->sortBy('days_until')
+            ->values()
+            ->take(10);
+
+        // Get members who joined in the last 12 months
+        $recentMembers = Member::select('id', 'first_name', 'last_name', 'email', 'created_at')
+            ->where('created_at', '>=', now()->subMonths(12))
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(function ($member) {
+                return [
+                    'id' => $member->id,
+                    'first_name' => $member->first_name,
+                    'last_name' => $member->last_name,
+                    'email' => $member->email,
+                    'created_at' => $member->created_at->format('Y-m-d'),
+                    'months_ago' => $member->created_at->diffInMonths(now()),
+                ];
+            });
+
         return Inertia::render('admin/dashboard', [
             'membersJoinedData' => $chartData,
             'currentYear' => $currentYear,
@@ -263,6 +369,9 @@ class DashboardController extends Controller
             'parents' => $parents,
             'members' => $members,
             'banners' => $banners,
+            'careAlertNotes' => $careAlertNotes,
+            'upcomingLifecycleEvents' => $upcomingLifecycleEvents,
+            'recentMembers' => $recentMembers,
             'roleSwitch' => $this->getRoleSwitchData(auth()->user()),
         ]);
     }

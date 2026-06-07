@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileText, Calendar, CalendarPlus, Clock, Edit, Trash2, User, Tag, AlertTriangle, CheckCircle } from 'lucide-react';
+import { FileText, Calendar, CalendarPlus, Clock, Edit, Trash2, User, Tag, AlertTriangle, CheckCircle, Heart } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BreadcrumbItem, Note } from '@/types';
@@ -45,6 +45,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                 added_by: note.added_by,
                 visibility: note.visibility,
                 priority: note.priority,
+                member_care_alert: note.member_care_alert,
                 member_id: note.member_id,
                 user_id: note.user_id,
             });
@@ -158,7 +159,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                 </div>
 
                 {/* Status and Priority Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className={`grid grid-cols-1 md:grid-cols-${note.member_care_alert ? '5' : '4'} gap-4`}>
                     <Card>
                         <CardContent className="pt-6">
                             <div className="flex items-center">
@@ -222,6 +223,27 @@ export default function NoteShow({ note }: NoteShowProps) {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {note.member_care_alert && (
+                        <Card className="border-2 border-red-500">
+                            <CardContent className="pt-6">
+                                <div className="flex items-center">
+                                    <Heart className="h-4 w-4 text-red-500" />
+                                    <div className="ml-2">
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Care Alert</p>
+                                        <div className="flex items-center mt-1">
+                                            <Badge variant="destructive">
+                                                {note.member_care_alert === 'hospitalized' && 'Hospitalized'}
+                                                {note.member_care_alert === 'mourning' && 'Mourning'}
+                                                {note.member_care_alert === 'immediate_follow_up' && 'Immediate Follow-Up'}
+                                                {note.member_care_alert === 'other_emergency' && 'Other Emergency'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -1,9 +1,8 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import { Calendar, CalendarDays, MapPin, Globe, AlertCircle, UserPlus, Zap, GraduationCap, Mail, Printer, CheckCircle } from 'lucide-react';
+import { Calendar, CalendarDays, MapPin, Globe, AlertCircle, UserPlus, Zap, GraduationCap, Mail, Printer, Heart, Cake, Users } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatCurrency } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -69,6 +68,36 @@ interface Member {
     email: string;
 }
 
+interface CareAlertNote {
+    id: number;
+    name: string;
+    member_care_alert: string;
+    priority: string;
+    deadline_date: string | null;
+    member: {
+        id: number;
+        first_name: string;
+        last_name: string;
+    } | null;
+}
+
+interface LifecycleEvent {
+    member_id: number;
+    member_name: string;
+    event_type: 'birthday' | 'anniversary';
+    event_date: string;
+    days_until: number;
+}
+
+interface RecentMember {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    created_at: string;
+    months_ago: number;
+}
+
 interface DashboardProps {
     membersJoinedData: Array<{
         month: string;
@@ -84,9 +113,12 @@ interface DashboardProps {
     schoolTuitionTiers: SchoolTuitionTier[];
     parents: Parent[];
     members: Member[];
+    careAlertNotes: CareAlertNote[];
+    upcomingLifecycleEvents: LifecycleEvent[];
+    recentMembers: RecentMember[];
 }
 
-export default function Dashboard({ membersJoinedData, currentYear, currentHebrewDate, currentMonthYahrzeits, upcomingEvents, openInvoices, invoiceAging, membershipTiers, schoolTuitionTiers, parents, members }: DashboardProps) {
+export default function Dashboard({ membersJoinedData, currentYear, currentHebrewDate, currentMonthYahrzeits, upcomingEvents, openInvoices, invoiceAging, membershipTiers, schoolTuitionTiers, parents, members, careAlertNotes, upcomingLifecycleEvents, recentMembers }: DashboardProps) {
     const { auth, currency } = usePage().props as any;
     const user = auth.user;
     
@@ -564,8 +596,175 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                         </div>
                     </div>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                
+                {/* New Dashboard Sections */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Member Care Alerts */}
+                    <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+                                <Heart className="h-5 w-5 mr-2 text-red-500" />
+                                Member Care Alerts
+                            </h3>
+                            <Link href="/admin/notes">
+                                <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                    View All Notes
+                                </span>
+                            </Link>
+                        </div>
+                        {careAlertNotes.length > 0 ? (
+                            <div className="space-y-2">
+                                {careAlertNotes.map((note) => (
+                                    <Link
+                                        key={note.id}
+                                        href={`/admin/notes/${note.id}`}
+                                        className="block border-2 border-red-500 rounded-lg p-3 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
+                                    >
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                                        <Heart className="h-3 w-3 mr-1" />
+                                                        {note.member_care_alert === 'hospitalized' && 'Hospitalized'}
+                                                        {note.member_care_alert === 'mourning' && 'Mourning'}
+                                                        {note.member_care_alert === 'immediate_follow_up' && 'Immediate Follow-Up'}
+                                                        {note.member_care_alert === 'other_emergency' && 'Other Emergency'}
+                                                    </span>
+                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                                        note.priority === 'High' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                                                        note.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                                                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                                                    }`}>
+                                                        {note.priority}
+                                                    </span>
+                                                </div>
+                                                <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {note.name}
+                                                </div>
+                                                {note.member && (
+                                                    <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                                        Member: {note.member.first_name} {note.member.last_name}
+                                                    </div>
+                                                )}
+                                                {note.deadline_date && (
+                                                    <div className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                                                        Deadline: {new Date(note.deadline_date).toLocaleDateString()}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <Heart className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                                <p>No active member care alerts</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Upcoming Lifecycle Events */}
+                    <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+                                <Cake className="h-5 w-5 mr-2 text-purple-500" />
+                                Upcoming Lifecycle Events
+                            </h3>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">Next 30 Days</span>
+                        </div>
+                        {upcomingLifecycleEvents.length > 0 ? (
+                            <div className="space-y-2">
+                                {upcomingLifecycleEvents.map((event, index) => (
+                                    <Link
+                                        key={index}
+                                        href={`/admin/members/${event.member_id}`}
+                                        className="block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-purple-50 dark:hover:bg-purple-900/10 transition-colors"
+                                    >
+                                        <div className="flex items-center justify-between gap-3">
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                                                        event.event_type === 'birthday' 
+                                                            ? 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'
+                                                            : 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+                                                    }`}>
+                                                        {event.event_type === 'birthday' ? '🎂 Birthday' : '💐 Anniversary'}
+                                                    </span>
+                                                </div>
+                                                <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {event.member_name}
+                                                </div>
+                                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                    {new Date(event.event_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                    {event.days_until === 0 ? 'Today!' : `${Math.ceil(event.days_until)}d`}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <Cake className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                                <p>No upcoming events in the next 30 days</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Recent Members */}
+                    <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+                                <Users className="h-5 w-5 mr-2 text-green-500" />
+                                Recently Joined Members
+                            </h3>
+                            <Link href="/admin/members">
+                                <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                    View All Members
+                                </span>
+                            </Link>
+                        </div>
+                        {recentMembers.length > 0 ? (
+                            <div className="space-y-2">
+                                {recentMembers.map((member) => (
+                                    <Link
+                                        key={member.id}
+                                        href={`/admin/members/${member.id}`}
+                                        className="block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors"
+                                    >
+                                        <div className="flex items-center justify-between gap-3">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                    {member.first_name} {member.last_name}
+                                                </div>
+                                                <div className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                                                    {member.email}
+                                                </div>
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                    {new Date(member.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                </div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-500">
+                                                    {member.months_ago === 0 ? 'This month' : `${member.months_ago} month${member.months_ago > 1 ? 's' : ''} ago`}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <Users className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                                <p>No members joined in the last 12 months</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </AppLayout>
