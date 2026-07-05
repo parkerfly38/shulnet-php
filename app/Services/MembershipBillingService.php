@@ -70,7 +70,7 @@ class MembershipBillingService
                     }
 
                     // Determine anniversary date
-                    $anniversaryDate = $member->lastrenewal ?? $period->begin_date;
+                    $anniversaryDate = $member->last_renewal ?? $period->begin_date;
 
                     if (! $anniversaryDate) {
                         $skipped++;
@@ -98,7 +98,7 @@ class MembershipBillingService
                             $generated++;
 
                             // Update last renewal date
-                            $member->update(['lastrenewal' => $nextBillingDate]);
+                            $member->update(['last_renewal' => $nextBillingDate]);
                         } else {
                             $errors++;
                         }
@@ -172,7 +172,7 @@ class MembershipBillingService
                         $generated++;
 
                         // Update last renewal date
-                        $member->update(['lastrenewal' => $billingDate]);
+                        $member->update(['last_renewal' => $billingDate]);
                     } else {
                         $errors++;
                     }
@@ -299,10 +299,10 @@ class MembershipBillingService
                 ->with(['activeMembershipPeriods.membershipTier'])
                 ->get()
                 ->filter(function ($member) use ($date, $gracePeriodDays) {
-                    if (! $member->lastrenewal) {
+                    if (! $member->last_renewal) {
                         return false;
                     }
-                    $anniversaryDate = Carbon::parse($member->lastrenewal)->year($date->year);
+                    $anniversaryDate = Carbon::parse($member->last_renewal)->year($date->year);
 
                     return abs($anniversaryDate->diffInDays($date)) <= $gracePeriodDays;
                 });

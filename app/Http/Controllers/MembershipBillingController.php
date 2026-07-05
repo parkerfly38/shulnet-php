@@ -90,7 +90,7 @@ class MembershipBillingController extends Controller
                 'id' => $member->id,
                 'name' => $member->first_name.' '.$member->last_name,
                 'email' => $member->email,
-                'lastrenewal' => $member->lastrenewal?->format('Y-m-d'),
+                'last_renewal' => $member->last_renewal?->format('Y-m-d'),
                 'tiers' => $member->activeMembershipPeriods->map(function ($period) {
                     return [
                         'name' => $period->membershipTier?->name,

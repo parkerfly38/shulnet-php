@@ -179,7 +179,7 @@ Schedule::command('membership:generate-dues')
 ### Test Anniversary Billing
 
 1. Set billing method to `anniversary`
-2. Create/find a member with `lastrenewal` date around today
+2. Create/find a member with `last_renewal` date around today
 3. Run: `php artisan membership:generate-dues --dry-run`
 4. Should show that member in the list
 
@@ -224,7 +224,7 @@ MembershipPeriod:
   - Updated end_date to +1 year
 
 Member:
-  - Updated lastrenewal to billing date
+  - Updated last_renewal to billing date
 ```
 
 ---
@@ -290,7 +290,7 @@ If you encounter issues:
 1. Check logs: `tail -f storage/logs/laravel.log`
 2. Run dry-run: `php artisan membership:generate-dues --dry-run`
 3. Verify settings: `php artisan tinker` → `Setting::get('membership_billing_method')`
-4. Check member data: Ensure members have `lastrenewal` dates or membership periods
+4. Check member data: Ensure members have `last_renewal` dates or membership periods
 5. Review the full README: `MEMBERSHIP_BILLING_README.md`
 
 ---

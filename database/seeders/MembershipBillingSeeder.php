@@ -119,8 +119,8 @@ class MembershipBillingSeeder extends Seeder
             $monthsAgo = ($index % 12) + 1; // 1-12 months ago
             $startDate = Carbon::now()->subMonths($monthsAgo)->startOfMonth();
 
-            // Set lastrenewal to the start date (for anniversary billing)
-            $member->update(['lastrenewal' => $startDate]);
+            // Set last_renewal to the start date (for anniversary billing)
+            $member->update(['last_renewal' => $startDate]);
 
             // Create the membership period
             MembershipPeriod::create([

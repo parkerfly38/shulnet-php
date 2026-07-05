@@ -98,10 +98,10 @@ Make sure your cron is configured:
 
 When `membership_billing_method` is set to `anniversary`:
 
-1. System checks each member's `lastrenewal` date (or membership period `begin_date` if no renewal)
+1. System checks each member's `last_renewal` date (or membership period `begin_date` if no renewal)
 2. Calculates anniversary date for current year
 3. If today is within the grace period of the anniversary, generates invoice
-4. Updates member's `lastrenewal` date
+4. Updates member's `last_renewal` date
 5. Creates new membership period with updated end date
 
 **Example:**
@@ -168,7 +168,7 @@ POST /api/membership-billing/generate
 
 ### Related Tables
 
-- **members**: Member information including `lastrenewal` date
+- **members**: Member information including `last_renewal` date
 - **membership_tiers**: Tier definitions with pricing and billing period
 - **membership_periods**: Links members to tiers with begin/end dates and invoice
 - **invoices**: Generated membership invoices
@@ -298,4 +298,4 @@ For issues or questions:
 1. Check Laravel logs: `storage/logs/laravel.log`
 2. Run dry-run mode to test: `php artisan membership:generate-dues --dry-run`
 3. Review database settings table
-4. Check member data has required fields (`lastrenewal`, active periods, etc.)
+4. Check member data has required fields (`last_renewal`, active periods, etc.)

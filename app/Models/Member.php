@@ -15,7 +15,7 @@ class Member extends Model
 
     protected $fillable = [
         'member_type',
-        'lastrenewal',
+        'last_renewal',
         'lastaction',
         'lastlogin',
         'email',
@@ -53,7 +53,7 @@ class Member extends Model
         'dob' => 'date',
         'bnaimitzvahdate' => 'date',
         'anniversary_date' => 'date',
-        'lastrenewal' => 'date',
+        'last_renewal' => 'date',
         'lastaction' => 'datetime',
         'lastlogin' => 'datetime',
         'aliyah' => 'boolean',
