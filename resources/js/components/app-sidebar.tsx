@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone, CreditCard } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -230,6 +230,16 @@ const systemNavItems: NavItem[] = [
         title: 'General Settings',
         href: '/admin/settings',
         icon: Settings,
+    },
+    {
+        title: 'Membership Billing',
+        href: '/admin/settings/membership-billing',
+        icon: CreditCard,
+    },
+    {
+        title: 'Chart of Accounts',
+        href: '/admin/chart-of-accounts',
+        icon: FileSpreadsheet,
     },
     {
         title: 'API Tokens',
