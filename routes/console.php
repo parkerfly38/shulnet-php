@@ -12,3 +12,9 @@ Schedule::command('banners:send-push-notifications')
     ->everyFifteenMinutes()
     ->withoutOverlapping()
     ->runInBackground();
+
+Schedule::command('membership:generate-dues')
+    ->daily()
+    ->at('01:00')
+    ->withoutOverlapping()
+    ->runInBackground();
