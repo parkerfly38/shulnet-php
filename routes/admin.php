@@ -24,6 +24,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LeadershipDashboardController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MembershipBillingController;
 use App\Http\Controllers\MembershipPeriodController;
 use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\NoteController;
@@ -358,6 +359,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     // Settings
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+
+    // Membership Billing Settings
+    Route::get('settings/membership-billing', [MembershipBillingController::class, 'index'])->name('settings.membership-billing');
+    Route::put('settings/membership-billing', [MembershipBillingController::class, 'update'])->name('settings.membership-billing.update');
+    Route::get('settings/membership-billing/preview', [MembershipBillingController::class, 'preview'])->name('settings.membership-billing.preview');
+    Route::post('settings/membership-billing/generate', [MembershipBillingController::class, 'generate'])->name('settings.membership-billing.generate');
 
     // API Tokens
     Route::get('api-tokens', [\App\Http\Controllers\Api\TokenController::class, 'page'])->name('admin.api-tokens');
