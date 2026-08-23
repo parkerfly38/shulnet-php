@@ -54,10 +54,12 @@
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
         "concurrently": "^9.0.1",
+        "dompurify": "^3.4.14",
         "globals": "^15.14.0",
         "input-otp": "^1.4.2",
         "laravel-vite-plugin": "^2.0",
         "lucide-react": "^0.475.0",
+        "monaco-editor": "^0.53.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "recharts": "^3.6.0",
@@ -75,5 +77,15 @@
         "@tailwindcss/oxide-win32-x64-msvc": "^4.0.1",
         "lightningcss-linux-x64-gnu": "^1.29.1",
         "lightningcss-win32-x64-msvc": "^1.29.1"
+    },
+    "allowScripts": {
+        "esbuild@0.28.1": true,
+        "fsevents@2.3.3": true
+    },
+    "features": {
+        "allowScripts": {
+            "dompurify": "true",
+            "monaco-editor": "true"
+        }
     }
 }
