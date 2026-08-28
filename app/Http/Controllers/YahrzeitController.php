@@ -30,6 +30,8 @@ class YahrzeitController extends Controller
     {
         $search = $request->get('search');
         $perPage = $request->get('per_page', 15);
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
 
         $query = Yahrzeit::query()
             ->with(['members' => function ($query) {
@@ -58,6 +60,19 @@ class YahrzeitController extends Controller
             });
         }
 
+        if ($startDate && $endDate) {
+            $searchDates = $this->hebrewCalendar->getHebrewDatesBetween($startDate, $endDate);
+
+            $query->where(function ($q) use ($searchDates) {
+                foreach ($searchDates as $date) {
+                    $q->orWhere(function ($q2) use ($date) {
+                        $q2->where('hebrew_day_of_death', $date['day'])
+                           ->where('hebrew_month_of_death', $date['month']);
+                    });
+                }
+            });
+        }
+
         $yahrzeits = $query->paginate($perPage);
         
         // Calculate next observance date for each yahrzeit
@@ -82,6 +97,8 @@ class YahrzeitController extends Controller
             'yahrzeits' => $yahrzeits,
             'filters' => [
                 'search' => $search,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
             ],
         ]);
     }

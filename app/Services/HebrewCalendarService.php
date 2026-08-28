@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use IntlDateFormatter;
+
 class HebrewCalendarService
 {
     /**
@@ -472,6 +474,37 @@ class HebrewCalendarService
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * Get Hebrew Dates between two Gregorian dates
+     *
+     * @return array of Hebrew dates in ['day' => int, 'month' => int] format
+     *               Month number is based on the Hebrew year's leap year status (1-13 for leap year, 1-12 for regular year)
+     *               Handles Gregorian ranges that span multiple Hebrew years
+     */
+    public function getHebrewDatesBetween($startGregorian, $endGregorian): array
+    {
+        $start = new \DateTime($startGregorian);
+        $end = new \DateTime($endGregorian);
+
+        $results = [];
+        $current = clone $start;
+
+        while ($current <= $end) {
+            // Convert each Gregorian date to Hebrew, which automatically
+            // handles leap year month numbering correctly for that Hebrew year
+            $hebrewDate = $this->gregorianToHebrew($current->format('Y-m-d'));
+            
+            $results[] = [
+                'day' => $hebrewDate['day'],
+                'month' => $hebrewDate['month'],  // Month number (1-13 in leap years, 1-12 in regular years)
+            ];
+            
+            $current->modify('+1 day');
+        }
+        
+        return $results;
     }
 }
 

@@ -77,6 +77,8 @@ interface Props {
   yahrzeits: PaginationData;
   filters: {
     search?: string;
+    startDate?: string;
+    endDate?: string;
   };
 }
 
@@ -119,6 +121,8 @@ const OBSERVANCE_LABELS = {
 
 export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
+  const [startDate, setStartDate] = useState(filters.startDate || '');
+  const [endDate, setEndDate] = useState(filters.endDate || '');
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [selectedYahrzeit, setSelectedYahrzeit] = useState<Yahrzeit | null>(null);
@@ -168,7 +172,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.get('/admin/yahrzeits', { search }, {
+    router.get('/admin/yahrzeits', { search, startDate, endDate }, {
       preserveState: true,
       replace: true,
     });
@@ -439,15 +443,32 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                 className="pl-10"
               />
             </div>
+            <div className="relative flex"> Between </div>
+            <div className="relative flex-1">
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div className="relative flex-1">
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
             <Button type="submit" variant="outline">
               Search
             </Button>
           </form>
-          {filters.search && (
+          {(filters.search || filters.startDate || filters.endDate) && (
             <Button
               variant="outline"
               onClick={() => {
                 setSearch('');
+                setStartDate('');
+                setEndDate('');
                 router.get('/admin/yahrzeits');
               }}
             >
@@ -461,9 +482,11 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
           <span>
             Showing {yahrzeits.from} to {yahrzeits.to} of {yahrzeits.total} yahrzeit records
           </span>
-          {filters.search && (
+          {(filters.search || filters.startDate || filters.endDate) && (
             <span>
               Search results for: <strong>"{filters.search}"</strong>
+              {filters.startDate && <span> from <strong>{filters.startDate}</strong></span>}
+              {filters.endDate && <span> to <strong>{filters.endDate}</strong></span>}
             </span>
           )}
         </div>
