@@ -516,11 +516,14 @@ class YahrzeitController extends Controller
             ->orderBy('hebrew_day_of_death')
             ->get();
 
+        //convert hebrew month name to number
+        $hebrewMonthNumber = $this->hebrewCalendar->getMonthNumberFromName($selectedMonth, $currentHebrewDate['year']) ?? 0;
+
         // Prepare data with Gregorian dates
-        $yahrzeitsData = $yahrzeits->map(function ($yahrzeit) {
+        $yahrzeitsData = $yahrzeits->map(function ($yahrzeit) use ($hebrewMonthNumber) {
             $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
                 $yahrzeit->hebrew_day_of_death,
-                $yahrzeit->hebrew_month_of_death
+                $hebrewMonthNumber
             );
 
             return [

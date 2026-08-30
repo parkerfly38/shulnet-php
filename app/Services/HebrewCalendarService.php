@@ -342,7 +342,7 @@ class HebrewCalendarService
      *
      * @return string|null Gregorian date in 'F j, Y' format
      */
-    public function getGregorianDateForCurrentYear(int $hebrewDay, int $hebrewMonth): ?string
+    public function getGregorianDateForCurrentYear(int $hebrewDay,  int $hebrewMonth): ?string
     {
         $currentHebrewYear = $this->getCurrentHebrewDate()['year'];
 

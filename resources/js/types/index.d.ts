@@ -385,7 +385,7 @@ export interface Yahrzeit {
 
 export interface HebrewDate {
     day: number;
-    month: number;
+    month: string;
     year: number;
     isLeapYear: boolean;
     formatted: string;
