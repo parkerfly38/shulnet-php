@@ -205,7 +205,7 @@ class MemberPortalTestSeeder extends Seeder
             'hebrew_name' => 'Avraham ben Yitzchak',
             'date_of_death' => Carbon::now()->subYears(5)->addDays(20)->toDateString(),
             'hebrew_day_of_death' => 15,
-            'hebrew_month_of_death' => 5,
+            'hebrew_month_of_death' => 'Tishrei',
             'hebrew_year_of_death' => 5781,
         ]);
 
@@ -214,7 +214,7 @@ class MemberPortalTestSeeder extends Seeder
             'hebrew_name' => 'Sarah bat Moshe',
             'date_of_death' => Carbon::now()->subYears(10)->addDays(45)->toDateString(),
             'hebrew_day_of_death' => 22,
-            'hebrew_month_of_death' => 3,
+            'hebrew_month_of_death' => 'Kislev',
             'hebrew_year_of_death' => 5776,
         ]);
 

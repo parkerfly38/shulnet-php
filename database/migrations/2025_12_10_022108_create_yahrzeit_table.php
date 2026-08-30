@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('hebrew_name')->nullable();
             $table->date('date_of_death');
             $table->integer('hebrew_day_of_death')->nullable();
-            $table->integer('hebrew_month_of_death')->nullable();
+            $table->text('hebrew_month_of_death')->nullable();
             $table->integer('hebrew_year_of_death')->nullable();
             $table->string('relationship')->nullable(); // son, daughter, father, mother, etc.
             $table->string('observance_type')->default('standard'); // standard, kaddish, memorial_candle, other

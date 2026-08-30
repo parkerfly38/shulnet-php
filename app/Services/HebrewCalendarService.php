@@ -66,9 +66,10 @@ class HebrewCalendarService
         if (empty($hebrewDate)) {
             // Fallback if conversion fails
             $approxYear = (int) $year + 3760;
+            $approxMonth = $this->getHebrewMonthNumberApproximate((int) $month);
             return [
                 'day' => (int) $day,
-                'month' => $this->getHebrewMonthNumberApproximate((int) $month),
+                'month' => $this->getHebrewMonthName($approxMonth, $approxYear),
                 'year' => $approxYear,
                 'isLeapYear' => $this->isHebrewLeapYear($approxYear),
                 'formatted' => null,
@@ -83,7 +84,7 @@ class HebrewCalendarService
             $approxYear = (int) $year + 3760;
             return [
                 'day' => (int) $day,
-                'month' => $this->getHebrewMonthNumberApproximate((int) $month),
+                'month' => $this->getHebrewMonthName($this->getHebrewMonthNumberApproximate((int) $month), $approxYear),
                 'year' => $approxYear,
                 'isLeapYear' => $this->isHebrewLeapYear($approxYear),
                 'formatted' => null,
@@ -97,7 +98,7 @@ class HebrewCalendarService
 
         return [
             'day' => $hebrewDay,
-            'month' => $hebrewMonth,
+            'month' => $this->getHebrewMonthName($hebrewMonth, $hebrewYear),
             'year' => $hebrewYear,
             'isLeapYear' => $isLeapYear,
             'formatted' => sprintf('%d %s %d', $hebrewDay, $this->getHebrewMonthName($hebrewMonth, $hebrewYear), $hebrewYear),
@@ -354,16 +355,17 @@ class HebrewCalendarService
      * Handles leap year Adar complexities
      *
      * @param int $hebrewDay Hebrew day (1-30)
-     * @param int $hebrewMonth Hebrew month (1-13)
+     * @param string $hebrewMonth Hebrew month (e.g., "Nisan", "Iyar", "Adar")
      * @return string|null Next observance date in Y-m-d format
      */
-    public function getNextYahrzeitDate(int $hebrewDay, int $hebrewMonth): ?string
+    public function getNextYahrzeitDate(int $hebrewDay, string $hebrewMonth): ?string
     {
         $currentHebrewYear = $this->getCurrentHebrewDate()['year'];
         $today = new \DateTime('today');
         
         // Try current Hebrew year
         $dateThisYear = $this->calculateYahrzeitForYear($hebrewDay, $hebrewMonth, $currentHebrewYear);
+        
         
         if ($dateThisYear) {
             $dateObj = \DateTime::createFromFormat('Y-m-d', $dateThisYear);
@@ -386,10 +388,11 @@ class HebrewCalendarService
      * @param int $hebrewMonth Hebrew month (1-13)
      * @return string|null Previous observance date in Y-m-d format
      */
-    public function getPreviousYahrzeitDate(int $hebrewDay, int $hebrewMonth): ?string
+    public function getPreviousYahrzeitDate(int $hebrewDay, string $hebrewMonth): ?string
     {
         $currentHebrewYear = $this->getCurrentHebrewDate()['year'];
         $today = new \DateTime('today');
+        
         
         // Try current Hebrew year
         $dateThisYear = $this->calculateYahrzeitForYear($hebrewDay, $hebrewMonth, $currentHebrewYear);
@@ -411,28 +414,40 @@ class HebrewCalendarService
      * Handles month adjustments between leap and non-leap years
      *
      * @param int $hebrewDay Original Hebrew day of death
-     * @param int $hebrewMonth Original Hebrew month (stored in regular year numbering 1-12)
+     * @param string $hebrewMonth Original Hebrew month (stored in regular year numbering 1-12)
      * @param int $targetYear Hebrew year to calculate observance for
      * @return string|null Gregorian date in Y-m-d format
      */
-    private function calculateYahrzeitForYear(int $hebrewDay, int $hebrewMonth, int $targetYear): ?string
+    private function calculateYahrzeitForYear(int $hebrewDay, string $hebrewMonth, int $targetYear): ?string
     {
         $isTargetLeapYear = $this->isHebrewLeapYear($targetYear);
         $observanceMonth = $hebrewMonth;
         
         // Adjust month numbering based on leap year status
-        if ($hebrewMonth === 6) {
-            // Adar (month 6)
-            // Regular year: observe on Adar (month 6)
-            // Leap year: observe on Adar II (month 7) - traditional practice
-            $observanceMonth = $isTargetLeapYear ? 7 : 6;
-        } elseif ($hebrewMonth >= 7 && $hebrewMonth <= 12) {
-            // Months Nisan through Elul (7-12 in regular year)
-            // In leap years, these shift to months 8-13 due to Adar II insertion
-            $observanceMonth = $isTargetLeapYear ? $hebrewMonth + 1 : $hebrewMonth;
+        if ($hebrewMonth === 'Adar II') {
+            $hebrewMonth = $isTargetLeapYear ? 'Adar II' : 'Adar';
         }
-        // Months 1-5 (Tishrei through Shevat) never need adjustment
-        
+        // get the number of the month, 1-13
+        $monthNumbers = [
+            'Tishrei' => 1,
+            'Cheshvan' => 2,
+            'Kislev' => 3,
+            'Tevet' => 4,
+            'Shevat' => 5,
+            'Adar' => 6,
+            'Adar II' => 7,
+            'Nisan' => 8,
+            'Iyar' => 9,
+            'Sivan' => 10,
+            'Tammuz' => 11,
+            'Av' => 12,
+            'Elul' => 13,
+        ];
+
+        if (isset($monthNumbers[$hebrewMonth])) {
+            $observanceMonth = $monthNumbers[$hebrewMonth];
+        }
+
         return $this->hebrewToGregorianFormatted($hebrewDay, $observanceMonth, $targetYear);
     }
 
@@ -441,7 +456,7 @@ class HebrewCalendarService
      *
      * @return string|null Gregorian date in 'Y-m-d' format or null if conversion fails
      */
-    private function hebrewToGregorianFormatted(int $hebrewDay, int $hebrewMonth, int $hebrewYear): ?string
+    private function hebrewToGregorianFormatted(int $hebrewDay, string $hebrewMonth, int $hebrewYear): ?string
     {
         try {
             // Convert Hebrew date to Julian Day Number

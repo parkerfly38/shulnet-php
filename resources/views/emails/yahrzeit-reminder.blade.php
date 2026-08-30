@@ -19,7 +19,7 @@
             @endif
             
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
-                <p style="margin: 5px 0;"><strong>Hebrew Date:</strong> {{ $yahrzeit->hebrew_day_of_death }} {{ ['', 'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar', 'Nissan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'][$yahrzeit->hebrew_month_of_death] ?? 'Unknown' }}</p>
+                <p style="margin: 5px 0;"><strong>Hebrew Date:</strong> {{ $yahrzeit->hebrew_day_of_death }} {{ ['', 'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar', 'Adar II', 'Nisan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'][$yahrzeit->hebrew_month_of_death] ?? 'Unknown' }}</p>
                 <p style="margin: 5px 0;"><strong>This Year (Gregorian):</strong> {{ $gregorianDate }}</p>
                 <p style="margin: 5px 0;"><strong>Date of Passing:</strong> {{ $yahrzeit->date_of_death->format('F j, Y') }}</p>
             </div>
