@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Member\PaymentController;
+use App\Http\Controllers\Member\RideRequestController;
 use App\Http\Controllers\Member\CommitteeController as MemberCommitteeController;
 use App\Http\Controllers\Member\BoardController as MemberBoardController;
 use App\Http\Controllers\DashboardController;
@@ -23,6 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('yahrzeits/request-change', [MemberDashboardController::class, 'requestYahrzeitChange'])->name('member.yahrzeits.request-change');
         Route::get('events', [MemberDashboardController::class, 'events'])->name('member.events');
         Route::post('events/{event}/register', [MemberDashboardController::class, 'registerForEvent'])->name('member.events.register');
+        Route::get('rides', [RideRequestController::class, 'index'])->name('member.rides.index');
+        Route::post('rides', [RideRequestController::class, 'store'])->name('member.rides.store');
+        Route::post('rides/{rideRequest}/claim', [RideRequestController::class, 'claim'])->name('member.rides.claim');
 
         // Member Committees and Boards
         Route::get('committees', [MemberCommitteeController::class, 'index'])->name('member.committees.index');

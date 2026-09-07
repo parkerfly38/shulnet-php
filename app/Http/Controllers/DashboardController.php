@@ -13,6 +13,7 @@ use App\Models\Member;
 use App\Models\MembershipPeriod;
 use App\Models\MembershipTier;
 use App\Models\ParentModel;
+use App\Models\RideRequest;
 use App\Models\SchoolTuitionTier;
 use App\Models\Student;
 use App\Models\Yahrzeit;
@@ -356,6 +357,27 @@ class DashboardController extends Controller
                 ];
             });
 
+        $upcomingRideRequests = RideRequest::query()
+            ->with(['requester:id,first_name,last_name', 'driver:id,first_name,last_name'])
+            ->where('service_at', '>=', now())
+            ->orderBy('service_at')
+            ->limit(10)
+            ->get()
+            ->map(fn (RideRequest $rideRequest) => [
+                'id' => $rideRequest->id,
+                'service_at' => $rideRequest->service_at->toIso8601String(),
+                'pickup_location' => $rideRequest->pickup_location,
+                'passenger_count' => $rideRequest->passenger_count,
+                'requester' => [
+                    'id' => $rideRequest->requester->id,
+                    'name' => trim($rideRequest->requester->first_name.' '.$rideRequest->requester->last_name),
+                ],
+                'driver' => $rideRequest->driver ? [
+                    'id' => $rideRequest->driver->id,
+                    'name' => trim($rideRequest->driver->first_name.' '.$rideRequest->driver->last_name),
+                ] : null,
+            ]);
+
         return Inertia::render('admin/dashboard', [
             'membersJoinedData' => $chartData,
             'currentYear' => $currentYear,
@@ -372,6 +394,7 @@ class DashboardController extends Controller
             'careAlertNotes' => $careAlertNotes,
             'upcomingLifecycleEvents' => $upcomingLifecycleEvents,
             'recentMembers' => $recentMembers,
+            'upcomingRideRequests' => $upcomingRideRequests,
             'roleSwitch' => $this->getRoleSwitchData(auth()->user()),
         ]);
     }

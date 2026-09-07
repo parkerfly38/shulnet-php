@@ -195,6 +195,16 @@ class Member extends Model
         return $this->hasMany(EventRSVP::class);
     }
 
+    public function rideRequests(): HasMany
+    {
+        return $this->hasMany(RideRequest::class, 'requester_id');
+    }
+
+    public function claimedRideRequests(): HasMany
+    {
+        return $this->hasMany(RideRequest::class, 'driver_id');
+    }
+
     /**
      * Get all email records for this member.
      */

@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import { Calendar, CalendarDays, MapPin, Globe, AlertCircle, UserPlus, Zap, GraduationCap, Mail, Printer, Heart, Cake, Users } from 'lucide-react';
+import { Calendar, CalendarDays, MapPin, Globe, AlertCircle, UserPlus, Zap, GraduationCap, Mail, Printer, Heart, Cake, Users, Car, Clock } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatCurrency } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -98,6 +98,15 @@ interface RecentMember {
     months_ago: number;
 }
 
+interface RideRequest {
+    id: number;
+    service_at: string;
+    pickup_location: string;
+    passenger_count: number;
+    requester: { id: number; name: string };
+    driver: { id: number; name: string } | null;
+}
+
 interface DashboardProps {
     membersJoinedData: Array<{
         month: string;
@@ -116,9 +125,10 @@ interface DashboardProps {
     careAlertNotes: CareAlertNote[];
     upcomingLifecycleEvents: LifecycleEvent[];
     recentMembers: RecentMember[];
+    upcomingRideRequests: RideRequest[];
 }
 
-export default function Dashboard({ membersJoinedData, currentYear, currentHebrewDate, currentMonthYahrzeits, upcomingEvents, openInvoices, invoiceAging, membershipTiers, schoolTuitionTiers, parents, members, careAlertNotes, upcomingLifecycleEvents, recentMembers }: DashboardProps) {
+export default function Dashboard({ membersJoinedData, currentYear, currentHebrewDate, currentMonthYahrzeits, upcomingEvents, openInvoices, invoiceAging, membershipTiers, schoolTuitionTiers, parents, members, careAlertNotes, upcomingLifecycleEvents, recentMembers, upcomingRideRequests }: DashboardProps) {
     const { auth, currency } = usePage().props as any;
     const user = auth.user;
     
@@ -762,6 +772,55 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                 <Users className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
                                 <p>No members joined in the last 12 months</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Upcoming Ride Requests */}
+                    <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
+                                <Car className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
+                                Upcoming Ride Needs
+                            </h3>
+                            <Link href="/member/rides">
+                                <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">View Ride Sharing</span>
+                            </Link>
+                        </div>
+                        {upcomingRideRequests.length > 0 ? (
+                            <div className="space-y-2">
+                                {upcomingRideRequests.map((rideRequest) => (
+                                    <div key={rideRequest.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="min-w-0">
+                                                <Link href={`/admin/members/${rideRequest.requester.id}`} className="font-medium text-gray-900 dark:text-gray-100 hover:underline">
+                                                    {rideRequest.requester.name}
+                                                </Link>
+                                                <div className="mt-1 flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
+                                                    <Clock className="h-3.5 w-3.5 shrink-0" />
+                                                    {new Date(rideRequest.service_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                                                </div>
+                                                <div className="mt-1 flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 truncate">
+                                                    <MapPin className="h-3.5 w-3.5 shrink-0" />
+                                                    {rideRequest.pickup_location}
+                                                </div>
+                                            </div>
+                                            <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${rideRequest.driver ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'}`}>
+                                                {rideRequest.driver ? 'Driver assigned' : 'Needs driver'}
+                                            </span>
+                                        </div>
+                                        {rideRequest.driver && (
+                                            <div className="mt-2 border-t border-gray-100 pt-2 text-sm dark:border-gray-800">
+                                                Driver: <Link href={`/admin/members/${rideRequest.driver.id}`} className="font-medium text-blue-600 hover:underline dark:text-blue-400">{rideRequest.driver.name}</Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                <Car className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                                <p>No upcoming ride needs</p>
                             </div>
                         )}
                     </div>

@@ -13,7 +13,7 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone, CreditCard } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone, CreditCard, Car } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -50,6 +50,11 @@ const memberNavItems: NavItem[] = [
         title: 'My Events',
         href: '/member/events',
         icon: CalendarDays,
+    },
+    {
+        title: 'Ride Sharing',
+        href: '/member/rides',
+        icon: Car,
     },
     {
         title: 'My Committees',
