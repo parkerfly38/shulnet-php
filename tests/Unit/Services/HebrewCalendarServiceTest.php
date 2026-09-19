@@ -28,7 +28,7 @@ class HebrewCalendarServiceTest extends TestCase
         $this->assertArrayHasKey('formatted', $result);
 
         $this->assertEquals(10, $result['day']);
-        $this->assertEquals(1, $result['month']); // Tishrei
+        $this->assertEquals('Tishrei', $result['month']);
         $this->assertEquals(5784, $result['year']);
     }
 
@@ -38,7 +38,7 @@ class HebrewCalendarServiceTest extends TestCase
         $result = $this->service->gregorianToHebrew('2023-09-16');
 
         $this->assertEquals(1, $result['day']);
-        $this->assertEquals(1, $result['month']); // Tishrei
+        $this->assertEquals('Tishrei', $result['month']);
         $this->assertEquals(5784, $result['year']);
     }
 
@@ -48,8 +48,7 @@ class HebrewCalendarServiceTest extends TestCase
         $result = $this->service->gregorianToHebrew('2024-04-23');
 
         $this->assertEquals(15, $result['day']);
-        // 5784 is a leap year, so Nisan is month 8
-        $this->assertContains($result['month'], [7, 8]); // Allow for either depending on leap year
+        $this->assertEquals('Nisan', $result['month']);
     }
 
     public function test_is_hebrew_leap_year_identifies_leap_years()
