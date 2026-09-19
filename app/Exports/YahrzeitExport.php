@@ -106,13 +106,50 @@ class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, Wi
             $yahrzeit->hebrew_day_of_death,
             $yahrzeit->hebrew_month_of_death,
             $yahrzeit->hebrew_year_of_death,
-            $yahrzeit->date_of_death ? $yahrzeit->date_of_death->format('Y-m-d') : '',
+            $this->nextObservanceDate($yahrzeit),
             $yahrzeit->observance_type,
             $memberNames,
             $relationships,
             $yahrzeit->notes,
             $yahrzeit->created_at ? $yahrzeit->created_at->format('Y-m-d H:i:s') : '',
         ];
+    }
+
+    private function nextObservanceDate(Yahrzeit $yahrzeit): string
+    {
+        $fallback = $yahrzeit->date_of_death?->format('Y-m-d') ?? '';
+
+        if (! $yahrzeit->hebrew_day_of_death || ! $yahrzeit->hebrew_month_of_death) {
+            return $fallback;
+        }
+
+        $hebrewYear = null;
+        if ($yahrzeit->hebrew_year_of_death) {
+            $hebrewYear = (int) $yahrzeit->hebrew_year_of_death;
+        }
+
+        $month = is_numeric($yahrzeit->hebrew_month_of_death)
+            ? (int) $yahrzeit->hebrew_month_of_death
+            : $this->hebrewCalendar->getMonthNumberFromName(
+                $yahrzeit->hebrew_month_of_death,
+                $hebrewYear,
+            );
+
+        if (! $month) {
+            return $fallback;
+        }
+
+        $nextDate = null;
+        try {
+            $nextDate = $this->hebrewCalendar->getNextYahrzeitDate(
+                (int) $yahrzeit->hebrew_day_of_death,
+                (string) $month,
+            );
+        } catch (\Throwable) {
+            // Use the original date when the Hebrew date cannot be converted.
+        }
+
+        return $nextDate ?? $fallback;
     }
 
     public function styles(Worksheet $sheet): array
