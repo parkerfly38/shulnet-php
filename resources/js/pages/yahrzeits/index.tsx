@@ -46,7 +46,7 @@ interface Yahrzeit {
     hebrew_name?: string;
     date_of_death?: string | null;
     hebrew_day_of_death: number;
-    hebrew_month_of_death: number;
+    hebrew_month_of_death: string;
     next_observance_date?: string | null;
     observance_type: 'standard' | 'kaddish' | 'memorial_candle' | 'other';
     created_at: string;
@@ -77,6 +77,8 @@ interface Props {
   yahrzeits: PaginationData;
   filters: {
     search?: string;
+    startDate?: string;
+    endDate?: string;
   };
 }
 
@@ -119,6 +121,8 @@ const OBSERVANCE_LABELS = {
 
 export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
   const [search, setSearch] = useState(filters.search || '');
+  const [startDate, setStartDate] = useState(filters.startDate || '');
+  const [endDate, setEndDate] = useState(filters.endDate || '');
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [showReminderDialog, setShowReminderDialog] = useState(false);
   const [selectedYahrzeit, setSelectedYahrzeit] = useState<Yahrzeit | null>(null);
@@ -168,7 +172,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.get('/admin/yahrzeits', { search }, {
+    router.get('/admin/yahrzeits', { search, startDate, endDate }, {
       preserveState: true,
       replace: true,
     });
@@ -205,6 +209,15 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
 
   const handleDownloadTemplate = () => {
     window.location.href = '/admin/yahrzeits/template/download';
+  };
+
+  const handleExport = () => {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    
+    window.location.href = `/admin/yahrzeits/export?${params.toString()}`;
   };
 
   const handleDelete = (yahrzeit: Yahrzeit) => {
@@ -290,24 +303,13 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
     }
   };
 
-  const formatHebrewDate = (day: number, month: number) => {
+  const formatHebrewDate = (day: number, month: string) => {
     // For months 1-12, use regular array; for month 7 or 13, check leap year context
     let monthName: string;
     
-    if (month === 7 && HEBREW_MONTHS_LEAP[7]) {
-      // Could be Adar II in leap year or Nisan in regular year
-      // Default to regular month names unless we have more context
-      monthName = HEBREW_MONTHS[month] || 'Unknown';
-    } else if (month === 13) {
-      // Month 13 only exists in leap years (Elul)
-      monthName = HEBREW_MONTHS_LEAP[13] || 'Elul';
-    } else if (month >= 1 && month <= 12) {
-      monthName = HEBREW_MONTHS[month] || 'Unknown';
-    } else {
-      monthName = 'Unknown';
-    }
+    //if not a leap year we present Adar II as Adar - need is is hebrewleap year function
     
-    return `${day} ${monthName}`;
+    return `${day} ${month}`;
   };
 
   return (
@@ -348,6 +350,15 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
             </p>
           </div>
           <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={handleExport}
+              className="flex items-center gap-2"
+              title="Export current search results to Excel"
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
             <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
@@ -439,15 +450,32 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                 className="pl-10"
               />
             </div>
+            <div className="relative flex"> Between </div>
+            <div className="relative flex-1">
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div className="relative flex-1">
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
             <Button type="submit" variant="outline">
               Search
             </Button>
           </form>
-          {filters.search && (
+          {(filters.search || filters.startDate || filters.endDate) && (
             <Button
               variant="outline"
               onClick={() => {
                 setSearch('');
+                setStartDate('');
+                setEndDate('');
                 router.get('/admin/yahrzeits');
               }}
             >
@@ -461,9 +489,11 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
           <span>
             Showing {yahrzeits.from} to {yahrzeits.to} of {yahrzeits.total} yahrzeit records
           </span>
-          {filters.search && (
+          {(filters.search || filters.startDate || filters.endDate) && (
             <span>
               Search results for: <strong>"{filters.search}"</strong>
+              {filters.startDate && <span> from <strong>{filters.startDate}</strong></span>}
+              {filters.endDate && <span> to <strong>{filters.endDate}</strong></span>}
             </span>
           )}
         </div>
@@ -478,7 +508,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                     Deceased
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Next Observance
+                    Next Observance *
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Hebrew Date
@@ -587,12 +617,12 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
             <div className="bg-white dark:bg-black px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
               <div className="flex-1 flex justify-between sm:hidden">
                 {yahrzeits.prev_page_url && (
-                  <Button variant="outline" onClick={() => router.get(yahrzeits.prev_page_url!)}>
+                  <Button variant="outline" onClick={() => router.get(yahrzeits.prev_page_url!, { search, startDate, endDate }, { preserveState: true })}>
                     Previous
                   </Button>
                 )}
                 {yahrzeits.next_page_url && (
-                  <Button variant="outline" onClick={() => router.get(yahrzeits.next_page_url!)}>
+                  <Button variant="outline" onClick={() => router.get(yahrzeits.next_page_url!, { search, startDate, endDate }, { preserveState: true })}>
                     Next
                   </Button>
                 )}
@@ -612,7 +642,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                         key={index}
                         variant={link.active ? 'default' : 'outline'}
                         size="sm"
-                        onClick={() => link.url && router.get(link.url)}
+                        onClick={() => link.url && router.get(link.url, { search, startDate, endDate }, { preserveState: true })}
                         disabled={!link.url}
                         dangerouslySetInnerHTML={{ __html: link.label }}
                         className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
@@ -628,6 +658,8 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
             </div>
           )}
         </div>
+
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">* Next Observance takes into account Hebrew leap years and Adar adjustments, and represents the <strong>evening</strong> start of the observance.</p>
 
         {/* Yahrzeit Reminder Dialog */}
         <Dialog open={showReminderDialog} onOpenChange={setShowReminderDialog}>
@@ -725,7 +757,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                 <Input
                   id="gregorian_date"
                   type="text"
-                  value={gregorianDate}
+                  value={formatDate(gregorianDate)}
                   onChange={(e) => setGregorianDate(e.target.value)}
                   placeholder="e.g., January 15, 2026"
                 />

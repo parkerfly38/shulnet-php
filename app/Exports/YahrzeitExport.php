@@ -3,6 +3,8 @@
 namespace App\Exports;
 
 use App\Models\Yahrzeit;
+use App\Services\HebrewCalendarService;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -13,19 +15,55 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected $month;
+    protected $search;
+    protected $startDate;
+    protected $endDate;
+    protected $hebrewCalendar;
 
-    public function __construct($month = null)
+    public function __construct($month = null, $search = null, $startDate = null, $endDate = null)
     {
         $this->month = $month;
+        $this->search = $search;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->hebrewCalendar = app(HebrewCalendarService::class);
     }
 
-    public function collection()
+    public function collection(): Collection
     {
         $query = Yahrzeit::with('members');
 
+        // Month filter (used by Reports section)
         if ($this->month) {
-            // Filter by Hebrew month of death if provided
             $query->where('hebrew_month_of_death', $this->month);
+        }
+
+        // Search filter (used by Yahrzeit index page)
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('hebrew_name', 'like', "%{$this->search}%")
+                    ->orWhereHas('members', function ($memberQuery) {
+                        $memberQuery->where('first_name', 'like', "%{$this->search}%")
+                            ->orWhere('last_name', 'like', "%{$this->search}%")
+                            ->orWhere('hebrew_name', 'like', "%{$this->search}%")
+                            ->orWhere('member_yahrzeit.relationship', 'like', "%{$this->search}%");
+                    });
+            });
+        }
+
+        // Date range filter (used by Yahrzeit index page)
+        if ($this->startDate && $this->endDate) {
+            $searchDates = $this->hebrewCalendar->getHebrewDatesBetween($this->startDate, $this->endDate);
+
+            $query->where(function ($q) use ($searchDates) {
+                foreach ($searchDates as $date) {
+                    $q->orWhere(function ($q2) use ($date) {
+                        $q2->where('hebrew_day_of_death', $date['day'])
+                           ->where('hebrew_month_of_death', $date['month']);
+                    });
+                }
+            });
         }
 
         return $query->orderBy('hebrew_month_of_death')
@@ -68,7 +106,7 @@ class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, Wi
             $yahrzeit->hebrew_day_of_death,
             $yahrzeit->hebrew_month_of_death,
             $yahrzeit->hebrew_year_of_death,
-            $yahrzeit->date_of_death ? $yahrzeit->date_of_death->format('Y-m-d') : '',
+            $this->nextObservanceDate($yahrzeit),
             $yahrzeit->observance_type,
             $memberNames,
             $relationships,
@@ -77,7 +115,44 @@ class YahrzeitExport implements FromCollection, ShouldAutoSize, WithHeadings, Wi
         ];
     }
 
-    public function styles(Worksheet $sheet)
+    private function nextObservanceDate(Yahrzeit $yahrzeit): string
+    {
+        $fallback = $yahrzeit->date_of_death?->format('Y-m-d') ?? '';
+
+        if (! $yahrzeit->hebrew_day_of_death || ! $yahrzeit->hebrew_month_of_death) {
+            return $fallback;
+        }
+
+        $hebrewYear = null;
+        if ($yahrzeit->hebrew_year_of_death) {
+            $hebrewYear = (int) $yahrzeit->hebrew_year_of_death;
+        }
+
+        $month = is_numeric($yahrzeit->hebrew_month_of_death)
+            ? (int) $yahrzeit->hebrew_month_of_death
+            : $this->hebrewCalendar->getMonthNumberFromName(
+                $yahrzeit->hebrew_month_of_death,
+                $hebrewYear,
+            );
+
+        if (! $month) {
+            return $fallback;
+        }
+
+        $nextDate = null;
+        try {
+            $nextDate = $this->hebrewCalendar->getNextYahrzeitDate(
+                (int) $yahrzeit->hebrew_day_of_death,
+                (string) $month,
+            );
+        } catch (\Throwable) {
+            // Use the original date when the Hebrew date cannot be converted.
+        }
+
+        return $nextDate ?? $fallback;
+    }
+
+    public function styles(Worksheet $sheet): array
     {
         return [
             1 => ['font' => ['bold' => true]],

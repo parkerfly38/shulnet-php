@@ -26,7 +26,7 @@ interface Yahrzeit {
     hebrew_name?: string;
     date_of_death: string;
     hebrew_day_of_death: number;
-    hebrew_month_of_death: number;
+    hebrew_month_of_death: string;
     observance_type: 'standard' | 'kaddish' | 'memorial_candle' | 'other';
     notes?: string;
     next_observance_date?: string;
@@ -41,8 +41,8 @@ interface YahrzeitShowProps {
 
 const HEBREW_MONTHS = [
     '', // 0 index placeholder
-    'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar',
-    'Nissan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'
+    'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar', 'Adar II',
+    'Nisan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'
 ];
 
 const OBSERVANCE_COLORS = {
@@ -78,8 +78,8 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
         });
     };
 
-    const formatHebrewDate = (day: number, month: number) => {
-        const monthName = HEBREW_MONTHS[month] || 'Unknown';
+    const formatHebrewDate = (day: number, month: string) => {
+        const monthName = HEBREW_MONTHS.find(m => m === month) || 'Unknown';
         return `${day} ${monthName}`;
     };
 
@@ -213,7 +213,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                             <div className="space-y-4">
                                 <div>
                                     <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Gregorian Date of Death</label>
-                                    <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{formatDate(yahrzeit.date_of_death)}</p>
+                                    <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{yahrzeit.date_of_death ? formatDate(yahrzeit.date_of_death) : 'Unavailable'}</p>
                                 </div>
 
                                 <div>

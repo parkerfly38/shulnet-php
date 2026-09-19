@@ -24,12 +24,29 @@ class YahrzeitController extends Controller
     }
 
     /**
+     * Export yahrzeits based on current filters.
+     */
+    public function export(Request $request)
+    {
+        $search = $request->get('search');
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
+
+        return Excel::download(
+            new \App\Exports\YahrzeitExport(null, $search, $startDate, $endDate),
+            'yahrzeits-' . now()->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    /**
      * Display a listing of yahrzeits.
      */
     public function index(Request $request)
     {
         $search = $request->get('search');
         $perPage = $request->get('per_page', 15);
+        $startDate = $request->get('startDate');
+        $endDate = $request->get('endDate');
 
         $query = Yahrzeit::query()
             ->with(['members' => function ($query) {
@@ -41,9 +58,9 @@ class YahrzeitController extends Controller
                 'hebrew_day_of_death', 'hebrew_month_of_death', 'hebrew_year_of_death',
                 'observance_type', 'notes', 'created_at', 'updated_at',
             ])
+            ->orderByRaw('SUBSTRING_INDEX(name, \' \', -1) ASC')
             ->orderBy('hebrew_month_of_death')
-            ->orderBy('hebrew_day_of_death')
-            ->orderBy('name');
+            ->orderBy('hebrew_day_of_death');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -58,15 +75,33 @@ class YahrzeitController extends Controller
             });
         }
 
+        if ($startDate && $endDate) {
+            $searchDates = $this->hebrewCalendar->getHebrewDatesBetween($startDate, $endDate);
+
+            $query->where(function ($q) use ($searchDates) {
+                foreach ($searchDates as $date) {
+                    $q->orWhere(function ($q2) use ($date) {
+                        $q2->where('hebrew_day_of_death', $date['day'])
+                           ->where('hebrew_month_of_death', $date['month']);
+                    });
+                }
+            });
+        }
+
         $yahrzeits = $query->paginate($perPage);
         
         // Calculate next observance date for each yahrzeit
         $yahrzeits->getCollection()->transform(function ($yahrzeit) {
             try {
                 if ($yahrzeit->hebrew_day_of_death && $yahrzeit->hebrew_month_of_death) {
+                    // convert Hebrew month name to number if necessary
+                    $hebMonth = null;
+                    if (is_string($yahrzeit->hebrew_month_of_death)) {
+                        $hebMonth = $this->hebrewCalendar->getMonthNumberFromName($yahrzeit->hebrew_month_of_death);
+                    }
                     $yahrzeit->next_observance_date = $this->hebrewCalendar->getNextYahrzeitDate(
                         $yahrzeit->hebrew_day_of_death,
-                        $yahrzeit->hebrew_month_of_death
+                        $hebMonth ?? $yahrzeit->hebrew_month_of_death
                     );
                 } else {
                     $yahrzeit->next_observance_date = null;
@@ -82,6 +117,8 @@ class YahrzeitController extends Controller
             'yahrzeits' => $yahrzeits,
             'filters' => [
                 'search' => $search,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
             ],
         ]);
     }
@@ -112,7 +149,7 @@ class YahrzeitController extends Controller
             'date_of_death' => 'required|date',
             'observance_type' => 'required|string|in:standard,kaddish,memorial_candle,other',
             'notes' => 'nullable|string|max:1000',
-            'members' => 'required|array|min:1',
+            'members' => 'nullable|array',
             'members.*.member_id' => 'required|exists:members,id',
             'members.*.relationship' => 'required|string|max:100',
         ]);
@@ -227,27 +264,36 @@ class YahrzeitController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'hebrew_name' => 'nullable|string|max:255',
-            'date_of_death' => 'required|date',
+            'date_of_death' => 'nullable|date',
             'observance_type' => 'required|string|in:standard,kaddish,memorial_candle,other',
             'notes' => 'nullable|string|max:1000',
-            'members' => 'required|array|min:1',
+            'members' => 'nullable|array',
             'members.*.member_id' => 'required|exists:members,id',
             'members.*.relationship' => 'required|string|max:100',
         ]);
 
-        // Convert Gregorian date to Hebrew calendar
-        $hebrewDate = $this->hebrewCalendar->gregorianToHebrew($validated['date_of_death']);
+        // Convert Gregorian date to Hebrew calendar if a date of death is provided
+        $hebrewDate = $validated['date_of_death'] ? $this->hebrewCalendar->gregorianToHebrew($validated['date_of_death']) : null;
 
+        if ($hebrewDate) {
         // Update the yahrzeit
-        $yahrzeit->update([
-            'name' => $validated['name'],
-            'hebrew_name' => $validated['hebrew_name'],
-            'date_of_death' => $validated['date_of_death'],
-            'hebrew_day_of_death' => $hebrewDate['day'],
-            'hebrew_month_of_death' => $hebrewDate['month'],
-            'observance_type' => $validated['observance_type'],
-            'notes' => $validated['notes'],
-        ]);
+            $yahrzeit->update([
+                'name' => $validated['name'],
+                'hebrew_name' => $validated['hebrew_name'],
+                'date_of_death' => $validated['date_of_death'],
+                'hebrew_day_of_death' => $hebrewDate['day'],
+                'hebrew_month_of_death' => $hebrewDate['month'],
+                'observance_type' => $validated['observance_type'],
+                'notes' => $validated['notes'],
+            ]);
+        } else {
+            $yahrzeit->update([
+                'name' => $validated['name'],
+                'hebrew_name' => $validated['hebrew_name'],
+                'observance_type' => $validated['observance_type'],
+                'notes' => $validated['notes'],
+            ]);
+        }
 
         // Sync members with their relationships
         $syncData = [];
@@ -386,7 +432,7 @@ class YahrzeitController extends Controller
 
         // Calculate Gregorian date for current Hebrew year
         $hebrewCalendarService = app(\App\Services\HebrewCalendarService::class);
-        $gregorianDate = $hebrewCalendarService->getGregorianDateForCurrentYear(
+        $gregorianDate = $hebrewCalendarService->getNextYahrzeitDate(
             $yahrzeit->hebrew_day_of_death,
             $yahrzeit->hebrew_month_of_death
         );
@@ -440,10 +486,14 @@ class YahrzeitController extends Controller
             $query->whereIn('members.id', $memberIds)->withPivot('relationship');
         }]);
 
+        // Get Hebrew month name
+        $hebrewMonthName = $this->hebrewCalendar->getHebrewMonths()[$yahrzeit->hebrew_month_of_death] ?? 'Unknown';
+
         return view('yahrzeits.print-reminder', [
             'yahrzeit' => $yahrzeit,
             'members' => $yahrzeit->members,
             'gregorianDate' => $validated['gregorian_date'],
+            'hebrewMonthName' => $hebrewMonthName,
         ]);
     }
 
@@ -466,11 +516,14 @@ class YahrzeitController extends Controller
             ->orderBy('hebrew_day_of_death')
             ->get();
 
+        //convert hebrew month name to number
+        $hebrewMonthNumber = $this->hebrewCalendar->getMonthNumberFromName($selectedMonth, $currentHebrewDate['year']) ?? 0;
+
         // Prepare data with Gregorian dates
-        $yahrzeitsData = $yahrzeits->map(function ($yahrzeit) {
+        $yahrzeitsData = $yahrzeits->map(function ($yahrzeit) use ($hebrewMonthNumber) {
             $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
                 $yahrzeit->hebrew_day_of_death,
-                $yahrzeit->hebrew_month_of_death
+                $hebrewMonthNumber
             );
 
             return [
@@ -595,11 +648,15 @@ class YahrzeitController extends Controller
                 $yahrzeit->hebrew_month_of_death
             );
 
+            // Get Hebrew month name for this yahrzeit
+            $yahrzeitMonthName = $this->hebrewCalendar->getHebrewMonths()[$yahrzeit->hebrew_month_of_death] ?? 'Unknown';
+
             foreach ($yahrzeit->members as $member) {
                 $lettersData[] = [
                     'member' => $member,
                     'yahrzeit' => $yahrzeit,
                     'gregorianDate' => $gregorianDate,
+                    'hebrewMonthName' => $yahrzeitMonthName,
                 ];
             }
         }
