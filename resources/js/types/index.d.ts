@@ -374,7 +374,7 @@ export interface Yahrzeit {
     name: string;
     hebrew_name?: string;
     hebrew_day_of_death: number;
-    hebrew_month_of_death: number;
+    hebrew_month_of_death: string;
     date_of_death?: string;
     members?: Array<{
         id: number;
@@ -385,7 +385,7 @@ export interface Yahrzeit {
 
 export interface HebrewDate {
     day: number;
-    month: number;
+    month: string;
     year: number;
     isLeapYear: boolean;
     formatted: string;

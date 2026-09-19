@@ -130,7 +130,7 @@
                     <p><em>{{ $letter['yahrzeit']->hebrew_name }}</em></p>
                 @endif
                 
-                <p><strong>Hebrew Date:</strong> {{ $letter['yahrzeit']->hebrew_day_of_death }} {{ ['', 'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar', 'Nissan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'][$letter['yahrzeit']->hebrew_month_of_death] ?? 'Unknown' }}</p>
+                <p><strong>Hebrew Date:</strong> {{ $letter['yahrzeit']->hebrew_day_of_death }} {{ $letter['hebrewMonthName'] }}</p>
                 
                 <p><strong>This Year (Gregorian Calendar):</strong> {{ $letter['gregorianDate'] }}</p>
                 

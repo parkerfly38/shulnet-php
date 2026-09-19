@@ -38,7 +38,7 @@ interface Yahrzeit {
     hebrew_name?: string;
     date_of_death: string;
     hebrew_day_of_death: number;
-    hebrew_month_of_death: number;
+    hebrew_month_of_death: string;
     observance_type: string;
     notes?: string;
 }
@@ -71,8 +71,8 @@ const OBSERVANCE_OPTIONS = [
 
 const HEBREW_MONTHS = [
     '', // 0 index placeholder
-    'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar',
-    'Nissan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'
+    'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar','Adar II',
+    'Nisan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'
 ];
 
 export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
@@ -138,8 +138,8 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
         put(`/admin/yahrzeits/${yahrzeit.id}`);
     };
 
-    const formatHebrewDate = (day: number, month: number) => {
-        const monthName = HEBREW_MONTHS[month] || 'Unknown';
+    const formatHebrewDate = (day: number, month: string) => {
+        const monthName = HEBREW_MONTHS.find(m => m === month) || 'Unknown';
         return `${day} ${monthName}`;
     };
 

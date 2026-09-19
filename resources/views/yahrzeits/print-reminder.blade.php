@@ -103,7 +103,7 @@
                     <p><em>{{ $yahrzeit->hebrew_name }}</em></p>
                 @endif
                 
-                <p><strong>Hebrew Date:</strong> {{ $yahrzeit->hebrew_day_of_death }} {{ ['', 'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar', 'Nissan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul'][$yahrzeit->hebrew_month_of_death] ?? 'Unknown' }}</p>
+                <p><strong>Hebrew Date:</strong> {{ $yahrzeit->hebrew_day_of_death }} {{ $hebrewMonthName }}</p>
                 
                 <p><strong>This Year (Gregorian Calendar):</strong> {{ $gregorianDate }}</p>
                 

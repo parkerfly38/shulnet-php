@@ -206,6 +206,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     Route::resource('html-templates', HtmlTemplateController::class)->names('html-templates');
 
     // Yahrzeits
+    Route::get('yahrzeits/export', [YahrzeitController::class, 'export'])->name('yahrzeits.export');
     Route::post('yahrzeits/import', [YahrzeitController::class, 'import'])->name('yahrzeits.import');
     Route::get('yahrzeits/template/download', [YahrzeitController::class, 'downloadTemplate'])->name('yahrzeits.template.download');
     Route::get('yahrzeits/{yahrzeit}/prepare-reminder', [YahrzeitController::class, 'prepareReminder'])->name('yahrzeits.prepare-reminder');
