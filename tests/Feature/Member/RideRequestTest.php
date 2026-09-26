@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Member;
 
+use App\Enums\UserRole;
 use App\Models\Member;
 use App\Models\RideRequest;
 use App\Models\User;
@@ -62,6 +63,39 @@ class RideRequestTest extends TestCase
 
         $response->assertSessionHas('error', 'You cannot claim your own ride request.');
         $this->assertDatabaseHas('ride_requests', ['id' => $rideRequest->id, 'driver_id' => null]);
+    }
+
+    public function test_admin_can_post_a_ride_request_on_behalf_of_a_member(): void
+    {
+        $admin = User::factory()->create(['roles' => [UserRole::Admin]]);
+        $member = Member::factory()->create();
+
+        $response = $this->actingAs($admin)->post('/member/rides', [
+            'member_id' => $member->id,
+            'service_at' => now()->addDays(2)->format('Y-m-d H:i:s'),
+            'pickup_location' => '456 Oak Avenue',
+            'passenger_count' => 3,
+        ]);
+
+        $response->assertRedirect('/member/rides');
+        $this->assertDatabaseHas('ride_requests', [
+            'requester_id' => $member->id,
+            'pickup_location' => '456 Oak Avenue',
+            'passenger_count' => 3,
+        ]);
+    }
+
+    public function test_admin_without_member_profile_must_select_a_member(): void
+    {
+        $admin = User::factory()->create(['roles' => [UserRole::Admin]]);
+
+        $response = $this->actingAs($admin)->post('/member/rides', [
+            'service_at' => now()->addDays(2)->format('Y-m-d H:i:s'),
+            'pickup_location' => '456 Oak Avenue',
+            'passenger_count' => 3,
+        ]);
+
+        $response->assertSessionHasErrors('member_id');
     }
 
     private function memberUser(): array

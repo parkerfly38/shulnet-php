@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
+import AsyncMemberSelect from '@/components/async-member-select';
 import { Car, Clock, MapPin, Users } from 'lucide-react';
 
 interface RideRequest {
@@ -15,8 +16,9 @@ interface RideRequest {
     contact: { email: string; phone: string | null } | null;
 }
 
-export default function RidesPage({ rideRequests }: { rideRequests: RideRequest[] }) {
+export default function RidesPage({ rideRequests, isAdmin = false }: { rideRequests: RideRequest[]; isAdmin?: boolean }) {
     const { data, setData, post, processing, errors, reset } = useForm({
+        member_id: null as number | null,
         service_at: '',
         pickup_location: '',
         passenger_count: 1,
@@ -44,6 +46,18 @@ export default function RidesPage({ rideRequests }: { rideRequests: RideRequest[
                 <form onSubmit={submit} className="border rounded-lg bg-white p-4 dark:bg-black">
                     <h2 className="flex items-center gap-2 text-lg font-semibold"><Car className="h-5 w-5" /> Need a ride?</h2>
                     <div className="mt-4 grid gap-4 md:grid-cols-2">
+                        {isAdmin && (
+                            <label className="text-sm font-medium md:col-span-2">Member
+                                <div className="mt-1">
+                                    <AsyncMemberSelect
+                                        value={data.member_id}
+                                        onChange={(id) => setData('member_id', id)}
+                                        placeholder="Search for a member to create this request for..."
+                                    />
+                                </div>
+                                {errors.member_id && <p className="mt-1 text-sm text-red-600">{errors.member_id}</p>}
+                            </label>
+                        )}
                         <label className="text-sm font-medium">Service date and time
                             <input type="datetime-local" value={data.service_at} onChange={(event) => setData('service_at', event.target.value)} className="mt-1 w-full rounded-md border bg-transparent p-2" required />
                             {errors.service_at && <p className="mt-1 text-sm text-red-600">{errors.service_at}</p>}
@@ -63,7 +77,7 @@ export default function RidesPage({ rideRequests }: { rideRequests: RideRequest[
                 </form>
 
                 <section className="border rounded-lg bg-white dark:bg-black">
-                    <div className="border-b p-4"><h2 className="text-lg font-semibold">Upcoming Requests</h2></div>
+                    <div className="border-b p-4"><h2 className="text-lg font-semibold">{isAdmin ? 'All Members\u2019 Upcoming Requests' : 'Upcoming Requests'}</h2></div>
                     {rideRequests.length === 0 ? <p className="p-8 text-center text-gray-500 dark:text-gray-400">There are no upcoming ride requests.</p> : (
                         <div className="divide-y">
                             {rideRequests.map((rideRequest) => (
