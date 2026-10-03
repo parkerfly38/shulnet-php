@@ -16,6 +16,18 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Fix NGINX and other vulnerabilities
+# Update package sources and explicitly update nginx to the patched version
+RUN apt-get update && \
+    apt-get install -y --only-upgrade nginx || apt-get install -y --no-install-recommends nginx && \
+    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y openssl \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip calendar
 
