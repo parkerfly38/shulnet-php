@@ -12,7 +12,7 @@ export function CurrentDate() {
                 <span className="font-medium text-gray-900 dark:text-gray-100">
                     {currentDate.gregorian}
                 </span>
-                <span className="text-xs">
+                <span className="font-medium text-gray-900 dark:text-gray-100">
                     {currentDate.hebrew}
                 </span>
             </div>
@@ -20,7 +20,7 @@ export function CurrentDate() {
                 <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
                     {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </span>
-                <span className="text-xs">
+                <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
                     {currentDate.hebrew?.split(' ').slice(0, 2).join(' ')}
                 </span>
             </div>
