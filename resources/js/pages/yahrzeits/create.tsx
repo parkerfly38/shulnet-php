@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Star, User, Plus, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
@@ -10,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { type BreadcrumbItem } from '@/types';
+import MemberCombobox from '@/components/member-combobox';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -74,44 +74,18 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
         members: []
     });
 
-    const [memberSearches, setMemberSearches] = useState<string[]>([]);
-    const [filteredMembers, setFilteredMembers] = useState<Member[][]>([members]);
-
-    useEffect(() => {
-        const newFilteredMembers = memberSearches.map(search => {
-            if (search) {
-                return members.filter(member =>
-                    `${member.first_name} ${member.last_name}`.toLowerCase().includes(search.toLowerCase()) ||
-                    (member.hebrew_name && member.hebrew_name.toLowerCase().includes(search.toLowerCase()))
-                );
-            } else {
-                return members;
-            }
-        });
-        setFilteredMembers(newFilteredMembers);
-    }, [memberSearches, members]);
-
     const addMember = () => {
         setData('members', [...data.members, { member_id: '', relationship: '' }]);
-        setMemberSearches([...memberSearches, '']);
     };
 
     const removeMember = (index: number) => {
-        const newMembers = data.members.filter((_, i) => i !== index);
-        setData('members', newMembers);
-        setMemberSearches(memberSearches.filter((_, i) => i !== index));
+        setData('members', data.members.filter((_, i) => i !== index));
     };
 
     const updateMember = (index: number, field: keyof MemberRelationship, value: string) => {
         const newMembers = [...data.members];
         newMembers[index] = { ...newMembers[index], [field]: value };
         setData('members', newMembers);
-    };
-
-    const updateMemberSearch = (index: number, search: string) => {
-        const newSearches = [...memberSearches];
-        newSearches[index] = search;
-        setMemberSearches(newSearches);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -266,39 +240,14 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                         </div>
                                         
                                         <div>
-                                            <Label htmlFor={`member_search_${index}`}>Search Member</Label>
-                                            <Input
-                                                id={`member_search_${index}`}
-                                                type="text"
-                                                placeholder="Search by name or Hebrew name..."
-                                                value={memberSearches[index] || ''}
-                                                onChange={(e) => updateMemberSearch(index, e.target.value)}
-                                                className="mb-2"
-                                            />
-                                        </div>
-
-                                        <div>
                                             <Label htmlFor={`member_id_${index}`}>Select Member *</Label>
-                                            <Select 
-                                                value={memberData.member_id} 
-                                                onValueChange={(value) => updateMember(index, 'member_id', value)}
-                                            >
-                                                <SelectTrigger className={errors[`members.${index}.member_id`] ? 'border-red-500' : ''}>
-                                                    <SelectValue placeholder="Choose a member..." />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {(filteredMembers[index] || []).map((member) => (
-                                                        <SelectItem key={member.id} value={member.id.toString()}>
-                                                            <div>
-                                                                <div>{member.first_name} {member.last_name}</div>
-                                                                {member.hebrew_name && (
-                                                                    <div className="text-sm text-gray-600">{member.hebrew_name}</div>
-                                                                )}
-                                                            </div>
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                            <MemberCombobox
+                                                id={`member_id_${index}`}
+                                                members={members}
+                                                value={memberData.member_id}
+                                                onChange={(value) => updateMember(index, 'member_id', value)}
+                                                hasError={!!errors[`members.${index}.member_id`]}
+                                            />
                                             {errors[`members.${index}.member_id`] && (
                                                 <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.member_id`]}</p>
                                             )}

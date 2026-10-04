@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Star, User, Plus, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { BreadcrumbItem } from '@/types';
+import MemberCombobox from '@/components/member-combobox';
 
 interface Member {
     id: number;
@@ -88,36 +89,13 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
         }))
     });
 
-    const [memberSearches, setMemberSearches] = useState<string[]>(
-        yahrzeit.members.map(() => '')
-    );
-    const [filteredMembers, setFilteredMembers] = useState<Member[][]>(
-        yahrzeit.members.map(() => members)
-    );
-
-    useEffect(() => {
-        const newFilteredMembers = memberSearches.map(search => {
-            if (search) {
-                return members.filter(member =>
-                    `${member.first_name} ${member.last_name}`.toLowerCase().includes(search.toLowerCase()) ||
-                    (member.hebrew_name && member.hebrew_name.toLowerCase().includes(search.toLowerCase()))
-                );
-            } else {
-                return members;
-            }
-        });
-        setFilteredMembers(newFilteredMembers);
-    }, [memberSearches, members]);
-
     const addMember = () => {
         setData('members', [...data.members, { member_id: '', relationship: '' }]);
-        setMemberSearches([...memberSearches, '']);
     };
 
     const removeMember = (index: number) => {
         if (data.members.length > 1) {
             setData('members', data.members.filter((_, i) => i !== index));
-            setMemberSearches(memberSearches.filter((_, i) => i !== index));
         }
     };
 
@@ -125,12 +103,6 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
         const newMembers = [...data.members];
         newMembers[index][field] = value;
         setData('members', newMembers);
-    };
-
-    const updateMemberSearch = (index: number, value: string) => {
-        const newSearches = [...memberSearches];
-        newSearches[index] = value;
-        setMemberSearches(newSearches);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -220,39 +192,14 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                         )}
                                         
                                         <div>
-                                            <Label htmlFor={`member_search_${index}`}>Search Member</Label>
-                                            <Input
-                                                id={`member_search_${index}`}
-                                                type="text"
-                                                placeholder="Search by name or Hebrew name..."
-                                                value={memberSearches[index] || ''}
-                                                onChange={(e) => updateMemberSearch(index, e.target.value)}
-                                                className="mb-2"
-                                            />
-                                        </div>
-
-                                        <div>
                                             <Label htmlFor={`member_id_${index}`}>Select Member *</Label>
-                                            <Select 
-                                                value={memberRel.member_id} 
-                                                onValueChange={(value) => updateMember(index, 'member_id', value)}
-                                            >
-                                                <SelectTrigger className={errors[`members.${index}.member_id`] ? 'border-red-500' : ''}>
-                                                    <SelectValue placeholder="Choose a member..." />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {(filteredMembers[index] || members).map((member) => (
-                                                        <SelectItem key={member.id} value={member.id.toString()}>
-                                                            <div>
-                                                                <div>{member.first_name} {member.last_name}</div>
-                                                                {member.hebrew_name && (
-                                                                    <div className="text-sm text-gray-600">{member.hebrew_name}</div>
-                                                                )}
-                                                            </div>
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                            <MemberCombobox
+                                                id={`member_id_${index}`}
+                                                members={members}
+                                                value={memberRel.member_id}
+                                                onChange={(value) => updateMember(index, 'member_id', value)}
+                                                hasError={!!errors[`members.${index}.member_id`]}
+                                            />
                                             {errors[`members.${index}.member_id`] && (
                                                 <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.member_id`]}</p>
                                             )}
