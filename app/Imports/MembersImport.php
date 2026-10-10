@@ -23,7 +23,7 @@ class MembersImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadin
 
     protected $errors = [];
 
-    public function model(array $row)
+    public function model(array $row): \Illuminate\Database\Eloquent\Model|array|null
     {
         // Check if member exists by email (only if email is provided)
         $member = null;

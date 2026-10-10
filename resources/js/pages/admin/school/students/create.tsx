@@ -16,6 +16,11 @@ export default function StudentsCreate() {
         first_name: '',
         middle_name: '',
         last_name: '',
+        hebrew_name: '',
+        pronouns: '',
+        preferred_name: '',
+        allergies: '',
+        special_accomodations: '',
         gender: '',
         date_of_birth: '',
         email: '',
@@ -50,6 +55,32 @@ export default function StudentsCreate() {
                         <div className="flex-1">
                             <label className="block text-sm font-medium">Last Name</label>
                             <input value={form.data.last_name} onChange={(e) => form.setData('last_name', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Hebrew Name</label>
+                            <input value={form.data.hebrew_name} onChange={(e) => form.setData('hebrew_name', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Pronouns</label>
+                            <input value={form.data.pronouns} onChange={(e) => form.setData('pronouns', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Preferred Name</label>
+                            <input value={form.data.preferred_name} onChange={(e) => form.setData('preferred_name', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Allergies</label>
+                            <input value={form.data.allergies} onChange={(e) => form.setData('allergies', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Special Accomodations</label>
+                            <input value={form.data.special_accomodations} onChange={(e) => form.setData('special_accomodations', e.target.value)} className="w-full rounded border p-2" />
                         </div>
                     </div>
                     <div className="flex gap-2">

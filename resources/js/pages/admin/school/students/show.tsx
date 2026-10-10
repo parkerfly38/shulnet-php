@@ -17,7 +17,7 @@ export default function StudentsShow() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Student: ${data.first_name} ${data.last_name}` ?? ''} />
+            <Head title={`Student: ${data.first_name} ${data.last_name}`} />
             <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold">{data.first_name} {data.middle_name} {data.last_name}</h1>
@@ -33,6 +33,11 @@ export default function StudentsShow() {
                         <div><strong>Middle Name:</strong> {data.middle_name}</div>
                         <div><strong>Last Name:</strong> {data.last_name}</div>
                         <div><strong>Gender:</strong> {data.gender}</div>
+                        <div><strong>Hebrew Name:</strong> {data.hebrew_name}</div>
+                        <div><strong>Pronouns:</strong> {data.pronouns}</div>
+                        <div><strong>Preferred Name:</strong> {data.preferred_name}</div>
+                        <div><strong>Allergies:</strong> {data.allergies}</div>
+                        <div><strong>Special Accomodations:</strong> {data.special_accomodations}</div>
                         <div><strong>Date of Birth:</strong> {data.date_of_birth || data.dob}</div>
                         <div><strong>Email:</strong> {data.email}</div>
                         <div><strong>Parent Email:</strong> {data.is_parent_email ? 'Yes' : 'No'}</div>
