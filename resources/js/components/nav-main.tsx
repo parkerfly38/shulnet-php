@@ -1,37 +1,73 @@
 import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { resolveUrl } from '@/lib/utils';
+import { isNavItemActive } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
-export function NavMain({ items = [] }: { items: NavItem[] }) {
+export function NavMain({
+    items = [],
+    isActiveSection = false,
+}: {
+    items: NavItem[];
+    isActiveSection?: boolean;
+}) {
     const page = usePage();
+    const groupTitle = items[0]?.groupTitle;
+    const [isOpen, setIsOpen] = useState(isActiveSection);
+
     return (
-        <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>{items[0]?.groupTitle}</SidebarGroupLabel>
-            <SidebarMenu>
-                {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton
-                            asChild
-                            isActive={page.url.startsWith(
-                                resolveUrl(item.href),
-                            )}
-                            tooltip={{ children: item.title }}
-                        >
-                            <Link href={item.href} prefetch>
-                                {item.icon && <item.icon />}
-                                <span>{item.title}</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-        </SidebarGroup>
+        <Collapsible open={groupTitle ? isOpen : true} onOpenChange={setIsOpen}>
+            <SidebarGroup className="px-2 py-0">
+                {groupTitle && (
+                    <CollapsibleTrigger asChild>
+                        <SidebarGroupLabel asChild>
+                            <button
+                                type="button"
+                                className="w-full cursor-pointer justify-between"
+                                aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${groupTitle}`}
+                            >
+                                <span>{groupTitle}</span>
+                                <ChevronDown
+                                    className={`size-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                                />
+                            </button>
+                        </SidebarGroupLabel>
+                    </CollapsibleTrigger>
+                )}
+                <CollapsibleContent>
+                    <SidebarMenu>
+                        {items.map((item) => (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isNavItemActive(
+                                        page.url,
+                                        item.href,
+                                    )}
+                                    tooltip={{ children: item.title }}
+                                >
+                                    <Link href={item.href} prefetch>
+                                        {item.icon && <item.icon />}
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </CollapsibleContent>
+            </SidebarGroup>
+        </Collapsible>
     );
 }
