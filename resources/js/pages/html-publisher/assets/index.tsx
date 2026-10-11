@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, router, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export default function HtmlAssetsIndex({ assets }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
@@ -89,24 +91,24 @@ export default function HtmlAssetsIndex({ assets }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="HTML Assets" />
+      <Head title={t('HTML Assets')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Asset Library</h1>
+          <h1 className="text-3xl font-bold">{t('Asset Library')}</h1>
           <Button onClick={() => setShowUploadDialog(true)}>
-            <Upload className="mr-2 h-4 w-4" />
-            Upload Asset
+            <Upload className="me-2 h-4 w-4" />
+            {t('Upload Asset')}
           </Button>
         </div>
 
         {assets.length === 0 ? (
           <Card>
             <CardContent className="py-16 text-center">
-              <p className="text-gray-500 mb-4">No assets uploaded yet</p>
+              <p className="text-gray-500 mb-4">{t('No assets uploaded yet')}</p>
               <Button onClick={() => setShowUploadDialog(true)}>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Your First Asset
+                <Upload className="me-2 h-4 w-4" />
+                {t('Upload Your First Asset')}
               </Button>
             </CardContent>
           </Card>
@@ -168,9 +170,9 @@ export default function HtmlAssetsIndex({ assets }: Readonly<Props>) {
       <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload Asset</DialogTitle>
+            <DialogTitle>{t('Upload Asset')}</DialogTitle>
             <DialogDescription>
-              Upload images and files for use in your HTML pages
+              {t('Upload images and files for use in your HTML pages')}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleUpload} className="space-y-4">
@@ -182,16 +184,16 @@ export default function HtmlAssetsIndex({ assets }: Readonly<Props>) {
                 onChange={(e) => setData('file', e.target.files?.[0] || null)}
                 required
               />
-              <p className="text-xs text-gray-500 mt-1">Maximum size: 10MB</p>
+              <p className="text-xs text-gray-500 mt-1">{t('Maximum size: 10MB')}</p>
             </div>
 
             <div>
-              <Label htmlFor="alt_text">Alt Text (for images)</Label>
+              <Label htmlFor="alt_text">{t('Alt Text (for images)')}</Label>
               <Input
                 id="alt_text"
                 value={data.alt_text}
                 onChange={(e) => setData('alt_text', e.target.value)}
-                placeholder="Description for accessibility"
+                placeholder={t('Description for accessibility')}
               />
             </div>
 
@@ -204,7 +206,7 @@ export default function HtmlAssetsIndex({ assets }: Readonly<Props>) {
                   reset();
                 }}
               >
-                Cancel
+                {t('Cancel')}
               </Button>
               <Button type="submit" disabled={processing}>
                 {processing ? 'Uploading...' : 'Upload'}

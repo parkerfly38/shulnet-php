@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -72,6 +73,7 @@ export default function LeadershipDashboard({
   upcomingTermEnds,
   recentReports,
 }: Readonly<Props>) {
+    const { t } = useTranslation();
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -100,13 +102,13 @@ export default function LeadershipDashboard({
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Leadership Dashboard" />
+      <Head title={t('Leadership Dashboard')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="mb-4">
-          <h1 className="text-3xl font-bold tracking-tight">Leadership Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('Leadership Dashboard')}</h1>
           <p className="text-muted-foreground mt-2">
-            Overview of committees, boards, meetings, and member terms
+            {t('Overview of committees, boards, meetings, and member terms')}
           </p>
         </div>
 
@@ -114,7 +116,7 @@ export default function LeadershipDashboard({
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Committees</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Committees')}</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -127,7 +129,7 @@ export default function LeadershipDashboard({
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Boards</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Boards')}</CardTitle>
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -140,23 +142,23 @@ export default function LeadershipDashboard({
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Upcoming Meetings</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Upcoming Meetings')}</CardTitle>
               <CalendarDays className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.upcoming_meetings_count}</div>
-              <p className="text-xs text-muted-foreground">Next 30 days</p>
+              <p className="text-xs text-muted-foreground">{t('Next 30 days')}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Expiring Terms</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Expiring Terms')}</CardTitle>
               <AlertCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.expiring_terms_count}</div>
-              <p className="text-xs text-muted-foreground">Next 60 days</p>
+              <p className="text-xs text-muted-foreground">{t('Next 60 days')}</p>
             </CardContent>
           </Card>
         </div>
@@ -167,8 +169,8 @@ export default function LeadershipDashboard({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Upcoming Meetings</CardTitle>
-                  <CardDescription>Next 30 days</CardDescription>
+                  <CardTitle>{t('Upcoming Meetings')}</CardTitle>
+                  <CardDescription>{t('Next 30 days')}</CardDescription>
                 </div>
                 <CalendarDays className="h-5 w-5 text-muted-foreground" />
               </div>
@@ -200,7 +202,7 @@ export default function LeadershipDashboard({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
-                  No upcoming meetings scheduled
+                  {t('No upcoming meetings scheduled')}
                 </p>
               )}
             </CardContent>
@@ -211,8 +213,8 @@ export default function LeadershipDashboard({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Recent Meetings</CardTitle>
-                  <CardDescription>Past 30 days</CardDescription>
+                  <CardTitle>{t('Recent Meetings')}</CardTitle>
+                  <CardDescription>{t('Past 30 days')}</CardDescription>
                 </div>
                 <Clock className="h-5 w-5 text-muted-foreground" />
               </div>
@@ -228,7 +230,7 @@ export default function LeadershipDashboard({
                             <p className="font-medium">{meeting.title}</p>
                             {meeting.has_minutes && (
                               <Badge variant="secondary" className="text-xs">
-                                Minutes
+                                {t('Minutes')}
                               </Badge>
                             )}
                           </div>
@@ -246,7 +248,7 @@ export default function LeadershipDashboard({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
-                  No recent meetings
+                  {t('No recent meetings')}
                 </p>
               )}
             </CardContent>
@@ -259,8 +261,8 @@ export default function LeadershipDashboard({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Expiring Terms</CardTitle>
-                  <CardDescription>Next 60 days</CardDescription>
+                  <CardTitle>{t('Expiring Terms')}</CardTitle>
+                  <CardDescription>{t('Next 60 days')}</CardDescription>
                 </div>
                 <AlertCircle className="h-5 w-5 text-muted-foreground" />
               </div>
@@ -284,7 +286,7 @@ export default function LeadershipDashboard({
                               Ends {formatDate(term.term_end_date)}
                             </p>
                           </div>
-                          <div className="text-right">
+                          <div className="text-end">
                             <Badge
                               variant={getTermExpirationVariant(daysUntil)}
                             >
@@ -299,7 +301,7 @@ export default function LeadershipDashboard({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
-                  No terms expiring soon
+                  {t('No terms expiring soon')}
                 </p>
               )}
             </CardContent>
@@ -310,7 +312,7 @@ export default function LeadershipDashboard({
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Recent Reports</CardTitle>
+                  <CardTitle>{t('Recent Reports')}</CardTitle>
                   <CardDescription>This month ({stats.monthly_reports_count} total)</CardDescription>
                 </div>
                 <FileText className="h-5 w-5 text-muted-foreground" />
@@ -346,7 +348,7 @@ export default function LeadershipDashboard({
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
-                  No reports this month
+                  {t('No reports this month')}
                 </p>
               )}
             </CardContent>
@@ -356,20 +358,20 @@ export default function LeadershipDashboard({
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>{t('Quick Actions')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
               <Link href="/admin/committees">
                 <Button variant="outline">
-                  <Users className="mr-2 h-4 w-4" />
-                  View Committees
+                  <Users className="me-2 h-4 w-4" />
+                  {t('View Committees')}
                 </Button>
               </Link>
               <Link href="/admin/boards">
                 <Button variant="outline">
-                  <Briefcase className="mr-2 h-4 w-4" />
-                  View Boards
+                  <Briefcase className="me-2 h-4 w-4" />
+                  {t('View Boards')}
                 </Button>
               </Link>
             </div>

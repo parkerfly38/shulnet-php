@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -49,6 +50,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function GravesitesIndex({ gravesites, cemeteries, stats, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
     const [search, setSearch] = useState(filters.search || '');
     const [status, setStatus] = useState(filters.status || '');
     const [cemetery, setCemetery] = useState(filters.cemetery || '');
@@ -113,19 +115,19 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Gravesites" />
+            <Head title={t('Gravesites')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Cemetery Gravesites</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Manage cemetery plots and burial sites</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Cemetery Gravesites')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Manage cemetery plots and burial sites')}</p>
                     </div>
                     <Link href="/admin/gravesites/create">
                         <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Gravesite
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('Add Gravesite')}
                         </Button>
                     </Link>
                 </div>
@@ -158,24 +160,24 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                 <div className="rounded-lg border bg-white dark:bg-black p-4 shadow-sm">
                     <div className="flex flex-wrap gap-4">
                         <form onSubmit={handleFilter} className="flex-1 min-w-[200px] relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
-                                placeholder="Search by plot number, section, or deceased name..."
+                                placeholder={t('Search by plot number, section, or deceased name...')}
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="pl-10"
+                                className="ps-10"
                             />
                         </form>
                         <div className="w-[150px]">
                             <Select value={status ?? " "} onValueChange={setStatus}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="All Statuses" />
+                                    <SelectValue placeholder={t('All Statuses')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value=" ">All Statuses</SelectItem>
-                                    <SelectItem value="available">Available</SelectItem>
-                                    <SelectItem value="reserved">Reserved</SelectItem>
-                                    <SelectItem value="occupied">Occupied</SelectItem>
+                                    <SelectItem value=" ">{t('All Statuses')}</SelectItem>
+                                    <SelectItem value="available">{t('Available')}</SelectItem>
+                                    <SelectItem value="reserved">{t('Reserved')}</SelectItem>
+                                    <SelectItem value="occupied">{t('Occupied')}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -183,10 +185,10 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                             <div className="w-[200px]">
                                 <Select value={cemetery ?? " "} onValueChange={setCemetery}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="All Cemeteries" />
+                                        <SelectValue placeholder={t('All Cemeteries')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value=" ">All Cemeteries</SelectItem>
+                                        <SelectItem value=" ">{t('All Cemeteries')}</SelectItem>
                                         {cemeteries.map((cem) => (
                                             <SelectItem key={cem} value={cem}>
                                                 {cem}
@@ -197,12 +199,12 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                             </div>
                         )}
                         <Button type="button" onClick={(e) => handleFilter() }>
-                            <Search className="h-4 w-4 mr-2" />
-                            Filter
+                            <Search className="h-4 w-4 me-2" />
+                            {t('Filter')}
                         </Button>
                         {(filters.search || filters.status || filters.cemetery) && (
                             <Button variant="outline" onClick={handleClearFilters}>
-                                Clear
+                                {t('Clear')}
                             </Button>
                         )}
                     </div>
@@ -219,23 +221,23 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                                        Location
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        {t('Location')}
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                                        Type
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        {t('Type')}
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                                        Status
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        {t('Status')}
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                                        Owner/Deceased
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        {t('Owner/Deceased')}
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
-                                        Details
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                        {t('Details')}
                                     </th>
                                     <th className="relative px-6 py-3">
-                                        <span className="sr-only">Actions</span>
+                                        <span className="sr-only">{t('Actions')}</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -290,11 +292,11 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                                                 )}
                                                 {gravesite.perpetual_care && (
                                                     <div className="text-xs text-green-600 dark:text-green-400">
-                                                        Perpetual Care
+                                                        {t('Perpetual Care')}
                                                     </div>
                                                 )}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <div className="flex gap-2 justify-end">
                                                     <Link href={`/admin/gravesites/${gravesite.id}`}>
                                                         <Button variant="outline" size="sm">
@@ -328,7 +330,7 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                                             </div>
                                             {!filters.search && !filters.status && !filters.cemetery && (
                                                 <Link href="/admin/gravesites/create" className="mt-2 inline-block">
-                                                    <Button>Add your first gravesite</Button>
+                                                    <Button>{t('Add your first gravesite')}</Button>
                                                 </Link>
                                             )}
                                         </td>
@@ -345,12 +347,12 @@ export default function GravesitesIndex({ gravesites, cemeteries, stats, filters
                         <div className="flex gap-2">
                             {gravesites.prev_page_url && (
                                 <Link href={gravesites.prev_page_url} preserveState>
-                                    <Button variant="outline">Previous</Button>
+                                    <Button variant="outline">{t('Previous')}</Button>
                                 </Link>
                             )}
                             {gravesites.next_page_url && (
                                 <Link href={gravesites.next_page_url} preserveState>
-                                    <Button variant="outline">Next</Button>
+                                    <Button variant="outline">{t('Next')}</Button>
                                 </Link>
                             )}
                         </div>

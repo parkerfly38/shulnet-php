@@ -46,9 +46,9 @@ export default function StudentsShow() {
                             {data.parents && data.parents.length > 0 ? (
                                 <div className="mt-1 space-y-1">
                                     {data.parents.map((parent: any) => (
-                                        <div key={parent.id} className="inline-block mr-2 mb-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded">
+                                        <div key={parent.id} className="inline-block me-2 mb-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded">
                                             {parent.first_name} {parent.last_name}
-                                            {parent.email && <span className="text-sm ml-2">({parent.email})</span>}
+                                            {parent.email && <span className="text-sm ms-2">({parent.email})</span>}
                                         </div>
                                     ))}
                                 </div>

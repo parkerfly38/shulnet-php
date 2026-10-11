@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'HTML Publisher', href: '/admin/html-pages' },
@@ -46,11 +48,11 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="HTML Pages" />
+      <Head title={t('HTML Pages')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">HTML Pages</h1>
+          <h1 className="text-3xl font-bold">{t('HTML Pages')}</h1>
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -58,13 +60,13 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                 window.location.href = '/admin/html-pages/export-all';
               }}
             >
-              <Download className="mr-2 h-4 w-4" />
-              Export All as ZIP
+              <Download className="me-2 h-4 w-4" />
+              {t('Export All as ZIP')}
             </Button>
             <Link href="/admin/html-pages/create">
               <Button>
-                <FileText className="mr-2 h-4 w-4" />
-                Create Page
+                <FileText className="me-2 h-4 w-4" />
+                {t('Create Page')}
               </Button>
             </Link>
           </div>
@@ -74,20 +76,20 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">Slug</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell">Template</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell">In Navigation</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell">Published</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Title')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">{t('Slug')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell">{t('Template')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Status')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell">{t('In Navigation')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden xl:table-cell">{t('Published')}</th>
+                <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
               {pages.length === 0 ? (
                 <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
-                    No pages yet. Create your first page to get started.
+                    {t('No pages yet. Create your first page to get started.')}
                   </td>
                 </tr>
               ) : (
@@ -123,15 +125,15 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                         ? new Date(page.published_at).toLocaleDateString()
                         : '—'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-end">
                       <div className="flex justify-end gap-1">
                         <Link href={`/admin/html-pages/${page.id}`}>
-                          <Button variant="ghost" size="sm" title="View Details">
+                          <Button variant="ghost" size="sm" title={t('View Details')}>
                             <Eye className="h-4 w-4" />
                           </Button>
                         </Link>
                         <Link href={`/admin/html-pages/${page.id}/edit`}>
-                          <Button variant="ghost" size="sm" title="Edit Page">
+                          <Button variant="ghost" size="sm" title={t('Edit Page')}>
                             <Edit className="h-4 w-4" />
                           </Button>
                         </Link>
@@ -139,7 +141,7 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                           variant="ghost"
                           size="sm"
                           className="hidden sm:inline-flex"
-                          title="Preview in new tab"
+                          title={t('Preview in new tab')}
                           asChild
                         >
                           <a
@@ -154,7 +156,7 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                           <Button
                             variant="ghost"
                             size="sm"
-                            title="Publish Page"
+                            title={t('Publish Page')}
                             onClick={() => handlePublish(page.id)}
                           >
                             <Globe className="h-4 w-4" />
@@ -163,7 +165,7 @@ export default function HtmlPagesIndex({ pages }: Readonly<Props>) {
                         <Button
                           variant="ghost"
                           size="sm"
-                          title="Delete Page"
+                          title={t('Delete Page')}
                           onClick={() => handleDelete(page.id)}
                         >
                           <Trash2 className="h-4 w-4" />

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState, useEffect } from 'react';
 import { Head, Link, useForm, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -49,6 +50,7 @@ interface PageProps {
 }
 
 export default function DeedsCreate({ members, gravesites, deed: propsDeed, membershipTiers, tuitionTiers }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { props } = usePage<PageProps>();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [createdDeed, setCreatedDeed] = useState<any>(null);
@@ -119,26 +121,26 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Deed" />
+      <Head title={t('Create Deed')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create New Deed</h1>
-            <p className="text-gray-600 dark:text-gray-400">Add a new cemetery plot deed</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create New Deed')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Add a new cemetery plot deed')}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Deed Information</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Deed Information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="member_id">Owner *</Label>
                 <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select member" />
+                    <SelectValue placeholder={t('Select member')} />
                   </SelectTrigger>
                   <SelectContent>
                     {members.map((member) => (
@@ -157,7 +159,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                   id="deed_number"
                   value={data.deed_number}
                   onChange={(e) => setData('deed_number', e.target.value)}
-                  placeholder="DEED-0001"
+                  placeholder={t('DEED-0001')}
                   required
                 />
                 {errors.deed_number && <p className="text-sm text-red-600">{errors.deed_number}</p>}
@@ -176,7 +178,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="purchase_price">Purchase Price</Label>
+                <Label htmlFor="purchase_price">{t('Purchase Price')}</Label>
                 <Input
                   id="purchase_price"
                   type="number"
@@ -236,13 +238,13 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
               </div>
 
               <div className="md:col-span-2 space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t('Notes')}</Label>
                 <Textarea
                   id="notes"
                   value={data.notes}
                   onChange={(e) => setData('notes', e.target.value)}
                   rows={4}
-                  placeholder="Additional notes..."
+                  placeholder={t('Additional notes...')}
                 />
                 {errors.notes && <p className="text-sm text-red-600">{errors.notes}</p>}
               </div>
@@ -252,7 +254,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
           <div className="flex justify-end gap-4">
             <Link href="/admin/deeds">
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>
@@ -265,9 +267,9 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
         <Dialog open={showInvoiceModal} onOpenChange={setShowInvoiceModal}>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Create Deed Invoice</DialogTitle>
+              <DialogTitle>{t('Create Deed Invoice')}</DialogTitle>
               <DialogDescription>
-                Create an invoice for the newly created deed. You can preview, email, or print the invoice.
+                {t('Create an invoice for the newly created deed. You can preview, email, or print the invoice.')}
               </DialogDescription>
             </DialogHeader>
 
@@ -304,8 +306,8 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                     size="sm"
                     onClick={() => setInvoiceItems([...invoiceItems, { description: '', quantity: 1, unit_price: '' }])}
                   >
-                    <Plus className="h-4 w-4 mr-1" />
-                    Add Item
+                    <Plus className="h-4 w-4 me-1" />
+                    {t('Add Item')}
                   </Button>
                 </div>
 
@@ -327,14 +329,14 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                         }}
                         membershipTiers={membershipTiers}
                         tuitionTiers={tuitionTiers}
-                        placeholder="Start typing to search tiers or enter custom description"
+                        placeholder={t('Start typing to search tiers or enter custom description')}
                       />
                     </div>
                     <div className="w-24 space-y-2">
                       <Input
                         type="number"
                         min="1"
-                        placeholder="Qty"
+                        placeholder={t('Qty')}
                         value={item.quantity}
                         onChange={(e) => {
                           const newItems = [...invoiceItems];
@@ -349,7 +351,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                         type="number"
                         step="0.01"
                         min="0"
-                        placeholder="Price"
+                        placeholder={t('Price')}
                         value={item.unit_price}
                         onChange={(e) => {
                           const newItems = [...invoiceItems];
@@ -376,7 +378,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                 ))}
 
                 <div className="flex justify-end pt-2 border-t">
-                  <div className="text-right space-y-1">
+                  <div className="text-end space-y-1">
                     <div className="text-sm text-gray-600 dark:text-gray-400">
                       Subtotal: ${invoiceItems.reduce((sum, item) => sum + (item.quantity * parseFloat(item.unit_price || '0')), 0).toFixed(2)}
                     </div>
@@ -388,7 +390,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="tax_amount">Tax Amount</Label>
+                <Label htmlFor="tax_amount">{t('Tax Amount')}</Label>
                 <Input
                   id="tax_amount"
                   type="number"
@@ -401,13 +403,13 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="invoice_notes">Notes</Label>
+                <Label htmlFor="invoice_notes">{t('Notes')}</Label>
                 <Textarea
                   id="invoice_notes"
                   value={invoiceForm.data.notes}
                   onChange={(e) => invoiceForm.setData('notes', e.target.value)}
                   rows={3}
-                  placeholder="Additional invoice notes..."
+                  placeholder={t('Additional invoice notes...')}
                 />
               </div>
 
@@ -418,17 +420,17 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                     Create invoice only (no email or print)
                   </ToggleGroupItem>
                   <ToggleGroupItem value="email" className="w-full justify-start">
-                    <Send className="h-4 w-4 mr-2" />
-                    Email invoice to recipient
+                    <Send className="h-4 w-4 me-2" />
+                    {t('Email invoice to recipient')}
                   </ToggleGroupItem>
                   <ToggleGroupItem value="print" className="w-full justify-start">
-                    <Printer className="h-4 w-4 mr-2" />
-                    Open print view
+                    <Printer className="h-4 w-4 me-2" />
+                    {t('Open print view')}
                   </ToggleGroupItem>
                   <ToggleGroupItem value="both" className="w-full justify-start">
-                    <Send className="h-4 w-4 mr-2" />
-                    <Printer className="h-4 w-4 mr-2" />
-                    Email and print
+                    <Send className="h-4 w-4 me-2" />
+                    <Printer className="h-4 w-4 me-2" />
+                    {t('Email and print')}
                   </ToggleGroupItem>
                 </ToggleGroup>
               </div>
@@ -442,7 +444,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                       type="email"
                       value={invoiceForm.data.recipient_email}
                       onChange={(e) => invoiceForm.setData('recipient_email', e.target.value)}
-                      placeholder="email@example.com"
+                      placeholder={t('email@example.com')}
                       required
                     />
                   </div>
@@ -452,7 +454,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                       id="recipient_name"
                       value={invoiceForm.data.recipient_name}
                       onChange={(e) => invoiceForm.setData('recipient_name', e.target.value)}
-                      placeholder="John Doe"
+                      placeholder={t('John Doe')}
                       required
                     />
                   </div>
@@ -469,7 +471,7 @@ export default function DeedsCreate({ members, gravesites, deed: propsDeed, memb
                   router.visit(`/admin/deeds/${createdDeed?.id || ''}`);
                 }}
               >
-                Skip Invoice
+                {t('Skip Invoice')}
               </Button>
               <Button
                 type="button"

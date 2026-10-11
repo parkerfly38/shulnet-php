@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import AsyncMemberSelect from '@/components/async-member-select';
@@ -17,6 +18,7 @@ interface RideRequest {
 }
 
 export default function RidesPage({ rideRequests, isAdmin = false }: { rideRequests: RideRequest[]; isAdmin?: boolean }) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm({
         member_id: null as number | null,
         service_at: '',
@@ -36,11 +38,11 @@ export default function RidesPage({ rideRequests, isAdmin = false }: { rideReque
 
     return (
         <AppLayout>
-            <Head title="Ride Sharing" />
+            <Head title={t('Ride Sharing')} />
             <div className="p-4 space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold">Ride Sharing</h1>
-                    <p className="mt-1 text-gray-600 dark:text-gray-400">Request transportation to a service or volunteer to drive a fellow member.</p>
+                    <h1 className="text-2xl font-bold">{t('Ride Sharing')}</h1>
+                    <p className="mt-1 text-gray-600 dark:text-gray-400">{t('Request transportation to a service or volunteer to drive a fellow member.')}</p>
                 </div>
 
                 <form onSubmit={submit} className="border rounded-lg bg-white p-4 dark:bg-black">
@@ -52,7 +54,7 @@ export default function RidesPage({ rideRequests, isAdmin = false }: { rideReque
                                     <AsyncMemberSelect
                                         value={data.member_id}
                                         onChange={(id) => setData('member_id', id)}
-                                        placeholder="Search for a member to create this request for..."
+                                        placeholder={t('Search for a member to create this request for...')}
                                     />
                                 </div>
                                 {errors.member_id && <p className="mt-1 text-sm text-red-600">{errors.member_id}</p>}
@@ -73,12 +75,12 @@ export default function RidesPage({ rideRequests, isAdmin = false }: { rideReque
                             <input value={data.notes} onChange={(event) => setData('notes', event.target.value)} className="mt-1 w-full rounded-md border bg-transparent p-2" maxLength={1000} />
                         </label>
                     </div>
-                    <button type="submit" disabled={processing} className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">Post ride request</button>
+                    <button type="submit" disabled={processing} className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">{t('Post ride request')}</button>
                 </form>
 
                 <section className="border rounded-lg bg-white dark:bg-black">
                     <div className="border-b p-4"><h2 className="text-lg font-semibold">{isAdmin ? 'All Members\u2019 Upcoming Requests' : 'Upcoming Requests'}</h2></div>
-                    {rideRequests.length === 0 ? <p className="p-8 text-center text-gray-500 dark:text-gray-400">There are no upcoming ride requests.</p> : (
+                    {rideRequests.length === 0 ? <p className="p-8 text-center text-gray-500 dark:text-gray-400">{t('There are no upcoming ride requests.')}</p> : (
                         <div className="divide-y">
                             {rideRequests.map((rideRequest) => (
                                 <article key={rideRequest.id} className="p-4">
@@ -94,9 +96,9 @@ export default function RidesPage({ rideRequests, isAdmin = false }: { rideReque
                                             {rideRequest.driver_name && <p className="mt-2 text-sm font-medium text-green-700 dark:text-green-400">Driver: {rideRequest.driver_name}</p>}
                                             {rideRequest.contact && <p className="mt-2 text-sm">Contact {rideRequest.contact.email}{rideRequest.contact.phone ? ` | ${rideRequest.contact.phone}` : ''}</p>}
                                         </div>
-                                        {!rideRequest.is_mine && !rideRequest.driver_name && <button onClick={() => post(`/member/rides/${rideRequest.id}/claim`)} disabled={processing} className="h-10 shrink-0 rounded-md bg-green-600 px-4 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50">Volunteer to drive</button>}
-                                        {rideRequest.is_mine && <span className="text-sm font-medium text-gray-500">Your request</span>}
-                                        {rideRequest.is_claimed_by_me && <span className="text-sm font-medium text-green-700 dark:text-green-400">You are driving</span>}
+                                        {!rideRequest.is_mine && !rideRequest.driver_name && <button onClick={() => post(`/member/rides/${rideRequest.id}/claim`)} disabled={processing} className="h-10 shrink-0 rounded-md bg-green-600 px-4 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50">{t('Volunteer to drive')}</button>}
+                                        {rideRequest.is_mine && <span className="text-sm font-medium text-gray-500">{t('Your request')}</span>}
+                                        {rideRequest.is_claimed_by_me && <span className="text-sm font-medium text-green-700 dark:text-green-400">{t('You are driving')}</span>}
                                     </div>
                                 </article>
                             ))}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -78,6 +79,7 @@ interface Props {
 }
 
 export default function CampaignShow({ campaign, campaignEmails, templates, availableMembers }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false);
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
@@ -261,7 +263,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
           </div>
           <div className="flex gap-2">
             <Button onClick={handleSend} disabled={confirmedCount === 0}>
-              Send Campaign
+              {t('Send Campaign')}
             </Button>
             <Link href={`/admin/campaigns/${campaign.id}/edit`}>
               <Button variant="outline">Edit</Button>
@@ -294,7 +296,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Campaign Emails</h2>
             <Button variant="outline" size="sm" onClick={() => router.visit(`/admin/campaigns/${campaign.id}/emails/create`)}>
-              Create Email
+              {t('Create Email')}
             </Button>
           </div>
           
@@ -307,11 +309,11 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-gray-800">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Sent</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
+                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created</th>
+                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Sent</th>
+                    <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
@@ -334,7 +336,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {email.sent_at ? new Date(email.sent_at).toLocaleDateString() : '-'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <td className="px-6 py-4 whitespace-nowrap text-end">
                         <div className="flex gap-2 justify-end">
                           {email.status === 'pending' && (
                             <>
@@ -343,7 +345,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                                 size="sm"
                                 onClick={() => router.visit(`/admin/campaigns/${campaign.id}/emails/${email.id}/edit`)}
                               >
-                                Edit
+                                {t('Edit')}
                               </Button>
                               <Button
                                 variant="outline"
@@ -359,7 +361,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                             size="sm"
                             onClick={() => setViewingEmail(email)}
                           >
-                            View
+                            {t('View')}
                           </Button>
                         </div>
                       </td>
@@ -377,19 +379,19 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
             <Button variant="outline" size="sm" onClick={handleCopy}>
               {isCopied ? (
                 <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Copied!
+                  <Check className="w-4 h-4 me-2" />
+                  {t('Copied!')}
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Code
+                  <Copy className="w-4 h-4 me-2" />
+                  {t('Copy Code')}
                 </>
               )}
             </Button>
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Copy this code and paste it into any webpage to allow visitors to subscribe to this campaign.
+            {t('Copy this code and paste it into any webpage to allow visitors to subscribe to this campaign.')}
           </p>
           <Textarea
             value={generateEmbedCode()}
@@ -417,7 +419,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                 </SelectContent>
               </Select>
               <Button onClick={() => setShowSubscribeDialog(true)}>
-                Add Subscriber
+                {t('Add Subscriber')}
               </Button>
             </div>
           </div>
@@ -426,18 +428,18 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                 {filteredSubscribers.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                      No subscribers found
+                      {t('No subscribers found')}
                     </td>
                   </tr>
                 ) : (
@@ -472,14 +474,14 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                           ? new Date(subscriber.pivot.unsubscribed_at).toLocaleDateString()
                           : '-'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <td className="px-6 py-4 whitespace-nowrap text-end">
                         {subscriber.pivot.status !== 'unsubscribed' && (
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleUnsubscribe(subscriber.id)}
                           >
-                            Unsubscribe
+                            {t('Unsubscribe')}
                           </Button>
                         )}
                       </td>
@@ -497,7 +499,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
           <DialogHeader>
             <DialogTitle>Add Subscriber</DialogTitle>
             <DialogDescription>
-              Add a member or new contact to this campaign.
+              {t('Add a member or new contact to this campaign.')}
               {campaign.opt_in_type === 'double' && ' A confirmation email will be sent.'}
             </DialogDescription>
           </DialogHeader>
@@ -511,7 +513,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
               }`}
               onClick={() => setSubscribeTab('existing')}
             >
-              Existing Member
+              {t('Existing Member')}
             </button>
             <button
               className={`px-4 py-2 font-medium transition-colors ${
@@ -521,7 +523,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
               }`}
               onClick={() => setSubscribeTab('new')}
             >
-              New Contact
+              {t('New Contact')}
             </button>
           </div>
 
@@ -531,7 +533,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                 <Label htmlFor="search">Search Members</Label>
                 <Input
                   id="search"
-                  placeholder="Search by name or email..."
+                  placeholder={t('Search by name or email...')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -539,7 +541,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
               
               {availableMembers.length === 0 ? (
                 <p className="text-center text-gray-500 py-4">
-                  All members with email addresses are already subscribed to this campaign.
+                  {t('All members with email addresses are already subscribed to this campaign.')}
                 </p>
               ) : (
                 <div className="border rounded-lg max-h-96 overflow-y-auto">
@@ -581,7 +583,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                 <Input
                   id="new-email"
                   type="email"
-                  placeholder="subscriber@example.com"
+                  placeholder={t('subscriber@example.com')}
                   value={newSubscriber.email}
                   onChange={(e) => setNewSubscriber({ ...newSubscriber, email: e.target.value })}
                 />
@@ -591,7 +593,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                   <Label htmlFor="new-first-name">First Name *</Label>
                   <Input
                     id="new-first-name"
-                    placeholder="John"
+                    placeholder={t('John')}
                     value={newSubscriber.first_name}
                     onChange={(e) => setNewSubscriber({ ...newSubscriber, first_name: e.target.value })}
                   />
@@ -600,14 +602,14 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
                   <Label htmlFor="new-last-name">Last Name *</Label>
                   <Input
                     id="new-last-name"
-                    placeholder="Doe"
+                    placeholder={t('Doe')}
                     value={newSubscriber.last_name}
                     onChange={(e) => setNewSubscriber({ ...newSubscriber, last_name: e.target.value })}
                   />
                 </div>
               </div>
               <p className="text-sm text-gray-500">
-                This will create a minimal contact record in your member database.
+                {t('This will create a minimal contact record in your member database.')}
               </p>
             </div>
           )}
@@ -620,7 +622,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
               setNewSubscriber({ email: '', first_name: '', last_name: '' });
               setSubscribeTab('existing');
             }}>
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button 
               onClick={handleAddSubscriber} 
@@ -641,7 +643,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
           <DialogHeader>
             <DialogTitle>Load Email Template</DialogTitle>
             <DialogDescription>
-              Select a template to load into your campaign email. This will replace the current subject and content.
+              {t('Select a template to load into your campaign email. This will replace the current subject and content.')}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-3">
@@ -667,7 +669,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowTemplateDialog(false)}>
-              Cancel
+              {t('Cancel')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -718,7 +720,7 @@ export default function CampaignShow({ campaign, campaignEmails, templates, avai
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setViewingEmail(null)}>
-              Close
+              {t('Close')}
             </Button>
           </DialogFooter>
         </DialogContent>

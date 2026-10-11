@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default function CommitteeShow({ committee, upcomingMeetings, reports }: Readonly<Props>) {
+    const { t } = useTranslation();
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -63,7 +65,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
             <CardHeader>
               <div className="flex items-center gap-2">
                 <CalendarDays className="h-5 w-5" />
-                <CardTitle>Upcoming Meetings</CardTitle>
+                <CardTitle>{t('Upcoming Meetings')}</CardTitle>
               </div>
               <CardDescription>
                 {upcomingMeetings.length} upcoming meeting{upcomingMeetings.length === 1 ? '' : 's'}
@@ -94,13 +96,13 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
                               rel="noopener noreferrer"
                               className="text-primary hover:underline"
                             >
-                              Join Meeting
+                              {t('Join Meeting')}
                             </a>
                           </div>
                         )}
                         {meeting.agenda && (
                           <div className="mt-2 pt-2 border-t">
-                            <p className="text-xs font-medium mb-1">Agenda:</p>
+                            <p className="text-xs font-medium mb-1">{t('Agenda:')}</p>
                             <p className="whitespace-pre-wrap">{meeting.agenda}</p>
                           </div>
                         )}
@@ -111,7 +113,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
               ) : (
                 <div className="text-center py-8">
                   <CalendarDays className="h-8 w-8 mx-auto mb-2 text-muted-foreground opacity-50" />
-                  <p className="text-sm text-muted-foreground">No upcoming meetings scheduled</p>
+                  <p className="text-sm text-muted-foreground">{t('No upcoming meetings scheduled')}</p>
                 </div>
               )}
             </CardContent>
@@ -122,7 +124,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
             <CardHeader>
               <div className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                <CardTitle>Committee Members</CardTitle>
+                <CardTitle>{t('Committee Members')}</CardTitle>
               </div>
               <CardDescription>
                 {committee.members.length} member{committee.members.length === 1 ? '' : 's'}
@@ -146,7 +148,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
                           </p>
                           {!isActive && (
                             <Badge variant="secondary" className="text-xs">
-                              Past Member
+                              {t('Past Member')}
                             </Badge>
                           )}
                         </div>
@@ -176,7 +178,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
           <CardHeader>
             <div className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
-              <CardTitle>Recent Reports</CardTitle>
+              <CardTitle>{t('Recent Reports')}</CardTitle>
             </div>
             <CardDescription>
               {reports.length} report{reports.length === 1 ? '' : 's'}
@@ -201,7 +203,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
                     </p>
                     {report.content.length > 200 && (
                       <Button variant="link" className="p-0 h-auto mt-2 text-xs">
-                        Read more
+                        {t('Read more')}
                       </Button>
                     )}
                   </div>
@@ -210,7 +212,7 @@ export default function CommitteeShow({ committee, upcomingMeetings, reports }: 
             ) : (
               <div className="text-center py-8">
                 <FileText className="h-8 w-8 mx-auto mb-2 text-muted-foreground opacity-50" />
-                <p className="text-sm text-muted-foreground">No reports available</p>
+                <p className="text-sm text-muted-foreground">{t('No reports available')}</p>
               </div>
             )}
           </CardContent>

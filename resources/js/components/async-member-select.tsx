@@ -115,7 +115,7 @@ export default function AsyncMemberSelect({ onChange, placeholder = 'Search memb
         className="w-full rounded border px-2 py-1"
       />
       {open && (
-        <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-auto rounded border bg-white z-40">
+        <div className="absolute start-0 end-0 mt-1 max-h-60 overflow-auto rounded border bg-white z-40">
           {loading && <div className="p-2 text-sm text-gray-500">Searching…</div>}
           {!loading && results.length === 0 && <div className="p-2 text-sm text-gray-500">No results</div>}
           {results.map((m, idx) => (

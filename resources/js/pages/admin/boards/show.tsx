@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -38,6 +39,7 @@ interface Props {
 }
 
 export default function BoardsShow({ board, availableMembers }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [showAddForm, setShowAddForm] = React.useState(false);
 
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -99,20 +101,20 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
           <div className="flex gap-2">
             <Link href={`/admin/meetings/board/${board.id}`}>
               <Button variant="outline">
-                <CalendarDays className="mr-2 h-4 w-4" />
-                Meetings
+                <CalendarDays className="me-2 h-4 w-4" />
+                {t('Meetings')}
               </Button>
             </Link>
             <Link href={`/admin/reports/board/${board.id}`}>
               <Button variant="outline">
-                <FileText className="mr-2 h-4 w-4" />
-                Reports
+                <FileText className="me-2 h-4 w-4" />
+                {t('Reports')}
               </Button>
             </Link>
             <Link href={`/admin/boards/${board.id}/edit`}>
               <Button>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Board
+                <Edit className="me-2 h-4 w-4" />
+                {t('Edit Board')}
               </Button>
             </Link>
           </div>
@@ -123,13 +125,13 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Board Members</CardTitle>
+                  <CardTitle>{t('Board Members')}</CardTitle>
                   <CardDescription>
                     {board.members?.length || 0} member{board.members?.length === 1 ? '' : 's'}
                   </CardDescription>
                 </div>
                 <Button onClick={() => setShowAddForm(!showAddForm)} variant={showAddForm ? 'outline' : 'default'}>
-                  <Plus className="mr-2 h-4 w-4" />
+                  <Plus className="me-2 h-4 w-4" />
                   {showAddForm ? 'Cancel' : 'Add Member'}
                 </Button>
               </div>
@@ -138,7 +140,7 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
               {showAddForm && (
                 <Card className="mb-6 bg-muted/50">
                   <CardHeader>
-                    <CardTitle className="text-lg">Add Member to Board</CardTitle>
+                    <CardTitle className="text-lg">{t('Add Member to Board')}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -146,7 +148,7 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
                         <Label htmlFor="member_id">Member *</Label>
                         <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a member" />
+                            <SelectValue placeholder={t('Select a member')} />
                           </SelectTrigger>
                           <SelectContent>
                             {availableMembers.map((member) => (
@@ -162,12 +164,12 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="title">Title/Position</Label>
+                        <Label htmlFor="title">{t('Title/Position')}</Label>
                         <Input
                           id="title"
                           value={data.title}
                           onChange={(e) => setData('title', e.target.value)}
-                          placeholder="e.g., President, Treasurer, Director"
+                          placeholder={t('e.g., President, Treasurer, Director')}
                         />
                         {errors.title && (
                           <p className="text-sm text-destructive">{errors.title}</p>
@@ -190,14 +192,14 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="term_end_date">Term End Date</Label>
+                          <Label htmlFor="term_end_date">{t('Term End Date')}</Label>
                           <Input
                             id="term_end_date"
                             type="date"
                             value={data.term_end_date}
                             onChange={(e) => setData('term_end_date', e.target.value)}
                           />
-                          <p className="text-xs text-muted-foreground">Leave blank for ongoing</p>
+                          <p className="text-xs text-muted-foreground">{t('Leave blank for ongoing')}</p>
                           {errors.term_end_date && (
                             <p className="text-sm text-destructive">{errors.term_end_date}</p>
                           )}
@@ -206,7 +208,7 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
 
                       <div className="flex justify-end gap-2">
                         <Button type="button" variant="outline" onClick={() => setShowAddForm(false)}>
-                          Cancel
+                          {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                           {processing ? 'Adding...' : 'Add Member'}
@@ -242,13 +244,13 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
 
                             {member.pivot?.title && (
                               <div className="text-sm text-muted-foreground mb-2">
-                                <span className="font-medium">Position:</span> {member.pivot.title}
+                                <span className="font-medium">{t('Position:')}</span> {member.pivot.title}
                               </div>
                             )}
 
                             <div className="grid grid-cols-2 gap-3 text-sm">
                               <div>
-                                <span className="font-medium text-muted-foreground">Term Start:</span>
+                                <span className="font-medium text-muted-foreground">{t('Term Start:')}</span>
                                 <div>
                                   {member.pivot?.term_start_date
                                     ? formatDate(member.pivot.term_start_date)
@@ -256,7 +258,7 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
                                 </div>
                               </div>
                               <div>
-                                <span className="font-medium text-muted-foreground">Term End:</span>
+                                <span className="font-medium text-muted-foreground">{t('Term End:')}</span>
                                 <div>
                                   {member.pivot?.term_end_date
                                     ? formatDate(member.pivot.term_end_date)
@@ -269,7 +271,7 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
                           <div className="flex gap-2">
                             <Link href={`/admin/members/${member.id}`}>
                               <Button variant="outline" size="sm">
-                                View Profile
+                                {t('View Profile')}
                               </Button>
                             </Link>
                             <Button
@@ -289,7 +291,7 @@ export default function BoardsShow({ board, availableMembers }: Readonly<Props>)
                 <div className="text-center py-12">
                   <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
                   <p className="text-muted-foreground">
-                    No members assigned to this board yet
+                    {t('No members assigned to this board yet')}
                   </p>
                 </div>
               )}

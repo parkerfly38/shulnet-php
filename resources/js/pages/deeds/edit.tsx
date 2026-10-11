@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, put, processing, errors } = useForm({
     member_id: deed.member_id.toString(),
     deed_number: deed.deed_number,
@@ -47,21 +49,21 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Deed</h1>
-            <p className="text-gray-600 dark:text-gray-400">Update cemetery plot deed</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Edit Deed')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Update cemetery plot deed')}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Deed Information</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Deed Information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="member_id">Owner *</Label>
                 <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select member" />
+                    <SelectValue placeholder={t('Select member')} />
                   </SelectTrigger>
                   <SelectContent>
                     {members.map((member) => (
@@ -97,7 +99,7 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="purchase_price">Purchase Price</Label>
+                <Label htmlFor="purchase_price">{t('Purchase Price')}</Label>
                 <Input
                   id="purchase_price"
                   type="number"
@@ -161,12 +163,12 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
                     checked={data.is_active}
                     onCheckedChange={(checked) => setData('is_active', !!checked)}
                   />
-                  <Label htmlFor="is_active">Active</Label>
+                  <Label htmlFor="is_active">{t('Active')}</Label>
                 </div>
               </div>
 
               <div className="md:col-span-2 space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t('Notes')}</Label>
                 <Textarea
                   id="notes"
                   value={data.notes}
@@ -180,7 +182,7 @@ export default function DeedsEdit({ deed, members, gravesites }: Readonly<Props>
           <div className="flex justify-end gap-4">
             <Link href={`/admin/deeds/${deed.id}`}>
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>

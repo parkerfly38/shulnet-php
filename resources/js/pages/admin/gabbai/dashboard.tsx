@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -29,6 +30,7 @@ interface Anniversary {
 }
 
 export default function GabbaiDashboard() {
+    const { t } = useTranslation();
     const { data, loading, error, fetchTorahReadings } = useTorahReadings();
     const [assignments, setAssignments] = useState<Array<{ honor: string; member_name: string | null }>>([]);
     const [config, setConfig] = useState<{ triennial: boolean } | null>(null);
@@ -135,22 +137,22 @@ export default function GabbaiDashboard() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Gabbai Dashboard" />
+            <Head title={t('Gabbai Dashboard')} />
 
             <div className="p-4 space-y-4">
-                <h1 className="text-2xl font-bold">Gabbai Dashboard</h1>
+                <h1 className="text-2xl font-bold">{t('Gabbai Dashboard')}</h1>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div className="lg:col-span-2 bg-white dark:bg-black rounded-lg p-6 border">
-                        <h2 className="text-lg font-semibold mb-3">Upcoming Parashah</h2>
+                        <h2 className="text-lg font-semibold mb-3">{t('Upcoming Parashah')}</h2>
                         {triennialYear && (
                             <h2 className="text-md font-semibold mb-3">Using Triennial Year: {triennialYear}</h2>
                         )}
-                        {loading && <p>Loading parashah...</p>}
+                        {loading && <p>{t('Loading parashah...')}</p>}
                         {error && (
                             <div>
                                 <p className="text-red-500 mb-2">{error}</p>
-                                <p className="text-sm text-gray-500">Unable to fetch Torah reading data from Hebcal API. Please check your internet connection or try again later.</p>
+                                <p className="text-sm text-gray-500">{t('Unable to fetch Torah reading data from Hebcal API. Please check your internet connection or try again later.')}</p>
                             </div>
                         )}
                         {!loading && !error && upcomingParsha && (
@@ -158,17 +160,17 @@ export default function GabbaiDashboard() {
                                 <p className="font-medium text-lg">{upcomingParsha.name?.en} {upcomingParsha.name?.he ? `(${upcomingParsha.name.he})` : ''}</p>
                                 {upcomingParsha.hdate && <p className="text-sm text-gray-500">{upcomingParsha.hdate} — {formatDate(upcomingParsha.date)}</p>}
                                 {upcomingParsha.summary && <p className="mt-2 text-sm">{upcomingParsha.summary}</p>}
-                                {upcomingParsha.fullkriyah && <p className="mt-2 text-sm text-gray-500">Full kriyah available</p>}
+                                {upcomingParsha.fullkriyah && <p className="mt-2 text-sm text-gray-500">{t('Full kriyah available')}</p>}
                                 
                                 {/* Sefaria Summary */}
                                 <div className="mt-4 pt-4 border-t">
-                                    <h3 className="text-sm font-semibold mb-2">Summary from Sefaria</h3>
-                                    {sefariaLoading && <p className="text-sm text-gray-500 italic">Loading summary...</p>}
+                                    <h3 className="text-sm font-semibold mb-2">{t('Summary from Sefaria')}</h3>
+                                    {sefariaLoading && <p className="text-sm text-gray-500 italic">{t('Loading summary...')}</p>}
                                     {!sefariaLoading && sefariaText && (
                                         <p className="text-sm text-gray-700 dark:text-gray-300">{sefariaText}</p>
                                     )}
                                     {!sefariaLoading && !sefariaText && (
-                                        <p className="text-sm text-gray-500 italic">No summary available from Sefaria</p>
+                                        <p className="text-sm text-gray-500 italic">{t('No summary available from Sefaria')}</p>
                                     )}
                                     {upcomingParsha.name?.en && (
                                         <a 
@@ -185,24 +187,24 @@ export default function GabbaiDashboard() {
                         )}
                         {!loading && !error && !upcomingParsha && data && (
                             <div>
-                                <p className="text-gray-500 mb-2">No parashah data available for the selected date.</p>
+                                <p className="text-gray-500 mb-2">{t('No parashah data available for the selected date.')}</p>
                                 <p className="text-sm text-gray-500">Received {data.items?.length || 0} items from API. Date range: {data.range?.start} to {data.range?.end}</p>
                             </div>
                         )}
                         {!loading && !error && !upcomingParsha && !data && (
-                            <p className="text-gray-500">No parashah data available. The API request may not have completed.</p>
+                            <p className="text-gray-500">{t('No parashah data available. The API request may not have completed.')}</p>
                         )}
                     </div>
 
                     <div className="space-y-4">
                         <div className="bg-white dark:bg-black rounded-lg p-6 border">
                             <div className="flex items-center justify-between mb-3">
-                                <h3 className="font-semibold">Upcoming Anniversaries & Bnai</h3>
-                                <Link href="/admin/gabbai/anniversaries" className="text-sm text-blue-600">View all</Link>
+                                <h3 className="font-semibold">{t('Upcoming Anniversaries & Bnai')}</h3>
+                                <Link href="/admin/gabbai/anniversaries" className="text-sm text-blue-600">{t('View all')}</Link>
                             </div>
-                            {anniversariesLoading && <p className="text-sm text-gray-500">Loading...</p>}
+                            {anniversariesLoading && <p className="text-sm text-gray-500">{t('Loading...')}</p>}
                             {!anniversariesLoading && anniversaries.length === 0 && (
-                                <p className="text-sm text-gray-500">No upcoming anniversaries or bnai mitzvah dates in the next 30 days.</p>
+                                <p className="text-sm text-gray-500">{t('No upcoming anniversaries or bnai mitzvah dates in the next 30 days.')}</p>
                             )}
                             {!anniversariesLoading && anniversaries.length > 0 && (
                                 <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -229,18 +231,18 @@ export default function GabbaiDashboard() {
                         </div>
 
                         <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                            <h3 className="font-semibold">Assign Honors — Next Shabbos</h3>
+                            <h3 className="font-semibold">{t('Assign Honors — Next Shabbos')}</h3>
                             <div className="mt-2">
-                                <label className="block text-sm text-gray-500">View assignments for date</label>
+                                <label className="block text-sm text-gray-500">{t('View assignments for date')}</label>
                                 <input type="date" value={viewDate} onChange={(e) => setViewDate(e.target.value)} className="mt-1 rounded border p-1" />
                                 <div className="mt-2 text-sm">
-                                    <Link href={`/admin/gabbai/honors?date=${viewDate}`} className="text-blue-600">Edit assignments for this date</Link>
+                                    <Link href={`/admin/gabbai/honors?date=${viewDate}`} className="text-blue-600">{t('Edit assignments for this date')}</Link>
                                 </div>
                             </div>
 
                             <div className="mt-3">
-                                <h4 className="font-medium">Assignments</h4>
-                                {honors.length === 0 && <p className="text-sm text-gray-500">No honors found for this date.</p>}
+                                <h4 className="font-medium">{t('Assignments')}</h4>
+                                {honors.length === 0 && <p className="text-sm text-gray-500">{t('No honors found for this date.')}</p>}
                                 <div className="mt-2 space-y-1">
                                     {honors.map((h) => {
                                         const found = assignments.find((a) => a.honor === h.key);
@@ -259,8 +261,8 @@ export default function GabbaiDashboard() {
                         </div>
 
                         <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                            <h3 className="font-semibold">Pledges (Aliyah)</h3>
-                            <p className="text-sm text-gray-500 mt-2">Pledges from Torah honors will appear here (based on invoice components labeled "Aliyah").</p>
+                            <h3 className="font-semibold">{t('Pledges (Aliyah)')}</h3>
+                            <p className="text-sm text-gray-500 mt-2">{t("Pledges from Torah honors will appear here (based on invoice components labeled \"Aliyah\").")}</p>
                         </div>
                     </div>
                 </div>

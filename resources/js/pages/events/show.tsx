@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -79,6 +80,7 @@ interface EventShowProps {
 }
 
 export default function EventShow({ event }: EventShowProps) {
+    const { t } = useTranslation();
     const [editingRsvp, setEditingRsvp] = useState<RSVP | null>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     
@@ -215,7 +217,7 @@ export default function EventShow({ event }: EventShowProps) {
                         <div>
                             <div className="flex items-center gap-2 mb-1">
                                 <Badge variant="outline">
-                                    <Calendar className="h-3 w-3 mr-1" />
+                                    <Calendar className="h-3 w-3 me-1" />
                                     {event.calendar.name}
                                 </Badge>
                             </div>
@@ -225,18 +227,18 @@ export default function EventShow({ event }: EventShowProps) {
                             <div className="flex items-center gap-2 mt-1">
                                 {event.members_only ? (
                                     <Badge variant="secondary">
-                                        <Users className="h-3 w-3 mr-1" />
-                                        Members Only
+                                        <Users className="h-3 w-3 me-1" />
+                                        {t('Members Only')}
                                     </Badge>
                                 ) : (
                                     <Badge variant="outline">
-                                        <Globe className="h-3 w-3 mr-1" />
-                                        Public
+                                        <Globe className="h-3 w-3 me-1" />
+                                        {t('Public')}
                                     </Badge>
                                 )}
                                 {!!event.all_day && (
                                     <Badge variant="outline">
-                                        All Day
+                                        {t('All Day')}
                                     </Badge>
                                 )}
                             </div>
@@ -245,14 +247,14 @@ export default function EventShow({ event }: EventShowProps) {
                     <div className="flex items-center space-x-2">
                         <Link href={`/admin/events/${event.id}/ticket-types`}>
                             <Button variant="outline">
-                                <Ticket className="h-4 w-4 mr-2" />
-                                Manage Tickets
+                                <Ticket className="h-4 w-4 me-2" />
+                                {t('Manage Tickets')}
                             </Button>
                         </Link>
                         <Link href={`/admin/events/${event.id}/edit`}>
                             <Button variant="outline">
-                                <Edit className="h-4 w-4 mr-2" />
-                                Edit
+                                <Edit className="h-4 w-4 me-2" />
+                                {t('Edit')}
                             </Button>
                         </Link>
                         <Button 
@@ -260,8 +262,8 @@ export default function EventShow({ event }: EventShowProps) {
                             onClick={handleDelete}
                             className="text-red-600 hover:text-red-800"
                         >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            <Trash2 className="h-4 w-4 me-2" />
+                            {t('Delete')}
                         </Button>
                     </div>
                 </div>
@@ -270,26 +272,26 @@ export default function EventShow({ event }: EventShowProps) {
                     {/* Event Details */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Event Details</CardTitle>
+                            <CardTitle>{t('Event Details')}</CardTitle>
                             <CardDescription>
-                                Information about this event
+                                {t('Information about this event')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Title</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Title')}</label>
                                 <p className="text-gray-900 dark:text-gray-100 font-medium">{event.title}</p>
                             </div>
 
                             {event.description && (
                                 <div>
-                                    <label className="text-sm font-medium text-gray-500">Description</label>
+                                    <label className="text-sm font-medium text-gray-500">{t('Description')}</label>
                                     <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{event.description}</p>
                                 </div>
                             )}
                             
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Calendar</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Calendar')}</label>
                                 <div className="flex items-center gap-2 mt-1">
                                     <Calendar className="h-4 w-4 text-gray-400" />
                                     <span className="text-gray-900 dark:text-gray-100">{event.calendar.name}</span>
@@ -297,13 +299,13 @@ export default function EventShow({ event }: EventShowProps) {
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Date & Time</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Date & Time')}</label>
                                 <div className="flex items-center gap-2 mt-1">
                                     <Clock className="h-4 w-4 text-gray-400" />
                                     <div>
                                         <p className="text-gray-900 dark:text-gray-100">{formatDateRange()}</p>
                                         {event.all_day && (
-                                            <p className="text-sm text-gray-500">All day event</p>
+                                            <p className="text-sm text-gray-500">{t('All day event')}</p>
                                         )}
                                     </div>
                                 </div>
@@ -311,7 +313,7 @@ export default function EventShow({ event }: EventShowProps) {
 
                             {event.location && (
                                 <div>
-                                    <label className="text-sm font-medium text-gray-500">Location</label>
+                                    <label className="text-sm font-medium text-gray-500">{t('Location')}</label>
                                     <div className="flex items-center gap-2 mt-1">
                                         <MapPin className="h-4 w-4 text-gray-400" />
                                         <span className="text-gray-900 dark:text-gray-100">{event.location}</span>
@@ -320,17 +322,17 @@ export default function EventShow({ event }: EventShowProps) {
                             )}
 
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Visibility</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Visibility')}</label>
                                 <div className="flex items-center gap-2 mt-1">
                                     {event.members_only ? (
                                         <>
                                             <Users className="h-4 w-4 text-blue-500" />
-                                            <span className="text-gray-900 dark:text-gray-100">Members Only</span>
+                                            <span className="text-gray-900 dark:text-gray-100">{t('Members Only')}</span>
                                         </>
                                     ) : (
                                         <>
                                             <Globe className="h-4 w-4 text-green-500" />
-                                            <span className="text-gray-900 dark:text-gray-100">Public Event</span>
+                                            <span className="text-gray-900 dark:text-gray-100">{t('Public Event')}</span>
                                         </>
                                     )}
                                 </div>
@@ -341,24 +343,24 @@ export default function EventShow({ event }: EventShowProps) {
                     {/* Metadata */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Metadata</CardTitle>
+                            <CardTitle>{t('Metadata')}</CardTitle>
                             <CardDescription>
-                                Creation and modification information
+                                {t('Creation and modification information')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Created</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Created')}</label>
                                 <p className="text-gray-900 dark:text-gray-100">{formatDate(event.created_at)}</p>
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Last Updated</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Last Updated')}</label>
                                 <p className="text-gray-900 dark:text-gray-100">{formatDate(event.updated_at)}</p>
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium text-gray-500">Event ID</label>
+                                <label className="text-sm font-medium text-gray-500">{t('Event ID')}</label>
                                 <p className="text-gray-900 dark:text-gray-100 font-mono text-sm">{event.id}</p>
                             </div>
                         </CardContent>
@@ -368,31 +370,31 @@ export default function EventShow({ event }: EventShowProps) {
                 {/* Quick Actions */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Quick Actions</CardTitle>
+                        <CardTitle>{t('Quick Actions')}</CardTitle>
                         <CardDescription>
-                            Common actions for this event
+                            {t('Common actions for this event')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <Link href={`/admin/events/${event.id}/edit`} className="block">
                                 <Button variant="outline" className="w-full justify-start">
-                                    <Edit className="h-4 w-4 mr-2" />
-                                    Edit Event
+                                    <Edit className="h-4 w-4 me-2" />
+                                    {t('Edit Event')}
                                 </Button>
                             </Link>
 
                             <Link href={`/admin/calendars/${event.calendar.id}`} className="block">
                                 <Button variant="outline" className="w-full justify-start">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    View Calendar
+                                    <Calendar className="h-4 w-4 me-2" />
+                                    {t('View Calendar')}
                                 </Button>
                             </Link>
 
                             <Link href={`/admin/events?calendar=${event.calendar.id}`} className="block">
                                 <Button variant="outline" className="w-full justify-start">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    Other Events
+                                    <Calendar className="h-4 w-4 me-2" />
+                                    {t('Other Events')}
                                 </Button>
                             </Link>
                         </div>
@@ -407,7 +409,7 @@ export default function EventShow({ event }: EventShowProps) {
                                 <div>
                                     <CardTitle>Event RSVPs ({event.rsvps.length})</CardTitle>
                                     <CardDescription>
-                                        Registered attendees for this event
+                                        {t('Registered attendees for this event')}
                                     </CardDescription>
                                 </div>
                                 <Button
@@ -415,8 +417,8 @@ export default function EventShow({ event }: EventShowProps) {
                                     variant="outline"
                                     size="sm"
                                 >
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Export to Excel
+                                    <Download className="me-2 h-4 w-4" />
+                                    {t('Export to Excel')}
                                 </Button>
                             </div>
                         </CardHeader>
@@ -424,14 +426,14 @@ export default function EventShow({ event }: EventShowProps) {
                             <div className="overflow-x-auto">
                                 <table className="w-full">
                                     <thead className="border-b">
-                                        <tr className="text-left">
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Name</th>
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Email</th>
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Phone</th>
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Guests</th>
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Status</th>
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Registered</th>
-                                            <th className="pb-3 text-sm font-medium text-gray-500">Actions</th>
+                                        <tr className="text-start">
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Name')}</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Email')}</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Phone')}</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Guests')}</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Status')}</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Registered')}</th>
+                                            <th className="pb-3 text-sm font-medium text-gray-500">{t('Actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y">
@@ -477,7 +479,7 @@ export default function EventShow({ event }: EventShowProps) {
                                                             variant="ghost"
                                                             size="sm"
                                                             onClick={() => handleEditRsvp(rsvp)}
-                                                            title="Edit RSVP"
+                                                            title={t('Edit RSVP')}
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
@@ -486,7 +488,7 @@ export default function EventShow({ event }: EventShowProps) {
                                                             size="sm"
                                                             onClick={() => handleDeleteRsvp(rsvp)}
                                                             className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-950"
-                                                            title="Delete RSVP"
+                                                            title={t('Delete RSVP')}
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
@@ -500,7 +502,7 @@ export default function EventShow({ event }: EventShowProps) {
                             
                             {event.rsvps.some(rsvp => rsvp.notes) && (
                                 <div className="mt-6 space-y-3">
-                                    <h4 className="text-sm font-medium text-gray-500">Special Requests / Notes</h4>
+                                    <h4 className="text-sm font-medium text-gray-500">{t('Special Requests / Notes')}</h4>
                                     {event.rsvps.filter(rsvp => rsvp.notes).map((rsvp) => (
                                         <div key={rsvp.id} className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3">
                                             <p className="text-sm font-medium text-gray-900 dark:text-gray-100">

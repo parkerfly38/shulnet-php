@@ -39,7 +39,7 @@ export function AdminChatWidget() {
         <>
             {/* Toggle Button with subtle ping ring */}
             {!isOpen && (
-                <span className="fixed bottom-4 right-4 z-50 flex h-12 w-12">
+                <span className="fixed bottom-4 end-4 z-50 flex h-12 w-12">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-10" />
                     <Button
                         onClick={() => setIsOpen(true)}
@@ -54,7 +54,7 @@ export function AdminChatWidget() {
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-4 right-4 w-96 h-[520px] bg-background border border-border rounded-lg shadow-2xl flex flex-col z-50">
+                <div className="fixed bottom-4 end-4 w-96 h-[520px] bg-background border border-border rounded-lg shadow-2xl flex flex-col z-50">
                     <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                         <h3 className="font-semibold text-sm">{chatConfig.title}</h3>
                         <div className="flex items-center gap-1">

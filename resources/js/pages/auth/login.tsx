@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { BannerDisplay } from '@/components/banner-display';
@@ -25,6 +26,7 @@ export default function Login({
     canResetPassword,
     canRegister,
 }: LoginProps) {
+    const { t } = useTranslation();
     const { loginBanners, auth } = usePage().props as any;
     const banners = (loginBanners || []) as Banner[];
     const isAuthenticated = !!auth?.user;
@@ -63,10 +65,10 @@ export default function Login({
 
     return (
         <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
+            title={t('Log in to your account')}
+            description={t('Enter your email and password below to log in')}
         >
-            <Head title="Log in" />
+            <Head title={t('Log in')} />
 
             {banners.length > 0 && (
                 <div className="mb-6">
@@ -88,7 +90,7 @@ export default function Login({
                     <>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">{t('Email address')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -104,14 +106,14 @@ export default function Login({
 
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">{t('Password')}</Label>
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="ml-auto text-sm"
+                                            className="ms-auto text-sm"
                                             tabIndex={5}
                                         >
-                                            Forgot password?
+                                            {t('Forgot password?')}
                                         </TextLink>
                                     )}
                                 </div>
@@ -122,7 +124,7 @@ export default function Login({
                                     required
                                     tabIndex={2}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder={t('Password')}
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -133,7 +135,7 @@ export default function Login({
                                     name="remember"
                                     tabIndex={3}
                                 />
-                                <Label htmlFor="remember">Remember me</Label>
+                                <Label htmlFor="remember">{t('Remember me')}</Label>
                             </div>
 
                             <Button
@@ -150,9 +152,9 @@ export default function Login({
 
                         {canRegister && (
                             <div className="text-center text-sm text-muted-foreground">
-                                Don't have an account?{' '}
+                                {t('Don\'t have an account?')}{' '}
                                 <TextLink href={register()} tabIndex={5}>
-                                    Sign up
+                                    {t('Sign up')}
                                 </TextLink>
                             </div>
                         )}

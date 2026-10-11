@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
@@ -129,6 +130,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ membersJoinedData, currentYear, currentHebrewDate, currentMonthYahrzeits, upcomingEvents, openInvoices, invoiceAging, membershipTiers, schoolTuitionTiers, parents, members, careAlertNotes, upcomingLifecycleEvents, recentMembers, upcomingRideRequests }: DashboardProps) {
+    const { t } = useTranslation();
     const { auth, currency } = usePage().props as any;
     const user = auth.user;
     
@@ -195,7 +197,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
+            <Head title={t('Dashboard')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Members Joined Chart and Workflows */}
                 <div className="grid gap-4 lg:grid-cols-12">
@@ -205,7 +207,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                 Members Joined in {currentYear}
                             </h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                New memberships by month
+                                {t('New memberships by month')}
                             </p>
                         </div>
                         <div className="h-80">
@@ -247,27 +249,27 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="lg:col-span-4 bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                         <div className="mb-4">
                             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <Zap className="h-5 w-5 mr-2" />
-                                Quick Workflows
+                                <Zap className="h-5 w-5 me-2" />
+                                {t('Quick Workflows')}
                             </h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                                Common administrative tasks
+                                {t('Common administrative tasks')}
                             </p>
                         </div>
                         <div className="space-y-3">
                             <Dialog open={showMemberOnboarding} onOpenChange={setShowMemberOnboarding}>
                                 <DialogTrigger asChild>
-                                    <button className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
+                                    <button className="w-full text-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
                                         <div className="flex items-center">
                                             <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
                                                 <UserPlus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                                             </div>
-                                            <div className="ml-3 flex-1">
+                                            <div className="ms-3 flex-1">
                                                 <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    Onboard New Member
+                                                    {t('Onboard New Member')}
                                                 </h3>
                                                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                                                    Create member, assign tier, generate invoice
+                                                    {t('Create member, assign tier, generate invoice')}
                                                 </p>
                                             </div>
                                         </div>
@@ -275,9 +277,9 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                 </DialogTrigger>
                                 <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                                     <DialogHeader>
-                                        <DialogTitle>Onboard New Member</DialogTitle>
+                                        <DialogTitle>{t('Onboard New Member')}</DialogTitle>
                                         <DialogDescription>
-                                            Create a new member profile, assign a membership tier, and optionally generate an invoice.
+                                            {t('Create a new member profile, assign a membership tier, and optionally generate an invoice.')}
                                         </DialogDescription>
                                     </DialogHeader>
                                     <OnboardingWorkflow membershipTiers={membershipTiers} onClose={() => setShowMemberOnboarding(false)} />
@@ -286,14 +288,14 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                             
                             <Dialog open={showStudentOnboarding} onOpenChange={setShowStudentOnboarding}>
                                 <DialogTrigger asChild>
-                                    <button className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
+                                    <button className="w-full text-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
                                         <div className="flex items-center">
                                             <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
                                                 <GraduationCap className="h-5 w-5 text-green-600 dark:text-green-400" />
                                             </div>
-                                            <div className="ml-3 flex-1">
+                                            <div className="ms-3 flex-1">
                                                 <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    Onboard New Student
+                                                    {t('Onboard New Student')}
                                                 </h3>
                                                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                                                     Create student(s), assign parent, set tuition tier
@@ -304,7 +306,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                 </DialogTrigger>
                                 <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                                     <DialogHeader>
-                                        <DialogTitle>Onboard New Student</DialogTitle>
+                                        <DialogTitle>{t('Onboard New Student')}</DialogTitle>
                                         <DialogDescription>
                                             Create student profile(s), assign or create a parent, select tuition tier, and generate an invoice.
                                         </DialogDescription>
@@ -320,17 +322,17 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
 
                             <Dialog open={showMonthlyYahrzeits} onOpenChange={setShowMonthlyYahrzeits}>
                                 <DialogTrigger asChild>
-                                    <button className="w-full text-left p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
+                                    <button className="w-full text-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors group">
                                         <div className="flex items-center">
                                             <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 transition-colors">
                                                 <Mail className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                                             </div>
-                                            <div className="ml-3 flex-1">
+                                            <div className="ms-3 flex-1">
                                                 <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    Print/Email Monthly Yahrzeit Letters
+                                                    {t('Print/Email Monthly Yahrzeit Letters')}
                                                 </h3>
                                                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                                                    Generate letters for this Hebrew month
+                                                    {t('Generate letters for this Hebrew month')}
                                                 </p>
                                             </div>
                                         </div>
@@ -338,9 +340,9 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                 </DialogTrigger>
                                 <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                                     <DialogHeader>
-                                        <DialogTitle>Monthly Yahrzeit Letters</DialogTitle>
+                                        <DialogTitle>{t('Monthly Yahrzeit Letters')}</DialogTitle>
                                         <DialogDescription>
-                                            Generate PDF or send email reminders for all yahrzeits in the current Hebrew month.
+                                            {t('Generate PDF or send email reminders for all yahrzeits in the current Hebrew month.')}
                                         </DialogDescription>
                                     </DialogHeader>
                                     <MonthlyYahrzeitWorkflow 
@@ -358,7 +360,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <Calendar className="h-4 w-4 mr-2" />
+                                <Calendar className="h-4 w-4 me-2" />
                                 {currentHebrewDate.month} Yahrzeits
                             </h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -415,7 +417,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                             ) : (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                    <p className="text-xs">No yahrzeits this month</p>
+                                    <p className="text-xs">{t('No yahrzeits this month')}</p>
                                 </div>
                             )}
                         </div>
@@ -425,11 +427,11 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <CalendarDays className="h-4 w-4 mr-2" />
-                                Upcoming Events
+                                <CalendarDays className="h-4 w-4 me-2" />
+                                {t('Upcoming Events')}
                             </h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                Next scheduled events
+                                {t('Next scheduled events')}
                             </p>
                         </div>
 
@@ -463,7 +465,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                             </div>
                                                             {isToday && (
                                                                 <span className="flex-shrink-0 inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded">
-                                                                    Today
+                                                                    {t('Today')}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -484,14 +486,14 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                             )}
                                                             {event.location && (
                                                                 <span className="flex items-center">
-                                                                    <MapPin className="h-3 w-3 mr-0.5" />
+                                                                    <MapPin className="h-3 w-3 me-0.5" />
                                                                     <span className="truncate max-w-[100px]">{event.location}</span>
                                                                 </span>
                                                             )}
                                                             {event.online && (
                                                                 <span className="flex items-center">
-                                                                    <Globe className="h-3 w-3 mr-0.5" />
-                                                                    Online
+                                                                    <Globe className="h-3 w-3 me-0.5" />
+                                                                    {t('Online')}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -504,7 +506,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                             ) : (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <CalendarDays className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                    <p className="text-xs">No upcoming events</p>
+                                    <p className="text-xs">{t('No upcoming events')}</p>
                                 </div>
                             )}
                         </div>
@@ -514,11 +516,11 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-4 overflow-hidden flex flex-col">
                         <div className="mb-3">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <span className="text-lg mr-2">{currencySymbol}</span>
-                                Open Invoices
+                                <span className="text-lg me-2">{currencySymbol}</span>
+                                {t('Open Invoices')}
                             </h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                Aging summary
+                                {t('Aging summary')}
                             </p>
                         </div>
 
@@ -550,7 +552,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                 <span className="text-xs font-medium">
                                                     {categoryLabels[category]}
                                                 </span>
-                                                <div className="text-right">
+                                                <div className="text-end">
                                                     <div className="text-sm font-bold">
                                                         {currencySymbol}{data.total.toFixed(2)}
                                                     </div>
@@ -568,7 +570,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                             {openInvoices && openInvoices.length > 0 && (
                                 <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
                                     <h4 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                        Recent Open Invoices
+                                        {t('Recent Open Invoices')}
                                     </h4>
                                     <div className="space-y-1.5 max-h-48 overflow-y-auto">
                                         {openInvoices.slice(0, 5).map((invoice) => (
@@ -586,13 +588,13 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                             {invoice.member_name}
                                                         </div>
                                                     </div>
-                                                    <div className="flex-shrink-0 text-right">
+                                                    <div className="flex-shrink-0 text-end">
                                                         <div className="font-semibold text-gray-900 dark:text-gray-100">
                                                             {formatCurrency(invoice.total, currency)}
                                                         </div>
                                                         {invoice.days_overdue !== null && invoice.days_overdue > 0 && (
                                                             <div className="flex items-center text-red-600 dark:text-red-400">
-                                                                <AlertCircle className="h-3 w-3 mr-0.5" />
+                                                                <AlertCircle className="h-3 w-3 me-0.5" />
                                                                 {invoice.days_overdue}d
                                                             </div>
                                                         )}
@@ -613,12 +615,12 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <Heart className="h-5 w-5 mr-2 text-red-500" />
-                                Member Care Alerts
+                                <Heart className="h-5 w-5 me-2 text-red-500" />
+                                {t('Member Care Alerts')}
                             </h3>
                             <Link href="/admin/notes">
                                 <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                                    View All Notes
+                                    {t('View All Notes')}
                                 </span>
                             </Link>
                         </div>
@@ -634,7 +636,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                                                        <Heart className="h-3 w-3 mr-1" />
+                                                        <Heart className="h-3 w-3 me-1" />
                                                         {note.member_care_alert === 'hospitalized' && 'Hospitalized'}
                                                         {note.member_care_alert === 'mourning' && 'Mourning'}
                                                         {note.member_care_alert === 'immediate_follow_up' && 'Immediate Follow-Up'}
@@ -669,7 +671,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                         ) : (
                             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                 <Heart className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-                                <p>No active member care alerts</p>
+                                <p>{t('No active member care alerts')}</p>
                             </div>
                         )}
                     </div>
@@ -678,10 +680,10 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <Cake className="h-5 w-5 mr-2 text-purple-500" />
-                                Upcoming Lifecycle Events
+                                <Cake className="h-5 w-5 me-2 text-purple-500" />
+                                {t('Upcoming Lifecycle Events')}
                             </h3>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Next 30 Days</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">{t('Next 30 Days')}</span>
                         </div>
                         {upcomingLifecycleEvents.length > 0 ? (
                             <div className="space-y-2">
@@ -709,7 +711,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                     {new Date(event.event_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                                                 </div>
                                             </div>
-                                            <div className="text-right">
+                                            <div className="text-end">
                                                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {event.days_until === 0 ? 'Today!' : `${Math.ceil(event.days_until)}d`}
                                                 </div>
@@ -721,7 +723,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                         ) : (
                             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                 <Cake className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-                                <p>No upcoming events in the next 30 days</p>
+                                <p>{t('No upcoming events in the next 30 days')}</p>
                             </div>
                         )}
                     </div>
@@ -730,12 +732,12 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <Users className="h-5 w-5 mr-2 text-green-500" />
-                                Recently Joined Members
+                                <Users className="h-5 w-5 me-2 text-green-500" />
+                                {t('Recently Joined Members')}
                             </h3>
                             <Link href="/admin/members">
                                 <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                                    View All Members
+                                    {t('View All Members')}
                                 </span>
                             </Link>
                         </div>
@@ -756,7 +758,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                                     {member.email}
                                                 </div>
                                             </div>
-                                            <div className="text-right flex-shrink-0">
+                                            <div className="text-end flex-shrink-0">
                                                 <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                     {new Date(member.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                                 </div>
@@ -771,7 +773,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                         ) : (
                             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                 <Users className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-                                <p>No members joined in the last 12 months</p>
+                                <p>{t('No members joined in the last 12 months')}</p>
                             </div>
                         )}
                     </div>
@@ -780,11 +782,11 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                     <div className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center">
-                                <Car className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
-                                Upcoming Ride Needs
+                                <Car className="h-5 w-5 me-2 text-blue-600 dark:text-blue-400" />
+                                {t('Upcoming Ride Needs')}
                             </h3>
                             <Link href="/member/rides">
-                                <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">View Ride Sharing</span>
+                                <span className="text-sm text-blue-600 dark:text-blue-400 hover:underline">{t('View Ride Sharing')}</span>
                             </Link>
                         </div>
                         {upcomingRideRequests.length > 0 ? (
@@ -820,7 +822,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                         ) : (
                             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                 <Car className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-                                <p>No upcoming ride needs</p>
+                                <p>{t('No upcoming ride needs')}</p>
                             </div>
                         )}
                     </div>
@@ -934,26 +936,26 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
 
             {/* Step Labels */}
             <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                <span>Basic Info</span>
-                <span>Additional Details</span>
-                <span>Membership Tier</span>
-                <span>Invoice Preview</span>
+                <span>{t('Basic Info')}</span>
+                <span>{t('Additional Details')}</span>
+                <span>{t('Membership Tier')}</span>
+                <span>{t('Invoice Preview')}</span>
             </div>
 
             {/* Step Content */}
             <div className="min-h-[400px]">
                 {step === 1 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Basic Member Information</h3>
+                        <h3 className="font-medium text-lg">{t('Basic Member Information')}</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Title</label>
+                                <label className="block text-sm font-medium mb-1">{t('Title')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    placeholder="Mr., Mrs., Dr., etc."
+                                    placeholder={t('Mr., Mrs., Dr., etc.')}
                                 />
                             </div>
                             <div>
@@ -966,7 +968,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Middle Name</label>
+                                <label className="block text-sm font-medium mb-1">{t('Middle Name')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -993,7 +995,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Primary Phone</label>
+                                <label className="block text-sm font-medium mb-1">{t('Primary Phone')}</label>
                                 <input
                                     type="tel"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1002,7 +1004,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div className="col-span-2">
-                                <label className="block text-sm font-medium mb-1">Secondary Phone</label>
+                                <label className="block text-sm font-medium mb-1">{t('Secondary Phone')}</label>
                                 <input
                                     type="tel"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1029,7 +1031,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">City</label>
+                                <label className="block text-sm font-medium mb-1">{t('City')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1038,7 +1040,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">State</label>
+                                <label className="block text-sm font-medium mb-1">{t('State')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1047,7 +1049,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">ZIP Code</label>
+                                <label className="block text-sm font-medium mb-1">{t('ZIP Code')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1056,7 +1058,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Country</label>
+                                <label className="block text-sm font-medium mb-1">{t('Country')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1070,37 +1072,37 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
 
                 {step === 2 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Additional Member Details</h3>
+                        <h3 className="font-medium text-lg">{t('Additional Member Details')}</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Member Type</label>
+                                <label className="block text-sm font-medium mb-1">{t('Member Type')}</label>
                                 <select
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                                     value={formData.member_type}
                                     onChange={(e) => setFormData({ ...formData, member_type: e.target.value })}
                                 >
-                                    <option value="">Select type</option>
-                                    <option value="member">Member</option>
-                                    <option value="contact">Contact</option>
-                                    <option value="prospect">Prospect</option>
-                                    <option value="former">Former Member</option>
+                                    <option value="">{t('Select type')}</option>
+                                    <option value="member">{t('Member')}</option>
+                                    <option value="contact">{t('Contact')}</option>
+                                    <option value="prospect">{t('Prospect')}</option>
+                                    <option value="former">{t('Former Member')}</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Gender</label>
+                                <label className="block text-sm font-medium mb-1">{t('Gender')}</label>
                                 <select
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                                     value={formData.gender}
                                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                                 >
-                                    <option value="">Select gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
+                                    <option value="">{t('Select gender')}</option>
+                                    <option value="male">{t('Male')}</option>
+                                    <option value="female">{t('Female')}</option>
+                                    <option value="other">{t('Other')}</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Date of Birth</label>
+                                <label className="block text-sm font-medium mb-1">{t('Date of Birth')}</label>
                                 <input
                                     type="date"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1109,7 +1111,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Anniversary Date</label>
+                                <label className="block text-sm font-medium mb-1">{t('Anniversary Date')}</label>
                                 <input
                                     type="date"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1118,7 +1120,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div className="col-span-2">
-                                <label className="block text-sm font-medium mb-1">Hebrew Name</label>
+                                <label className="block text-sm font-medium mb-1">{t('Hebrew Name')}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1127,7 +1129,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Father's Hebrew Name</label>
+                                <label className="block text-sm font-medium mb-1">{t("Father's Hebrew Name")}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1136,7 +1138,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Mother's Hebrew Name</label>
+                                <label className="block text-sm font-medium mb-1">{t("Mother's Hebrew Name")}</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1150,7 +1152,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
 
                 {step === 3 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Select Membership Tier</h3>
+                        <h3 className="font-medium text-lg">{t('Select Membership Tier')}</h3>
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                             Choose a membership tier for {formData.first_name} {formData.last_name}
                         </div>
@@ -1177,14 +1179,14 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                                 <ul className="mt-2 space-y-1">
                                                     {tier.features.map((feature, idx) => (
                                                         <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
-                                                            <span className="mr-2">✓</span>
+                                                            <span className="me-2">✓</span>
                                                             {feature}
                                                         </li>
                                                     ))}
                                                 </ul>
                                             )}
                                         </div>
-                                        <div className="ml-4 text-right">
+                                        <div className="ms-4 text-end">
                                             <div className="font-bold text-xl">
                                                 {formatCurrency(parseFloat(tier.price), currency)}
                                             </div>
@@ -1213,22 +1215,22 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 onChange={(e) => setFormData({ ...formData, create_invoice: e.target.checked })}
                                 className="rounded"
                             />
-                            <label htmlFor="create_invoice" className="text-sm">Create invoice for this membership</label>
+                            <label htmlFor="create_invoice" className="text-sm">{t('Create invoice for this membership')}</label>
                         </div>
                     </div>
                 )}
 
                 {step === 4 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Review & Send Invoice</h3>
+                        <h3 className="font-medium text-lg">{t('Review & Send Invoice')}</h3>
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-3">
                             <div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">Member</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">{t('Member')}</div>
                                 <div className="font-medium">{formData.first_name} {formData.last_name}</div>
                                 <div className="text-sm">{formData.email}</div>
                             </div>
                             <div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">Membership</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">{t('Membership')}</div>
                                 {formData.membership_tier_id && (() => {
                                     const selectedTier = membershipTiers.find(t => t.id.toString() === formData.membership_tier_id);
                                     return selectedTier ? (
@@ -1244,7 +1246,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                 const selectedTier = membershipTiers.find(t => t.id.toString() === formData.membership_tier_id);
                                 return selectedTier ? (
                                     <div>
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">Invoice Amount</div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">{t('Invoice Amount')}</div>
                                         <div className="font-medium text-lg">{formatCurrency(parseFloat(selectedTier.price), currency)}</div>
                                     </div>
                                 ) : null;
@@ -1259,7 +1261,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                                     onChange={(e) => setFormData({ ...formData, email_invoice: e.target.checked })}
                                     className="rounded"
                                 />
-                                <label htmlFor="email_invoice" className="text-sm">Email invoice to member</label>
+                                <label htmlFor="email_invoice" className="text-sm">{t('Email invoice to member')}</label>
                             </div>
                         )}
                     </div>
@@ -1273,15 +1275,15 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                     onClick={handleBack}
                     disabled={step === 1}
                 >
-                    Back
+                    {t('Back')}
                 </Button>
                 {step < 3 ? (
                     <Button onClick={handleNext}>
-                        Next
+                        {t('Next')}
                     </Button>
                 ) : (
                     <Button onClick={handleSubmit}>
-                        Complete Onboarding
+                        {t('Complete Onboarding')}
                     </Button>
                 )}
             </div>
@@ -1438,7 +1440,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
         <div className="space-y-6">
             {loading ? (
                 <div className="text-center py-8">
-                    <p className="text-gray-600 dark:text-gray-400">Loading yahrzeits...</p>
+                    <p className="text-gray-600 dark:text-gray-400">{t('Loading yahrzeits...')}</p>
                 </div>
             ) : yahrzeits.length === 0 ? (
                 <div className="text-center py-8">
@@ -1447,7 +1449,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                         No yahrzeits found for {selectedMonth}.
                     </p>
                     <div className="mt-4">
-                        <Label htmlFor="hebrew-month-empty" className="text-sm font-medium">Select a Different Month</Label>
+                        <Label htmlFor="hebrew-month-empty" className="text-sm font-medium">{t('Select a Different Month')}</Label>
                         <select
                             id="hebrew-month-empty"
                             value={selectedMonth}
@@ -1467,16 +1469,16 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                     <div className="space-y-4">
                         <div>
                             <h3 className="font-medium text-lg mb-2">
-                                Monthly Yahrzeit Letters
+                                {t('Monthly Yahrzeit Letters')}
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Select the Hebrew month and yahrzeits to include
+                                {t('Select the Hebrew month and yahrzeits to include')}
                             </p>
                         </div>
 
                         {/* Month Selection */}
                         <div className="space-y-2">
-                            <Label htmlFor="hebrew-month" className="text-sm font-medium">Hebrew Month</Label>
+                            <Label htmlFor="hebrew-month" className="text-sm font-medium">{t('Hebrew Month')}</Label>
                             <select
                                 id="hebrew-month"
                                 value={selectedMonth}
@@ -1499,13 +1501,13 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                                 Yahrzeits for {selectedMonth} ({yahrzeits.length} total)
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Select the yahrzeits to include in the letters
+                                {t('Select the yahrzeits to include in the letters')}
                             </p>
                         </div>
 
                         {/* Action Selection */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium">Action</label>
+                            <label className="block text-sm font-medium">{t('Action')}</label>
                             <div className="space-y-2">
                                 <div className="flex items-center space-x-2">
                                     <input
@@ -1519,7 +1521,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                                     />
                                     <label htmlFor="action-email" className="cursor-pointer font-normal flex items-center gap-2">
                                         <Mail className="h-4 w-4" />
-                                        Send via Email to All Members
+                                        {t('Send via Email to All Members')}
                                     </label>
                                 </div>
                                 <div className="flex items-center space-x-2">
@@ -1534,7 +1536,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                                     />
                                     <label htmlFor="action-print" className="cursor-pointer font-normal flex items-center gap-2">
                                         <Printer className="h-4 w-4" />
-                                        Generate PDF for All Members
+                                        {t('Generate PDF for All Members')}
                                     </label>
                                 </div>
                             </div>
@@ -1548,7 +1550,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                         {/* Yahrzeit Selection */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label className="block text-sm font-medium">Select Yahrzeits</label>
+                                <label className="block text-sm font-medium">{t('Select Yahrzeits')}</label>
                                 <button
                                     type="button"
                                     onClick={handleToggleAll}
@@ -1590,7 +1592,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                                                             {action === 'email' && ` (${membersWithEmail} with email)`}
                                                         </div>
                                                     </div>
-                                                    <div className="flex-shrink-0 ml-2">
+                                                    <div className="flex-shrink-0 ms-2">
                                                         <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded">
                                                             {yahrzeit.hebrew_day_of_death}
                                                         </span>
@@ -1612,7 +1614,7 @@ function MonthlyYahrzeitWorkflow({ currentHebrewDate, onClose }: MonthlyYahrzeit
                         </div>
                         <div className="flex gap-2">
                             <Button variant="outline" onClick={onClose} disabled={processing}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                             <Button
                                 onClick={handleSubmit}
@@ -1780,10 +1782,10 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
 
             {/* Step Labels */}
             <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                <span>Student Details</span>
-                <span>Parent/Guardian</span>
-                <span>Tuition Tier</span>
-                <span>Invoice Preview</span>
+                <span>{t('Student Details')}</span>
+                <span>{t('Parent/Guardian')}</span>
+                <span>{t('Tuition Tier')}</span>
+                <span>{t('Invoice Preview')}</span>
             </div>
 
             {/* Step Content */}
@@ -1791,10 +1793,10 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                 {step === 1 && (
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="font-medium text-lg">Student Information</h3>
+                            <h3 className="font-medium text-lg">{t('Student Information')}</h3>
                             <Button onClick={addStudent} size="sm">
-                                <UserPlus className="h-4 w-4 mr-1" />
-                                Add Another Student
+                                <UserPlus className="h-4 w-4 me-1" />
+                                {t('Add Another Student')}
                             </Button>
                         </div>
                         
@@ -1808,7 +1810,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                             size="sm" 
                                             onClick={() => removeStudent(index)}
                                         >
-                                            Remove
+                                            {t('Remove')}
                                         </Button>
                                     )}
                                 </div>
@@ -1833,7 +1835,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Middle Name</label>
+                                        <label className="block text-sm font-medium mb-1">{t('Middle Name')}</label>
                                         <input
                                             type="text"
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1842,16 +1844,16 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Gender</label>
+                                        <label className="block text-sm font-medium mb-1">{t('Gender')}</label>
                                         <select
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                                             value={student.gender}
                                             onChange={(e) => updateStudent(index, 'gender', e.target.value)}
                                         >
-                                            <option value="">Select gender</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="other">Other</option>
+                                            <option value="">{t('Select gender')}</option>
+                                            <option value="male">{t('Male')}</option>
+                                            <option value="female">{t('Female')}</option>
+                                            <option value="other">{t('Other')}</option>
                                         </select>
                                     </div>
                                     <div>
@@ -1864,7 +1866,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Email</label>
+                                        <label className="block text-sm font-medium mb-1">{t('Email')}</label>
                                         <input
                                             type="email"
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1873,7 +1875,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                         />
                                     </div>
                                     <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-1">Address</label>
+                                        <label className="block text-sm font-medium mb-1">{t('Address')}</label>
                                         <input
                                             type="text"
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -1891,7 +1893,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                                 className="rounded"
                                             />
                                             <label htmlFor={`is_parent_email_${index}`} className="text-sm">
-                                                Use parent's email
+                                                {t("Use parent's email")}
                                             </label>
                                         </div>
                                     </div>
@@ -1903,7 +1905,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
 
                 {step === 2 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Select or Create Parent/Guardian</h3>
+                        <h3 className="font-medium text-lg">{t('Select or Create Parent/Guardian')}</h3>
                         
                         <div className="space-y-3">
                             <label className="flex items-center space-x-3 p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900">
@@ -1919,13 +1921,13 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                             </label>
                             
                             {parentData.selection_type === 'existing_parent' && (
-                                <div className="ml-6">
+                                <div className="ms-6">
                                     <select
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                                         value={parentData.parent_id}
                                         onChange={(e) => setParentData({ ...parentData, parent_id: e.target.value })}
                                     >
-                                        <option value="">Select a parent</option>
+                                        <option value="">{t('Select a parent')}</option>
                                         {parents && parents.length > 0 ? (
                                             parents.map((parent) => (
                                                 <option key={parent.id} value={parent.id}>
@@ -1933,7 +1935,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                                 </option>
                                             ))
                                         ) : (
-                                            <option disabled>No parents available</option>
+                                            <option disabled>{t('No parents available')}</option>
                                         )}
                                     </select>
                                 </div>
@@ -1952,13 +1954,13 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                             </label>
                             
                             {parentData.selection_type === 'existing_member' && (
-                                <div className="ml-6">
+                                <div className="ms-6">
                                     <select
                                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
                                         value={parentData.member_id}
                                         onChange={(e) => setParentData({ ...parentData, member_id: e.target.value })}
                                     >
-                                        <option value="">Select a member</option>
+                                        <option value="">{t('Select a member')}</option>
                                         {members && members.length > 0 ? (
                                             members.map((member) => (
                                                 <option key={member.id} value={member.id}>
@@ -1966,7 +1968,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                                 </option>
                                             ))
                                         ) : (
-                                            <option disabled>No members available</option>
+                                            <option disabled>{t('No members available')}</option>
                                         )}
                                     </select>
                                 </div>
@@ -1981,11 +1983,11 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                     onChange={(e) => setParentData({ ...parentData, selection_type: e.target.value })}
                                     className="rounded-full"
                                 />
-                                <span>Create New Parent</span>
+                                <span>{t('Create New Parent')}</span>
                             </label>
                             
                             {parentData.selection_type === 'new_parent' && (
-                                <div className="ml-6 grid grid-cols-2 gap-4">
+                                <div className="ms-6 grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium mb-1">First Name *</label>
                                         <input
@@ -2014,7 +2016,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Date of Birth</label>
+                                        <label className="block text-sm font-medium mb-1">{t('Date of Birth')}</label>
                                         <input
                                             type="date"
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -2023,7 +2025,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                         />
                                     </div>
                                     <div className="col-span-2">
-                                        <label className="block text-sm font-medium mb-1">Address</label>
+                                        <label className="block text-sm font-medium mb-1">{t('Address')}</label>
                                         <input
                                             type="text"
                                             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800"
@@ -2039,13 +2041,13 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
 
                 {step === 3 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Select Tuition Tier</h3>
+                        <h3 className="font-medium text-lg">{t('Select Tuition Tier')}</h3>
                         <div className="text-sm text-gray-600 dark:text-gray-400">
                             Choose a tuition tier for {students.length} student{students.length > 1 ? 's' : ''}
                         </div>
                         {!schoolTuitionTiers || schoolTuitionTiers.length === 0 ? (
                             <div className="p-4 border border-gray-300 dark:border-gray-600 rounded-lg text-center text-gray-500 dark:text-gray-400">
-                                No tuition tiers available. Please contact administration.
+                                {t('No tuition tiers available. Please contact administration.')}
                             </div>
                         ) : (
                             <div className="space-y-3">
@@ -2071,14 +2073,14 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                                     <ul className="mt-2 space-y-1">
                                                         {tier.features.map((feature, idx) => (
                                                             <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
-                                                                <span className="mr-2">✓</span>
+                                                                <span className="me-2">✓</span>
                                                                 {feature}
                                                             </li>
                                                         ))}
                                                     </ul>
                                                 )}
                                             </div>
-                                            <div className="ml-4 text-right">
+                                            <div className="ms-4 text-end">
                                                 <div className="font-bold text-xl">
                                                     {formatCurrency(parseFloat(tier.price), currency)}
                                                 </div>
@@ -2094,7 +2096,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                         
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">Quantity (Students)</label>
+                                <label className="block text-sm font-medium mb-1">{t('Quantity (Students)')}</label>
                                 <input
                                     type="number"
                                     min="1"
@@ -2122,17 +2124,17 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                 onChange={(e) => setTuitionData({ ...tuitionData, create_invoice: e.target.checked })}
                                 className="rounded"
                             />
-                            <label htmlFor="create_invoice" className="text-sm">Create invoice for tuition</label>
+                            <label htmlFor="create_invoice" className="text-sm">{t('Create invoice for tuition')}</label>
                         </div>
                     </div>
                 )}
 
                 {step === 4 && (
                     <div className="space-y-4">
-                        <h3 className="font-medium text-lg">Review & Send Invoice</h3>
+                        <h3 className="font-medium text-lg">{t('Review & Send Invoice')}</h3>
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-3">
                             <div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">Students</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">{t('Students')}</div>
                                 {students.map((student, idx) => (
                                     <div key={idx} className="font-medium">
                                         {idx + 1}. {student.first_name} {student.last_name}
@@ -2142,7 +2144,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                             </div>
                             
                             <div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">Parent/Guardian</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">{t('Parent/Guardian')}</div>
                                 {parentData.selection_type === 'existing_parent' && parentData.parent_id && (() => {
                                     const selectedParent = parents.find(p => p.id.toString() === parentData.parent_id);
                                     return selectedParent ? (
@@ -2156,20 +2158,20 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                     return selectedMember ? (
                                         <div className="font-medium">
                                             {selectedMember.first_name} {selectedMember.last_name} - {selectedMember.email}
-                                            <span className="text-xs text-gray-600 dark:text-gray-400 ml-2">(Member → Parent)</span>
+                                            <span className="text-xs text-gray-600 dark:text-gray-400 ms-2">(Member → Parent)</span>
                                         </div>
                                     ) : null;
                                 })()}
                                 {parentData.selection_type === 'new_parent' && (
                                     <div className="font-medium">
                                         {parentData.first_name} {parentData.last_name} - {parentData.email}
-                                        <span className="text-xs text-gray-600 dark:text-gray-400 ml-2">(New)</span>
+                                        <span className="text-xs text-gray-600 dark:text-gray-400 ms-2">(New)</span>
                                     </div>
                                 )}
                             </div>
                             
                             <div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">Tuition</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">{t('Tuition')}</div>
                                 {tuitionData.tuition_tier_id && (() => {
                                     const selectedTier = schoolTuitionTiers.find(t => t.id.toString() === tuitionData.tuition_tier_id);
                                     return selectedTier ? (
@@ -2188,7 +2190,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                 const selectedTier = schoolTuitionTiers.find(t => t.id.toString() === tuitionData.tuition_tier_id);
                                 return selectedTier ? (
                                     <div>
-                                        <div className="text-sm text-gray-600 dark:text-gray-400">Total Invoice Amount</div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400">{t('Total Invoice Amount')}</div>
                                         <div className="font-medium text-lg">
                                             {formatCurrency(parseFloat(selectedTier.price) * tuitionData.quantity, currency)}
                                         </div>
@@ -2206,7 +2208,7 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                                     onChange={(e) => setTuitionData({ ...tuitionData, email_invoice: e.target.checked })}
                                     className="rounded"
                                 />
-                                <label htmlFor="email_invoice" className="text-sm">Email invoice to parent</label>
+                                <label htmlFor="email_invoice" className="text-sm">{t('Email invoice to parent')}</label>
                             </div>
                         )}
                     </div>
@@ -2220,15 +2222,15 @@ function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members, onClo
                     onClick={handleBack}
                     disabled={step === 1}
                 >
-                    Back
+                    {t('Back')}
                 </Button>
                 {step < 4 ? (
                     <Button onClick={handleNext}>
-                        Next
+                        {t('Next')}
                     </Button>
                 ) : (
                     <Button onClick={handleSubmit}>
-                        Complete Onboarding
+                        {t('Complete Onboarding')}
                     </Button>
                 )}
             </div>

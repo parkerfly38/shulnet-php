@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { router } from '@inertiajs/react';
 import {
     Calendar,
@@ -78,6 +79,7 @@ export function GlobalSearchDialog({
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }) {
+    const { t } = useTranslation();
     const [query, setQuery] = React.useState('');
     const [results, setResults] = React.useState<SearchResults>({
         members: [],
@@ -133,18 +135,18 @@ export function GlobalSearchDialog({
     return (
         <CommandDialog open={open} onOpenChange={onOpenChange}>
             <CommandInput
-                placeholder="Search members, students, deeds, yahrzeits..."
+                placeholder={t('Search members, students, deeds, yahrzeits...')}
                 value={query}
                 onValueChange={setQuery}
             />
             <CommandList>
                 {isLoading && (
                     <div className="py-6 text-center text-sm">
-                        Searching...
+                        {t('Searching...')}
                     </div>
                 )}
                 {!isLoading && query.length >= 2 && totalResults === 0 && (
-                    <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandEmpty>{t('No results found.')}</CommandEmpty>
                 )}
 
                 {results.members.length > 0 && (
@@ -153,9 +155,9 @@ export function GlobalSearchDialog({
                             <button
                                 key={`member-${member.id}`}
                                 onClick={() => handleSelect(member.url)}
-                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-left"
+                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-start"
                             >
-                                <User className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                <User className="me-2 h-4 w-4 shrink-0 opacity-50" />
                                 <div className="flex-1">
                                     <div className="font-medium">
                                         {member.name}
@@ -171,7 +173,7 @@ export function GlobalSearchDialog({
                                             <span>{member.phone}</span>
                                         )}
                                         {member.type && (
-                                            <span className="ml-2 rounded bg-blue-100 px-1.5 py-0.5 text-xs dark:bg-blue-900/30">
+                                            <span className="ms-2 rounded bg-blue-100 px-1.5 py-0.5 text-xs dark:bg-blue-900/30">
                                                 {member.type}
                                             </span>
                                         )}
@@ -188,9 +190,9 @@ export function GlobalSearchDialog({
                             <button
                                 key={`student-${student.id}`}
                                 onClick={() => handleSelect(student.url)}
-                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-left"
+                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-start"
                             >
-                                <GraduationCap className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                <GraduationCap className="me-2 h-4 w-4 shrink-0 opacity-50" />
                                 <div className="flex-1">
                                     <div className="font-medium">
                                         {student.name}
@@ -217,9 +219,9 @@ export function GlobalSearchDialog({
                             <button
                                 key={`parent-${parent.id}`}
                                 onClick={() => handleSelect(parent.url)}
-                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-left"
+                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-start"
                             >
-                                <Users className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                <Users className="me-2 h-4 w-4 shrink-0 opacity-50" />
                                 <div className="flex-1">
                                     <div className="font-medium">
                                         {parent.name}
@@ -247,9 +249,9 @@ export function GlobalSearchDialog({
                             <button
                                 key={`deed-${deed.id}`}
                                 onClick={() => handleSelect(deed.url)}
-                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-left"
+                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-start"
                             >
-                                <FileText className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                <FileText className="me-2 h-4 w-4 shrink-0 opacity-50" />
                                 <div className="flex-1">
                                     <div className="font-medium">
                                         Deed #{deed.number}
@@ -279,9 +281,9 @@ export function GlobalSearchDialog({
                             <button
                                 key={`yahrzeit-${yahrzeit.id}`}
                                 onClick={() => handleSelect(yahrzeit.url)}
-                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-left"
+                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-start"
                             >
-                                <Calendar className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                <Calendar className="me-2 h-4 w-4 shrink-0 opacity-50" />
                                 <div className="flex-1">
                                     <div className="font-medium">
                                         {yahrzeit.name}
@@ -310,9 +312,9 @@ export function GlobalSearchDialog({
                             <button
                                 key={`rsvp-${rsvp.id}`}
                                 onClick={() => handleSelect(rsvp.url)}
-                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-left"
+                                className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground text-start"
                             >
-                                <Mail className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                                <Mail className="me-2 h-4 w-4 shrink-0 opacity-50" />
                                 <div className="flex-1">
                                     <div className="font-medium">
                                         {rsvp.name}

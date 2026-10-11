@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export default function TemplateIndex({ templates }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null);
@@ -63,22 +65,22 @@ export default function TemplateIndex({ templates }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Email Templates" />
+      <Head title={t('Email Templates')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Email Templates</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage reusable email templates for campaigns</p>
+            <h1 className="text-3xl font-bold">{t('Email Templates')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage reusable email templates for campaigns')}</p>
           </div>
           <Link href="/admin/templates/create">
-            <Button>Create Template</Button>
+            <Button>{t('Create Template')}</Button>
           </Link>
         </div>
 
         <div className="flex gap-4 items-center">
           <Input
-            placeholder="Search templates..."
+            placeholder={t('Search templates...')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-sm"
@@ -90,11 +92,11 @@ export default function TemplateIndex({ templates }: Readonly<Props>) {
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Subject</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Updated</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Name')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Subject')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Description')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Updated')}</th>
+                <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
@@ -126,13 +128,13 @@ export default function TemplateIndex({ templates }: Readonly<Props>) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(template.updated_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-end">
                       <div className="flex justify-end gap-2">
                         <Link href={`/admin/templates/${template.id}`}>
-                          <Button variant="outline" size="sm">View</Button>
+                          <Button variant="outline" size="sm">{t('View')}</Button>
                         </Link>
                         <Link href={`/admin/templates/${template.id}/edit`}>
-                          <Button variant="outline" size="sm">Edit</Button>
+                          <Button variant="outline" size="sm">{t('Edit')}</Button>
                         </Link>
                         <Button
                           variant="outline"
@@ -157,17 +159,17 @@ export default function TemplateIndex({ templates }: Readonly<Props>) {
       <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Template</DialogTitle>
+            <DialogTitle>{t('Delete Template')}</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete "{selectedTemplate?.name}"? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteDialog(false)}>
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
-              Delete
+              {t('Delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

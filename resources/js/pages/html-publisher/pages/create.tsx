@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export default function HtmlPageCreate({ templates }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm<HtmlPageFormData>({
     title: '',
     slug: '',
@@ -76,7 +78,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Page" />
+      <Head title={t('Create Page')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 p-4">
         <div>
@@ -99,7 +101,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                     value={data.title}
                     onChange={(e) => handleTitleChange(e.target.value)}
                     required
-                    placeholder="About Our Congregation"
+                    placeholder={t('About Our Congregation')}
                   />
                   {errors.title && <p className="text-sm text-red-600">{errors.title}</p>}
                 </div>
@@ -109,7 +111,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                     id="slug"
                     value={data.slug}
                     onChange={(e) => setData('slug', e.target.value)}
-                    placeholder="about-us"
+                    placeholder={t('about-us')}
                   />
                   {errors.slug && <p className="text-sm text-red-600">{errors.slug}</p>}
                   <p className="text-sm text-gray-500">Auto-generated from title, but you can customize it</p>
@@ -124,7 +126,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                     onValueChange={(value) => setData('template_id', value ? Number.parseInt(value) : null)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="No template" />
+                      <SelectValue placeholder={t('No template')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value=" ">No template</SelectItem>
@@ -198,7 +200,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                       <RichTextEditor
                         value={data.content}
                         onChange={(value) => setData('content', value)}
-                        placeholder="Enter your page content here..."
+                        placeholder={t('Enter your page content here...')}
                       />
                       {errors.content && <p className="text-sm text-red-600">{errors.content}</p>}
                     </div>
@@ -219,7 +221,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                   <RichTextEditor
                     value={data.header}
                     onChange={(value) => setData('header', value)}
-                    placeholder="Optional custom header (overrides template)"
+                    placeholder={t('Optional custom header (overrides template)')}
                   />
                   <p className="text-sm text-gray-500">Leave empty to use template header if a template is selected</p>
                 </TabsContent>
@@ -229,7 +231,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                   <RichTextEditor
                     value={data.navigation}
                     onChange={(value) => setData('navigation', value)}
-                    placeholder="Optional custom navigation"
+                    placeholder={t('Optional custom navigation')}
                   />
                   <p className="text-sm text-gray-500">Leave empty to use template navigation if a template is selected</p>
                 </TabsContent>
@@ -239,7 +241,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                   <RichTextEditor
                     value={data.footer}
                     onChange={(value) => setData('footer', value)}
-                    placeholder="Optional custom footer (overrides template)"
+                    placeholder={t('Optional custom footer (overrides template)')}
                   />
                   <p className="text-sm text-gray-500">Leave empty to use template footer if a template is selected</p>
                 </TabsContent>
@@ -251,7 +253,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                       id="meta_description"
                       value={data.meta_description}
                       onChange={(e) => setData('meta_description', e.target.value)}
-                      placeholder="A brief description of this page for search engines"
+                      placeholder={t('A brief description of this page for search engines')}
                     />
                     <p className="text-sm text-gray-500">Recommended: 150-160 characters</p>
                   </div>
@@ -261,7 +263,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
                       id="meta_keywords"
                       value={data.meta_keywords}
                       onChange={(e) => setData('meta_keywords', e.target.value)}
-                      placeholder="keyword1, keyword2, keyword3"
+                      placeholder={t('keyword1, keyword2, keyword3')}
                     />
                     <p className="text-sm text-gray-500">Comma-separated keywords</p>
                   </div>
@@ -277,7 +279,7 @@ export default function HtmlPageCreate({ templates }: Readonly<Props>) {
               onClick={() => window.history.back()}
               disabled={processing}
             >
-              Cancel
+              {t('Cancel')}
             </Button>
             <Button type="submit" disabled={processing}>
               {processing ? 'Creating...' : 'Create Page'}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Committee, Board, BreadcrumbItem } from '@/types';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function Create({ meetable, meetableType }: Readonly<Props>) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         agenda: '',
@@ -40,14 +42,14 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 max-w-2xl">
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold">Schedule Meeting</h1>
+                    <h1 className="text-3xl font-bold">{t('Schedule Meeting')}</h1>
                     <p className="text-muted-foreground mt-1">{meetable.name}</p>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Meeting Details</CardTitle>
-                        <CardDescription>Schedule a new meeting and set the agenda</CardDescription>
+                        <CardTitle>{t('Meeting Details')}</CardTitle>
+                        <CardDescription>{t('Schedule a new meeting and set the agenda')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -57,7 +59,7 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
                                     id="title"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
-                                    placeholder="e.g., Monthly Planning Meeting"
+                                    placeholder={t('e.g., Monthly Planning Meeting')}
                                     required
                                 />
                                 {errors.title && (
@@ -80,12 +82,12 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="location">Location</Label>
+                                <Label htmlFor="location">{t('Location')}</Label>
                                 <Input
                                     id="location"
                                     value={data.location}
                                     onChange={(e) => setData('location', e.target.value)}
-                                    placeholder="e.g., Conference Room, Synagogue Office"
+                                    placeholder={t('e.g., Conference Room, Synagogue Office')}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     Optional: Physical location for in-person meetings
@@ -96,13 +98,13 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="meeting_link">Meeting Link</Label>
+                                <Label htmlFor="meeting_link">{t('Meeting Link')}</Label>
                                 <Input
                                     id="meeting_link"
                                     type="url"
                                     value={data.meeting_link}
                                     onChange={(e) => setData('meeting_link', e.target.value)}
-                                    placeholder="https://zoom.us/j/..."
+                                    placeholder={t('https://zoom.us/j/...')}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     Optional: Zoom, Google Meet, or other video conferencing link
@@ -113,12 +115,12 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="agenda">Agenda</Label>
+                                <Label htmlFor="agenda">{t('Agenda')}</Label>
                                 <Textarea
                                     id="agenda"
                                     value={data.agenda}
                                     onChange={(e) => setData('agenda', e.target.value)}
-                                    placeholder="Meeting agenda and discussion topics..."
+                                    placeholder={t('Meeting agenda and discussion topics...')}
                                     rows={8}
                                 />
                                 {errors.agenda && (
@@ -128,7 +130,7 @@ export default function Create({ meetable, meetableType }: Readonly<Props>) {
 
                             <div className="flex justify-end gap-2">
                                 <Button type="button" variant="outline" asChild>
-                                    <Link href={`/admin/meetings/${meetableType}/${meetable.id}`}>Cancel</Link>
+                                    <Link href={`/admin/meetings/${meetableType}/${meetable.id}`}>{t('Cancel')}</Link>
                                 </Button>
                                 <Button type="submit" disabled={processing}>
                                     {processing ? 'Creating...' : 'Create Meeting'}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Committee, Board, Meeting, BreadcrumbItem } from '@/types';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function Index({ meetable, meetableType, meetings }: Readonly<Props>) {
+    const { t } = useTranslation();
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             weekday: 'long',
@@ -52,23 +54,23 @@ export default function Index({ meetable, meetableType, meetings }: Readonly<Pro
                 <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold">{meetable.name} Meetings</h1>
-                        <p className="text-muted-foreground mt-1">Manage meetings, agendas, and minutes</p>
+                        <p className="text-muted-foreground mt-1">{t('Manage meetings, agendas, and minutes')}</p>
                     </div>
                     <Button asChild>
                         <Link href={`/admin/meetings/${meetableType}/${meetable.id}/create`}>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Schedule Meeting
+                            <Plus className="me-2 h-4 w-4" />
+                            {t('Schedule Meeting')}
                         </Link>
                     </Button>
                 </div>
 
                 {/* Upcoming Meetings */}
                 <div className="mb-8">
-                    <h2 className="text-xl font-semibold mb-4">Upcoming Meetings</h2>
+                    <h2 className="text-xl font-semibold mb-4">{t('Upcoming Meetings')}</h2>
                     {upcomingMeetings.length === 0 ? (
                         <Card>
                             <CardContent className="py-8 text-center text-muted-foreground">
-                                No upcoming meetings scheduled
+                                {t('No upcoming meetings scheduled')}
                             </CardContent>
                         </Card>
                     ) : (
@@ -81,44 +83,44 @@ export default function Index({ meetable, meetableType, meetings }: Readonly<Pro
                                                 <CardTitle className="text-xl">{meeting.title}</CardTitle>
                                                 <CardDescription className="mt-2 flex flex-wrap gap-4">
                                                     <span className="flex items-center">
-                                                        <Calendar className="mr-1 h-4 w-4" />
+                                                        <Calendar className="me-1 h-4 w-4" />
                                                         {formatDate(meeting.meeting_date)}
                                                     </span>
                                                     <span className="flex items-center">
-                                                        <Clock className="mr-1 h-4 w-4" />
+                                                        <Clock className="me-1 h-4 w-4" />
                                                         {formatTime(meeting.meeting_date)}
                                                     </span>
                                                     {meeting.location && (
                                                         <span className="flex items-center">
-                                                            <MapPin className="mr-1 h-4 w-4" />
+                                                            <MapPin className="me-1 h-4 w-4" />
                                                             {meeting.location}
                                                         </span>
                                                     )}
                                                     {meeting.meeting_link && (
                                                         <span className="flex items-center">
-                                                            <Video className="mr-1 h-4 w-4" />
+                                                            <Video className="me-1 h-4 w-4" />
                                                             <a 
                                                                 href={meeting.meeting_link} 
                                                                 target="_blank" 
                                                                 rel="noopener noreferrer"
                                                                 className="text-primary hover:underline"
                                                             >
-                                                                Join Meeting
+                                                                {t('Join Meeting')}
                                                             </a>
                                                         </span>
                                                     )}
                                                 </CardDescription>
                                             </div>
-                                            <Badge variant="default">Upcoming</Badge>
+                                            <Badge variant="default">{t('Upcoming')}</Badge>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex justify-end gap-2">
                                             <Button variant="outline" asChild>
-                                                <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}`}>View Details</Link>
+                                                <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}`}>{t('View Details')}</Link>
                                             </Button>
                                             <Button variant="outline" asChild>
-                                                <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}/edit`}>Edit</Link>
+                                                <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}/edit`}>{t('Edit')}</Link>
                                             </Button>
                                         </div>
                                     </CardContent>
@@ -130,11 +132,11 @@ export default function Index({ meetable, meetableType, meetings }: Readonly<Pro
 
                 {/* Past Meetings */}
                 <div>
-                    <h2 className="text-xl font-semibold mb-4">Past Meetings</h2>
+                    <h2 className="text-xl font-semibold mb-4">{t('Past Meetings')}</h2>
                     {pastMeetings.length === 0 ? (
                         <Card>
                             <CardContent className="py-8 text-center text-muted-foreground">
-                                No past meetings
+                                {t('No past meetings')}
                             </CardContent>
                         </Card>
                     ) : (
@@ -147,34 +149,34 @@ export default function Index({ meetable, meetableType, meetings }: Readonly<Pro
                                                 <CardTitle className="text-xl">{meeting.title}</CardTitle>
                                                 <CardDescription className="mt-2 flex flex-wrap gap-4">
                                                     <span className="flex items-center">
-                                                        <Calendar className="mr-1 h-4 w-4" />
+                                                        <Calendar className="me-1 h-4 w-4" />
                                                         {formatDate(meeting.meeting_date)}
                                                     </span>
                                                     <span className="flex items-center">
-                                                        <Clock className="mr-1 h-4 w-4" />
+                                                        <Clock className="me-1 h-4 w-4" />
                                                         {formatTime(meeting.meeting_date)}
                                                     </span>
                                                     {meeting.location && (
                                                         <span className="flex items-center">
-                                                            <MapPin className="mr-1 h-4 w-4" />
+                                                            <MapPin className="me-1 h-4 w-4" />
                                                             {meeting.location}
                                                         </span>
                                                     )}
                                                     {meeting.minutes && (
                                                         <span className="flex items-center text-green-600">
-                                                            <FileText className="mr-1 h-4 w-4" />
-                                                            Minutes Available
+                                                            <FileText className="me-1 h-4 w-4" />
+                                                            {t('Minutes Available')}
                                                         </span>
                                                     )}
                                                 </CardDescription>
                                             </div>
-                                            <Badge variant="secondary">Past</Badge>
+                                            <Badge variant="secondary">{t('Past')}</Badge>
                                         </div>
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex justify-end gap-2">
                                             <Button variant="outline" asChild>
-                                                <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}`}>View Details</Link>
+                                                <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}`}>{t('View Details')}</Link>
                                             </Button>
                                         </div>
                                     </CardContent>

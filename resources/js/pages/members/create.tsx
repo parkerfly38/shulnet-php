@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -42,6 +43,7 @@ interface MemberForm {
 }
 
 export default function MembersCreate() {
+    const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm<MemberForm>({
     member_type: 'member',
     first_name: '',
@@ -87,16 +89,16 @@ export default function MembersCreate() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Add New Member" />
+      <Head title={t('Add New Member')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              Add New Member
+              {t('Add New Member')}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Create a new member profile
+              {t('Create a new member profile')}
             </p>
           </div>
         </div>
@@ -104,7 +106,7 @@ export default function MembersCreate() {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
-              Personal Information
+              {t('Personal Information')}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -112,13 +114,13 @@ export default function MembersCreate() {
                 <Label htmlFor="member_type">Type *</Label>
                 <Select value={data.member_type} onValueChange={(value: any) => setData('member_type', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={t('Select type')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="member">Member</SelectItem>
-                    <SelectItem value="contact">Contact</SelectItem>
-                    <SelectItem value="prospect">Prospect</SelectItem>
-                    <SelectItem value="former">Former Member</SelectItem>
+                    <SelectItem value="member">{t('Member')}</SelectItem>
+                    <SelectItem value="contact">{t('Contact')}</SelectItem>
+                    <SelectItem value="prospect">{t('Prospect')}</SelectItem>
+                    <SelectItem value="former">{t('Former Member')}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.member_type && (
@@ -127,11 +129,11 @@ export default function MembersCreate() {
               </div>
 
               <div>
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor="title">{t('Title')}</Label>
                 <Input
                   id="title"
                   type="text"
-                  placeholder="Mr., Mrs., Dr., Rabbi, etc."
+                  placeholder={t('Mr., Mrs., Dr., Rabbi, etc.')}
                   value={data.title}
                   onChange={(e) => setData('title', e.target.value)}
                 />
@@ -155,7 +157,7 @@ export default function MembersCreate() {
               </div>
 
               <div>
-                <Label htmlFor="middle_name">Middle Name</Label>
+                <Label htmlFor="middle_name">{t('Middle Name')}</Label>
                 <Input
                   id="middle_name"
                   type="text"
@@ -184,15 +186,15 @@ export default function MembersCreate() {
               </div>
 
               <div>
-                <Label htmlFor="gender">Gender</Label>
+                <Label htmlFor="gender">{t('Gender')}</Label>
                 <Select value={data.gender} onValueChange={(value) => setData('gender', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
+                    <SelectValue placeholder={t('Select gender')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="male">{t('Male')}</SelectItem>
+                    <SelectItem value="female">{t('Female')}</SelectItem>
+                    <SelectItem value="other">{t('Other')}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.gender && (
@@ -202,7 +204,7 @@ export default function MembersCreate() {
             </div>
 
             <div className="mt-6">
-              <Label htmlFor="dob">Date of Birth</Label>
+              <Label htmlFor="dob">{t('Date of Birth')}</Label>
               <Input
                 id="dob"
                 type="date"
@@ -228,18 +230,18 @@ export default function MembersCreate() {
 
           <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
-              Contact Information
+              {t('Contact Information')}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">{t('Email Address')}</Label>
                 <Input
                   id="email"
                   type="email"
                   value={data.email}
                   onChange={(e) => setData('email', e.target.value)}
-                  placeholder="Optional - needed for user account"
+                  placeholder={t('Optional - needed for user account')}
                 />
                 {errors.email && (
                   <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.email}</p>
@@ -247,7 +249,7 @@ export default function MembersCreate() {
               </div>
 
               <div>
-                <Label htmlFor="phone1">Primary Phone</Label>
+                <Label htmlFor="phone1">{t('Primary Phone')}</Label>
                 <Input
                   id="phone1"
                   type="tel"
@@ -261,7 +263,7 @@ export default function MembersCreate() {
             </div>
 
             <div className="mt-6">
-              <Label htmlFor="phone2">Secondary Phone</Label>
+              <Label htmlFor="phone2">{t('Secondary Phone')}</Label>
               <Input
                 id="phone2"
                 type="tel"
@@ -276,7 +278,7 @@ export default function MembersCreate() {
 
           <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
-              Address Information
+              {t('Address Information')}
             </h2>
             
             <div className="space-y-6">
@@ -285,7 +287,7 @@ export default function MembersCreate() {
                 <Input
                   id="address_line_1"
                   type="text"
-                  placeholder="Street address"
+                  placeholder={t('Street address')}
                   value={data.address_line_1}
                   onChange={(e) => setData('address_line_1', e.target.value)}
                 />
@@ -299,7 +301,7 @@ export default function MembersCreate() {
                 <Input
                   id="address_line_2"
                   type="text"
-                  placeholder="Apartment, suite, etc."
+                  placeholder={t('Apartment, suite, etc.')}
                   value={data.address_line_2}
                   onChange={(e) => setData('address_line_2', e.target.value)}
                 />
@@ -310,7 +312,7 @@ export default function MembersCreate() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <Label htmlFor="city">City</Label>
+                  <Label htmlFor="city">{t('City')}</Label>
                   <Input
                     id="city"
                     type="text"
@@ -323,7 +325,7 @@ export default function MembersCreate() {
                 </div>
 
                 <div>
-                  <Label htmlFor="state">State/Province</Label>
+                  <Label htmlFor="state">{t('State/Province')}</Label>
                   <Input
                     id="state"
                     type="text"
@@ -336,7 +338,7 @@ export default function MembersCreate() {
                 </div>
 
                 <div>
-                  <Label htmlFor="zip">ZIP/Postal Code</Label>
+                  <Label htmlFor="zip">{t('ZIP/Postal Code')}</Label>
                   <Input
                     id="zip"
                     type="text"
@@ -350,11 +352,11 @@ export default function MembersCreate() {
               </div>
 
               <div>
-                <Label htmlFor="country">Country</Label>
+                <Label htmlFor="country">{t('Country')}</Label>
                 <Input
                   id="country"
                   type="text"
-                  placeholder="United States"
+                  placeholder={t('United States')}
                   value={data.country}
                   onChange={(e) => setData('country', e.target.value)}
                 />
@@ -367,16 +369,16 @@ export default function MembersCreate() {
 
           <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
-              Hebrew/Jewish Information
+              {t('Hebrew/Jewish Information')}
             </h2>
             
             <div className="space-y-6">
               <div>
-                <Label htmlFor="hebrew_name">Hebrew Name</Label>
+                <Label htmlFor="hebrew_name">{t('Hebrew Name')}</Label>
                 <Input
                   id="hebrew_name"
                   type="text"
-                  placeholder="Hebrew name"
+                  placeholder={t('Hebrew name')}
                   value={data.hebrew_name}
                   onChange={(e) => setData('hebrew_name', e.target.value)}
                 />
@@ -387,11 +389,11 @@ export default function MembersCreate() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="father_hebrew_name">Father's Hebrew Name</Label>
+                  <Label htmlFor="father_hebrew_name">{t("Father's Hebrew Name")}</Label>
                   <Input
                     id="father_hebrew_name"
                     type="text"
-                    placeholder="Father's Hebrew name"
+                    placeholder={t("Father's Hebrew name")}
                     value={data.father_hebrew_name}
                     onChange={(e) => setData('father_hebrew_name', e.target.value)}
                   />
@@ -401,11 +403,11 @@ export default function MembersCreate() {
                 </div>
 
                 <div>
-                  <Label htmlFor="mother_hebrew_name">Mother's Hebrew Name</Label>
+                  <Label htmlFor="mother_hebrew_name">{t("Mother's Hebrew Name")}</Label>
                   <Input
                     id="mother_hebrew_name"
                     type="text"
-                    placeholder="Mother's Hebrew name"
+                    placeholder={t("Mother's Hebrew name")}
                     value={data.mother_hebrew_name}
                     onChange={(e) => setData('mother_hebrew_name', e.target.value)}
                   />
@@ -417,15 +419,15 @@ export default function MembersCreate() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="tribe">Tribe</Label>
+                  <Label htmlFor="tribe">{t('Tribe')}</Label>
                   <Select value={data.tribe} onValueChange={(value) => setData('tribe', value)}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select tribe" />
+                      <SelectValue placeholder={t('Select tribe')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="israel">Israel</SelectItem>
-                      <SelectItem value="kohein">Kohein</SelectItem>
-                      <SelectItem value="levi">Levi</SelectItem>
+                      <SelectItem value="israel">{t('Israel')}</SelectItem>
+                      <SelectItem value="kohein">{t('Kohein')}</SelectItem>
+                      <SelectItem value="levi">{t('Levi')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.tribe && (
@@ -434,7 +436,7 @@ export default function MembersCreate() {
                 </div>
 
                 <div>
-                  <Label htmlFor="bnaimitzvahdate">B'nai Mitzvah Date</Label>
+                  <Label htmlFor="bnaimitzvahdate">{t("B'nai Mitzvah Date")}</Label>
                   <Input
                     id="bnaimitzvahdate"
                     type="date"
@@ -448,7 +450,7 @@ export default function MembersCreate() {
               </div>
 
               <div>
-                <Label htmlFor="anniversary_date">Anniversary Date</Label>
+                <Label htmlFor="anniversary_date">{t('Anniversary Date')}</Label>
                 <Input
                   id="anniversary_date"
                   type="date"
@@ -464,7 +466,7 @@ export default function MembersCreate() {
 
           <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6">
-              Religious Roles & Capabilities
+              {t('Religious Roles & Capabilities')}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -478,7 +480,7 @@ export default function MembersCreate() {
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <Label htmlFor="aliyah" className="text-sm font-medium">
-                    Aliyah
+                    {t('Aliyah')}
                   </Label>
                 </div>
 
@@ -504,7 +506,7 @@ export default function MembersCreate() {
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <Label htmlFor="dvartorah" className="text-sm font-medium">
-                    D'var Torah
+                    {t("D'var Torah")}
                   </Label>
                 </div>
               </div>
@@ -519,7 +521,7 @@ export default function MembersCreate() {
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <Label htmlFor="brianbatorah" className="text-sm font-medium">
-                    Bri'an BaTorah
+                    {t("Bri'an BaTorah")}
                   </Label>
                 </div>
 
@@ -532,7 +534,7 @@ export default function MembersCreate() {
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <Label htmlFor="maftir" className="text-sm font-medium">
-                    Maftir
+                    {t('Maftir')}
                   </Label>
                 </div>
 
@@ -545,7 +547,7 @@ export default function MembersCreate() {
                     className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                   />
                   <Label htmlFor="deceased" className="text-sm font-medium">
-                    Deceased
+                    {t('Deceased')}
                   </Label>
                 </div>
               </div>
@@ -555,16 +557,16 @@ export default function MembersCreate() {
           <div className="flex justify-end gap-4">
             <Link href="/admin/members">
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>
               {processing ? (
-                <>Saving...</>
+                <>{t('Saving...')}</>
               ) : (
                 <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Member
+                  <Save className="h-4 w-4 me-2" />
+                  {t('Save Member')}
                 </>
               )}
             </Button>

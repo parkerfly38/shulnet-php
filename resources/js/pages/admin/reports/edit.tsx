@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export default function ReportsEdit({ report, reportable, reportableType }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, put, processing, errors } = useForm({
     title: report.title,
     report_date: report.report_date,
@@ -65,14 +67,14 @@ export default function ReportsEdit({ report, reportable, reportableType }: Read
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Report</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Edit Report')}</h1>
             <p className="text-muted-foreground mt-2">{reportable.name}</p>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Report Details</CardTitle>
+            <CardTitle>{t('Report Details')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -82,7 +84,7 @@ export default function ReportsEdit({ report, reportable, reportableType }: Read
                   id="title"
                   value={data.title}
                   onChange={(e) => setData('title', e.target.value)}
-                  placeholder="e.g., Q1 2026 Financial Report, Annual Summary"
+                  placeholder={t('e.g., Q1 2026 Financial Report, Annual Summary')}
                   required
                 />
                 {errors.title && (
@@ -110,7 +112,7 @@ export default function ReportsEdit({ report, reportable, reportableType }: Read
                   id="content"
                   value={data.content}
                   onChange={(e) => setData('content', e.target.value)}
-                  placeholder="Enter the full report content here..."
+                  placeholder={t('Enter the full report content here...')}
                   rows={15}
                   required
                 />
@@ -122,7 +124,7 @@ export default function ReportsEdit({ report, reportable, reportableType }: Read
               <div className="flex justify-end gap-2">
                 <Link href={backUrl}>
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                 </Link>
                 <Button type="submit" disabled={processing}>

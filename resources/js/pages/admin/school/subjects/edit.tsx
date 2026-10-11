@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ interface EditProps {
 }
 
 export default function Edit({ item }: Readonly<EditProps>) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Subjects', href: '/admin/school/subjects' },
@@ -50,14 +52,14 @@ export default function Edit({ item }: Readonly<EditProps>) {
 
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold leading-tight text-gray-800">
-                    Edit Subject
+                    {t('Edit Subject')}
                 </h2>
                 <div className="flex gap-2">
                     <Link href={subjects.index.url()}>
-                        <Button variant="outline">Back to List</Button>
+                        <Button variant="outline">{t('Back to List')}</Button>
                     </Link>
                     <Link href={subjects.show.url(item.id)}>
-                        <Button variant="outline">View</Button>
+                        <Button variant="outline">{t('View')}</Button>
                     </Link>
                 </div>
             </div>
@@ -66,7 +68,7 @@ export default function Edit({ item }: Readonly<EditProps>) {
                 <div className="">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Edit Subject Information</CardTitle>
+                            <CardTitle>{t('Edit Subject Information')}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={submit} className="space-y-6">
@@ -86,7 +88,7 @@ export default function Edit({ item }: Readonly<EditProps>) {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="subject_code">Subject Code</Label>
+                                    <Label htmlFor="subject_code">{t('Subject Code')}</Label>
                                     <Input
                                         id="subject_code"
                                         type="text"
@@ -100,7 +102,7 @@ export default function Edit({ item }: Readonly<EditProps>) {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="class_id">Class ID</Label>
+                                    <Label htmlFor="class_id">{t('Class ID')}</Label>
                                     <Input
                                         id="class_id"
                                         type="number"
@@ -114,7 +116,7 @@ export default function Edit({ item }: Readonly<EditProps>) {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="teacher_id">Teacher ID</Label>
+                                    <Label htmlFor="teacher_id">{t('Teacher ID')}</Label>
                                     <Input
                                         id="teacher_id"
                                         type="number"
@@ -128,7 +130,7 @@ export default function Edit({ item }: Readonly<EditProps>) {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="books">Books</Label>
+                                    <Label htmlFor="books">{t('Books')}</Label>
                                     <Textarea
                                         id="books"
                                         value={data.books}
@@ -144,11 +146,11 @@ export default function Edit({ item }: Readonly<EditProps>) {
                                 <div className="flex justify-end gap-2">
                                     <Link href={subjects.index.url()}>
                                         <Button type="button" variant="outline">
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
                                     </Link>
                                     <Button type="submit" disabled={processing}>
-                                        Update Subject
+                                        {t('Update Subject')}
                                     </Button>
                                 </div>
                             </form>

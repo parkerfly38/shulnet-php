@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -27,6 +28,7 @@ interface Attendance {
 }
 
 export default function AttendanceIndex() {
+    const { t } = useTranslation();
     const [attendances, setAttendances] = useState<Attendance[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchDate, setSearchDate] = useState(new Date().toISOString().split('T')[0]);
@@ -75,21 +77,21 @@ export default function AttendanceIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Attendance" />
+            <Head title={t('Attendance')} />
             <div className="p-4">
                 <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold">Student Attendance</h1>
+                    <h1 className="text-2xl font-bold">{t('Student Attendance')}</h1>
                     <Link href="/admin/school/attendance/mark">
                         <Button>
-                            <Plus className="w-4 h-4 mr-2" />
-                            Mark Attendance
+                            <Plus className="w-4 h-4 me-2" />
+                            {t('Mark Attendance')}
                         </Button>
                     </Link>
                 </div>
 
                 <div className="mb-4 flex gap-4 items-end bg-white dark:bg-black p-4 rounded border">
                     <div className="flex-1">
-                        <label className="block text-sm font-medium mb-1">Date</label>
+                        <label className="block text-sm font-medium mb-1">{t('Date')}</label>
                         <input
                             type="date"
                             value={searchDate}
@@ -98,45 +100,45 @@ export default function AttendanceIndex() {
                         />
                     </div>
                     <div className="flex-1">
-                        <label className="block text-sm font-medium mb-1">Status</label>
+                        <label className="block text-sm font-medium mb-1">{t('Status')}</label>
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
                             className="w-full rounded border p-2"
                         >
-                            <option value="">All Statuses</option>
-                            <option value="present">Present</option>
-                            <option value="absent">Absent</option>
-                            <option value="tardy">Tardy</option>
-                            <option value="excused">Excused</option>
+                            <option value="">{t('All Statuses')}</option>
+                            <option value="present">{t('Present')}</option>
+                            <option value="absent">{t('Absent')}</option>
+                            <option value="tardy">{t('Tardy')}</option>
+                            <option value="excused">{t('Excused')}</option>
                         </select>
                     </div>
                     <Button onClick={() => fetchAttendances()}>
-                        <Search className="w-4 h-4 mr-2" />
-                        Search
+                        <Search className="w-4 h-4 me-2" />
+                        {t('Search')}
                     </Button>
                 </div>
 
                 {loading ? (
-                    <p>Loading...</p>
+                    <p>{t('Loading...')}</p>
                 ) : (
                     <>
                         <div className="bg-white dark:bg-black rounded border overflow-hidden">
                             <table className="w-full">
                                 <thead className="bg-gray-50 dark:bg-gray-900">
                                     <tr>
-                                        <th className="px-4 py-2 text-left">Date</th>
-                                        <th className="px-4 py-2 text-left">Student</th>
-                                        <th className="px-4 py-2 text-left">Class</th>
-                                        <th className="px-4 py-2 text-left">Status</th>
-                                        <th className="px-4 py-2 text-left">Notes</th>
+                                        <th className="px-4 py-2 text-start">{t('Date')}</th>
+                                        <th className="px-4 py-2 text-start">{t('Student')}</th>
+                                        <th className="px-4 py-2 text-start">{t('Class')}</th>
+                                        <th className="px-4 py-2 text-start">{t('Status')}</th>
+                                        <th className="px-4 py-2 text-start">{t('Notes')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {attendances.length === 0 ? (
                                         <tr>
                                             <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                                                No attendance records found
+                                                {t('No attendance records found')}
                                             </td>
                                         </tr>
                                     ) : (
@@ -178,7 +180,7 @@ export default function AttendanceIndex() {
                                     onClick={() => fetchAttendances(currentPage - 1)}
                                     disabled={currentPage === 1}
                                 >
-                                    Previous
+                                    {t('Previous')}
                                 </Button>
                                 <span className="px-4 py-2">
                                     Page {currentPage} of {lastPage}
@@ -188,7 +190,7 @@ export default function AttendanceIndex() {
                                     onClick={() => fetchAttendances(currentPage + 1)}
                                     disabled={currentPage === lastPage}
                                 >
-                                    Next
+                                    {t('Next')}
                                 </Button>
                             </div>
                         )}

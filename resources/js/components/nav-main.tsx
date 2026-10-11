@@ -11,6 +11,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { isNavItemActive } from '@/lib/utils';
+import { useTranslation } from '@/hooks/use-translation';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronDown } from 'lucide-react';
@@ -24,6 +25,7 @@ export function NavMain({
     isActiveSection?: boolean;
 }) {
     const page = usePage();
+    const { t } = useTranslation();
     const groupTitle = items[0]?.groupTitle;
     const [isOpen, setIsOpen] = useState(isActiveSection);
 
@@ -36,9 +38,9 @@ export function NavMain({
                             <button
                                 type="button"
                                 className="w-full cursor-pointer justify-between"
-                                aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${groupTitle}`}
+                                aria-label={`${isOpen ? t('Collapse') : t('Expand')} ${t(groupTitle)}`}
                             >
-                                <span>{groupTitle}</span>
+                                <span>{t(groupTitle)}</span>
                                 <ChevronDown
                                     className={`size-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                                 />
@@ -56,11 +58,11 @@ export function NavMain({
                                         page.url,
                                         item.href,
                                     )}
-                                    tooltip={{ children: item.title }}
+                                    tooltip={{ children: t(item.title) }}
                                 >
                                     <Link href={item.href} prefetch>
                                         {item.icon && <item.icon />}
-                                        <span>{item.title}</span>
+                                        <span>{t(item.title)}</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

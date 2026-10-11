@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState, FormEvent } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -24,6 +25,7 @@ interface FormData {
 }
 
 export default function CreateMembershipTier() {
+    const { t } = useTranslation();
   const [currentFeature, setCurrentFeature] = useState('');
   const { data, setData, post, processing, errors } = useForm<FormData>({
     name: '',
@@ -75,15 +77,15 @@ export default function CreateMembershipTier() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Membership Tier" />
+      <Head title={t('Create Membership Tier')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Membership Tier</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Create Membership Tier')}</h1>
             <p className="text-muted-foreground mt-2">
-              Add a new membership tier type with pricing
+              {t('Add a new membership tier type with pricing')}
             </p>
           </div>
         </div>
@@ -92,9 +94,9 @@ export default function CreateMembershipTier() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle>{t('Basic Information')}</CardTitle>
               <CardDescription>
-                Enter the basic details for this membership tier
+                {t('Enter the basic details for this membership tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -105,7 +107,7 @@ export default function CreateMembershipTier() {
                     id="name"
                     value={data.name}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="e.g., Family Membership"
+                    placeholder={t('e.g., Family Membership')}
                     required
                   />
                   {errors.name && (
@@ -114,29 +116,29 @@ export default function CreateMembershipTier() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="slug">Slug</Label>
+                  <Label htmlFor="slug">{t('Slug')}</Label>
                   <Input
                     id="slug"
                     value={data.slug}
                     onChange={(e) => setData('slug', e.target.value)}
-                    placeholder="e.g., family-membership"
+                    placeholder={t('e.g., family-membership')}
                   />
                   {errors.slug && (
                     <p className="text-sm text-destructive">{errors.slug}</p>
                   )}
                   <p className="text-sm text-muted-foreground">
-                    Auto-generated from name if left empty
+                    {t('Auto-generated from name if left empty')}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('Description')}</Label>
                 <Textarea
                   id="description"
                   value={data.description}
                   onChange={(e) => setData('description', e.target.value)}
-                  placeholder="Optional description of this membership tier"
+                  placeholder={t('Optional description of this membership tier')}
                   rows={3}
                 />
                 {errors.description && (
@@ -148,9 +150,9 @@ export default function CreateMembershipTier() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Pricing & Billing</CardTitle>
+              <CardTitle>{t('Pricing & Billing')}</CardTitle>
               <CardDescription>
-                Set the price and billing period for this tier
+                {t('Set the price and billing period for this tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -181,10 +183,10 @@ export default function CreateMembershipTier() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="annual">Annual</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="lifetime">Lifetime</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
+                      <SelectItem value="annual">{t('Annual')}</SelectItem>
+                      <SelectItem value="monthly">{t('Monthly')}</SelectItem>
+                      <SelectItem value="lifetime">{t('Lifetime')}</SelectItem>
+                      <SelectItem value="custom">{t('Custom')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.billing_period && (
@@ -197,22 +199,22 @@ export default function CreateMembershipTier() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Additional Settings</CardTitle>
+              <CardTitle>{t('Additional Settings')}</CardTitle>
               <CardDescription>
-                Configure additional options for this tier
+                {t('Configure additional options for this tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="max_members">Maximum Members</Label>
+                  <Label htmlFor="max_members">{t('Maximum Members')}</Label>
                   <Input
                     id="max_members"
                     type="number"
                     min="1"
                     value={data.max_members}
                     onChange={(e) => setData('max_members', e.target.value)}
-                    placeholder="Leave empty for unlimited"
+                    placeholder={t('Leave empty for unlimited')}
                   />
                   {errors.max_members && (
                     <p className="text-sm text-destructive">{errors.max_members}</p>
@@ -220,7 +222,7 @@ export default function CreateMembershipTier() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sort_order">Sort Order</Label>
+                  <Label htmlFor="sort_order">{t('Sort Order')}</Label>
                   <Input
                     id="sort_order"
                     type="number"
@@ -239,16 +241,16 @@ export default function CreateMembershipTier() {
                   checked={data.is_active}
                   onCheckedChange={(checked) => setData('is_active', checked as boolean)}
                 />
-                <Label htmlFor="is_active">Active</Label>
+                <Label htmlFor="is_active">{t('Active')}</Label>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Features</CardTitle>
+              <CardTitle>{t('Features')}</CardTitle>
               <CardDescription>
-                Add features included in this membership tier
+                {t('Add features included in this membership tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -256,7 +258,7 @@ export default function CreateMembershipTier() {
                 <Input
                   value={currentFeature}
                   onChange={(e) => setCurrentFeature(e.target.value)}
-                  placeholder="e.g., Access to all events"
+                  placeholder={t('e.g., Access to all events')}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -295,7 +297,7 @@ export default function CreateMembershipTier() {
           <div className="flex justify-end gap-4">
             <Link href="/admin/membership-tiers">
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>

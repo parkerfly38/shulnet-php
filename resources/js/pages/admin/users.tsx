@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -65,6 +66,7 @@ interface Props {
 }
 
 export default function AdminUsers({ users, available_roles, filters }: Props) {
+    const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState(filters.search || '');
   const [selectedRole, setSelectedRole] = useState(filters.role || 'all');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -158,14 +160,14 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Admin - User Management" />
+      <Head title={t('Admin - User Management')} />
       
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Users</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage user accounts and roles</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Users')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage user accounts and roles')}</p>
           </div>
         </div>
 
@@ -174,7 +176,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
           <form onSubmit={handleSearch} className="flex items-center space-x-2 flex-1 max-w-md">
             <Input
               type="text"
-              placeholder="Search users..."
+              placeholder={t('Search users...')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
@@ -186,10 +188,10 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
 
           <Select value={selectedRole || "all"} onValueChange={handleRoleFilter}>
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="All roles" />
+              <SelectValue placeholder={t('All roles')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All roles</SelectItem>
+              <SelectItem value="all">{t('All roles')}</SelectItem>
               {Object.entries(available_roles).map(([value, label]) => (
                 <SelectItem key={value} value={value}>
                   {label}
@@ -200,7 +202,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
 
           {(filters.search || (filters.role && filters.role !== '')) && (
             <Button variant="outline" onClick={clearFilters}>
-              Clear Filters
+              {t('Clear Filters')}
             </Button>
           )}
         </div>
@@ -211,20 +213,20 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    User
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('User')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Roles
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Roles')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Default Admin
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Default Admin')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Created
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Created')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                  <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -247,14 +249,14 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                               </Badge>
                             ))
                           ) : (
-                            <span className="text-sm text-gray-500 dark:text-gray-400">No roles assigned</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">{t('No roles assigned')}</span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {user.is_default_admin ? (
                           <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                            Default Admin
+                            {t('Default Admin')}
                           </Badge>
                         ) : user.is_admin ? (
                           <Button
@@ -263,7 +265,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                             onClick={() => setDefaultAdmin(user.id)}
                             className="text-xs"
                           >
-                            Set as Default
+                            {t('Set as Default')}
                           </Button>
                         ) : (
                           <span className="text-sm text-gray-400">-</span>
@@ -272,14 +274,14 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                         {new Date(user.created_at).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => openRoleModal(user)}
                         >
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit Roles
+                          <Edit className="h-4 w-4 me-2" />
+                          {t('Edit Roles')}
                         </Button>
                       </td>
                     </tr>
@@ -289,7 +291,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                     <td colSpan={5} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center">
                         <Users className="h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No users found</h3>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{t('No users found')}</h3>
                         <p className="text-gray-600 dark:text-gray-400">
                           {filters.search || filters.role 
                             ? 'No users match your search criteria.' 
@@ -310,12 +312,12 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                 <div className="flex-1 flex justify-between sm:hidden">
                   {users.prev_page_url && (
                     <Link href={users.prev_page_url}>
-                      <Button variant="outline">Previous</Button>
+                      <Button variant="outline">{t('Previous')}</Button>
                     </Link>
                   )}
                   {users.next_page_url && (
                     <Link href={users.next_page_url}>
-                      <Button variant="outline">Next</Button>
+                      <Button variant="outline">{t('Next')}</Button>
                     </Link>
                   )}
                 </div>
@@ -383,7 +385,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                     }}
                     className="rounded border shadow-sm"
                   />
-                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{label}</span>
+                  <span className="ms-2 text-sm text-gray-700 dark:text-gray-300">{label}</span>
                 </label>
               ))}
             </div>
@@ -395,13 +397,13 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                 }}
                 className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
               >
-                Cancel
+                {t('Cancel')}
               </button>
               <button
                 onClick={() => updateUserRoles(selectedUser.id, selectedUser.roles)}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
               >
-                Save Changes
+                {t('Save Changes')}
               </button>
             </div>
           </div>

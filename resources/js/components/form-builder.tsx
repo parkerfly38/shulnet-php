@@ -65,27 +65,27 @@ export default function FormBuilder({ value, onChange }: FormBuilderProps) {
                 <h3 className="text-lg font-medium mb-3">Add Field</h3>
                 <div className="flex gap-2 flex-wrap">
                     <Button type="button" variant="outline" size="sm" onClick={() => addField('text')}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="w-4 h-4 me-2" />
                         Text
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => addField('textarea')}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="w-4 h-4 me-2" />
                         Textarea
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => addField('date')}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="w-4 h-4 me-2" />
                         Date
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => addField('boolean')}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="w-4 h-4 me-2" />
                         Yes/No
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => addField('select')}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="w-4 h-4 me-2" />
                         Select
                     </Button>
                     <Button type="button" variant="outline" size="sm" onClick={() => addField('multiselect')}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="w-4 h-4 me-2" />
                         Multi-Select
                     </Button>
                 </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { useMemo } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Star, User, Plus, X } from 'lucide-react';
@@ -77,6 +78,7 @@ const HEBREW_MONTHS = [
 ];
 
 export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
+    const { t } = useTranslation();
     const { data, setData, put, processing, errors } = useForm<YahrzeitFormData>({
         name: yahrzeit.name,
         hebrew_name: yahrzeit.hebrew_name || '',
@@ -136,12 +138,12 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Edit Yahrzeit Record" />
+            <Head title={t('Edit Yahrzeit Record')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
           {/* Header */}
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Yahrzeit Record</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Edit Yahrzeit Record')}</h1>
                         <p className="text-gray-600 dark:text-gray-400">Update memorial observance for {yahrzeit.name}</p>
                     </div>
                 </div>
@@ -151,7 +153,7 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                     <Star className="h-4 w-4" />
                     <AlertDescription>
                         <div className="flex items-center gap-2">
-                            <span>Current Hebrew Date:</span>
+                            <span>{t('Current Hebrew Date:')}</span>
                             <Badge variant="secondary">
                                 {formatHebrewDate(yahrzeit.hebrew_day_of_death, yahrzeit.hebrew_month_of_death)}
                             </Badge>
@@ -168,7 +170,7 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <User className="h-5 w-5" />
-                                Member Information
+                                {t('Member Information')}
                             </CardTitle>
                             <CardDescription>
                                 Select the congregation member(s) who will observe this yahrzeit
@@ -184,7 +186,7 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                                 type="button"
                                                 variant="ghost"
                                                 size="sm"
-                                                className="absolute top-2 right-2"
+                                                className="absolute top-2 end-2"
                                                 onClick={() => removeMember(index)}
                                             >
                                                 <X className="h-4 w-4" />
@@ -212,7 +214,7 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                                 onValueChange={(value) => updateMember(index, 'relationship', value)}
                                             >
                                                 <SelectTrigger className={errors[`members.${index}.relationship`] ? 'border-red-500' : ''}>
-                                                    <SelectValue placeholder="Select relationship..." />
+                                                    <SelectValue placeholder={t('Select relationship...')} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {RELATIONSHIP_OPTIONS.map((relationship) => (
@@ -247,8 +249,8 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                 size="sm"
                                 onClick={addMember}
                             >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Another Member
+                                <Plus className="h-4 w-4 me-2" />
+                                {t('Add Another Member')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -258,10 +260,10 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Star className="h-5 w-5" />
-                                Deceased Information
+                                {t('Deceased Information')}
                             </CardTitle>
                             <CardDescription>
-                                Information about the person being remembered
+                                {t('Information about the person being remembered')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -273,20 +275,20 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                     className={errors.name ? 'border-red-500' : ''}
-                                    placeholder="Full name of the deceased"
+                                    placeholder={t('Full name of the deceased')}
                                 />
                                 {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
                             </div>
 
                             <div>
-                                <Label htmlFor="hebrew_name">Hebrew Name</Label>
+                                <Label htmlFor="hebrew_name">{t('Hebrew Name')}</Label>
                                 <Input
                                     id="hebrew_name"
                                     type="text"
                                     value={data.hebrew_name}
                                     onChange={(e) => setData('hebrew_name', e.target.value)}
                                     className={errors.hebrew_name ? 'border-red-500' : ''}
-                                    placeholder="Hebrew name (optional)"
+                                    placeholder={t('Hebrew name (optional)')}
                                 />
                                 {errors.hebrew_name && <p className="text-sm text-red-600 mt-1">{errors.hebrew_name}</p>}
                             </div>
@@ -298,10 +300,10 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5" />
-                                Date and Observance Details
+                                {t('Date and Observance Details')}
                             </CardTitle>
                             <CardDescription>
-                                Date of death and observance preferences. Hebrew dates will be recalculated automatically if changed.
+                                {t('Date of death and observance preferences. Hebrew dates will be recalculated automatically if changed.')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -316,7 +318,7 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                                 />
                                 {errors.date_of_death && <p className="text-sm text-red-600 mt-1">{errors.date_of_death}</p>}
                                 <p className="text-sm text-gray-600 mt-1">
-                                    Hebrew calendar date will be recalculated if this date is changed
+                                    {t('Hebrew calendar date will be recalculated if this date is changed')}
                                 </p>
                             </div>
 
@@ -338,13 +340,13 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                             </div>
 
                             <div>
-                                <Label htmlFor="notes">Notes</Label>
+                                <Label htmlFor="notes">{t('Notes')}</Label>
                                 <Textarea
                                     id="notes"
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
                                     className={errors.notes ? 'border-red-500' : ''}
-                                    placeholder="Additional notes or special instructions (optional)"
+                                    placeholder={t('Additional notes or special instructions (optional)')}
                                     rows={3}
                                 />
                                 {errors.notes && <p className="text-sm text-red-600 mt-1">{errors.notes}</p>}
@@ -359,7 +361,7 @@ export default function YahrzeitEdit({ yahrzeit, members }: YahrzeitEditProps) {
                             variant="outline"
                             onClick={() => router.get('/admin/yahrzeits')}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                             {processing ? 'Updating...' : 'Update Yahrzeit Record'}

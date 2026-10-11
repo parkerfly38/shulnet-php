@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { useEffect } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
 import { Calendar, Clock, MapPin, Users, Type } from 'lucide-react';
@@ -52,6 +53,7 @@ interface EventFormData {
 }
 
 export default function EventCreate({ calendars, selectedCalendar }: EventCreateProps) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm<EventFormData>({
         calendar_id: selectedCalendar || '',
         title: '',
@@ -106,13 +108,13 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Event" />
+            <Head title={t('Create Event')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Header */}
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create Event</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Add a new event to a calendar</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create Event')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Add a new event to a calendar')}</p>
                     </div>
                 </div>
 
@@ -122,10 +124,10 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Type className="h-5 w-5" />
-                                Basic Information
+                                {t('Basic Information')}
                             </CardTitle>
                             <CardDescription>
-                                General details about the event
+                                {t('General details about the event')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -133,7 +135,7 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                                 <Label htmlFor="calendar_id">Calendar *</Label>
                                 <Select value={data.calendar_id} onValueChange={(value) => setData('calendar_id', value)}>
                                     <SelectTrigger className={errors.calendar_id ? 'border-red-500' : ''}>
-                                        <SelectValue placeholder="Select a calendar..." />
+                                        <SelectValue placeholder={t('Select a calendar...')} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {calendars.map((calendar) => (
@@ -157,19 +159,19 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
                                     className={errors.title ? 'border-red-500' : ''}
-                                    placeholder="Enter event title..."
+                                    placeholder={t('Enter event title...')}
                                 />
                                 {errors.title && <p className="text-sm text-red-600 mt-1">{errors.title}</p>}
                             </div>
 
                             <div>
-                                <Label htmlFor="description">Description</Label>
+                                <Label htmlFor="description">{t('Description')}</Label>
                                 <Textarea
                                     id="description"
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
                                     className={errors.description ? 'border-red-500' : ''}
-                                    placeholder="Enter event description..."
+                                    placeholder={t('Enter event description...')}
                                     rows={3}
                                 />
                                 {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}
@@ -182,10 +184,10 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Clock className="h-5 w-5" />
-                                Date and Time
+                                {t('Date and Time')}
                             </CardTitle>
                             <CardDescription>
-                                When the event takes place
+                                {t('When the event takes place')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -195,7 +197,7 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                                     checked={data.all_day}
                                     onCheckedChange={handleAllDayChange}
                                 />
-                                <Label htmlFor="all_day">All Day Event</Label>
+                                <Label htmlFor="all_day">{t('All Day Event')}</Label>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -213,7 +215,7 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
 
                                 {!data.all_day && (
                                     <div>
-                                        <Label htmlFor="start_time">Start Time</Label>
+                                        <Label htmlFor="start_time">{t('Start Time')}</Label>
                                         <Input
                                             id="start_time"
                                             type="time"
@@ -226,7 +228,7 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                                 )}
 
                                 <div>
-                                    <Label htmlFor="end_date">End Date</Label>
+                                    <Label htmlFor="end_date">{t('End Date')}</Label>
                                     <Input
                                         id="end_date"
                                         type="date"
@@ -239,7 +241,7 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
 
                                 {!data.all_day && (
                                     <div>
-                                        <Label htmlFor="end_time">End Time</Label>
+                                        <Label htmlFor="end_time">{t('End Time')}</Label>
                                         <Input
                                             id="end_time"
                                             type="time"
@@ -259,22 +261,22 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <MapPin className="h-5 w-5" />
-                                Additional Details
+                                {t('Additional Details')}
                             </CardTitle>
                             <CardDescription>
-                                Location and visibility settings
+                                {t('Location and visibility settings')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <Label htmlFor="location">Location</Label>
+                                <Label htmlFor="location">{t('Location')}</Label>
                                 <Input
                                     id="location"
                                     type="text"
                                     value={data.location}
                                     onChange={(e) => setData('location', e.target.value)}
                                     className={errors.location ? 'border-red-500' : ''}
-                                    placeholder="Event location or address..."
+                                    placeholder={t('Event location or address...')}
                                 />
                                 {errors.location && <p className="text-sm text-red-600 mt-1">{errors.location}</p>}
                             </div>
@@ -287,11 +289,11 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                                 />
                                 <Label htmlFor="members_only" className="flex items-center gap-2">
                                     <Users className="h-4 w-4" />
-                                    Members Only Event
+                                    {t('Members Only Event')}
                                 </Label>
                             </div>
                             <p className="text-sm text-gray-600">
-                                Members only events require authentication to view
+                                {t('Members only events require authentication to view')}
                             </p>
                         </CardContent>
                     </Card>
@@ -303,7 +305,7 @@ export default function EventCreate({ calendars, selectedCalendar }: EventCreate
                             variant="outline"
                             onClick={() => router.get('/admin/events')}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                             {processing ? 'Creating...' : 'Create Event'}

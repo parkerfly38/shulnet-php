@@ -73,7 +73,7 @@ export default function MemberCombobox({ id, members, value, onChange, hasError 
                             <button
                                 key={m.id}
                                 type="button"
-                                className="w-full border-b px-3 py-2 text-left last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                className="w-full border-b px-3 py-2 text-start last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-700"
                                 onClick={() => {
                                     onChange(m.id.toString());
                                     setQuery(`${m.first_name} ${m.last_name}`);

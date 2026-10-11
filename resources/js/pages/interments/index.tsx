@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export default function IntermentsIndex({ interments, deeds, members, stats, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [search, setSearch] = useState(filters.search || '');
   const [deedId, setDeedId] = useState(filters.deed || '');
   const [memberId, setMemberId] = useState(filters.member || '');
@@ -111,19 +113,19 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Interments" />
+      <Head title={t('Interments')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Interments</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage burial and interment records</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Interments')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage burial and interment records')}</p>
           </div>
           <Link href="/admin/interments/create">
             <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Interment
+              <Plus className="h-4 w-4 me-2" />
+              {t('New Interment')}
             </Button>
           </Link>
         </div>
@@ -160,23 +162,23 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute start-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search by name..."
+                  placeholder={t('Search by name...')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
-                  className="pl-9"
+                  className="ps-9"
                 />
               </div>
             </div>
             <div>
               <Select value={deedId ?? ' '} onValueChange={setDeedId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Deeds" />
+                  <SelectValue placeholder={t('All Deeds')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=" ">All Deeds</SelectItem>
+                  <SelectItem value=" ">{t('All Deeds')}</SelectItem>
                   {deeds.map((deed) => (
                     <SelectItem key={deed.id} value={deed.id.toString()}>
                       {deed.deed_number} - {deed.plot_location}
@@ -188,10 +190,10 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
             <div>
               <Select value={memberId ?? ' '} onValueChange={setMemberId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Members" />
+                  <SelectValue placeholder={t('All Members')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=" ">All Members</SelectItem>
+                  <SelectItem value=" ">{t('All Members')}</SelectItem>
                   {members.map((member) => (
                     <SelectItem key={member.id} value={member.id.toString()}>
                       {member.first_name} {member.last_name}
@@ -203,10 +205,10 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
           </div>
           <div className="flex gap-2 mt-4">
             <Button onClick={handleFilter} size="sm">
-              Apply Filters
+              {t('Apply Filters')}
             </Button>
             <Button onClick={handleClearFilters} variant="outline" size="sm">
-              Clear
+              {t('Clear')}
             </Button>
           </div>
         </div>
@@ -217,26 +219,26 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Name
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Name')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Hebrew Name
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Hebrew Name')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Date of Death
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Date of Death')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Interment Date
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Interment Date')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Deed Location
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Deed Location')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Related Member
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Related Member')}
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
+                  <th className="px-4 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -272,7 +274,7 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
                           {interment.deed.deed_number} - {interment.deed.plot_location}
                         </Link>
                       ) : (
-                        <span className="text-gray-400">N/A</span>
+                        <span className="text-gray-400">{t('N/A')}</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
@@ -287,7 +289,7 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
                         <span className="text-gray-400">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-sm text-right">
+                    <td className="px-4 py-3 text-sm text-end">
                       <div className="flex items-center justify-end gap-2">
                         <Link href={`/admin/interments/${interment.id}/edit`}>
                           <Button variant="ghost" size="sm">
@@ -313,12 +315,12 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
           {interments.data.length === 0 && (
             <div className="p-12 text-center">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No interments found</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Get started by creating your first interment record.</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('No interments found')}</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{t('Get started by creating your first interment record.')}</p>
               <Link href="/admin/interments/create">
                 <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Interment
+                  <Plus className="me-2 h-4 w-4" />
+                  {t('Create Interment')}
                 </Button>
               </Link>
             </div>
@@ -339,7 +341,7 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
                     router.get(`/admin/interments?page=${interments.current_page - 1}`)
                   }
                 >
-                  Previous
+                  {t('Previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -349,7 +351,7 @@ export default function IntermentsIndex({ interments, deeds, members, stats, fil
                     router.get(`/admin/interments?page=${interments.current_page + 1}`)
                   }
                 >
-                  Next
+                  {t('Next')}
                 </Button>
               </div>
             </div>

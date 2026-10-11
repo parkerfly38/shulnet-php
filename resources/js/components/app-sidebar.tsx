@@ -10,6 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { useTranslation } from '@/hooks/use-translation';
 import { isNavItemActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
@@ -307,6 +308,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     const page = usePage();
+    const { t } = useTranslation();
     const { auth, roleSwitch, version } = page.props as any;
     const user = auth.user;
     const isAdmin = user?.is_admin || false;
@@ -352,7 +354,7 @@ export function AppSidebar() {
                                 tooltip={{
                                     children: (
                                         <div className="flex items-center gap-2">
-                                            Search
+                                            {t('Search')}
                                             <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                                                 <span className="text-xs">⌘K</span>
                                             </kbd>
@@ -361,7 +363,7 @@ export function AppSidebar() {
                                 }}
                             >
                                 <Search />
-                                <span>Search</span>
+                                <span>{t('Search')}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     )}

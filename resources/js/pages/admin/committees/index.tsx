@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function CommitteesIndex({ committees }: Readonly<Props>) {
+    const { t } = useTranslation();
   const handleDelete = (committee: CommitteeWithCounts) => {
     if (confirm(`Are you sure you want to delete "${committee.name}"?`)) {
       router.delete(`/admin/committees/${committee.id}`);
@@ -29,21 +31,21 @@ export default function CommitteesIndex({ committees }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Committees" />
+      <Head title={t('Committees')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Committees</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Committees')}</h1>
             <p className="text-muted-foreground mt-2">
-              Manage committees and their members
+              {t('Manage committees and their members')}
             </p>
           </div>
           <Link href="/admin/committees/create">
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Committee
+              <Plus className="me-2 h-4 w-4" />
+              {t('Add Committee')}
             </Button>
           </Link>
         </div>
@@ -52,7 +54,7 @@ export default function CommitteesIndex({ committees }: Readonly<Props>) {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Committees</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Committees')}</CardTitle>
               <Users2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -61,7 +63,7 @@ export default function CommitteesIndex({ committees }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Members</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Members')}</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -72,7 +74,7 @@ export default function CommitteesIndex({ committees }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Memberships</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Active Memberships')}</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -101,17 +103,17 @@ export default function CommitteesIndex({ committees }: Readonly<Props>) {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Total Members:</span>
+                      <span className="text-muted-foreground">{t('Total Members:')}</span>
                       <span className="font-medium">{committee.members_count}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Active:</span>
+                      <span className="text-muted-foreground">{t('Active:')}</span>
                       <span className="font-medium">{committee.active_members_count}</span>
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Link href={`/admin/committees/${committee.id}`} className="flex-1">
                         <Button variant="outline" size="sm" className="w-full">
-                          View Details
+                          {t('View Details')}
                         </Button>
                       </Link>
                       <Link href={`/admin/committees/${committee.id}/edit`}>
@@ -134,14 +136,14 @@ export default function CommitteesIndex({ committees }: Readonly<Props>) {
           ) : (
             <div className="col-span-full text-center py-12">
               <Users2 className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-medium mb-2">No committees found</h3>
+              <h3 className="text-lg font-medium mb-2">{t('No committees found')}</h3>
               <p className="text-muted-foreground mb-4">
-                Get started by creating your first committee
+                {t('Get started by creating your first committee')}
               </p>
               <Link href="/admin/committees/create">
                 <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Committee
+                  <Plus className="me-2 h-4 w-4" />
+                  {t('Create Committee')}
                 </Button>
               </Link>
             </div>

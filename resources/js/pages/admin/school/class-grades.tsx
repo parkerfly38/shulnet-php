@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
@@ -10,12 +11,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ClassGradesPage() {
+    const { t } = useTranslation();
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Class Grades" />
+            <Head title={t('Class Grades')} />
             <div className="p-4">
                 <SchoolCrud
-                    title="Class Grades"
+                    title={t('Class Grades')}
                     endpoint="/api/admin/class-grades"
                     fields={[
                         { name: 'class_definition_id', label: 'Class', type: 'select', optionsEndpoint: '/api/admin/class-definitions' },
