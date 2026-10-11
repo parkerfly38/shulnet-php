@@ -87,7 +87,7 @@ This is a replacement for the previous open source solution based on Zenbership.
 ## Tech Stack
 
 ### Backend
-- **Laravel 12.x** - PHP framework
+- **Laravel 13.x** - PHP framework, version 12.x prior to October 2026
 - **Inertia.js** - Server-side rendering for React
 - **SQLite** - Database (configurable for MySQL/PostgreSQL)
 - **Fortify** - Authentication
