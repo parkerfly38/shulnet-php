@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function HtmlTemplatesIndex({ templates }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'HTML Publisher', href: '/admin/html-pages' },
@@ -34,15 +36,15 @@ export default function HtmlTemplatesIndex({ templates }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="HTML Templates" />
+      <Head title={t('HTML Templates')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">HTML Templates</h1>
+          <h1 className="text-3xl font-bold">{t('HTML Templates')}</h1>
           <Link href="/admin/html-templates/create">
             <Button>
-              <FileText className="mr-2 h-4 w-4" />
-              Create Template
+              <FileText className="me-2 h-4 w-4" />
+              {t('Create Template')}
             </Button>
           </Link>
         </div>
@@ -51,17 +53,17 @@ export default function HtmlTemplatesIndex({ templates }: Readonly<Props>) {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Pages Using</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Name')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Description')}</th>
+                <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Pages Using')}</th>
+                <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{t('Actions')}</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
               {templates.length === 0 ? (
                 <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
-                    No templates yet. Create a template to reuse headers, footers, and navigation.
+                    {t('No templates yet. Create a template to reuse headers, footers, and navigation.')}
                   </td>
                 </tr>
               ) : (
@@ -72,7 +74,7 @@ export default function HtmlTemplatesIndex({ templates }: Readonly<Props>) {
                       {template.description || '—'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{template.pages_count}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-end">
                       <div className="flex justify-end gap-2">
                         <Link href={`/admin/html-templates/${template.id}/edit`}>
                           <Button variant="ghost" size="sm">

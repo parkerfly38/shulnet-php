@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export default function CreateCampaignEmail({ campaign, templates }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const { data, setData, post, processing, errors } = useForm({
     subject: '',
@@ -77,12 +79,12 @@ export default function CreateCampaignEmail({ campaign, templates }: Readonly<Pr
               variant="outline"
               onClick={() => setShowTemplateDialog(true)}
             >
-              <FileText className="w-4 h-4 mr-2" />
-              Load Template
+              <FileText className="w-4 h-4 me-2" />
+              {t('Load Template')}
             </Button>
             <Button type="button" onClick={handleSubmit} disabled={processing}>
-              <Save className="w-4 h-4 mr-2" />
-              Create Email
+              <Save className="w-4 h-4 me-2" />
+              {t('Create Email')}
             </Button>
           </div>
         </div>
@@ -94,7 +96,7 @@ export default function CreateCampaignEmail({ campaign, templates }: Readonly<Pr
                 <CardHeader>
                   <CardTitle>Email Details</CardTitle>
                   <CardDescription>
-                    This email will be queued as pending and can be sent to all confirmed subscribers.
+                    {t('This email will be queued as pending and can be sent to all confirmed subscribers.')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -104,7 +106,7 @@ export default function CreateCampaignEmail({ campaign, templates }: Readonly<Pr
                       id="subject"
                       value={data.subject}
                       onChange={(e) => setData('subject', e.target.value)}
-                      placeholder="Enter email subject"
+                      placeholder={t('Enter email subject')}
                       required
                     />
                     {errors.subject && <p className="text-sm text-red-600 mt-1">{errors.subject}</p>}
@@ -136,7 +138,7 @@ export default function CreateCampaignEmail({ campaign, templates }: Readonly<Pr
                   <iframe
                     srcDoc={data.content || '<p style="padding: 20px; color: #666;">Email preview will appear here...</p>'}
                     className="w-full min-h-[500px] border-0"
-                    title="Email Preview"
+                    title={t('Email Preview')}
                     sandbox="allow-same-origin"
                   />
                 </div>
@@ -151,7 +153,7 @@ export default function CreateCampaignEmail({ campaign, templates }: Readonly<Pr
           <DialogHeader>
             <DialogTitle>Load Email Template</DialogTitle>
             <DialogDescription>
-              Select a template to load. This will replace the current subject and content.
+              {t('Select a template to load. This will replace the current subject and content.')}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-3 max-h-96 overflow-y-auto">
@@ -177,7 +179,7 @@ export default function CreateCampaignEmail({ campaign, templates }: Readonly<Pr
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowTemplateDialog(false)}>
-              Cancel
+              {t('Cancel')}
             </Button>
           </DialogFooter>
         </DialogContent>

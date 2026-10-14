@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -65,6 +66,7 @@ interface FormData {
 }
 
 export default function InvoicesCreate({ members, selectedMember, membershipTiers, tuitionTiers, chartOfAccounts }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { currency } = usePage().props as any;
 
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
@@ -133,14 +135,14 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Invoice" />
+      <Head title={t('Create Invoice')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create Invoice</h1>
-            <p className="text-gray-600 dark:text-gray-400">Create a new invoice for a member</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create Invoice')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Create a new invoice for a member')}</p>
           </div>
         </div>
 
@@ -148,14 +150,14 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Invoice Details</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Invoice Details')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="member_id">Member *</Label>
                 <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
                   <SelectTrigger className={errors.member_id ? 'border-red-500' : ''}>
-                    <SelectValue placeholder="Select member" />
+                    <SelectValue placeholder={t('Select member')} />
                   </SelectTrigger>
                   <SelectContent>
                     {members.map((member) => (
@@ -175,12 +177,12 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="partial">Partial</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="overdue">Overdue</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="draft">{t('Draft')}</SelectItem>
+                    <SelectItem value="open">{t('Open')}</SelectItem>
+                    <SelectItem value="partial">{t('Partial')}</SelectItem>
+                    <SelectItem value="paid">{t('Paid')}</SelectItem>
+                    <SelectItem value="overdue">{t('Overdue')}</SelectItem>
+                    <SelectItem value="cancelled">{t('Cancelled')}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.status && <p className="text-sm text-red-600 mt-1">{errors.status}</p>}
@@ -212,14 +214,14 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
             </div>
 
             <div className="mt-4">
-              <Label htmlFor="notes">Notes</Label>
+              <Label htmlFor="notes">{t('Notes')}</Label>
               <Textarea
                 id="notes"
                 value={data.notes}
                 onChange={(e) => setData('notes', e.target.value)}
                 className={errors.notes ? 'border-red-500' : ''}
                 rows={3}
-                placeholder="Optional notes for this invoice"
+                placeholder={t('Optional notes for this invoice')}
               />
               {errors.notes && <p className="text-sm text-red-600 mt-1">{errors.notes}</p>}
             </div>
@@ -228,10 +230,10 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
           {/* Invoice Items */}
           <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Line Items</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('Line Items')}</h2>
               <Button type="button" onClick={addItem} variant="outline" size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Item
+                <Plus className="h-4 w-4 me-2" />
+                {t('Add Item')}
               </Button>
             </div>
 
@@ -279,16 +281,16 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                     />
                   </div>
                   <div className="w-56">
-                    <Label htmlFor={`item-${index}-gl_account_id`}>GL Account</Label>
+                    <Label htmlFor={`item-${index}-gl_account_id`}>{t('GL Account')}</Label>
                     <Select 
                       value={item.gl_account_id} 
                       onValueChange={(value) => updateItem(index, 'gl_account_id', value)}
                     >
                       <SelectTrigger className={errors[`items.${index}.gl_account_id`] ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Select GL account" />
+                        <SelectValue placeholder={t('Select GL account')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="">{t('None')}</SelectItem>
                         {chartOfAccounts.map((account) => (
                           <SelectItem key={account.id} value={account.id.toString()}>
                             {account.account_code} - {account.account_name}
@@ -323,13 +325,13 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
             {/* Totals */}
             <div className="mt-6 pt-6 border-t space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
+                <span className="text-gray-600 dark:text-gray-400">{t('Subtotal:')}</span>
                 <span className="font-medium text-gray-900 dark:text-gray-100">
                   {formatCurrency(calculateSubtotal())}
                 </span>
               </div>
               <div className="flex justify-between items-center text-sm">
-                <Label htmlFor="tax_amount">Tax:</Label>
+                <Label htmlFor="tax_amount">{t('Tax:')}</Label>
                 <Input
                   id="tax_amount"
                   type="number"
@@ -341,7 +343,7 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                 />
               </div>
               <div className="flex justify-between text-lg font-semibold pt-2 border-t">
-                <span className="text-gray-900 dark:text-gray-100">Total:</span>
+                <span className="text-gray-900 dark:text-gray-100">{t('Total:')}</span>
                 <span className="text-gray-900 dark:text-gray-100">
                   {formatCurrency(calculateTotal())}
                 </span>
@@ -351,7 +353,7 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
 
           {/* Recurring Settings */}
           <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recurring Settings</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Recurring Settings')}</h2>
             
             <div className="flex items-center space-x-2 mb-4">
               <Checkbox
@@ -359,11 +361,11 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                 checked={data.recurring}
                 onCheckedChange={(checked) => setData('recurring', checked as boolean)}
               />
-              <Label htmlFor="recurring">Make this invoice recurring</Label>
+              <Label htmlFor="recurring">{t('Make this invoice recurring')}</Label>
             </div>
 
             {data.recurring && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ps-6">
                 <div>
                   <Label htmlFor="recurring_interval">Interval *</Label>
                   <Select value={data.recurring_interval} onValueChange={(value) => setData('recurring_interval', value)}>
@@ -371,10 +373,10 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="yearly">Yearly</SelectItem>
+                      <SelectItem value="daily">{t('Daily')}</SelectItem>
+                      <SelectItem value="weekly">{t('Weekly')}</SelectItem>
+                      <SelectItem value="monthly">{t('Monthly')}</SelectItem>
+                      <SelectItem value="yearly">{t('Yearly')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.recurring_interval && <p className="text-sm text-red-600 mt-1">{errors.recurring_interval}</p>}
@@ -396,7 +398,7 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                 </div>
 
                 <div>
-                  <Label htmlFor="recurring_end_date">End Date (Optional)</Label>
+                  <Label htmlFor="recurring_end_date">{t('End Date (Optional)')}</Label>
                   <Input
                     id="recurring_end_date"
                     type="date"
@@ -421,12 +423,12 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
                 onCheckedChange={(checked) => setData('send_email', checked as boolean)}
               />
               <Label htmlFor="send_email" className="cursor-pointer">
-                Generate PDF and email invoice to member
+                {t('Generate PDF and email invoice to member')}
               </Label>
             </div>
             {data.send_email && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
-                A PDF invoice will be generated and emailed to the member's email address after creation.
+              <p className="text-sm text-gray-600 dark:text-gray-400 ps-6">
+                {t("A PDF invoice will be generated and emailed to the member's email address after creation.")}
               </p>
             )}
           </div>
@@ -435,11 +437,11 @@ export default function InvoicesCreate({ members, selectedMember, membershipTier
           <div className="flex justify-end gap-2">
             <Link href="/admin/invoices">
               <Button type="button" variant="outline" disabled={processing}>
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-4 w-4 me-2" />
               {processing ? 'Creating...' : 'Create Invoice'}
             </Button>
           </div>

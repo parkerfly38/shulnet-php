@@ -3,6 +3,7 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
+import { DirectionProvider } from '@radix-ui/react-direction';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 
@@ -20,7 +21,14 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                <App {...props} />
+                <DirectionProvider
+                    dir={
+                        (props.initialPage.props.direction as 'ltr' | 'rtl') ??
+                        'ltr'
+                    }
+                >
+                    <App {...props} />
+                </DirectionProvider>
             </StrictMode>,
         );
     },

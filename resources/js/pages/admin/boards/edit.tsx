@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export default function BoardsEdit({ board }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, put, processing, errors } = useForm({
     name: board.name || '',
     description: board.description || '',
@@ -36,16 +38,16 @@ export default function BoardsEdit({ board }: Readonly<Props>) {
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Board</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Edit Board')}</h1>
             <p className="text-muted-foreground mt-2">
-              Update board information
+              {t('Update board information')}
             </p>
           </div>
         </div>
 
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Board Information</CardTitle>
+            <CardTitle>{t('Board Information')}</CardTitle>
             <CardDescription>
               Update the details for {board.name}
             </CardDescription>
@@ -67,7 +69,7 @@ export default function BoardsEdit({ board }: Readonly<Props>) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('Description')}</Label>
                 <Textarea
                   id="description"
                   value={data.description}
@@ -86,7 +88,7 @@ export default function BoardsEdit({ board }: Readonly<Props>) {
                 </Button>
                 <Link href="/admin/boards">
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                 </Link>
               </div>

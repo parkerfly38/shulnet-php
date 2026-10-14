@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function ReportsShow({ report, reportable, reportableType }: Readonly<Props>) {
+    const { t } = useTranslation();
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -72,13 +74,13 @@ export default function ReportsShow({ report, reportable, reportableType }: Read
           <div className="flex gap-2">
             <Link href={`/admin/reports/${reportableType}/${reportable.id}/${report.id}/edit`}>
               <Button variant="outline">
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
+                <Edit className="me-2 h-4 w-4" />
+                {t('Edit')}
               </Button>
             </Link>
             <Button variant="destructive" onClick={handleDelete}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              <Trash2 className="me-2 h-4 w-4" />
+              {t('Delete')}
             </Button>
           </div>
         </div>
@@ -86,16 +88,16 @@ export default function ReportsShow({ report, reportable, reportableType }: Read
         <div className="grid gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Report Details</CardTitle>
+              <CardTitle>{t('Report Details')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Report Date</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('Report Date')}</h3>
                 <p className="text-lg">{formatDate(report.report_date)}</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">Content</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">{t('Content')}</h3>
                 <div className="prose max-w-none whitespace-pre-wrap">
                   {report.content}
                 </div>
@@ -103,11 +105,11 @@ export default function ReportsShow({ report, reportable, reportableType }: Read
 
               <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Created</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('Created')}</h3>
                   <p className="text-sm">{formatDate(report.created_at)}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Last Updated</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">{t('Last Updated')}</h3>
                   <p className="text-sm">{formatDate(report.updated_at)}</p>
                 </div>
               </div>

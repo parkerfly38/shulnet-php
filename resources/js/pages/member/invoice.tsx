@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 
@@ -52,6 +53,7 @@ interface Props {
 }
 
 export default function InvoiceView({ member, invoice }: Props) {
+    const { t } = useTranslation();
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -98,10 +100,10 @@ export default function InvoiceView({ member, invoice }: Props) {
                             href="/member/dashboard"
                             className="text-blue-600 hover:text-blue-800 flex items-center"
                         >
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
-                            Back to Dashboard
+                            {t('Back to Dashboard')}
                         </Link>
                         <div className="flex gap-3">
                             {invoice.balance > 0 && (
@@ -109,20 +111,20 @@ export default function InvoiceView({ member, invoice }: Props) {
                                     href={`/member/invoices/${invoice.id}/pay`}
                                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center"
                                 >
-                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                     </svg>
-                                    Pay Now
+                                    {t('Pay Now')}
                                 </Link>
                             )}
                             <button
                                 onClick={handlePrint}
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
                             >
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                                 </svg>
-                                Print Invoice
+                                {t('Print Invoice')}
                             </button>
                         </div>
                     </div>
@@ -133,10 +135,10 @@ export default function InvoiceView({ member, invoice }: Props) {
                         <div className="border-b pb-6 mb-6">
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h1 className="text-3xl font-bold text-gray-900">Invoice</h1>
+                                    <h1 className="text-3xl font-bold text-gray-900">{t('Invoice')}</h1>
                                     <p className="text-gray-600 mt-1">#{invoice.invoice_number}</p>
                                 </div>
-                                <div className="text-right">
+                                <div className="text-end">
                                     <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(invoice.status)}`}>
                                         {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
                                     </span>
@@ -147,7 +149,7 @@ export default function InvoiceView({ member, invoice }: Props) {
                         {/* Billing Information */}
                         <div className="grid grid-cols-2 gap-8 mb-8">
                             <div>
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Bill To</h3>
+                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">{t('Bill To')}</h3>
                                 <div className="text-gray-900">
                                     <p className="font-semibold">{member.first_name} {member.last_name}</p>
                                     {member.address_line1 && <p>{member.address_line1}</p>}
@@ -162,8 +164,8 @@ export default function InvoiceView({ member, invoice }: Props) {
                                 </div>
                             </div>
 
-                            <div className="text-right">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Invoice Details</h3>
+                            <div className="text-end">
+                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">{t('Invoice Details')}</h3>
                                 <div className="text-gray-900">
                                     <div className="mb-2">
                                         <span className="text-gray-600">Invoice Date: </span>
@@ -182,19 +184,19 @@ export default function InvoiceView({ member, invoice }: Props) {
                             <table className="w-full">
                                 <thead>
                                     <tr className="border-b-2 border-gray-300">
-                                        <th className="text-left py-3 text-gray-700 font-semibold">Description</th>
-                                        <th className="text-right py-3 text-gray-700 font-semibold">Quantity</th>
-                                        <th className="text-right py-3 text-gray-700 font-semibold">Unit Price</th>
-                                        <th className="text-right py-3 text-gray-700 font-semibold">Total</th>
+                                        <th className="text-start py-3 text-gray-700 font-semibold">{t('Description')}</th>
+                                        <th className="text-end py-3 text-gray-700 font-semibold">{t('Quantity')}</th>
+                                        <th className="text-end py-3 text-gray-700 font-semibold">{t('Unit Price')}</th>
+                                        <th className="text-end py-3 text-gray-700 font-semibold">{t('Total')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {invoice.items.map((item) => (
                                         <tr key={item.id} className="border-b border-gray-200">
                                             <td className="py-3 text-gray-900">{item.description}</td>
-                                            <td className="py-3 text-right text-gray-900">{item.quantity}</td>
-                                            <td className="py-3 text-right text-gray-900">{formatCurrency(item.unit_price)}</td>
-                                            <td className="py-3 text-right text-gray-900 font-semibold">{formatCurrency(item.total)}</td>
+                                            <td className="py-3 text-end text-gray-900">{item.quantity}</td>
+                                            <td className="py-3 text-end text-gray-900">{formatCurrency(item.unit_price)}</td>
+                                            <td className="py-3 text-end text-gray-900 font-semibold">{formatCurrency(item.total)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -205,22 +207,22 @@ export default function InvoiceView({ member, invoice }: Props) {
                         <div className="flex justify-end mb-8">
                             <div className="w-64">
                                 <div className="flex justify-between py-2 border-b border-gray-200">
-                                    <span className="text-gray-600">Subtotal:</span>
+                                    <span className="text-gray-600">{t('Subtotal:')}</span>
                                     <span className="text-gray-900 font-semibold">{formatCurrency(invoice.subtotal)}</span>
                                 </div>
                                 <div className="flex justify-between py-3 border-b border-gray-200">
-                                    <span className="text-gray-900 font-bold">Total:</span>
+                                    <span className="text-gray-900 font-bold">{t('Total:')}</span>
                                     <span className="text-gray-900 font-bold">{formatCurrency(invoice.total)}</span>
                                 </div>
                                 {invoice.amount_paid > 0 && (
                                     <div className="flex justify-between py-2 border-b border-gray-200">
-                                        <span className="text-gray-600">Amount Paid:</span>
+                                        <span className="text-gray-600">{t('Amount Paid:')}</span>
                                         <span className="text-green-600 font-semibold">{formatCurrency(invoice.amount_paid)}</span>
                                     </div>
                                 )}
                                 {invoice.balance > 0 && (
                                     <div className="flex justify-between py-3 border-t-2 border-gray-900">
-                                        <span className="text-gray-900 font-bold text-lg">Balance Due:</span>
+                                        <span className="text-gray-900 font-bold text-lg">{t('Balance Due:')}</span>
                                         <span className="text-gray-900 font-bold text-lg">{formatCurrency(invoice.balance)}</span>
                                     </div>
                                 )}
@@ -230,7 +232,7 @@ export default function InvoiceView({ member, invoice }: Props) {
                         {/* Notes */}
                         {invoice.notes && (
                             <div className="border-t pt-6 mb-6">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Notes</h3>
+                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">{t('Notes')}</h3>
                                 <p className="text-gray-700 whitespace-pre-line">{invoice.notes}</p>
                             </div>
                         )}
@@ -238,22 +240,22 @@ export default function InvoiceView({ member, invoice }: Props) {
                         {/* Payment History */}
                         {invoice.payments && invoice.payments.length > 0 && (
                             <div className="border-t pt-6">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">Payment History</h3>
+                                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-4">{t('Payment History')}</h3>
                                 <div className="space-y-2">
                                     {invoice.payments.map((payment) => (
                                         <div key={payment.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
                                             <div>
                                                 <span className="font-medium">{formatCurrency(payment.amount)}</span>
-                                                <span className="text-gray-600 text-sm ml-2">
+                                                <span className="text-gray-600 text-sm ms-2">
                                                     via {payment.payment_method.replace('_', ' ')}
                                                 </span>
                                                 {payment.transaction_id && (
-                                                    <span className="text-gray-500 text-xs ml-2">
+                                                    <span className="text-gray-500 text-xs ms-2">
                                                         (#{payment.transaction_id.substring(0, 12)}...)
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="text-right">
+                                            <div className="text-end">
                                                 <div className="text-sm text-gray-600">
                                                     {new Date(payment.paid_at).toLocaleDateString('en-US', {
                                                         year: 'numeric',

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useEffect, useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
@@ -16,6 +17,7 @@ interface MemberAnniversary {
 }
 
 export default function GabbaiAnniversaries() {
+    const { t } = useTranslation();
     const [items, setItems] = useState<MemberAnniversary[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -45,12 +47,12 @@ export default function GabbaiAnniversaries() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Anniversaries & Bnai" />
+            <Head title={t('Anniversaries & Bnai')} />
 
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4">Anniversaries & Bnai</h1>
+                <h1 className="text-2xl font-bold mb-4">{t('Anniversaries & Bnai')}</h1>
 
-                {loading && <p>Loading...</p>}
+                {loading && <p>{t('Loading...')}</p>}
                 {error && <p className="text-red-500">{error}</p>}
 
                 {!loading && items.length === 0 && <p className="text-sm text-gray-500">No upcoming items found. If you have an API, point this page to it at <code>/admin/api/gabbai/anniversaries</code>.</p>}

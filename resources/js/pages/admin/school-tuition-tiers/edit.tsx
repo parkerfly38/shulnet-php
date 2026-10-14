@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState, FormEvent } from 'react';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -41,6 +42,7 @@ interface FormData {
 }
 
 export default function EditSchoolTuitionTier({ tier }: Props) {
+    const { t } = useTranslation();
   const [currentFeature, setCurrentFeature] = useState('');
   const { data, setData, put, processing, errors } = useForm<FormData>({
     name: tier.name,
@@ -101,7 +103,7 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
         {/* Header */}
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Tuition Tier</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Edit Tuition Tier')}</h1>
             <p className="text-muted-foreground mt-2">
               Update details for {tier.name}
             </p>
@@ -112,9 +114,9 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle>{t('Basic Information')}</CardTitle>
               <CardDescription>
-                Enter the basic details for this tuition tier
+                {t('Enter the basic details for this tuition tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -125,7 +127,7 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
                     id="name"
                     value={data.name}
                     onChange={(e) => handleNameChange(e.target.value)}
-                    placeholder="e.g., Full Tuition"
+                    placeholder={t('e.g., Full Tuition')}
                     required
                   />
                   {errors.name && (
@@ -134,12 +136,12 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="slug">Slug</Label>
+                  <Label htmlFor="slug">{t('Slug')}</Label>
                   <Input
                     id="slug"
                     value={data.slug}
                     onChange={(e) => setData('slug', e.target.value)}
-                    placeholder="e.g., full-tuition"
+                    placeholder={t('e.g., full-tuition')}
                   />
                   {errors.slug && (
                     <p className="text-sm text-destructive">{errors.slug}</p>
@@ -148,12 +150,12 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('Description')}</Label>
                 <Textarea
                   id="description"
                   value={data.description}
                   onChange={(e) => setData('description', e.target.value)}
-                  placeholder="Optional description of this tuition tier"
+                  placeholder={t('Optional description of this tuition tier')}
                   rows={3}
                 />
                 {errors.description && (
@@ -165,9 +167,9 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Pricing & Billing</CardTitle>
+              <CardTitle>{t('Pricing & Billing')}</CardTitle>
               <CardDescription>
-                Set the price and billing period for this tier
+                {t('Set the price and billing period for this tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -198,10 +200,10 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="annual">Annual</SelectItem>
-                      <SelectItem value="semester">Semester</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
+                      <SelectItem value="annual">{t('Annual')}</SelectItem>
+                      <SelectItem value="semester">{t('Semester')}</SelectItem>
+                      <SelectItem value="monthly">{t('Monthly')}</SelectItem>
+                      <SelectItem value="custom">{t('Custom')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.billing_period && (
@@ -214,22 +216,22 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Additional Settings</CardTitle>
+              <CardTitle>{t('Additional Settings')}</CardTitle>
               <CardDescription>
-                Configure additional options for this tier
+                {t('Configure additional options for this tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="max_students">Maximum Students</Label>
+                  <Label htmlFor="max_students">{t('Maximum Students')}</Label>
                   <Input
                     id="max_students"
                     type="number"
                     min="1"
                     value={data.max_students}
                     onChange={(e) => setData('max_students', e.target.value)}
-                    placeholder="Leave empty for unlimited"
+                    placeholder={t('Leave empty for unlimited')}
                   />
                   {errors.max_students && (
                     <p className="text-sm text-destructive">{errors.max_students}</p>
@@ -237,7 +239,7 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="sort_order">Sort Order</Label>
+                  <Label htmlFor="sort_order">{t('Sort Order')}</Label>
                   <Input
                     id="sort_order"
                     type="number"
@@ -256,16 +258,16 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
                   checked={data.is_active}
                   onCheckedChange={(checked) => setData('is_active', checked as boolean)}
                 />
-                <Label htmlFor="is_active">Active</Label>
+                <Label htmlFor="is_active">{t('Active')}</Label>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Features</CardTitle>
+              <CardTitle>{t('Features')}</CardTitle>
               <CardDescription>
-                Add features included in this tuition tier
+                {t('Add features included in this tuition tier')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -273,7 +275,7 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
                 <Input
                   value={currentFeature}
                   onChange={(e) => setCurrentFeature(e.target.value)}
-                  placeholder="e.g., All course materials included"
+                  placeholder={t('e.g., All course materials included')}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -312,11 +314,11 @@ export default function EditSchoolTuitionTier({ tier }: Props) {
           <div className="flex justify-end gap-4">
             <Link href="/admin/school-tuition-tiers">
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>
-              Update Tuition Tier
+              {t('Update Tuition Tier')}
             </Button>
           </div>
         </form>

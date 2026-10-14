@@ -25,7 +25,7 @@ export default function FormRenderer({ fields, values = {}, onChange, errors = {
                 <div key={field.id} className="space-y-2">
                     <Label htmlFor={field.id}>
                         {field.label}
-                        {field.required && <span className="text-red-600 ml-1">*</span>}
+                        {field.required && <span className="text-red-600 ms-1">*</span>}
                     </Label>
                     {field.description && (
                         <p className="text-sm text-gray-600 dark:text-gray-400">{field.description}</p>

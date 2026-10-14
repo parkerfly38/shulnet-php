@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ReportsIndex() {
+    const { t } = useTranslation();
     const { csrf_token } = usePage<{ csrf_token: string }>().props;
     
     const [memberFilters, setMemberFilters] = useState({
@@ -92,7 +94,7 @@ export default function ReportsIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Reports & Exports" />
+            <Head title={t('Reports & Exports')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                     {/* Financial Reports Link */}
@@ -100,10 +102,10 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <DollarSign className="h-5 w-5 text-primary" />
-                                <CardTitle>Financial Reports Dashboard</CardTitle>
+                                <CardTitle>{t('Financial Reports Dashboard')}</CardTitle>
                             </div>
                             <CardDescription>
-                                View comprehensive financial analytics including income summary, outstanding balances, aging reports, and revenue analysis
+                                {t('View comprehensive financial analytics including income summary, outstanding balances, aging reports, and revenue analysis')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -111,7 +113,7 @@ export default function ReportsIndex() {
                                 onClick={() => router.visit('/admin/reports/financial')}
                                 className="w-full md:w-auto"
                             >
-                                View Financial Reports
+                                {t('View Financial Reports')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -121,19 +123,19 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <FileSpreadsheet className="h-5 w-5" />
-                                <CardTitle>Members Export</CardTitle>
+                                <CardTitle>{t('Members Export')}</CardTitle>
                             </div>
                             <CardDescription>
-                                Export member data with optional filters
+                                {t('Export member data with optional filters')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="member-search">Search</Label>
+                                    <Label htmlFor="member-search">{t('Search')}</Label>
                                     <Input
                                         id="member-search"
-                                        placeholder="Name or email..."
+                                        placeholder={t('Name or email...')}
                                         value={memberFilters.search}
                                         onChange={(e) =>
                                             setMemberFilters({ ...memberFilters, search: e.target.value })
@@ -141,7 +143,7 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="member-type">Member Type</Label>
+                                    <Label htmlFor="member-type">{t('Member Type')}</Label>
                                     <Select
                                         value={memberFilters.member_type ?? ' '}
                                         onValueChange={(value) =>
@@ -149,14 +151,14 @@ export default function ReportsIndex() {
                                         }
                                     >
                                         <SelectTrigger id="member-type">
-                                            <SelectValue placeholder="All types" />
+                                            <SelectValue placeholder={t('All types')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value=" ">All types</SelectItem>
-                                            <SelectItem value="member">Member</SelectItem>
-                                            <SelectItem value="contact">Contact</SelectItem>
-                                            <SelectItem value="prospect">Prospect</SelectItem>
-                                            <SelectItem value="former">Former Member</SelectItem>
+                                            <SelectItem value=" ">{t('All types')}</SelectItem>
+                                            <SelectItem value="member">{t('Member')}</SelectItem>
+                                            <SelectItem value="contact">{t('Contact')}</SelectItem>
+                                            <SelectItem value="prospect">{t('Prospect')}</SelectItem>
+                                            <SelectItem value="former">{t('Former Member')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -165,8 +167,8 @@ export default function ReportsIndex() {
                                 onClick={() => handleExport('export/members', memberFilters)}
                                 className="w-full md:w-auto"
                             >
-                                <Download className="mr-2 h-4 w-4" />
-                                Export Members
+                                <Download className="me-2 h-4 w-4" />
+                                {t('Export Members')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -176,16 +178,16 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <FileSpreadsheet className="h-5 w-5" />
-                                <CardTitle>Invoices Export</CardTitle>
+                                <CardTitle>{t('Invoices Export')}</CardTitle>
                             </div>
                             <CardDescription>
-                                Export invoice data by status and date range
+                                {t('Export invoice data by status and date range')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-3">
                                 <div className="space-y-2">
-                                    <Label htmlFor="invoice-status">Status</Label>
+                                    <Label htmlFor="invoice-status">{t('Status')}</Label>
                                     <Select
                                         value={invoiceFilters.status ?? ' '}
                                         onValueChange={(value) =>
@@ -193,20 +195,20 @@ export default function ReportsIndex() {
                                         }
                                     >
                                         <SelectTrigger id="invoice-status">
-                                            <SelectValue placeholder="All statuses" />
+                                            <SelectValue placeholder={t('All statuses')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value=" ">All statuses</SelectItem>
-                                            <SelectItem value="draft">Draft</SelectItem>
-                                            <SelectItem value="open">Open</SelectItem>
-                                            <SelectItem value="paid">Paid</SelectItem>
-                                            <SelectItem value="overdue">Overdue</SelectItem>
-                                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                                            <SelectItem value=" ">{t('All statuses')}</SelectItem>
+                                            <SelectItem value="draft">{t('Draft')}</SelectItem>
+                                            <SelectItem value="open">{t('Open')}</SelectItem>
+                                            <SelectItem value="paid">{t('Paid')}</SelectItem>
+                                            <SelectItem value="overdue">{t('Overdue')}</SelectItem>
+                                            <SelectItem value="cancelled">{t('Cancelled')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="invoice-start-date">Start Date</Label>
+                                    <Label htmlFor="invoice-start-date">{t('Start Date')}</Label>
                                     <Input
                                         id="invoice-start-date"
                                         type="date"
@@ -217,7 +219,7 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="invoice-end-date">End Date</Label>
+                                    <Label htmlFor="invoice-end-date">{t('End Date')}</Label>
                                     <Input
                                         id="invoice-end-date"
                                         type="date"
@@ -232,8 +234,8 @@ export default function ReportsIndex() {
                                 onClick={() => handleExport('export/invoices', invoiceFilters)}
                                 className="w-full md:w-auto"
                             >
-                                <Download className="mr-2 h-4 w-4" />
-                                Export Invoices
+                                <Download className="me-2 h-4 w-4" />
+                                {t('Export Invoices')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -243,19 +245,19 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <FileSpreadsheet className="h-5 w-5" />
-                                <CardTitle>Students Export</CardTitle>
+                                <CardTitle>{t('Students Export')}</CardTitle>
                             </div>
                             <CardDescription>
-                                Export student data with contact and parent information
+                                {t('Export student data with contact and parent information')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="student-grade">Grade Level</Label>
+                                    <Label htmlFor="student-grade">{t('Grade Level')}</Label>
                                     <Input
                                         id="student-grade"
-                                        placeholder="e.g., 5"
+                                        placeholder={t('e.g., 5')}
                                         value={studentFilters.grade_level}
                                         onChange={(e) =>
                                             setStudentFilters({ ...studentFilters, grade_level: e.target.value })
@@ -267,8 +269,8 @@ export default function ReportsIndex() {
                                 onClick={() => handleExport('export/students', studentFilters)}
                                 className="w-full md:w-auto"
                             >
-                                <Download className="mr-2 h-4 w-4" />
-                                Export Students
+                                <Download className="me-2 h-4 w-4" />
+                                {t('Export Students')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -278,10 +280,10 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <FileSpreadsheet className="h-5 w-5" />
-                                <CardTitle>Financial Summary Report</CardTitle>
+                                <CardTitle>{t('Financial Summary Report')}</CardTitle>
                             </div>
                             <CardDescription>
-                                Comprehensive financial report with aging analysis
+                                {t('Comprehensive financial report with aging analysis')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -316,8 +318,8 @@ export default function ReportsIndex() {
                                 disabled={!financialFilters.start_date || !financialFilters.end_date}
                                 className="w-full md:w-auto"
                             >
-                                <Download className="mr-2 h-4 w-4" />
-                                Export Financial Summary
+                                <Download className="me-2 h-4 w-4" />
+                                {t('Export Financial Summary')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -327,16 +329,16 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <FileSpreadsheet className="h-5 w-5" />
-                                <CardTitle>Yahrzeit Calendar Export</CardTitle>
+                                <CardTitle>{t('Yahrzeit Calendar Export')}</CardTitle>
                             </div>
                             <CardDescription>
-                                Export yahrzeit dates with member associations by Hebrew month
+                                {t('Export yahrzeit dates with member associations by Hebrew month')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label htmlFor="yahrzeit-month">Hebrew Month</Label>
+                                    <Label htmlFor="yahrzeit-month">{t('Hebrew Month')}</Label>
                                     <Select
                                         value={yahrzeitFilters.month}
                                         onValueChange={(value) =>
@@ -344,21 +346,21 @@ export default function ReportsIndex() {
                                         }
                                     >
                                         <SelectTrigger id="yahrzeit-month">
-                                            <SelectValue placeholder="Select month" />
+                                            <SelectValue placeholder={t('Select month')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="1">Tishrei</SelectItem>
-                                            <SelectItem value="2">Cheshvan</SelectItem>
-                                            <SelectItem value="3">Kislev</SelectItem>
-                                            <SelectItem value="4">Tevet</SelectItem>
-                                            <SelectItem value="5">Shevat</SelectItem>
-                                            <SelectItem value="6">Adar</SelectItem>
-                                            <SelectItem value="7">Nisan</SelectItem>
-                                            <SelectItem value="8">Iyar</SelectItem>
-                                            <SelectItem value="9">Sivan</SelectItem>
-                                            <SelectItem value="10">Tammuz</SelectItem>
-                                            <SelectItem value="11">Av</SelectItem>
-                                            <SelectItem value="12">Elul</SelectItem>
+                                            <SelectItem value="1">{t('Tishrei')}</SelectItem>
+                                            <SelectItem value="2">{t('Cheshvan')}</SelectItem>
+                                            <SelectItem value="3">{t('Kislev')}</SelectItem>
+                                            <SelectItem value="4">{t('Tevet')}</SelectItem>
+                                            <SelectItem value="5">{t('Shevat')}</SelectItem>
+                                            <SelectItem value="6">{t('Adar')}</SelectItem>
+                                            <SelectItem value="7">{t('Nisan')}</SelectItem>
+                                            <SelectItem value="8">{t('Iyar')}</SelectItem>
+                                            <SelectItem value="9">{t('Sivan')}</SelectItem>
+                                            <SelectItem value="10">{t('Tammuz')}</SelectItem>
+                                            <SelectItem value="11">{t('Av')}</SelectItem>
+                                            <SelectItem value="12">{t('Elul')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -367,8 +369,8 @@ export default function ReportsIndex() {
                                 onClick={() => handleExport('export/yahrzeit', yahrzeitFilters)}
                                 className="w-full md:w-auto"
                             >
-                                <Download className="mr-2 h-4 w-4" />
-                                Export Yahrzeit Calendar
+                                <Download className="me-2 h-4 w-4" />
+                                {t('Export Yahrzeit Calendar')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -378,10 +380,10 @@ export default function ReportsIndex() {
                         <CardHeader>
                             <div className="flex items-center gap-2">
                                 <DollarSign className="h-5 w-5 text-green-600" />
-                                <CardTitle>GL Batch Export</CardTitle>
+                                <CardTitle>{t('GL Batch Export')}</CardTitle>
                             </div>
                             <CardDescription>
-                                Export transactions by date range mapped to your Chart of Accounts for QuickBooks or other accounting software
+                                {t('Export transactions by date range mapped to your Chart of Accounts for QuickBooks or other accounting software')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -411,10 +413,10 @@ export default function ReportsIndex() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="gl-batch-number">Batch Number (Optional)</Label>
+                                    <Label htmlFor="gl-batch-number">{t('Batch Number (Optional)')}</Label>
                                     <Input
                                         id="gl-batch-number"
-                                        placeholder="e.g., 2026-03-001"
+                                        placeholder={t('e.g., 2026-03-001')}
                                         value={glBatchFilters.batch_number}
                                         onChange={(e) =>
                                             setGlBatchFilters({ ...glBatchFilters, batch_number: e.target.value })
@@ -435,15 +437,15 @@ export default function ReportsIndex() {
                                     disabled={!glBatchFilters.start_date || !glBatchFilters.end_date}
                                     className="w-full sm:w-auto"
                                 >
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Export GL Batch
+                                    <Download className="me-2 h-4 w-4" />
+                                    {t('Export GL Batch')}
                                 </Button>
                                 <Button
                                     variant="outline"
                                     onClick={() => router.visit('/admin/chart-of-accounts')}
                                     className="w-full sm:w-auto"
                                 >
-                                    Manage Chart of Accounts
+                                    {t('Manage Chart of Accounts')}
                                 </Button>
                             </div>
                             <p className="text-xs text-muted-foreground">

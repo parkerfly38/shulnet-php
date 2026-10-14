@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -37,6 +38,7 @@ interface Props {
 }
 
 export default function BannersIndex({ banners, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [selectedStatus, setSelectedStatus] = useState(filters.status || 'all');
   const [selectedAudience, setSelectedAudience] = useState(filters.audience || 'all');
 
@@ -109,21 +111,21 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Banners" />
+      <Head title={t('Banners')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Banner Messages</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Banner Messages')}</h1>
             <p className="text-muted-foreground mt-2">
-              Manage system-wide banner messages for users
+              {t('Manage system-wide banner messages for users')}
             </p>
           </div>
           <Link href="/admin/banners/create">
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Banner
+              <Plus className="me-2 h-4 w-4" />
+              {t('Create Banner')}
             </Button>
           </Link>
         </div>
@@ -132,7 +134,7 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
         <div className="grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Banners</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Banners')}</CardTitle>
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -141,7 +143,7 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Active')}</CardTitle>
               <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
             </CardHeader>
             <CardContent>
@@ -150,7 +152,7 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Views')}</CardTitle>
               <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -159,7 +161,7 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Clicks')}</CardTitle>
               <MousePointerClick className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -173,31 +175,31 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
           <div className="flex-1">
             <Select value={selectedStatus} onValueChange={handleStatusFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
+                <SelectValue placeholder={t('Filter by status')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="all">{t('All Status')}</SelectItem>
+                <SelectItem value="active">{t('Active')}</SelectItem>
+                <SelectItem value="inactive">{t('Inactive')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="flex-1">
             <Select value={selectedAudience} onValueChange={handleAudienceFilter}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by audience" />
+                <SelectValue placeholder={t('Filter by audience')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Audiences</SelectItem>
-                <SelectItem value="members">Members</SelectItem>
-                <SelectItem value="students">Students</SelectItem>
-                <SelectItem value="parents">Parents</SelectItem>
+                <SelectItem value="all">{t('All Audiences')}</SelectItem>
+                <SelectItem value="members">{t('Members')}</SelectItem>
+                <SelectItem value="students">{t('Students')}</SelectItem>
+                <SelectItem value="parents">{t('Parents')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           {(selectedStatus !== 'all' || selectedAudience !== 'all') && (
             <Button variant="outline" onClick={clearFilters}>
-              Clear Filters
+              {t('Clear Filters')}
             </Button>
           )}
         </div>
@@ -214,15 +216,15 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
                         <CardTitle className="text-lg">{banner.title}</CardTitle>
                         <Badge variant={getTypeBadgeVariant(banner.type)}>
                           {getTypeIcon(banner.type)}
-                          <span className="ml-1 capitalize">{banner.type}</span>
+                          <span className="ms-1 capitalize">{banner.type}</span>
                         </Badge>
                         {banner.is_active ? (
                           <Badge variant="outline" className="bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800">
-                            Active
+                            {t('Active')}
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="bg-gray-50 dark:bg-gray-950">
-                            Inactive
+                            {t('Inactive')}
                           </Badge>
                         )}
                       </div>
@@ -236,24 +238,24 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       <div>
-                        <span className="text-muted-foreground">Audience:</span>
-                        <span className="ml-2 font-medium capitalize">{banner.target_audience}</span>
+                        <span className="text-muted-foreground">{t('Audience:')}</span>
+                        <span className="ms-2 font-medium capitalize">{banner.target_audience}</span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Start:</span>
-                        <span className="ml-2 font-medium">
+                        <span className="text-muted-foreground">{t('Start:')}</span>
+                        <span className="ms-2 font-medium">
                           {new Date(banner.start_date).toLocaleDateString()}
                         </span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">End:</span>
-                        <span className="ml-2 font-medium">
+                        <span className="text-muted-foreground">{t('End:')}</span>
+                        <span className="ms-2 font-medium">
                           {banner.end_date ? new Date(banner.end_date).toLocaleDateString() : 'None'}
                         </span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Created by:</span>
-                        <span className="ml-2 font-medium">{banner.creator?.name || 'Unknown'}</span>
+                        <span className="text-muted-foreground">{t('Created by:')}</span>
+                        <span className="ms-2 font-medium">{banner.creator?.name || 'Unknown'}</span>
                       </div>
                     </div>
                     
@@ -282,8 +284,8 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
                       </Button>
                       <Link href={`/admin/banners/${banner.id}/edit`}>
                         <Button variant="outline" size="sm">
-                          <Edit className="h-4 w-4 mr-1" />
-                          Edit
+                          <Edit className="h-4 w-4 me-1" />
+                          {t('Edit')}
                         </Button>
                       </Link>
                       <Button
@@ -301,14 +303,14 @@ export default function BannersIndex({ banners, filters }: Readonly<Props>) {
           ) : (
             <div className="col-span-full text-center py-12">
               <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-medium mb-2">No banners found</h3>
+              <h3 className="text-lg font-medium mb-2">{t('No banners found')}</h3>
               <p className="text-muted-foreground mb-4">
-                Get started by creating your first banner message
+                {t('Get started by creating your first banner message')}
               </p>
               <Link href="/admin/banners/create">
                 <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Banner
+                  <Plus className="me-2 h-4 w-4" />
+                  {t('Create Banner')}
                 </Button>
               </Link>
             </div>

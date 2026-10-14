@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState, useRef, useEffect } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -120,6 +121,7 @@ const OBSERVANCE_LABELS = {
 } as const;
 
 export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [search, setSearch] = useState(filters.search || '');
   const [startDate, setStartDate] = useState(filters.startDate || '');
   const [endDate, setEndDate] = useState(filters.endDate || '');
@@ -314,7 +316,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Yahrzeits" />
+      <Head title={t('Yahrzeits')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {flash?.success && (
@@ -329,7 +331,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
         )}
         {flash?.import_errors && flash.import_errors.length > 0 && (
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded">
-            <p className="font-semibold mb-2">Import completed with some errors:</p>
+            <p className="font-semibold mb-2">{t('Import completed with some errors:')}</p>
             <ul className="list-disc list-inside space-y-1">
               {flash.import_errors.map((error: any, idx: number) => (
                 <li key={idx} className="text-sm">
@@ -343,10 +345,10 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              Yahrzeit Management
+              {t('Yahrzeit Management')}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Manage memorial observances and remembrance dates
+              {t('Manage memorial observances and remembrance dates')}
             </p>
           </div>
           <div className="flex gap-2">
@@ -354,23 +356,23 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
               variant="outline" 
               onClick={handleExport}
               className="flex items-center gap-2"
-              title="Export current search results to Excel"
+              title={t('Export current search results to Excel')}
             >
               <Download className="h-4 w-4" />
-              Export
+              {t('Export')}
             </Button>
             <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
                   <Upload className="h-4 w-4" />
-                  Import Yahrzeits
+                  {t('Import Yahrzeits')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Import Yahrzeits from CSV</DialogTitle>
+                  <DialogTitle>{t('Import Yahrzeits from CSV')}</DialogTitle>
                   <DialogDescription>
-                    Upload a CSV file to import or update yahrzeit records. Download the template to see the required format.
+                    {t('Upload a CSV file to import or update yahrzeit records. Download the template to see the required format.')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
@@ -379,13 +381,13 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                       <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
                       <div className="text-center">
                         <p className="text-lg font-medium text-gray-900">
-                          Importing Yahrzeits...
+                          {t('Importing Yahrzeits...')}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          Please wait while we process your file. Large files may take several minutes.
+                          {t('Please wait while we process your file. Large files may take several minutes.')}
                         </p>
                         <p className="text-xs text-gray-500 mt-2">
-                          Do not close this window
+                          {t('Do not close this window')}
                         </p>
                       </div>
                     </div>
@@ -398,7 +400,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                           className="w-full flex items-center gap-2"
                         >
                           <Download className="h-4 w-4" />
-                          Download CSV Template
+                          {t('Download CSV Template')}
                         </Button>
                       </div>
                       <div className="border-t pt-4">
@@ -420,7 +422,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                         disabled={!selectedFile}
                         className="w-full"
                       >
-                        Import Yahrzeits
+                        {t('Import Yahrzeits')}
                       </Button>
                     </>
                   )}
@@ -431,7 +433,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
             <Link href="/admin/yahrzeits/create">
               <Button className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Add Yahrzeit
+                {t('Add Yahrzeit')}
               </Button>
             </Link>
           </div>
@@ -441,13 +443,13 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
         <div className="flex gap-4">
           <form onSubmit={handleSearch} className="flex gap-2 flex-1">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Search yahrzeit records by name or relationship..."
+                placeholder={t('Search yahrzeit records by name or relationship...')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="ps-10"
               />
             </div>
             <div className="relative flex"> Between </div>
@@ -466,7 +468,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
               />
             </div>
             <Button type="submit" variant="outline">
-              Search
+              {t('Search')}
             </Button>
           </form>
           {(filters.search || filters.startDate || filters.endDate) && (
@@ -479,7 +481,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                 router.get('/admin/yahrzeits');
               }}
             >
-              Clear
+              {t('Clear')}
             </Button>
           )}
         </div>
@@ -504,20 +506,20 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Deceased
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Deceased')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Next Observance *
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Hebrew Date
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Hebrew Date')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Observance
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Observance')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
+                  <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -539,13 +541,13 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                         <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                          <Calendar className="h-4 w-4 me-2 text-gray-400" />
                           {formatDate(yahrzeit.next_observance_date)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                         <div className="flex items-center">
-                          <Star className="h-4 w-4 mr-2 text-gray-400" />
+                          <Star className="h-4 w-4 me-2 text-gray-400" />
                           {formatHebrewDate(yahrzeit.hebrew_day_of_death, yahrzeit.hebrew_month_of_death)}
                         </div>
                       </td>
@@ -554,14 +556,14 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                           {OBSERVANCE_LABELS[yahrzeit.observance_type]}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleSendReminder(yahrzeit)}
                             className="text-blue-600 hover:text-blue-800"
-                            title="Send/Print Reminder"
+                            title={t('Send/Print Reminder')}
                           >
                             <Mail className="h-4 w-4" />
                           </Button>
@@ -593,15 +595,15 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                       <div className="flex flex-col items-center">
                         <Calendar className="h-12 w-12 text-gray-400 mb-4" />
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                          No yahrzeit records found
+                          {t('No yahrzeit records found')}
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400 mb-4">
                           {filters.search ? 'No records match your search criteria.' : 'Get started by adding your first yahrzeit record.'}
                         </p>
                         <Link href="/admin/yahrzeits/create">
                           <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Yahrzeit Record
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('Add Yahrzeit Record')}
                           </Button>
                         </Link>
                       </div>
@@ -618,12 +620,12 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
               <div className="flex-1 flex justify-between sm:hidden">
                 {yahrzeits.prev_page_url && (
                   <Button variant="outline" onClick={() => router.get(yahrzeits.prev_page_url!, { search, startDate, endDate }, { preserveState: true })}>
-                    Previous
+                    {t('Previous')}
                   </Button>
                 )}
                 {yahrzeits.next_page_url && (
                   <Button variant="outline" onClick={() => router.get(yahrzeits.next_page_url!, { search, startDate, endDate }, { preserveState: true })}>
-                    Next
+                    {t('Next')}
                   </Button>
                 )}
               </div>
@@ -636,7 +638,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   </p>
                 </div>
                 <div>
-                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label={t('Pagination')}>
                     {yahrzeits.links.map((link, index) => (
                       <Button
                         key={index}
@@ -646,9 +648,9 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                         disabled={!link.url}
                         dangerouslySetInnerHTML={{ __html: link.label }}
                         className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                          index === 0 ? 'rounded-l-md' : ''
+                          index === 0 ? 'rounded-s-md' : ''
                         } ${
-                          index === yahrzeits.links.length - 1 ? 'rounded-r-md' : ''
+                          index === yahrzeits.links.length - 1 ? 'rounded-e-md' : ''
                         }`}
                       />
                     ))}
@@ -659,20 +661,20 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
           )}
         </div>
 
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">* Next Observance takes into account Hebrew leap years and Adar adjustments, and represents the <strong>evening</strong> start of the observance.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">* Next Observance takes into account Hebrew leap years and Adar adjustments, and represents the <strong>{t('evening')}</strong> start of the observance.</p>
 
         {/* Yahrzeit Reminder Dialog */}
         <Dialog open={showReminderDialog} onOpenChange={setShowReminderDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Send Yahrzeit Reminder</DialogTitle>
+              <DialogTitle>{t('Send Yahrzeit Reminder')}</DialogTitle>
               <DialogDescription>
                 Send a reminder for {selectedYahrzeit?.name}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-3">
-                <Label>Reminder Method</Label>
+                <Label>{t('Reminder Method')}</Label>
                 <div className="flex gap-4">
                   <div className="flex items-center space-x-2">
                     <input
@@ -686,7 +688,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                     />
                     <Label htmlFor="reminder-email" className="cursor-pointer font-normal flex items-center gap-2">
                       <Mail className="h-4 w-4" />
-                      Send via Email
+                      {t('Send via Email')}
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -701,17 +703,17 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                     />
                     <Label htmlFor="reminder-print" className="cursor-pointer font-normal flex items-center gap-2">
                       <Printer className="h-4 w-4" />
-                      Print Letter
+                      {t('Print Letter')}
                     </Label>
                   </div>
                 </div>
               </div>
 
               <div>
-                <Label>Select Recipients</Label>
+                <Label>{t('Select Recipients')}</Label>
                 <div className="space-y-2 max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
                   {familyMembers.length === 0 ? (
-                    <p className="text-sm text-gray-500">Loading family members...</p>
+                    <p className="text-sm text-gray-500">{t('Loading family members...')}</p>
                   ) : (
                     familyMembers.map((member) => (
                       <div key={member.id} className="flex items-center space-x-2">
@@ -753,16 +755,16 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
               </div>
 
               <div>
-                <Label htmlFor="gregorian_date">Gregorian Date (This Year)</Label>
+                <Label htmlFor="gregorian_date">{t('Gregorian Date (This Year)')}</Label>
                 <Input
                   id="gregorian_date"
                   type="text"
                   value={formatDate(gregorianDate)}
                   onChange={(e) => setGregorianDate(e.target.value)}
-                  placeholder="e.g., January 15, 2026"
+                  placeholder={t('e.g., January 15, 2026')}
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Auto-calculated from Hebrew date for current Hebrew year
+                  {t('Auto-calculated from Hebrew date for current Hebrew year')}
                 </p>
               </div>
 
@@ -771,7 +773,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   variant="outline"
                   onClick={() => setShowReminderDialog(false)}
                 >
-                  Cancel
+                  {t('Cancel')}
                 </Button>
                 <Button
                   onClick={submitReminder}
@@ -792,12 +794,12 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                 {importResults?.success ? (
                   <>
                     <CheckCircle className="h-5 w-5 text-green-600" />
-                    Import Completed
+                    {t('Import Completed')}
                   </>
                 ) : (
                   <>
                     <XCircle className="h-5 w-5 text-red-600" />
-                    Import Failed
+                    {t('Import Failed')}
                   </>
                 )}
               </DialogTitle>
@@ -812,7 +814,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-green-900">
-                        New Yahrzeits
+                        {t('New Yahrzeits')}
                       </p>
                       <p className="text-2xl font-bold text-green-600 mt-1">
                         {importResults?.imported || 0}
@@ -825,7 +827,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-900">
-                        Updated Yahrzeits
+                        {t('Updated Yahrzeits')}
                       </p>
                       <p className="text-2xl font-bold text-blue-600 mt-1">
                         {importResults?.updated || 0}
@@ -854,7 +856,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                         {importResults.errors.map((error) => (
                           <div
                             key={`error-${error.row}-${error.attribute}`}
-                            className="text-sm border-l-4 border-red-500 pl-3 py-1"
+                            className="text-sm border-s-4 border-red-500 ps-3 py-1"
                           >
                             <div className="font-medium text-gray-900">
                               Row {error.row}
@@ -886,7 +888,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                     <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
                     <div>
                       <p className="font-medium text-red-900">
-                        Import Error
+                        {t('Import Error')}
                       </p>
                       <p className="text-sm text-red-700 mt-1">
                         {importResults.errorMessage}
@@ -903,10 +905,10 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
                     <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
                     <div>
                       <p className="font-medium text-green-900">
-                        All records processed successfully
+                        {t('All records processed successfully')}
                       </p>
                       <p className="text-sm text-green-700 mt-1">
-                        No validation errors were encountered during the import.
+                        {t('No validation errors were encountered during the import.')}
                       </p>
                     </div>
                   </div>
@@ -915,7 +917,7 @@ export default function YahrzeitIndex({ yahrzeits, filters }: Readonly<Props>) {
 
               <div className="flex justify-end pt-4 border-t">
                 <Button onClick={() => setShowResultsDialog(false)}>
-                  Close
+                  {t('Close')}
                 </Button>
               </div>
             </div>

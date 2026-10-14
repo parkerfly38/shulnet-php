@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -19,6 +20,7 @@ interface UserMenuContentProps {
 }
 
 export function UserMenuContent({ user, onClose }: UserMenuContentProps) {
+    const { t } = useTranslation();
     const cleanup = useMobileNavigation();
     const { props } = usePage();
     const roleSwitch = (props as { roleSwitch?: RoleSwitch }).roleSwitch;
@@ -38,7 +40,7 @@ export function UserMenuContent({ user, onClose }: UserMenuContentProps) {
     return (
         <>
             <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                     <UserInfo user={user} showEmail={true} />
                 </div>
             </DropdownMenuLabel>
@@ -64,8 +66,8 @@ export function UserMenuContent({ user, onClose }: UserMenuContentProps) {
                         prefetch
                         onClick={cleanup}
                     >
-                        <Settings className="mr-2" />
-                        Settings
+                        <Settings className="me-2" />
+                        {t('Settings')}
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -78,8 +80,8 @@ export function UserMenuContent({ user, onClose }: UserMenuContentProps) {
                     onClick={handleLogout}
                     data-test="logout-button"
                 >
-                    <LogOut className="mr-2" />
-                    Log out
+                    <LogOut className="me-2" />
+                    {t('Log out')}
                 </Link>
             </DropdownMenuItem>
         </>

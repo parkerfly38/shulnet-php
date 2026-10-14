@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, router } from '@inertiajs/react';
 import { useState, FormEvent } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -31,6 +32,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CampaignCreate() {
+    const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -47,13 +49,13 @@ export default function CampaignCreate() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Campaign" />
+      <Head title={t('Create Campaign')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div>
-          <h1 className="text-3xl font-bold">Create Email Campaign</h1>
+          <h1 className="text-3xl font-bold">{t('Create Email Campaign')}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Set up a new email campaign with subscriber management
+            {t('Set up a new email campaign with subscriber management')}
           </p>
         </div>
 
@@ -70,7 +72,7 @@ export default function CampaignCreate() {
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{t('Description')}</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -108,7 +110,7 @@ export default function CampaignCreate() {
 
             <div className="flex items-center justify-between border rounded-lg p-4">
               <div>
-                <Label>Active Campaign</Label>
+                <Label>{t('Active Campaign')}</Label>
                 <p className="text-sm text-gray-500">
                   {formData.is_active
                     ? 'Campaign is active and can accept subscribers'
@@ -128,11 +130,11 @@ export default function CampaignCreate() {
 
           {formData.opt_in_type === 'double' && (
             <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold mb-4">Confirmation Email (Double Opt-in)</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('Confirmation Email (Double Opt-in)')}</h3>
               
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="confirmation_subject">Confirmation Subject</Label>
+                  <Label htmlFor="confirmation_subject">{t('Confirmation Subject')}</Label>
                   <Input
                     id="confirmation_subject"
                     value={formData.confirmation_subject}
@@ -144,7 +146,7 @@ export default function CampaignCreate() {
                 </div>
 
                 <div>
-                  <Label htmlFor="confirmation_content">Confirmation Body</Label>
+                  <Label htmlFor="confirmation_content">{t('Confirmation Body')}</Label>
                   <Textarea
                     id="confirmation_content"
                     value={formData.confirmation_content}
@@ -152,7 +154,7 @@ export default function CampaignCreate() {
                       setFormData({ ...formData, confirmation_content: e.target.value })
                     }
                     rows={6}
-                    placeholder="Please click the link below to confirm your subscription..."
+                    placeholder={t('Please click the link below to confirm your subscription...')}
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     A confirmation link will be automatically included. Use {'{confirmation_url}'} to customize placement.
@@ -168,9 +170,9 @@ export default function CampaignCreate() {
               variant="outline"
               onClick={() => router.visit('/admin/campaigns')}
             >
-              Cancel
+              {t('Cancel')}
             </Button>
-            <Button type="submit">Create Campaign</Button>
+            <Button type="submit">{t('Create Campaign')}</Button>
           </div>
         </form>
       </div>

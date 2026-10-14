@@ -10,6 +10,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { useTranslation } from '@/hooks/use-translation';
+import { isNavItemActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -282,9 +284,18 @@ const contentNavItems: NavItem[] = [
     },
 ];
 
+const adminSections = [
+    { id: 'administration', items: adminNavItems },
+    { id: 'leadership', items: leadershipNavItems },
+    { id: 'school', items: schoolNavItems },
+    { id: 'cemetery', items: cemeteryNavItems },
+    { id: 'content', items: contentNavItems },
+    { id: 'system', items: systemNavItems },
+];
+
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',    
+        title: 'Repository',
         href: 'https://github.com/parkerfly38/shulnet-php',
         icon: Folder,
     },
@@ -296,7 +307,9 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth, roleSwitch, version } = usePage().props as any;
+    const page = usePage();
+    const { t } = useTranslation();
+    const { auth, roleSwitch, version } = page.props as any;
     const user = auth.user;
     const isAdmin = user?.is_admin || false;
     const isMember = user?.is_member || false;
@@ -306,6 +319,20 @@ export function AppSidebar() {
     const activeRole: string | undefined = roleSwitch?.activeRole;
     const showAdmin = activeRole ? activeRole === 'admin' : isAdmin;
     const showMember = activeRole ? activeRole === 'member' : isMember;
+    const visibleSections = [
+        ...(showMember ? [{ id: 'member', items: memberNavItems }] : []),
+        ...(showAdmin
+            ? [{ id: 'dashboard', items: mainNavItems }, ...adminSections]
+            : []),
+    ];
+    const activeSectionId = visibleSections.find((section) =>
+        section.items.some((item) => isNavItemActive(page.url, item.href)),
+    )?.id;
+    const orderedSections = [...visibleSections].sort(
+        (left, right) =>
+            Number(right.id === activeSectionId) -
+            Number(left.id === activeSectionId),
+    );
 
     const handleSearchClick = () => {
         window.dispatchEvent(new CustomEvent('open-search'));
@@ -327,7 +354,7 @@ export function AppSidebar() {
                                 tooltip={{
                                     children: (
                                         <div className="flex items-center gap-2">
-                                            Search
+                                            {t('Search')}
                                             <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                                                 <span className="text-xs">⌘K</span>
                                             </kbd>
@@ -336,7 +363,7 @@ export function AppSidebar() {
                                 }}
                             >
                                 <Search />
-                                <span>Search</span>
+                                <span>{t('Search')}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     )}
@@ -344,34 +371,13 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {/* Member Portal Section */}
-                {showMember && (
-                    <NavMain items={memberNavItems} />
-                )}
-
-                {showAdmin && (
-                    <>
-                        <NavMain items={mainNavItems} />
-                        {/* Admin Section */}
-                        <NavMain items={adminNavItems} />
-
-                        {/* Leadership Management Section */}
-                        <NavMain items={leadershipNavItems} />
-
-                        {/* School Management Section */}
-                        <NavMain items={schoolNavItems} />
-
-                        {/* Cemetery Management Section */}
-                        <NavMain items={cemeteryNavItems} />
-                        
-                        {/* Content Management Section */}
-                        <NavMain items={contentNavItems} />
-                        
-                        {/* System Section */}
-                        <NavMain items={systemNavItems} />
-
-                    </>
-                )}
+                {orderedSections.map((section) => (
+                    <NavMain
+                        key={`${activeSectionId ?? 'none'}-${section.id}`}
+                        items={section.items}
+                        isActiveSection={section.id === activeSectionId}
+                    />
+                ))}
             </SidebarContent>
 
             <SidebarFooter>

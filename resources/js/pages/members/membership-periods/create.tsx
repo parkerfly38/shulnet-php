@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -34,6 +35,7 @@ interface MembershipPeriodForm {
 }
 
 export default function MembershipPeriodsCreate({ member, invoices }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm<MembershipPeriodForm>({
     begin_date: '',
     end_date: '',
@@ -79,7 +81,7 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
           </Link>
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              Add Membership Period
+              {t('Add Membership Period')}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Add a new membership period for {member.first_name} {member.last_name}
@@ -90,8 +92,8 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6 flex items-center">
-              <Calendar className="h-5 w-5 mr-2" />
-              Membership Period Details
+              <Calendar className="h-5 w-5 me-2" />
+              {t('Membership Period Details')}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -110,7 +112,7 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
               </div>
 
               <div>
-                <Label htmlFor="end_date">End Date</Label>
+                <Label htmlFor="end_date">{t('End Date')}</Label>
                 <Input
                   id="end_date"
                   type="date"
@@ -119,7 +121,7 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
                   className="mt-1"
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Leave blank for ongoing membership
+                  {t('Leave blank for ongoing membership')}
                 </p>
                 {errors.end_date && (
                   <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.end_date}</p>
@@ -127,17 +129,17 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
               </div>
 
               <div>
-                <Label htmlFor="membership_type">Membership Type</Label>
+                <Label htmlFor="membership_type">{t('Membership Type')}</Label>
                 <Select value={data.membership_type} onValueChange={(value) => setData('membership_type', value)}>
                   <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Select type" />
+                    <SelectValue placeholder={t('Select type')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="annual">Annual</SelectItem>
-                    <SelectItem value="lifetime">Lifetime</SelectItem>
-                    <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="family">Family</SelectItem>
-                    <SelectItem value="honorary">Honorary</SelectItem>
+                    <SelectItem value="annual">{t('Annual')}</SelectItem>
+                    <SelectItem value="lifetime">{t('Lifetime')}</SelectItem>
+                    <SelectItem value="student">{t('Student')}</SelectItem>
+                    <SelectItem value="family">{t('Family')}</SelectItem>
+                    <SelectItem value="honorary">{t('Honorary')}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.membership_type && (
@@ -146,13 +148,13 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
               </div>
 
               <div>
-                <Label htmlFor="invoice_id">Associated Invoice (Optional)</Label>
+                <Label htmlFor="invoice_id">{t('Associated Invoice (Optional)')}</Label>
                 <Select value={data.invoice_id ?? " "} onValueChange={(value) => setData('invoice_id', value)}>
                   <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Select invoice" />
+                    <SelectValue placeholder={t('Select invoice')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=" ">None</SelectItem>
+                    <SelectItem value=" ">{t('None')}</SelectItem>
                     {invoices.map((invoice) => (
                       <SelectItem key={invoice.id} value={invoice.id.toString()}>
                         {invoice.invoice_number} - ${invoice.total} ({invoice.status})
@@ -166,12 +168,12 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
               </div>
 
               <div className="md:col-span-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t('Notes')}</Label>
                 <Textarea
                   id="notes"
                   value={data.notes}
                   onChange={(e) => setData('notes', e.target.value)}
-                  placeholder="Any additional notes about this membership period..."
+                  placeholder={t('Any additional notes about this membership period...')}
                   className="mt-1"
                   rows={3}
                 />
@@ -185,11 +187,11 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
           <div className="flex items-center justify-end gap-4">
             <Link href={`/admin/members/${member.id}`}>
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-4 w-4 me-2" />
               {processing ? 'Saving...' : 'Save Membership Period'}
             </Button>
           </div>

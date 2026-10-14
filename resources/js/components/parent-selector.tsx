@@ -133,7 +133,7 @@ export default function ParentSelector({ value, onChange, error }: ParentSelecto
                     <div className="flex items-center justify-between w-full">
                         <span>
                             {selectedParent.first_name} {selectedParent.last_name}
-                            {selectedParent.email && <span className="text-gray-500 text-sm ml-2">({selectedParent.email})</span>}
+                            {selectedParent.email && <span className="text-gray-500 text-sm ms-2">({selectedParent.email})</span>}
                         </span>
                         <button
                             type="button"
@@ -141,7 +141,7 @@ export default function ParentSelector({ value, onChange, error }: ParentSelecto
                                 e.stopPropagation();
                                 handleClear();
                             }}
-                            className="text-gray-400 hover:text-gray-600 ml-2"
+                            className="text-gray-400 hover:text-gray-600 ms-2"
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -158,13 +158,13 @@ export default function ParentSelector({ value, onChange, error }: ParentSelecto
                 <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-hidden flex flex-col">
                     <div className="p-2 border-b border-gray-200 dark:border-gray-700">
                         <div className="relative">
-                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                            <Search className="absolute start-2 top-2.5 h-4 w-4 text-gray-400" />
                             <input
                                 type="text"
                                 placeholder="Search parents..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm"
+                                className="w-full ps-8 pe-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm"
                                 autoFocus
                             />
                         </div>

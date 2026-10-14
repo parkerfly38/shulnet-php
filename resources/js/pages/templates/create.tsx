@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, router } from '@inertiajs/react';
 import { useState, FormEvent } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -24,6 +25,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function TemplateCreate() {
+    const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [subject, setSubject] = useState('');
@@ -41,7 +43,7 @@ export default function TemplateCreate() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Email Template" />
+      <Head title={t('Create Email Template')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div>
@@ -59,7 +61,7 @@ export default function TemplateCreate() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="e.g., Welcome Email"
+                  placeholder={t('e.g., Welcome Email')}
                 />
                 <p className="text-sm text-gray-500">A descriptive name for this template</p>
               </div>
@@ -71,7 +73,7 @@ export default function TemplateCreate() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}
-                  placeholder="Optional description of when to use this template"
+                  placeholder={t('Optional description of when to use this template')}
                 />
               </div>
 
@@ -82,7 +84,7 @@ export default function TemplateCreate() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   required
-                  placeholder="e.g., Welcome to Our Community!"
+                  placeholder={t('e.g., Welcome to Our Community!')}
                 />
               </div>
 
@@ -91,7 +93,7 @@ export default function TemplateCreate() {
                 <RichTextEditor
                   value={content}
                   onChange={setContent}
-                  placeholder="Enter your email content here..."
+                  placeholder={t('Enter your email content here...')}
                   className="min-h-[400px]"
                 />
                 <p className="text-sm text-gray-500">
@@ -106,7 +108,7 @@ export default function TemplateCreate() {
                   variant="outline"
                   onClick={() => router.visit('/admin/templates')}
                 >
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </div>
             </div>
@@ -122,7 +124,7 @@ export default function TemplateCreate() {
                   <iframe
                     srcDoc={content || '<p style="padding: 20px; color: #666;">Email preview will appear here...</p>'}
                     className="w-full min-h-[500px] border-0"
-                    title="Email Preview"
+                    title={t('Email Preview')}
                     sandbox="allow-same-origin"
                   />
                 </div>

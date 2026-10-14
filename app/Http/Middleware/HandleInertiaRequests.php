@@ -118,6 +118,13 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'csrf_token' => csrf_token(),
+            'locale' => app()->getLocale(),
+            'direction' => config('app.supported_locales.'.app()->getLocale().'.dir', 'ltr'),
+            'locales' => collect(config('app.supported_locales'))
+                ->map(fn ($l, $code) => ['code' => $code, 'name' => $l['name'], 'dir' => $l['dir']])
+                ->values()
+                ->all(),
+            'translations' => fn () => $this->translations(app()->getLocale()),
             'name' => config('app.name'),
             'version' => config('app.version'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
@@ -161,6 +168,16 @@ class HandleInertiaRequests extends Middleware
                 'import_errors' => $request->session()->get('import_errors'),
             ],
         ];
+    }
+
+    /**
+     * Load the flat JSON translation file for the given locale.
+     */
+    private function translations(string $locale): array
+    {
+        $path = lang_path("{$locale}.json");
+
+        return is_file($path) ? (json_decode(file_get_contents($path), true) ?: []) : [];
     }
 
     /**

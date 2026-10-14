@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { GraduationCap, Calendar, User, Mail, MapPin, Award, BookOpen, CheckCircle, XCircle, Clock, FileText, Edit2 } from 'lucide-react';
@@ -75,6 +76,7 @@ interface Props {
 }
 
 export default function StudentsPage({ member, students, hasStudents }: Props) {
+    const { t } = useTranslation();
     const [editingStudent, setEditingStudent] = useState<Student | null>(null);
     
     const { data, setData, put, processing, errors, reset } = useForm({
@@ -139,24 +141,24 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
 
     return (
         <AppLayout>
-            <Head title="My Students" />
+            <Head title={t('My Students')} />
 
             <div className="p-4 space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">My Students</h1>
+                        <h1 className="text-2xl font-bold">{t('My Students')}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            View your children's educational information
+                            {t("View your children's educational information")}
                         </p>
                     </div>
                     <Link
                         href="/member/dashboard"
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center"
                     >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to Dashboard
+                        {t('Back to Dashboard')}
                     </Link>
                 </div>
 
@@ -164,9 +166,9 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                     <div className="bg-white dark:bg-black rounded-lg border p-8">
                         <div className="text-center">
                             <GraduationCap className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                            <h2 className="text-xl font-semibold mb-2">No Students Found</h2>
+                            <h2 className="text-xl font-semibold mb-2">{t('No Students Found')}</h2>
                             <p className="text-gray-600 dark:text-gray-400">
-                                There are no students associated with your account.
+                                {t('There are no students associated with your account.')}
                             </p>
                         </div>
                     </div>
@@ -174,9 +176,9 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                     <div className="bg-white dark:bg-black rounded-lg border p-8">
                         <div className="text-center">
                             <GraduationCap className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                            <h2 className="text-xl font-semibold mb-2">No Students Registered</h2>
+                            <h2 className="text-xl font-semibold mb-2">{t('No Students Registered')}</h2>
                             <p className="text-gray-600 dark:text-gray-400">
-                                No students have been registered yet.
+                                {t('No students have been registered yet.')}
                             </p>
                         </div>
                     </div>
@@ -209,23 +211,23 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                                     size="sm"
                                                     className="text-white hover:bg-white/20"
                                                 >
-                                                    <Edit2 className="w-4 h-4 mr-2" />
-                                                    Edit
+                                                    <Edit2 className="w-4 h-4 me-2" />
+                                                    {t('Edit')}
                                                 </Button>
                                             </div>
                                             <div className="flex flex-wrap gap-4 mt-2 text-blue-100">
                                                 {student.date_of_birth && (
                                                     <div className="flex items-center">
-                                                        <Calendar className="w-4 h-4 mr-1" />
+                                                        <Calendar className="w-4 h-4 me-1" />
                                                         {formatDate(student.date_of_birth)}
                                                         {calculateAge(student.date_of_birth) && (
-                                                            <span className="ml-1">({calculateAge(student.date_of_birth)} years old)</span>
+                                                            <span className="ms-1">({calculateAge(student.date_of_birth)} years old)</span>
                                                         )}
                                                     </div>
                                                 )}
                                                 {student.gender && (
                                                     <div className="flex items-center">
-                                                        <User className="w-4 h-4 mr-1" />
+                                                        <User className="w-4 h-4 me-1" />
                                                         {student.gender}
                                                     </div>
                                                 )}
@@ -240,19 +242,19 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                     {(student.email || student.address) && (
                                         <div>
                                             <h3 className="text-lg font-semibold mb-3 flex items-center">
-                                                <Mail className="w-5 h-5 mr-2 text-blue-600" />
-                                                Contact Information
+                                                <Mail className="w-5 h-5 me-2 text-blue-600" />
+                                                {t('Contact Information')}
                                             </h3>
                                             <div className="space-y-2 text-sm">
                                                 {student.email && (
                                                     <div className="flex items-center text-gray-600 dark:text-gray-400">
-                                                        <Mail className="w-4 h-4 mr-2" />
+                                                        <Mail className="w-4 h-4 me-2" />
                                                         {student.email}
                                                     </div>
                                                 )}
                                                 {student.address && (
                                                     <div className="flex items-center text-gray-600 dark:text-gray-400">
-                                                        <MapPin className="w-4 h-4 mr-2" />
+                                                        <MapPin className="w-4 h-4 me-2" />
                                                         {student.address}
                                                     </div>
                                                 )}
@@ -263,12 +265,12 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                     {/* Current Classes */}
                                     <div>
                                         <h3 className="text-lg font-semibold mb-3 flex items-center">
-                                            <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
-                                            Current Classes
+                                            <BookOpen className="w-5 h-5 me-2 text-blue-600" />
+                                            {t('Current Classes')}
                                         </h3>
                                         {student.classes.length === 0 ? (
                                             <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                                No classes enrolled
+                                                {t('No classes enrolled')}
                                             </p>
                                         ) : (
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -306,8 +308,8 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                     {student.subject_grades.length > 0 && (
                                         <div>
                                             <h3 className="text-lg font-semibold mb-3 flex items-center">
-                                                <FileText className="w-5 h-5 mr-2 text-blue-600" />
-                                                Subject Grades
+                                                <FileText className="w-5 h-5 me-2 text-blue-600" />
+                                                {t('Subject Grades')}
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 {student.subject_grades.map((subjectGrade) => (
@@ -335,8 +337,8 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                     {student.attendance.total > 0 && (
                                         <div>
                                             <h3 className="text-lg font-semibold mb-3 flex items-center">
-                                                <CheckCircle className="w-5 h-5 mr-2 text-blue-600" />
-                                                Attendance
+                                                <CheckCircle className="w-5 h-5 me-2 text-blue-600" />
+                                                {t('Attendance')}
                                             </h3>
                                             
                                             {/* Attendance Summary */}
@@ -345,25 +347,25 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                                     <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                                                         {student.attendance.present}
                                                     </div>
-                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Present</div>
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('Present')}</div>
                                                 </div>
                                                 <div className="border rounded-lg p-3 text-center">
                                                     <div className="text-2xl font-bold text-red-600 dark:text-red-400">
                                                         {student.attendance.absent}
                                                     </div>
-                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Absent</div>
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('Absent')}</div>
                                                 </div>
                                                 <div className="border rounded-lg p-3 text-center">
                                                     <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                                                         {student.attendance.tardy}
                                                     </div>
-                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Tardy</div>
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('Tardy')}</div>
                                                 </div>
                                                 <div className="border rounded-lg p-3 text-center">
                                                     <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                                                         {student.attendance.excused}
                                                     </div>
-                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Excused</div>
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('Excused')}</div>
                                                 </div>
                                                 <div className="border rounded-lg p-3 text-center bg-blue-50 dark:bg-blue-950">
                                                     <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -371,7 +373,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                                             ? `${student.attendance.attendance_rate}%` 
                                                             : 'N/A'}
                                                     </div>
-                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Rate</div>
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">{t('Rate')}</div>
                                                 </div>
                                             </div>
 
@@ -379,23 +381,23 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                             {student.recent_attendances.length > 0 && (
                                                 <div>
                                                     <h4 className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">
-                                                        Recent Attendance
+                                                        {t('Recent Attendance')}
                                                     </h4>
                                                     <div className="overflow-x-auto">
                                                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                                             <thead className="bg-gray-50 dark:bg-gray-900">
                                                                 <tr>
-                                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                                                        Date
+                                                                    <th className="px-4 py-2 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                                                        {t('Date')}
                                                                     </th>
-                                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                                                        Class
+                                                                    <th className="px-4 py-2 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                                                        {t('Class')}
                                                                     </th>
-                                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                                                        Status
+                                                                    <th className="px-4 py-2 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                                                        {t('Status')}
                                                                     </th>
-                                                                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                                                        Notes
+                                                                    <th className="px-4 py-2 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                                                                        {t('Notes')}
                                                                     </th>
                                                                 </tr>
                                                             </thead>
@@ -418,9 +420,9 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                                                                     ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
                                                                                     : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
                                                                             }`}>
-                                                                                {attendance.status === 'present' && <CheckCircle className="w-3 h-3 mr-1" />}
-                                                                                {attendance.status === 'absent' && <XCircle className="w-3 h-3 mr-1" />}
-                                                                                {attendance.status === 'tardy' && <Clock className="w-3 h-3 mr-1" />}
+                                                                                {attendance.status === 'present' && <CheckCircle className="w-3 h-3 me-1" />}
+                                                                                {attendance.status === 'absent' && <XCircle className="w-3 h-3 me-1" />}
+                                                                                {attendance.status === 'tardy' && <Clock className="w-3 h-3 me-1" />}
                                                                                 {attendance.status.charAt(0).toUpperCase() + attendance.status.slice(1)}
                                                                             </span>
                                                                         </td>
@@ -441,21 +443,21 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                     {student.exam_grades.length > 0 && (
                                         <div>
                                             <h3 className="text-lg font-semibold mb-3 flex items-center">
-                                                <Award className="w-5 h-5 mr-2 text-blue-600" />
-                                                Exam Results
+                                                <Award className="w-5 h-5 me-2 text-blue-600" />
+                                                {t('Exam Results')}
                                             </h3>
                                             <div className="overflow-x-auto">
                                                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                                     <thead className="bg-gray-50 dark:bg-gray-900">
                                                         <tr>
-                                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                                Exam
+                                                            <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                                {t('Exam')}
                                                             </th>
-                                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                                Grade
+                                                            <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                                {t('Grade')}
                                                             </th>
-                                                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                                                Date
+                                                            <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                                {t('Date')}
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -471,7 +473,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                                                             {examGrade.grade}
                                                                         </span>
                                                                     ) : (
-                                                                        <span className="text-gray-400">N/A</span>
+                                                                        <span className="text-gray-400">{t('N/A')}</span>
                                                                     )}
                                                                 </td>
                                                                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
@@ -495,7 +497,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                     <DialogContent className="sm:max-w-[600px]">
                         <DialogHeader>
                             <DialogTitle>
-                                Edit Student Information
+                                {t('Edit Student Information')}
                             </DialogTitle>
                         </DialogHeader>
                         
@@ -529,7 +531,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                             </div>
 
                             <div>
-                                <Label htmlFor="middle_name">Middle Name</Label>
+                                <Label htmlFor="middle_name">{t('Middle Name')}</Label>
                                 <Input
                                     id="middle_name"
                                     value={data.middle_name}
@@ -543,17 +545,17 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <Label htmlFor="gender">Gender</Label>
+                                    <Label htmlFor="gender">{t('Gender')}</Label>
                                     <select
                                         id="gender"
                                         value={data.gender}
                                         onChange={(e) => setData('gender', e.target.value)}
                                         className={`w-full rounded-md border ${errors.gender ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'} bg-white dark:bg-gray-950 px-3 py-2 text-sm`}
                                     >
-                                        <option value="">Select gender</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="other">Other</option>
+                                        <option value="">{t('Select gender')}</option>
+                                        <option value="male">{t('Male')}</option>
+                                        <option value="female">{t('Female')}</option>
+                                        <option value="other">{t('Other')}</option>
                                     </select>
                                     {errors.gender && (
                                         <p className="text-sm text-red-500 mt-1">{errors.gender}</p>
@@ -561,7 +563,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="date_of_birth">Date of Birth</Label>
+                                    <Label htmlFor="date_of_birth">{t('Date of Birth')}</Label>
                                     <Input
                                         id="date_of_birth"
                                         type="date"
@@ -576,7 +578,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                             </div>
 
                             <div>
-                                <Label htmlFor="email">Email</Label>
+                                <Label htmlFor="email">{t('Email')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -590,7 +592,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                             </div>
 
                             <div>
-                                <Label htmlFor="address">Address</Label>
+                                <Label htmlFor="address">{t('Address')}</Label>
                                 <Input
                                     id="address"
                                     value={data.address}
@@ -609,7 +611,7 @@ export default function StudentsPage({ member, students, hasStudents }: Props) {
                                     onClick={closeEditDialog}
                                     disabled={processing}
                                 >
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                                 <Button
                                     type="submit"

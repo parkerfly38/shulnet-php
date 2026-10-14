@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { useMemo } from 'react';
 import { useForm, Head } from '@inertiajs/react';
 import { FileText, Calendar, Heart } from 'lucide-react';
@@ -31,6 +32,7 @@ interface NoteFormData {
 }
 
 export default function EditNote({ note, members, users }: EditNoteProps) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
         {
             title: 'Dashboard',
@@ -82,8 +84,8 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Note</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Update note information</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Edit Note')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Update note information')}</p>
                     </div>
                 </div>
 
@@ -93,11 +95,11 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center">
-                                    <FileText className="h-5 w-5 mr-2" />
-                                    Basic Information
+                                    <FileText className="h-5 w-5 me-2" />
+                                    {t('Basic Information')}
                                 </CardTitle>
                                 <CardDescription>
-                                    Update the basic details for the note
+                                    {t('Update the basic details for the note')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -110,7 +112,7 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                         type="text"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        placeholder="Enter note name"
+                                        placeholder={t('Enter note name')}
                                         className={errors.name ? 'border-red-500' : ''}
                                     />
                                     {errors.name && (
@@ -124,12 +126,12 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                     </Label>
                                     <Select value={data.item_scope} onValueChange={(value) => setData('item_scope', value)}>
                                         <SelectTrigger className={errors.item_scope ? 'border-red-500' : ''}>
-                                            <SelectValue placeholder="Select scope" />
+                                            <SelectValue placeholder={t('Select scope')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="User">User</SelectItem>
-                                            <SelectItem value="Member">Member</SelectItem>
-                                            <SelectItem value="Contact">Contact</SelectItem>
+                                            <SelectItem value="User">{t('User')}</SelectItem>
+                                            <SelectItem value="Member">{t('Member')}</SelectItem>
+                                            <SelectItem value="Contact">{t('Contact')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.item_scope && (
@@ -143,12 +145,12 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                     </Label>
                                     <Select value={data.priority} onValueChange={(value) => setData('priority', value)}>
                                         <SelectTrigger className={errors.priority ? 'border-red-500' : ''}>
-                                            <SelectValue placeholder="Select priority" />
+                                            <SelectValue placeholder={t('Select priority')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Low">Low</SelectItem>
-                                            <SelectItem value="Medium">Medium</SelectItem>
-                                            <SelectItem value="High">High</SelectItem>
+                                            <SelectItem value="Low">{t('Low')}</SelectItem>
+                                            <SelectItem value="Medium">{t('Medium')}</SelectItem>
+                                            <SelectItem value="High">{t('High')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.priority && (
@@ -162,12 +164,12 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                     </Label>
                                     <Select value={data.visibility} onValueChange={(value) => setData('visibility', value)}>
                                         <SelectTrigger className={errors.visibility ? 'border-red-500' : ''}>
-                                            <SelectValue placeholder="Select visibility" />
+                                            <SelectValue placeholder={t('Select visibility')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="Member">Member</SelectItem>
-                                            <SelectItem value="Admin">Admin</SelectItem>
-                                            <SelectItem value="Broadcast">Broadcast</SelectItem>
+                                            <SelectItem value="Member">{t('Member')}</SelectItem>
+                                            <SelectItem value="Admin">{t('Admin')}</SelectItem>
+                                            <SelectItem value="Broadcast">{t('Broadcast')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.visibility && (
@@ -177,19 +179,19 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
 
                                 <div className="space-y-2">
                                     <Label htmlFor="member_care_alert">
-                                        <Heart className="h-4 w-4 inline mr-1" />
-                                        Member Care Alert
+                                        <Heart className="h-4 w-4 inline me-1" />
+                                        {t('Member Care Alert')}
                                     </Label>
                                     <Select value={data.member_care_alert ?? ''} onValueChange={(value) => setData('member_care_alert', value)}>
                                         <SelectTrigger className={errors.member_care_alert ? 'border-red-500' : ''}>
-                                            <SelectValue placeholder="Select care alert (optional)" />
+                                            <SelectValue placeholder={t('Select care alert (optional)')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value=" ">No alert</SelectItem>
-                                            <SelectItem value="hospitalized">Hospitalized</SelectItem>
-                                            <SelectItem value="mourning">Mourning</SelectItem>
-                                            <SelectItem value="immediate_follow_up">Immediate Follow-Up</SelectItem>
-                                            <SelectItem value="other_emergency">Other Emergency</SelectItem>
+                                            <SelectItem value=" ">{t('No alert')}</SelectItem>
+                                            <SelectItem value="hospitalized">{t('Hospitalized')}</SelectItem>
+                                            <SelectItem value="mourning">{t('Mourning')}</SelectItem>
+                                            <SelectItem value="immediate_follow_up">{t('Immediate Follow-Up')}</SelectItem>
+                                            <SelectItem value="other_emergency">{t('Other Emergency')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.member_care_alert && (
@@ -203,16 +205,16 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center">
-                                    <Calendar className="h-5 w-5 mr-2" />
-                                    Additional Details
+                                    <Calendar className="h-5 w-5 me-2" />
+                                    {t('Additional Details')}
                                 </CardTitle>
                                 <CardDescription>
-                                    Optional information and scheduling
+                                    {t('Optional information and scheduling')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="deadline_date">Deadline Date</Label>
+                                    <Label htmlFor="deadline_date">{t('Deadline Date')}</Label>
                                     <Input
                                         id="deadline_date"
                                         type="datetime-local"
@@ -226,13 +228,13 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="label">Label</Label>
+                                    <Label htmlFor="label">{t('Label')}</Label>
                                     <Input
                                         id="label"
                                         type="text"
                                         value={data.label}
                                         onChange={(e) => setData('label', e.target.value)}
-                                        placeholder="Enter label (e.g., Financial, Meetings)"
+                                        placeholder={t('Enter label (e.g., Financial, Meetings)')}
                                         className={errors.label ? 'border-red-500' : ''}
                                     />
                                     {errors.label && (
@@ -241,13 +243,13 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="added_by">Added By</Label>
+                                    <Label htmlFor="added_by">{t('Added By')}</Label>
                                     <Input
                                         id="added_by"
                                         type="text"
                                         value={data.added_by}
                                         onChange={(e) => setData('added_by', e.target.value)}
-                                        placeholder="Enter who added this note"
+                                        placeholder={t('Enter who added this note')}
                                         className={errors.added_by ? 'border-red-500' : ''}
                                     />
                                     {errors.added_by && (
@@ -256,13 +258,13 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="member_id">Related Member</Label>
+                                    <Label htmlFor="member_id">{t('Related Member')}</Label>
                                     <Select value={data.member_id ?? ' '} onValueChange={(value) => setData('member_id', value)}>
                                         <SelectTrigger className={errors.member_id ? 'border-red-500' : ''}>
-                                            <SelectValue placeholder="Select a member (optional)" />
+                                            <SelectValue placeholder={t('Select a member (optional)')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value=" ">No member</SelectItem>
+                                            <SelectItem value=" ">{t('No member')}</SelectItem>
                                             {members.map((member) => (
                                                 <SelectItem key={member.id} value={member.id.toString()}>
                                                     {member.first_name} {member.last_name} - {member.email}
@@ -276,13 +278,13 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="user_id">Assigned User</Label>
+                                    <Label htmlFor="user_id">{t('Assigned User')}</Label>
                                     <Select value={data.user_id ?? ' '} onValueChange={(value) => setData('user_id', value)}>
                                         <SelectTrigger className={errors.user_id ? 'border-red-500' : ''}>
-                                            <SelectValue placeholder="Assign to user (optional)" />
+                                            <SelectValue placeholder={t('Assign to user (optional)')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value=" ">No user assigned</SelectItem>
+                                            <SelectItem value=" ">{t('No user assigned')}</SelectItem>
                                             {users.map((user) => (
                                                 <SelectItem key={user.id} value={user.id.toString()}>
                                                     {user.name} - {user.email}
@@ -302,21 +304,21 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center">
-                                <FileText className="h-5 w-5 mr-2" />
-                                Note Content
+                                <FileText className="h-5 w-5 me-2" />
+                                {t('Note Content')}
                             </CardTitle>
                             <CardDescription>
-                                Detailed description and content of the note
+                                {t('Detailed description and content of the note')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-2">
-                                <Label htmlFor="note_text">Note Details</Label>
+                                <Label htmlFor="note_text">{t('Note Details')}</Label>
                                 <Textarea
                                     id="note_text"
                                     value={data.note_text}
                                     onChange={(e) => setData('note_text', e.target.value)}
-                                    placeholder="Enter detailed note content..."
+                                    placeholder={t('Enter detailed note content...')}
                                     rows={6}
                                     className={errors.note_text ? 'border-red-500' : ''}
                                 />
@@ -334,7 +336,7 @@ export default function EditNote({ note, members, users }: EditNoteProps) {
                             variant="outline"
                             onClick={() => window.history.back()}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                             {processing ? 'Updating...' : 'Update Note'}

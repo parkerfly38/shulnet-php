@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function BannersEdit({ banner }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, put, processing, errors } = useForm({
     title: banner.title || '',
     message: banner.message || '',
@@ -50,9 +52,9 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Banner</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Edit Banner')}</h1>
             <p className="text-muted-foreground mt-2">
-              Update banner message details
+              {t('Update banner message details')}
             </p>
           </div>
         </div>
@@ -60,7 +62,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <Card className="max-w-3xl">
             <CardHeader>
-              <CardTitle>Banner Information</CardTitle>
+              <CardTitle>{t('Banner Information')}</CardTitle>
               <CardDescription>
                 Update the details for {banner.title}
               </CardDescription>
@@ -74,7 +76,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   value={data.title}
                   onChange={(e) => setData('title', e.target.value)}
                   className={errors.title ? 'border-red-500' : ''}
-                  placeholder="Enter banner title"
+                  placeholder={t('Enter banner title')}
                 />
                 {errors.title && (
                   <p className="text-sm text-red-500">{errors.title}</p>
@@ -89,12 +91,12 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   onChange={(e) => setData('message', e.target.value)}
                   rows={4}
                   className={errors.message ? 'border-red-500' : ''}
-                  placeholder="Enter banner message (HTML supported)"
+                  placeholder={t('Enter banner message (HTML supported)')}
                 />
                 {errors.message && (
                   <p className="text-sm text-red-500">{errors.message}</p>
                 )}
-                <p className="text-sm text-muted-foreground">HTML tags are supported for formatting</p>
+                <p className="text-sm text-muted-foreground">{t('HTML tags are supported for formatting')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -102,13 +104,13 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   <Label htmlFor="type">Type *</Label>
                   <Select value={data.type} onValueChange={(value: 'info' | 'warning' | 'success' | 'error') => setData('type', value)}>
                     <SelectTrigger id="type" className={errors.type ? 'border-red-500' : ''}>
-                      <SelectValue placeholder="Select banner type" />
+                      <SelectValue placeholder={t('Select banner type')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="info">Info</SelectItem>
-                      <SelectItem value="warning">Warning</SelectItem>
-                      <SelectItem value="success">Success</SelectItem>
-                      <SelectItem value="error">Error</SelectItem>
+                      <SelectItem value="info">{t('Info')}</SelectItem>
+                      <SelectItem value="warning">{t('Warning')}</SelectItem>
+                      <SelectItem value="success">{t('Success')}</SelectItem>
+                      <SelectItem value="error">{t('Error')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.type && (
@@ -120,13 +122,13 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   <Label htmlFor="target_audience">Target Audience *</Label>
                   <Select value={data.target_audience} onValueChange={(value: 'members' | 'students' | 'parents' | 'all') => setData('target_audience', value)}>
                     <SelectTrigger id="target_audience" className={errors.target_audience ? 'border-red-500' : ''}>
-                      <SelectValue placeholder="Select audience" />
+                      <SelectValue placeholder={t('Select audience')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Users</SelectItem>
-                      <SelectItem value="members">Members</SelectItem>
-                      <SelectItem value="students">Students</SelectItem>
-                      <SelectItem value="parents">Parents</SelectItem>
+                      <SelectItem value="all">{t('All Users')}</SelectItem>
+                      <SelectItem value="members">{t('Members')}</SelectItem>
+                      <SelectItem value="students">{t('Students')}</SelectItem>
+                      <SelectItem value="parents">{t('Parents')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.target_audience && (
@@ -151,7 +153,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="end_date">End Date</Label>
+                  <Label htmlFor="end_date">{t('End Date')}</Label>
                   <Input
                     id="end_date"
                     type="date"
@@ -162,7 +164,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   {errors.end_date && (
                     <p className="text-sm text-red-500">{errors.end_date}</p>
                   )}
-                  <p className="text-sm text-muted-foreground">Leave empty for no end date</p>
+                  <p className="text-sm text-muted-foreground">{t('Leave empty for no end date')}</p>
                 </div>
               </div>
 
@@ -180,28 +182,28 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                 {errors.display_duration_seconds && (
                   <p className="text-sm text-red-500">{errors.display_duration_seconds}</p>
                 )}
-                <p className="text-sm text-muted-foreground">How long the banner stays visible (1-300 seconds)</p>
+                <p className="text-sm text-muted-foreground">{t('How long the banner stays visible (1-300 seconds)')}</p>
               </div>
             </CardContent>
           </Card>
 
           <Card className="max-w-3xl">
             <CardHeader>
-              <CardTitle>Action Button (Optional)</CardTitle>
+              <CardTitle>{t('Action Button (Optional)')}</CardTitle>
               <CardDescription>
-                Add a call-to-action button to the banner
+                {t('Add a call-to-action button to the banner')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="action_text">Button Text</Label>
+                <Label htmlFor="action_text">{t('Button Text')}</Label>
                 <Input
                   id="action_text"
                   type="text"
                   value={data.action_text}
                   onChange={(e) => setData('action_text', e.target.value)}
                   className={errors.action_text ? 'border-red-500' : ''}
-                  placeholder="e.g., Learn More, Sign Up"
+                  placeholder={t('e.g., Learn More, Sign Up')}
                 />
                 {errors.action_text && (
                   <p className="text-sm text-red-500">{errors.action_text}</p>
@@ -209,14 +211,14 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="action_url">Button URL</Label>
+                <Label htmlFor="action_url">{t('Button URL')}</Label>
                 <Input
                   id="action_url"
                   type="url"
                   value={data.action_url}
                   onChange={(e) => setData('action_url', e.target.value)}
                   className={errors.action_url ? 'border-red-500' : ''}
-                  placeholder="https://example.com"
+                  placeholder={t('https://example.com')}
                 />
                 {errors.action_url && (
                   <p className="text-sm text-red-500">{errors.action_url}</p>
@@ -227,9 +229,9 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
 
           <Card className="max-w-3xl">
             <CardHeader>
-              <CardTitle>Display Options</CardTitle>
+              <CardTitle>{t('Display Options')}</CardTitle>
               <CardDescription>
-                Configure where and how the banner appears
+                {t('Configure where and how the banner appears')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -262,7 +264,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   onCheckedChange={(checked) => setData('show_on_login', checked as boolean)}
                 />
                 <Label htmlFor="show_on_login" className="font-normal cursor-pointer">
-                  Show on login page
+                  {t('Show on login page')}
                 </Label>
               </div>
 
@@ -273,7 +275,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
                   onCheckedChange={(checked) => setData('show_on_dashboard', checked as boolean)}
                 />
                 <Label htmlFor="show_on_dashboard" className="font-normal cursor-pointer">
-                  Show on dashboard
+                  {t('Show on dashboard')}
                 </Label>
               </div>
 
@@ -292,23 +294,23 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
 
           <Card className="max-w-3xl">
             <CardHeader>
-              <CardTitle>Statistics</CardTitle>
+              <CardTitle>{t('Statistics')}</CardTitle>
               <CardDescription>
-                Banner performance metrics
+                {t('Banner performance metrics')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Views:</span>
+                  <span className="text-muted-foreground">{t('Views:')}</span>
                   <div className="text-lg font-semibold">{banner.view_count.toLocaleString()}</div>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Clicks:</span>
+                  <span className="text-muted-foreground">{t('Clicks:')}</span>
                   <div className="text-lg font-semibold">{banner.click_count.toLocaleString()}</div>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Dismissed:</span>
+                  <span className="text-muted-foreground">{t('Dismissed:')}</span>
                   <div className="text-lg font-semibold">{banner.dismiss_count.toLocaleString()}</div>
                 </div>
               </div>
@@ -321,7 +323,7 @@ export default function BannersEdit({ banner }: Readonly<Props>) {
             </Button>
             <Link href="/admin/banners">
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
           </div>

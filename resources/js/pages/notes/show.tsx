@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -12,6 +13,7 @@ interface NoteShowProps {
 }
 
 export default function NoteShow({ note }: NoteShowProps) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
         {
             title: 'Dashboard',
@@ -137,13 +139,13 @@ export default function NoteShow({ note }: NoteShowProps) {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{note.name}</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Note Details</p>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Note Details')}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Link href={`/admin/notes/${note.id}/edit`}>
                             <Button variant="outline" size="sm">
-                                <Edit className="h-4 w-4 mr-2" />
-                                Edit
+                                <Edit className="h-4 w-4 me-2" />
+                                {t('Edit')}
                             </Button>
                         </Link>
                         <Button
@@ -152,8 +154,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                             onClick={handleDelete}
                             className="text-red-600 hover:text-red-800"
                         >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            <Trash2 className="h-4 w-4 me-2" />
+                            {t('Delete')}
                         </Button>
                     </div>
                 </div>
@@ -164,8 +166,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                         <CardContent className="pt-6">
                             <div className="flex items-center">
                                 {getPriorityIcon()}
-                                <div className="ml-2">
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Priority</p>
+                                <div className="ms-2">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('Priority')}</p>
                                     <div className="flex items-center mt-1">
                                         <Badge variant={getPriorityVariant()}>
                                             {note.priority}
@@ -180,8 +182,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                         <CardContent className="pt-6">
                             <div className="flex items-center">
                                 {statusInfo.icon}
-                                <div className="ml-2">
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Status</p>
+                                <div className="ms-2">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('Status')}</p>
                                     <div className="flex items-center mt-1">
                                         <Badge variant={statusInfo.variant}>
                                             {statusInfo.status}
@@ -196,8 +198,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                         <CardContent className="pt-6">
                             <div className="flex items-center">
                                 <User className="h-4 w-4 text-gray-400" />
-                                <div className="ml-2">
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Scope</p>
+                                <div className="ms-2">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('Scope')}</p>
                                     <div className="flex items-center mt-1">
                                         <Badge variant="outline">
                                             {note.item_scope}
@@ -212,8 +214,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                         <CardContent className="pt-6">
                             <div className="flex items-center">
                                 <Tag className="h-4 w-4 text-gray-400" />
-                                <div className="ml-2">
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Visibility</p>
+                                <div className="ms-2">
+                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('Visibility')}</p>
                                     <div className="flex items-center mt-1">
                                         <Badge variant="outline">
                                             {note.visibility}
@@ -229,8 +231,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                             <CardContent className="pt-6">
                                 <div className="flex items-center">
                                     <Heart className="h-4 w-4 text-red-500" />
-                                    <div className="ml-2">
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Care Alert</p>
+                                    <div className="ms-2">
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('Care Alert')}</p>
                                         <div className="flex items-center mt-1">
                                             <Badge variant="destructive">
                                                 {note.member_care_alert === 'hospitalized' && 'Hospitalized'}
@@ -253,8 +255,8 @@ export default function NoteShow({ note }: NoteShowProps) {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center">
-                                    <FileText className="h-5 w-5 mr-2" />
-                                    Note Content
+                                    <FileText className="h-5 w-5 me-2" />
+                                    {t('Note Content')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -263,7 +265,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                                         <p className="whitespace-pre-wrap">{note.note_text}</p>
                                     </div>
                                 ) : (
-                                    <p className="text-gray-500 italic">No note content available</p>
+                                    <p className="text-gray-500 italic">{t('No note content available')}</p>
                                 )}
                             </CardContent>
                         </Card>
@@ -272,21 +274,21 @@ export default function NoteShow({ note }: NoteShowProps) {
                         {!note.completed_date && (
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Quick Actions</CardTitle>
+                                    <CardTitle>{t('Quick Actions')}</CardTitle>
                                     <CardDescription>
-                                        Perform quick actions on this note
+                                        {t('Perform quick actions on this note')}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="flex space-x-2">
                                         <Button onClick={handleMarkComplete}>
-                                            <CheckCircle className="h-4 w-4 mr-2" />
-                                            Mark as Complete
+                                            <CheckCircle className="h-4 w-4 me-2" />
+                                            {t('Mark as Complete')}
                                         </Button>
                                         {note.deadline_date && (
                                             <Button onClick={handleDownloadICS} variant="outline">
-                                                <CalendarPlus className="h-4 w-4 mr-2" />
-                                                Add to Calendar
+                                                <CalendarPlus className="h-4 w-4 me-2" />
+                                                {t('Add to Calendar')}
                                             </Button>
                                         )}
                                     </div>
@@ -301,15 +303,15 @@ export default function NoteShow({ note }: NoteShowProps) {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center">
-                                    <Calendar className="h-5 w-5 mr-2" />
-                                    Timing
+                                    <Calendar className="h-5 w-5 me-2" />
+                                    {t('Timing')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {note.deadline_date && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Deadline
+                                            {t('Deadline')}
                                         </p>
                                         <p className="text-sm">
                                             {formatDateTime(note.deadline_date)}
@@ -320,7 +322,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                                 {note.completed_date && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Completed
+                                            {t('Completed')}
                                         </p>
                                         <p className="text-sm">
                                             {formatDateTime(note.completed_date)}
@@ -331,7 +333,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                                 {note.seen_date && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Last Seen
+                                            {t('Last Seen')}
                                         </p>
                                         <p className="text-sm">
                                             {formatDateTime(note.seen_date)}
@@ -341,7 +343,7 @@ export default function NoteShow({ note }: NoteShowProps) {
 
                                 <div>
                                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                        Created
+                                        {t('Created')}
                                     </p>
                                     <p className="text-sm">
                                         {formatDateTime(note.created_at)}
@@ -351,7 +353,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                                 {note.updated_at !== note.created_at && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Last Updated
+                                            {t('Last Updated')}
                                         </p>
                                         <p className="text-sm">
                                             {formatDateTime(note.updated_at)}
@@ -364,41 +366,41 @@ export default function NoteShow({ note }: NoteShowProps) {
                         {/* Additional Information */}
                         <Card>
                             <CardHeader>
-                                <CardTitle>Additional Information</CardTitle>
+                                <CardTitle>{t('Additional Information')}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {note.member && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Related Member
+                                            {t('Related Member')}
                                         </p>
                                         <div className="flex items-center">
-                                            <User className="h-4 w-4 mr-2 text-gray-400" />
+                                            <User className="h-4 w-4 me-2 text-gray-400" />
                                             <span className="text-sm">
                                                 {note.member.first_name} {note.member.last_name}
                                             </span>
                                         </div>
-                                        <p className="text-xs text-gray-500 ml-6">{note.member.email}</p>
+                                        <p className="text-xs text-gray-500 ms-6">{note.member.email}</p>
                                     </div>
                                 )}
 
                                 {note.user && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Assigned User
+                                            {t('Assigned User')}
                                         </p>
                                         <div className="flex items-center">
-                                            <User className="h-4 w-4 mr-2 text-gray-400" />
+                                            <User className="h-4 w-4 me-2 text-gray-400" />
                                             <span className="text-sm">{note.user.name}</span>
                                         </div>
-                                        <p className="text-xs text-gray-500 ml-6">{note.user.email}</p>
+                                        <p className="text-xs text-gray-500 ms-6">{note.user.email}</p>
                                     </div>
                                 )}
 
                                 {note.label && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Label
+                                            {t('Label')}
                                         </p>
                                         <Badge variant="outline">{note.label}</Badge>
                                     </div>
@@ -407,7 +409,7 @@ export default function NoteShow({ note }: NoteShowProps) {
                                 {note.added_by && (
                                     <div>
                                         <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                            Added By
+                                            {t('Added By')}
                                         </p>
                                         <p className="text-sm">{note.added_by}</p>
                                     </div>

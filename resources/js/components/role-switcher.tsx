@@ -63,9 +63,9 @@ export function RoleSwitcher({ roleSwitch, className, onRoleSwitch }: RoleSwitch
                     className={className}
                     disabled={isLoading}
                 >
-                    <UserCog className="mr-2 h-4 w-4" />
+                    <UserCog className="me-2 h-4 w-4" />
                     {activeRoleData?.label || 'Switch Role'}
-                    <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                    <ChevronDown className="ms-2 h-4 w-4 opacity-50" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">

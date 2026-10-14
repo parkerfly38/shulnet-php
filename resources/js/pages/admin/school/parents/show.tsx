@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -9,6 +10,7 @@ const breadcrumbsBase: BreadcrumbItem[] = [
 ];
 
 export default function ParentsShow() {
+    const { t } = useTranslation();
     const { props } = usePage();
     const pageProps: any = props;
     const data = pageProps.item ?? {};
@@ -22,21 +24,21 @@ export default function ParentsShow() {
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold">{data.first_name} {data.last_name}</h1>
                     <div className="flex gap-2">
-                        <Link href="/admin/school/parents" className="px-3 py-1 border rounded">Back</Link>
-                        <Link href={`/admin/school/parents/${data.id}/edit`} className="px-3 py-1 bg-yellow-500 text-white rounded">Edit</Link>
+                        <Link href="/admin/school/parents" className="px-3 py-1 border rounded">{t('Back')}</Link>
+                        <Link href={`/admin/school/parents/${data.id}/edit`} className="px-3 py-1 bg-yellow-500 text-white rounded">{t('Edit')}</Link>
                     </div>
                 </div>
 
                 <div className="bg-white dark:bg-black p-4 rounded border">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div><strong>First Name:</strong> {data.first_name}</div>
-                        <div><strong>Last Name:</strong> {data.last_name}</div>
-                        <div><strong>Email:</strong> {data.email}</div>
-                        <div><strong>Date of Birth:</strong> {data.date_of_birth}</div>
-                        <div className="col-span-1 md:col-span-2"><strong>Address:</strong> {data.address}</div>
+                        <div><strong>{t('First Name:')}</strong> {data.first_name}</div>
+                        <div><strong>{t('Last Name:')}</strong> {data.last_name}</div>
+                        <div><strong>{t('Email:')}</strong> {data.email}</div>
+                        <div><strong>{t('Date of Birth:')}</strong> {data.date_of_birth}</div>
+                        <div className="col-span-1 md:col-span-2"><strong>{t('Address:')}</strong> {data.address}</div>
                         {data.picture_url && (
                             <div className="col-span-1 md:col-span-2">
-                                <strong>Picture:</strong>
+                                <strong>{t('Picture:')}</strong>
                                 <img src={data.picture_url} alt={`${data.first_name} ${data.last_name}`} className="mt-2 w-32 h-32 object-cover rounded" />
                             </div>
                         )}
@@ -45,7 +47,7 @@ export default function ParentsShow() {
 
                 {/* Students Section */}
                 <div className="mt-6">
-                    <h2 className="text-xl font-bold mb-4">Students</h2>
+                    <h2 className="text-xl font-bold mb-4">{t('Students')}</h2>
                     <div className="bg-white dark:bg-black p-4 rounded border">
                         {data.students && data.students.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -72,7 +74,7 @@ export default function ParentsShow() {
                             </div>
                         ) : (
                             <div className="text-gray-500 dark:text-gray-400 text-center py-8">
-                                No students assigned to this parent
+                                {t('No students assigned to this parent')}
                             </div>
                         )}
                     </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router, usePage, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -72,6 +73,7 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function InvoicesIndex({ invoices, members, stats, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [search, setSearch] = useState(filters.search || '');
   const [status, setStatus] = useState(filters.status || '');
   const [memberId, setMemberId] = useState(filters.member || '');
@@ -191,19 +193,19 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Invoices" />
+      <Head title={t('Invoices')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Invoices</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage member invoices and recurring billing</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Invoices')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage member invoices and recurring billing')}</p>
           </div>
           <Link href="/admin/invoices/create">
             <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Invoice
+              <Plus className="h-4 w-4 me-2" />
+              {t('New Invoice')}
             </Button>
           </Link>
         </div>
@@ -244,7 +246,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <Input
-                placeholder="Search invoices..."
+                placeholder={t('Search invoices...')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
@@ -253,25 +255,25 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
             <div className="w-[180px]">
               <Select value={status ?? " "} onValueChange={setStatus}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Statuses" />
+                  <SelectValue placeholder={t('All Statuses')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=" ">All Statuses</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="open">Open</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value=" ">{t('All Statuses')}</SelectItem>
+                  <SelectItem value="draft">{t('Draft')}</SelectItem>
+                  <SelectItem value="open">{t('Open')}</SelectItem>
+                  <SelectItem value="paid">{t('Paid')}</SelectItem>
+                  <SelectItem value="overdue">{t('Overdue')}</SelectItem>
+                  <SelectItem value="cancelled">{t('Cancelled')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="w-[200px]">
               <Select value={memberId ?? " "} onValueChange={setMemberId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Members" />
+                  <SelectValue placeholder={t('All Members')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=" ">All Members</SelectItem>
+                  <SelectItem value=" ">{t('All Members')}</SelectItem>
                   {members.map((member) => (
                     <SelectItem key={member.id} value={member.id.toString()}>
                       {member.first_name} {member.last_name}
@@ -281,12 +283,12 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
               </Select>
             </div>
             <Button onClick={handleFilter} variant="outline">
-              <Search className="h-4 w-4 mr-2" />
-              Filter
+              <Search className="h-4 w-4 me-2" />
+              {t('Filter')}
             </Button>
             {(search || status || memberId) && (
               <Button onClick={handleClearFilters} variant="ghost">
-                Clear Filters
+                {t('Clear Filters')}
               </Button>
             )}
           </div>
@@ -298,29 +300,29 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Invoice #
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Member
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Member')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Date
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Date')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Due Date
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Due Date')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Amount
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Amount')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Status')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Recurring
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Recurring')}
                   </th>
                   <th className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">{t('Actions')}</span>
                   </th>
                 </tr>
               </thead>
@@ -358,27 +360,27 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                       <td className="px-6 py-4 whitespace-nowrap">
                         {invoice.recurring && (
                           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                            <RefreshCw className="h-3 w-3 mr-1" />
+                            <RefreshCw className="h-3 w-3 me-1" />
                             {invoice.recurring_interval_count > 1 && `Every ${invoice.recurring_interval_count} `}
                             {invoice.recurring_interval}
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex justify-end gap-2">
                           {invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => openMarkPaidDialog(invoice)}
-                              title="Mark as Paid"
+                              title={t('Mark as Paid')}
                               className="text-green-600 hover:text-green-700"
                             >
                               <CheckCircle className="h-4 w-4" />
                             </Button>
                           )}
                           <Link href={`/admin/invoices/${invoice.id}`}>
-                            <Button variant="ghost" size="sm" title="View">
+                            <Button variant="ghost" size="sm" title={t('View')}>
                               <FileText className="h-4 w-4" />
                             </Button>
                           </Link>
@@ -386,12 +388,12 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                             variant="ghost"
                             size="sm"
                             onClick={() => window.open(`/admin/invoices/${invoice.id}/print`, '_blank')}
-                            title="Print"
+                            title={t('Print')}
                           >
                             <Printer className="h-4 w-4" />
                           </Button>
                           <Link href={`/admin/invoices/${invoice.id}/edit`}>
-                            <Button variant="ghost" size="sm" title="Edit">
+                            <Button variant="ghost" size="sm" title={t('Edit')}>
                               <Edit className="h-4 w-4" />
                             </Button>
                           </Link>
@@ -399,7 +401,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDelete(invoice)}
-                            title="Delete"
+                            title={t('Delete')}
                           >
                             <Trash2 className="h-4 w-4 text-red-600" />
                           </Button>
@@ -412,8 +414,8 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                     <td colSpan={8} className="px-6 py-12 text-center">
                       <div className="text-gray-500 dark:text-gray-400">
                         <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                        <p className="text-lg font-medium">No invoices found</p>
-                        <p className="text-sm mt-1">Create your first invoice to get started.</p>
+                        <p className="text-lg font-medium">{t('No invoices found')}</p>
+                        <p className="text-sm mt-1">{t('Create your first invoice to get started.')}</p>
                       </div>
                     </td>
                   </tr>
@@ -435,7 +437,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                     href={`/admin/invoices?page=${invoices.current_page - 1}`}
                     preserveState
                   >
-                    <Button variant="outline" size="sm">Previous</Button>
+                    <Button variant="outline" size="sm">{t('Previous')}</Button>
                   </Link>
                 )}
                 {invoices.current_page < invoices.last_page && (
@@ -443,7 +445,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                     href={`/admin/invoices?page=${invoices.current_page + 1}`}
                     preserveState
                   >
-                    <Button variant="outline" size="sm">Next</Button>
+                    <Button variant="outline" size="sm">{t('Next')}</Button>
                   </Link>
                 )}
               </div>
@@ -457,14 +459,14 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
         <DialogContent>
           <form onSubmit={handleMarkAsPaid}>
             <DialogHeader>
-              <DialogTitle>Mark Invoice as Paid</DialogTitle>
+              <DialogTitle>{t('Mark Invoice as Paid')}</DialogTitle>
               <DialogDescription>
                 Record a manual payment for invoice {markPaidInvoice?.invoice_number}. A payment record will be created.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="payment_method">Payment Method</Label>
+                <Label htmlFor="payment_method">{t('Payment Method')}</Label>
                 <Select
                   value={data.payment_method}
                   onValueChange={(value) => setData('payment_method', value)}
@@ -473,15 +475,15 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="check">Check</SelectItem>
-                    <SelectItem value="cash">Cash</SelectItem>
-                    <SelectItem value="wire_transfer">Wire Transfer</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="check">{t('Check')}</SelectItem>
+                    <SelectItem value="cash">{t('Cash')}</SelectItem>
+                    <SelectItem value="wire_transfer">{t('Wire Transfer')}</SelectItem>
+                    <SelectItem value="other">{t('Other')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="amount">Amount</Label>
+                <Label htmlFor="amount">{t('Amount')}</Label>
                 <Input
                   id="amount"
                   type="number"
@@ -489,7 +491,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                   min="0"
                   value={data.amount}
                   onChange={(e) => setData('amount', e.target.value)}
-                  placeholder="Payment amount"
+                  placeholder={t('Payment amount')}
                 />
                 {markPaidInvoice && (
                   <p className="text-xs text-muted-foreground">
@@ -501,12 +503,12 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                 )}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="note">Note (Optional)</Label>
+                <Label htmlFor="note">{t('Note (Optional)')}</Label>
                 <Textarea
                   id="note"
                   value={data.note}
                   onChange={(e) => setData('note', e.target.value)}
-                  placeholder="Add any notes about this payment..."
+                  placeholder={t('Add any notes about this payment...')}
                   rows={3}
                 />
               </div>
@@ -518,7 +520,7 @@ export default function InvoicesIndex({ invoices, members, stats, filters }: Rea
                 onClick={() => setMarkPaidInvoice(null)}
                 disabled={processing}
               >
-                Cancel
+                {t('Cancel')}
               </Button>
               <Button type="submit" disabled={processing}>
                 {processing ? 'Recording...' : 'Record Payment'}

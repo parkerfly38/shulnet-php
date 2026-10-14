@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState, useRef, useEffect } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -70,6 +71,7 @@ interface Props {
 }
 
 export default function MembersIndex({ members, stats, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [search, setSearch] = useState(filters.search || '');
   const [memberType, setMemberType] = useState(filters.member_type || '');
   const [primaryOnly, setPrimaryOnly] = useState(filters.primary_only || false);
@@ -334,7 +336,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Member Management" />
+      <Head title={t('Member Management')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {flash?.success && !flash.success.includes('Import completed') && (
@@ -351,10 +353,10 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              Member Management
+              {t('Member Management')}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Manage synagogue members and their information
+              {t('Manage synagogue members and their information')}
             </p>
           </div>
           <div className="flex gap-2">
@@ -362,15 +364,14 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
               <DialogTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
                   <Upload className="h-4 w-4" />
-                  Import Members
+                  {t('Import Members')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Import Members from CSV</DialogTitle>
+                  <DialogTitle>{t('Import Members from CSV')}</DialogTitle>
                   <DialogDescription>
-                    Upload a CSV file to import or update members. Download the template to see the required format. 
-                    Large files (1000+ rows) may take several minutes to process.
+                    {t('Upload a CSV file to import or update members. Download the template to see the required format. Large files (1000+ rows) may take several minutes to process.')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 pt-4">
@@ -379,13 +380,13 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                       <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
                       <div className="text-center">
                         <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                          Importing Members...
+                          {t('Importing Members...')}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          Please wait while we process your file. Large files may take several minutes.
+                          {t('Please wait while we process your file. Large files may take several minutes.')}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
-                          Do not close this window
+                          {t('Do not close this window')}
                         </p>
                       </div>
                     </div>
@@ -398,7 +399,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                           className="w-full flex items-center gap-2"
                         >
                           <Download className="h-4 w-4" />
-                          Download CSV Template
+                          {t('Download CSV Template')}
                         </Button>
                       </div>
                       <div className="border-t pt-4">
@@ -420,7 +421,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                         disabled={!selectedFile}
                         className="w-full"
                       >
-                        Import Members
+                        {t('Import Members')}
                       </Button>
                     </>
                   )}
@@ -431,7 +432,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
             <Link href="/admin/members/create">
               <Button className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Add Member
+                {t('Add Member')}
               </Button>
             </Link>
           </div>
@@ -445,12 +446,12 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                 {importResults?.success ? (
                   <>
                     <CheckCircle className="h-5 w-5 text-green-600" />
-                    Import Completed
+                    {t('Import Completed')}
                   </>
                 ) : (
                   <>
                     <XCircle className="h-5 w-5 text-red-600" />
-                    Import Failed
+                    {t('Import Failed')}
                   </>
                 )}
               </DialogTitle>
@@ -465,7 +466,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-green-900 dark:text-green-100">
-                        New Members
+                        {t('New Members')}
                       </p>
                       <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">
                         {importResults?.imported || 0}
@@ -478,7 +479,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                        Updated Members
+                        {t('Updated Members')}
                       </p>
                       <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
                         {importResults?.updated || 0}
@@ -507,7 +508,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                         {importResults.errors.map((error) => (
                           <div
                             key={`error-${error.row}-${error.attribute}`}
-                            className="text-sm border-l-4 border-red-500 pl-3 py-1"
+                            className="text-sm border-s-4 border-red-500 ps-3 py-1"
                           >
                             <div className="font-medium text-gray-900 dark:text-gray-100">
                               Row {error.row}
@@ -539,7 +540,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                     <XCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
                     <div>
                       <p className="font-medium text-red-900 dark:text-red-100">
-                        Import Error
+                        {t('Import Error')}
                       </p>
                       <p className="text-sm text-red-700 dark:text-red-300 mt-1">
                         {importResults.errorMessage}
@@ -556,10 +557,10 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                     <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
                     <div>
                       <p className="font-medium text-green-900 dark:text-green-100">
-                        All records processed successfully
+                        {t('All records processed successfully')}
                       </p>
                       <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                        No validation errors were encountered during the import.
+                        {t('No validation errors were encountered during the import.')}
                       </p>
                     </div>
                   </div>
@@ -568,7 +569,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
 
               <div className="flex justify-end pt-4 border-t">
                 <Button onClick={() => setShowResultsDialog(false)}>
-                  Close
+                  {t('Close')}
                 </Button>
               </div>
             </div>
@@ -603,30 +604,30 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
         <div className="flex gap-4 items-end flex-wrap">
           <form onSubmit={handleSearch} className="flex gap-2 flex-1">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Search members by name, email, or location..."
+                placeholder={t('Search members by name, email, or location...')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="ps-10"
               />
             </div>
             <Button type="submit" variant="outline">
-              Search
+              {t('Search')}
             </Button>
           </form>
           <div className="w-48">
             <Select value={memberType ?? ' '} onValueChange={handleMemberTypeChange}>
               <SelectTrigger>
-                <SelectValue placeholder="All Types" />
+                <SelectValue placeholder={t('All Types')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=" ">All Types</SelectItem>
-                <SelectItem value="member">Members</SelectItem>
-                <SelectItem value="contact">Contacts</SelectItem>
-                <SelectItem value="prospect">Prospects</SelectItem>
-                <SelectItem value="former">Former Members</SelectItem>
+                <SelectItem value=" ">{t('All Types')}</SelectItem>
+                <SelectItem value="member">{t('Members')}</SelectItem>
+                <SelectItem value="contact">{t('Contacts')}</SelectItem>
+                <SelectItem value="prospect">{t('Prospects')}</SelectItem>
+                <SelectItem value="former">{t('Former Members')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -640,7 +641,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
               htmlFor="primary-only"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
-              Show only primary accounts
+              {t('Show only primary accounts')}
             </Label>
           </div>
           {(filters.search || filters.member_type || filters.primary_only) && (
@@ -653,7 +654,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                 router.get('/admin/members');
               }}
             >
-              Clear
+              {t('Clear')}
             </Button>
           )}
         </div>
@@ -676,23 +677,23 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Name
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Name')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Type
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Type')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Contact
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Contact')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Location
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Location')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Joined
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Joined')}
                   </th>
                   <th className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">{t('Actions')}</span>
                   </th>
                 </tr>
               </thead>
@@ -737,7 +738,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {new Date(member.created_at).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex gap-2 justify-end">
                           {!member.user_id && member.email && (
                             <Button
@@ -745,7 +746,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                               size="sm"
                               onClick={() => handleCreateUser(member)}
                               className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20"
-                              title="Create User Account"
+                              title={t('Create User Account')}
                             >
                               <KeyRound className="h-4 w-4" />
                             </Button>
@@ -780,7 +781,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                       </div>
                       {!filters.search && (
                         <Link href="/admin/members/create" className="mt-2 inline-block">
-                          <Button>Add your first member</Button>
+                          <Button>{t('Add your first member')}</Button>
                         </Link>
                       )}
                     </td>
@@ -797,12 +798,12 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
             <div className="flex gap-2">
               {members.prev_page_url && (
                 <Link href={members.prev_page_url} preserveState>
-                  <Button variant="outline">Previous</Button>
+                  <Button variant="outline">{t('Previous')}</Button>
                 </Link>
               )}
               {members.next_page_url && (
                 <Link href={members.next_page_url} preserveState>
-                  <Button variant="outline">Next</Button>
+                  <Button variant="outline">{t('Next')}</Button>
                 </Link>
               )}
             </div>
@@ -818,19 +819,19 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
             <DialogHeader>
               <DialogTitle>User Account for {selectedMember?.first_name} {selectedMember?.last_name}</DialogTitle>
               <DialogDescription>
-                Create a new user account or link to an existing user
+                {t('Create a new user account or link to an existing user')}
               </DialogDescription>
             </DialogHeader>
             
             <Tabs value={userAction} onValueChange={(value) => setUserAction(value as 'create' | 'link')} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="create">Create New User</TabsTrigger>
-                <TabsTrigger value="link">Link Existing User</TabsTrigger>
+                <TabsTrigger value="create">{t('Create New User')}</TabsTrigger>
+                <TabsTrigger value="link">{t('Link Existing User')}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="create" className="space-y-4 pt-4">
                 <div>
-                  <Label htmlFor="email">Email (from member record)</Label>
+                  <Label htmlFor="email">{t('Email (from member record)')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -841,7 +842,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                 </div>
 
                 <div className="space-y-3">
-                  <Label>Password Method</Label>
+                  <Label>{t('Password Method')}</Label>
                   <div className="flex gap-4">
                     <div className="flex items-center space-x-2">
                       <input
@@ -854,7 +855,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                         className="h-4 w-4 text-blue-600"
                       />
                       <Label htmlFor="method-email" className="cursor-pointer font-normal">
-                        Send temporary password via email
+                        {t('Send temporary password via email')}
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -868,7 +869,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                         className="h-4 w-4 text-blue-600"
                       />
                       <Label htmlFor="method-manual" className="cursor-pointer font-normal">
-                        Enter password manually
+                        {t('Enter password manually')}
                       </Label>
                     </div>
                   </div>
@@ -877,23 +878,23 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                 {passwordMethod === 'manual' && (
                   <>
                     <div>
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">{t('Password')}</Label>
                       <Input
                         id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter password"
+                        placeholder={t('Enter password')}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="password_confirmation">Confirm Password</Label>
+                      <Label htmlFor="password_confirmation">{t('Confirm Password')}</Label>
                       <Input
                         id="password_confirmation"
                         type="password"
                         value={passwordConfirmation}
                         onChange={(e) => setPasswordConfirmation(e.target.value)}
-                        placeholder="Confirm password"
+                        placeholder={t('Confirm password')}
                       />
                     </div>
                   </>
@@ -912,37 +913,37 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                     variant="outline"
                     onClick={() => setShowCreateUserDialog(false)}
                   >
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                   <Button
                     onClick={submitCreateUser}
                     disabled={passwordMethod === 'manual' && (!password || !passwordConfirmation || password !== passwordConfirmation)}
                   >
-                    Create User
+                    {t('Create User')}
                   </Button>
                 </div>
               </TabsContent>
               
               <TabsContent value="link" className="space-y-4 pt-4">
                 <div>
-                  <Label htmlFor="user-search">Search for Existing User</Label>
+                  <Label htmlFor="user-search">{t('Search for Existing User')}</Label>
                   <div className="relative mt-1">
                     <Input
                       id="user-search"
                       type="text"
-                      placeholder="Search by name or email..."
+                      placeholder={t('Search by name or email...')}
                       value={userSearch}
                       onChange={(e) => handleUserSearch(e.target.value)}
-                      className="pr-10"
+                      className="pe-10"
                     />
                     {searchingUsers && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <div className="absolute end-3 top-1/2 -translate-y-1/2">
                         <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
                       </div>
                     )}
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Type at least 2 characters to search
+                    {t('Type at least 2 characters to search')}
                   </p>
                 </div>
 
@@ -952,7 +953,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                       <button
                         key={user.id}
                         type="button"
-                        className={`w-full p-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
+                        className={`w-full p-3 text-start hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors ${
                           selectedUser?.id === user.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                         }`}
                         onClick={() => setSelectedUser(user)}
@@ -987,7 +988,7 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                   <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                     <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
                     <p>No users found matching "{userSearch}"</p>
-                    <p className="text-sm mt-1">Only users without an existing member link are shown</p>
+                    <p className="text-sm mt-1">{t('Only users without an existing member link are shown')}</p>
                   </div>
                 )}
 
@@ -1007,14 +1008,14 @@ export default function MembersIndex({ members, stats, filters }: Readonly<Props
                     variant="outline"
                     onClick={() => setShowCreateUserDialog(false)}
                   >
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                   <Button
                     onClick={submitCreateUser}
                     disabled={!selectedUser}
                   >
-                    <LinkIcon className="h-4 w-4 mr-2" />
-                    Link User
+                    <LinkIcon className="h-4 w-4 me-2" />
+                    {t('Link User')}
                   </Button>
                 </div>
               </TabsContent>

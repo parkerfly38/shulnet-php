@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -9,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { type BreadcrumbItem } from '@/types';
 
 export default function BoardsCreate() {
+    const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm({
     name: '',
     description: '',
@@ -27,23 +29,23 @@ export default function BoardsCreate() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Board" />
+      <Head title={t('Create Board')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Board</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Create Board')}</h1>
             <p className="text-muted-foreground mt-2">
-              Add a new board to manage
+              {t('Add a new board to manage')}
             </p>
           </div>
         </div>
 
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Board Information</CardTitle>
+            <CardTitle>{t('Board Information')}</CardTitle>
             <CardDescription>
-              Enter the details for the new board
+              {t('Enter the details for the new board')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -63,7 +65,7 @@ export default function BoardsCreate() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('Description')}</Label>
                 <Textarea
                   id="description"
                   value={data.description}
@@ -82,7 +84,7 @@ export default function BoardsCreate() {
                 </Button>
                 <Link href="/admin/boards">
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                 </Link>
               </div>

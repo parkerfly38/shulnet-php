@@ -29,6 +29,10 @@ export interface SharedData {
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    locale: string;
+    direction: 'ltr' | 'rtl';
+    locales: { code: string; name: string; dir: 'ltr' | 'rtl' }[];
+    translations: Record<string, string>;
     currentDate: {
         gregorian: string;
         hebrew: string;

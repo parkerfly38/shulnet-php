@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function GravesitesShow({ gravesite }: Readonly<Props>) {
+    const { t } = useTranslation();
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -63,13 +65,13 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                     <div className="flex gap-2">
                         <Link href={`/admin/gravesites/${gravesite.id}/edit`}>
                             <Button>
-                                <Edit className="h-4 w-4 mr-2" />
-                                Edit
+                                <Edit className="h-4 w-4 me-2" />
+                                {t('Edit')}
                             </Button>
                         </Link>
                         <Button variant="outline" onClick={handleDelete} className="text-red-600 hover:text-red-700">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            <Trash2 className="h-4 w-4 me-2" />
+                            {t('Delete')}
                         </Button>
                     </div>
                 </div>
@@ -80,47 +82,47 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                         {/* Location Information */}
                         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                                <MapPin className="h-5 w-5 mr-2" />
-                                Location Information
+                                <MapPin className="h-5 w-5 me-2" />
+                                {t('Location Information')}
                             </h2>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {gravesite.cemetery_name && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Cemetery</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Cemetery')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.cemetery_name}</dd>
                                     </div>
                                 )}
                                 
                                 <div>
-                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Plot Number</dt>
+                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Plot Number')}</dt>
                                     <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.plot_number}</dd>
                                 </div>
 
                                 {gravesite.section && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Section</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Section')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.section}</dd>
                                     </div>
                                 )}
 
                                 {gravesite.row && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Row</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Row')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.row}</dd>
                                     </div>
                                 )}
 
                                 {gravesite.block && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Block</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Block')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.block}</dd>
                                     </div>
                                 )}
 
                                 {gravesite.gps_coordinates && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">GPS Coordinates</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('GPS Coordinates')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.gps_coordinates}</dd>
                                     </div>
                                 )}
@@ -130,36 +132,36 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                         {/* Site Details */}
                         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                Site Details
+                                {t('Site Details')}
                             </h2>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
+                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Type')}</dt>
                                     <dd className="text-sm text-gray-900 dark:text-gray-100 capitalize">{gravesite.gravesite_type}</dd>
                                 </div>
 
                                 {gravesite.size_length && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Length</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Length')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.size_length} feet</dd>
                                     </div>
                                 )}
 
                                 {gravesite.size_width && (
                                     <div>
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Width</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Width')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.size_width} feet</dd>
                                     </div>
                                 )}
 
                                 <div>
-                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Perpetual Care</dt>
+                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Perpetual Care')}</dt>
                                     <dd className="text-sm text-gray-900 dark:text-gray-100">
                                         {gravesite.perpetual_care ? (
-                                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">{t('Yes')}</Badge>
                                         ) : (
-                                            <Badge variant="secondary">No</Badge>
+                                            <Badge variant="secondary">{t('No')}</Badge>
                                         )}
                                     </dd>
                                 </div>
@@ -170,14 +172,14 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                         {(gravesite.member || gravesite.purchase_date || gravesite.reserved_date) && (
                             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                                    <User className="h-5 w-5 mr-2" />
-                                    Ownership Information
+                                    <User className="h-5 w-5 me-2" />
+                                    {t('Ownership Information')}
                                 </h2>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {gravesite.member && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Owner</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Owner')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100">
                                                 <Link 
                                                     href={`/admin/members/${gravesite.member.id}`}
@@ -191,9 +193,9 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                     {gravesite.purchase_date && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Purchase Date</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Purchase Date')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                                                <Calendar className="h-4 w-4 mr-1" />
+                                                <Calendar className="h-4 w-4 me-1" />
                                                 {formatDate(gravesite.purchase_date)}
                                             </dd>
                                         </div>
@@ -201,9 +203,9 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                     {gravesite.purchase_price && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Purchase Price</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Purchase Price')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                                                <DollarSign className="h-4 w-4 mr-1" />
+                                                <DollarSign className="h-4 w-4 me-1" />
                                                 {formatCurrency(gravesite.purchase_price)}
                                             </dd>
                                         </div>
@@ -211,9 +213,9 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                     {gravesite.reserved_date && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Reserved Date</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Reserved Date')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                                                <Calendar className="h-4 w-4 mr-1" />
+                                                <Calendar className="h-4 w-4 me-1" />
                                                 {formatDate(gravesite.reserved_date)}
                                             </dd>
                                         </div>
@@ -221,7 +223,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                     {gravesite.reserved_by && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Reserved By</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Reserved By')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.reserved_by}</dd>
                                         </div>
                                     )}
@@ -233,29 +235,29 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                         {gravesite.status === 'occupied' && (
                             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                    Occupancy Information
+                                    {t('Occupancy Information')}
                                 </h2>
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {gravesite.deceased_name && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Deceased Name</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Deceased Name')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.deceased_name}</dd>
                                         </div>
                                     )}
 
                                     {gravesite.deceased_hebrew_name && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Hebrew Name</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Hebrew Name')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100">{gravesite.deceased_hebrew_name}</dd>
                                         </div>
                                     )}
 
                                     {gravesite.date_of_birth && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date of Birth</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Date of Birth')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                                                <Calendar className="h-4 w-4 mr-1" />
+                                                <Calendar className="h-4 w-4 me-1" />
                                                 {formatDate(gravesite.date_of_birth)}
                                             </dd>
                                         </div>
@@ -263,9 +265,9 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                     {gravesite.date_of_death && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date of Death</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Date of Death')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                                                <Calendar className="h-4 w-4 mr-1" />
+                                                <Calendar className="h-4 w-4 me-1" />
                                                 {formatDate(gravesite.date_of_death)}
                                             </dd>
                                         </div>
@@ -273,9 +275,9 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                     {gravesite.burial_date && (
                                         <div>
-                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Burial Date</dt>
+                                            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Burial Date')}</dt>
                                             <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                                                <Calendar className="h-4 w-4 mr-1" />
+                                                <Calendar className="h-4 w-4 me-1" />
                                                 {formatDate(gravesite.burial_date)}
                                             </dd>
                                         </div>
@@ -284,7 +286,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                                 {gravesite.monument_inscription && (
                                     <div className="mt-4">
-                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Monument Inscription</dt>
+                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Monument Inscription')}</dt>
                                         <dd className="text-sm text-gray-900 dark:text-gray-100 mt-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-md whitespace-pre-wrap">
                                             {gravesite.monument_inscription}
                                         </dd>
@@ -297,7 +299,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                         {gravesite.notes && (
                             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                    Notes
+                                    {t('Notes')}
                                 </h2>
                                 <p className="text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap">
                                     {gravesite.notes}
@@ -310,7 +312,7 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                     <div className="space-y-6">
                         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                Status
+                                {t('Status')}
                             </h3>
                             
                             <div className="space-y-3">
@@ -321,14 +323,14 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
                                 </div>
                                 
                                 <div>
-                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Created</dt>
+                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Created')}</dt>
                                     <dd className="text-sm text-gray-900 dark:text-gray-100">
                                         {formatDate(gravesite.created_at)}
                                     </dd>
                                 </div>
                                 
                                 <div>
-                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</dt>
+                                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Last Updated')}</dt>
                                     <dd className="text-sm text-gray-900 dark:text-gray-100">
                                         {formatDate(gravesite.updated_at)}
                                     </dd>
@@ -338,22 +340,22 @@ export default function GravesitesShow({ gravesite }: Readonly<Props>) {
 
                         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                Quick Actions
+                                {t('Quick Actions')}
                             </h3>
                             
                             <div className="space-y-2">
                                 <Link href={`/admin/gravesites/${gravesite.id}/edit`} className="block">
                                     <Button variant="outline" className="w-full justify-start">
-                                        <Edit className="h-4 w-4 mr-2" />
-                                        Edit Gravesite
+                                        <Edit className="h-4 w-4 me-2" />
+                                        {t('Edit Gravesite')}
                                     </Button>
                                 </Link>
                                 
                                 {gravesite.member && (
                                     <Link href={`/admin/members/${gravesite.member.id}`} className="block">
                                         <Button variant="outline" className="w-full justify-start">
-                                            <User className="h-4 w-4 mr-2" />
-                                            View Owner
+                                            <User className="h-4 w-4 me-2" />
+                                            {t('View Owner')}
                                         </Button>
                                     </Link>
                                 )}

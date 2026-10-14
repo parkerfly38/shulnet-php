@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function ReportList({ reports, reportable, reportableType }: Readonly<Props>) {
+    const { t } = useTranslation();
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -66,8 +68,8 @@ export default function ReportList({ reports, reportable, reportableType }: Read
           </div>
           <Link href={`/admin/reports/${reportableType}/${reportable.id}/create`}>
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Create Report
+              <Plus className="me-2 h-4 w-4" />
+              {t('Create Report')}
             </Button>
           </Link>
         </div>
@@ -75,7 +77,7 @@ export default function ReportList({ reports, reportable, reportableType }: Read
         <div className="grid gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>All Reports</CardTitle>
+              <CardTitle>{t('All Reports')}</CardTitle>
               <CardDescription>Reports submitted for this {reportableType}</CardDescription>
             </CardHeader>
             <CardContent>
@@ -102,7 +104,7 @@ export default function ReportList({ reports, reportable, reportableType }: Read
                         </div>
                         <Link href={`/admin/reports/${reportableType}/${reportable.id}/${report.id}`}>
                           <Button variant="outline" size="sm">
-                            View Report
+                            {t('View Report')}
                           </Button>
                         </Link>
                       </div>
@@ -112,11 +114,11 @@ export default function ReportList({ reports, reportable, reportableType }: Read
               ) : (
                 <div className="text-center py-12">
                   <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-                  <p className="text-muted-foreground">No reports created yet</p>
+                  <p className="text-muted-foreground">{t('No reports created yet')}</p>
                   <Link href={`/admin/reports/${reportableType}/${reportable.id}/create`}>
                     <Button className="mt-4" variant="outline">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Create First Report
+                      <Plus className="me-2 h-4 w-4" />
+                      {t('Create First Report')}
                     </Button>
                   </Link>
                 </div>

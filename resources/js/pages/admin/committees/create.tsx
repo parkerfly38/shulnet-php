@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -9,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { type BreadcrumbItem } from '@/types';
 
 export default function CommitteesCreate() {
+    const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm({
     name: '',
     description: '',
@@ -27,23 +29,23 @@ export default function CommitteesCreate() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Committee" />
+      <Head title={t('Create Committee')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create Committee</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Create Committee')}</h1>
             <p className="text-muted-foreground mt-2">
-              Add a new committee to manage
+              {t('Add a new committee to manage')}
             </p>
           </div>
         </div>
 
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Committee Information</CardTitle>
+            <CardTitle>{t('Committee Information')}</CardTitle>
             <CardDescription>
-              Enter the details for the new committee
+              {t('Enter the details for the new committee')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -63,7 +65,7 @@ export default function CommitteesCreate() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('Description')}</Label>
                 <Textarea
                   id="description"
                   value={data.description}
@@ -82,7 +84,7 @@ export default function CommitteesCreate() {
                 </Button>
                 <Link href="/admin/committees">
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t('Cancel')}
                   </Button>
                 </Link>
               </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function MembershipBilling({ settings, months }: Props) {
+    const { t } = useTranslation();
     const [previewData, setPreviewData] = useState<any>(null);
     const [isPreviewLoading, setIsPreviewLoading] = useState(false);
 
@@ -70,22 +72,22 @@ export default function MembershipBilling({ settings, months }: Props) {
 
     return (
         <AppLayout>
-            <Head title="Membership Billing Settings" />
+            <Head title={t('Membership Billing Settings')} />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Membership Billing Configuration</CardTitle>
+                            <CardTitle>{t('Membership Billing Configuration')}</CardTitle>
                             <CardDescription>
-                                Configure how and when membership dues are billed
+                                {t('Configure how and when membership dues are billed')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Billing Method */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="billing_method">Billing Method</Label>
+                                    <Label htmlFor="billing_method">{t('Billing Method')}</Label>
                                     <Select
                                         value={data.billing_method}
                                         onValueChange={(value) => setData('billing_method', value as 'anniversary' | 'fixed_date')}
@@ -94,8 +96,8 @@ export default function MembershipBilling({ settings, months }: Props) {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="anniversary">Anniversary Billing (Individual join dates)</SelectItem>
-                                            <SelectItem value="fixed_date">Fixed Date Billing (All on same date)</SelectItem>
+                                            <SelectItem value="anniversary">{t('Anniversary Billing (Individual join dates)')}</SelectItem>
+                                            <SelectItem value="fixed_date">{t('Fixed Date Billing (All on same date)')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <p className="text-sm text-muted-foreground">
@@ -112,7 +114,7 @@ export default function MembershipBilling({ settings, months }: Props) {
                                 {data.billing_method === 'fixed_date' && (
                                     <div className="grid grid-cols-2 gap-4 p-4 border rounded-lg bg-muted/50">
                                         <div className="space-y-2">
-                                            <Label htmlFor="fixed_month">Billing Month</Label>
+                                            <Label htmlFor="fixed_month">{t('Billing Month')}</Label>
                                             <Select
                                                 value={data.fixed_month.toString()}
                                                 onValueChange={(value) => setData('fixed_month', parseInt(value))}
@@ -134,7 +136,7 @@ export default function MembershipBilling({ settings, months }: Props) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="fixed_day">Billing Day</Label>
+                                            <Label htmlFor="fixed_day">{t('Billing Day')}</Label>
                                             <Select
                                                 value={data.fixed_day.toString()}
                                                 onValueChange={(value) => setData('fixed_day', parseInt(value))}
@@ -159,7 +161,7 @@ export default function MembershipBilling({ settings, months }: Props) {
 
                                 {/* Grace Period */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="grace_period_days">Grace Period (Days)</Label>
+                                    <Label htmlFor="grace_period_days">{t('Grace Period (Days)')}</Label>
                                     <Input
                                         id="grace_period_days"
                                         type="number"
@@ -169,7 +171,7 @@ export default function MembershipBilling({ settings, months }: Props) {
                                         onChange={(e) => setData('grace_period_days', parseInt(e.target.value))}
                                     />
                                     <p className="text-sm text-muted-foreground">
-                                        Number of days before/after billing date to check for renewals and avoid duplicates
+                                        {t('Number of days before/after billing date to check for renewals and avoid duplicates')}
                                     </p>
                                     {errors.grace_period_days && (
                                         <p className="text-sm text-destructive">{errors.grace_period_days}</p>
@@ -178,7 +180,7 @@ export default function MembershipBilling({ settings, months }: Props) {
 
                                 {/* Invoice Due Days */}
                                 <div className="space-y-2">
-                                    <Label htmlFor="invoice_due_days">Payment Due (Days)</Label>
+                                    <Label htmlFor="invoice_due_days">{t('Payment Due (Days)')}</Label>
                                     <Input
                                         id="invoice_due_days"
                                         type="number"
@@ -188,7 +190,7 @@ export default function MembershipBilling({ settings, months }: Props) {
                                         onChange={(e) => setData('invoice_due_days', parseInt(e.target.value))}
                                     />
                                     <p className="text-sm text-muted-foreground">
-                                        Number of days after invoice date when payment is due
+                                        {t('Number of days after invoice date when payment is due')}
                                     </p>
                                     {errors.invoice_due_days && (
                                         <p className="text-sm text-destructive">{errors.invoice_due_days}</p>
@@ -204,17 +206,17 @@ export default function MembershipBilling({ settings, months }: Props) {
                                     />
                                     <div className="space-y-0.5">
                                         <Label htmlFor="auto_generate" className="font-normal cursor-pointer">
-                                            Automatic Invoice Generation
+                                            {t('Automatic Invoice Generation')}
                                         </Label>
                                         <p className="text-sm text-muted-foreground">
-                                            Automatically generate membership dues invoices via scheduled task
+                                            {t('Automatically generate membership dues invoices via scheduled task')}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex gap-4">
                                     <Button type="submit" disabled={processing}>
-                                        Save Settings
+                                        {t('Save Settings')}
                                     </Button>
                                 </div>
                             </form>
@@ -224,9 +226,9 @@ export default function MembershipBilling({ settings, months }: Props) {
                     {/* Preview and Manual Generation */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Manual Operations</CardTitle>
+                            <CardTitle>{t('Manual Operations')}</CardTitle>
                             <CardDescription>
-                                Preview and manually generate membership dues invoices
+                                {t('Preview and manually generate membership dues invoices')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -235,7 +237,7 @@ export default function MembershipBilling({ settings, months }: Props) {
                                     {isPreviewLoading ? 'Loading...' : 'Preview Members Due'}
                                 </Button>
                                 <Button variant="default" onClick={handleGenerate}>
-                                    Generate Invoices Now
+                                    {t('Generate Invoices Now')}
                                 </Button>
                             </div>
 

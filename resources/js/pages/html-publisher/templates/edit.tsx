@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, router } from '@inertiajs/react';
 import { useState, FormEvent } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function HtmlTemplateEdit({ template }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [name, setName] = useState(template.name);
   const [description, setDescription] = useState(template.description || '');
   const [header, setHeader] = useState(template.header || '');
@@ -84,7 +86,7 @@ export default function HtmlTemplateEdit({ template }: Readonly<Props>) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="e.g., Main Site Template"
+                  placeholder={t('e.g., Main Site Template')}
                 />
                 <p className="text-sm text-gray-500">A descriptive name for this template</p>
               </div>
@@ -96,7 +98,7 @@ export default function HtmlTemplateEdit({ template }: Readonly<Props>) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}
-                  placeholder="Optional description of when to use this template"
+                  placeholder={t('Optional description of when to use this template')}
                 />
               </div>
 
@@ -105,11 +107,11 @@ export default function HtmlTemplateEdit({ template }: Readonly<Props>) {
                 <RichTextEditor
                   value={header}
                   onChange={setHeader}
-                  placeholder="Enter header HTML (navigation, logo, etc.)..."
+                  placeholder={t('Enter header HTML (navigation, logo, etc.)...')}
                   className="min-h-[200px]"
                 />
                 <p className="text-sm text-gray-500">
-                  This will appear at the top of all pages using this template
+                  {t('This will appear at the top of all pages using this template')}
                 </p>
               </div>
 
@@ -118,11 +120,11 @@ export default function HtmlTemplateEdit({ template }: Readonly<Props>) {
                 <RichTextEditor
                   value={footer}
                   onChange={setFooter}
-                  placeholder="Enter footer HTML (copyright, links, etc.)..."
+                  placeholder={t('Enter footer HTML (copyright, links, etc.)...')}
                   className="min-h-[200px]"
                 />
                 <p className="text-sm text-gray-500">
-                  This will appear at the bottom of all pages using this template
+                  {t('This will appear at the bottom of all pages using this template')}
                 </p>
               </div>
 
@@ -133,7 +135,7 @@ export default function HtmlTemplateEdit({ template }: Readonly<Props>) {
                   variant="outline"
                   onClick={() => router.visit('/admin/html-templates')}
                 >
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </div>
             </div>

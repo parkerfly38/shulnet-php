@@ -418,7 +418,7 @@ export default function EditRsvpDialog({ rsvp, ticketTypes, isOpen, onClose, onS
                             onClick={handleDelete}
                             disabled={processing}
                         >
-                            <Trash2 className="h-4 w-4 mr-2" />
+                            <Trash2 className="h-4 w-4 me-2" />
                             Delete RSVP
                         </Button>
                         <div className="flex gap-3">

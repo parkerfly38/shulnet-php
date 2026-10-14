@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -32,6 +33,7 @@ interface FormData {
 }
 
 export default function TicketTypeCreate({ event }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Events', href: '/admin/events' },
@@ -65,7 +67,7 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
         {/* Header */}
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create Ticket Type</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create Ticket Type')}</h1>
             <p className="text-gray-600 dark:text-gray-400">{event.name}</p>
           </div>
         </div>
@@ -75,7 +77,7 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
           <div className="space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Basic Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('Basic Information')}</h2>
               
               <div>
                 <Label htmlFor="name">Name *</Label>
@@ -84,20 +86,20 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
                   value={data.name}
                   onChange={(e) => setData('name', e.target.value)}
                   className={errors.name ? 'border-red-500' : ''}
-                  placeholder="e.g., Early Bird Special"
+                  placeholder={t('e.g., Early Bird Special')}
                 />
                 {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
               </div>
 
               <div>
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('Description')}</Label>
                 <Textarea
                   id="description"
                   value={data.description}
                   onChange={(e) => setData('description', e.target.value)}
                   className={errors.description ? 'border-red-500' : ''}
                   rows={3}
-                  placeholder="Optional description of this ticket type"
+                  placeholder={t('Optional description of this ticket type')}
                 />
                 {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}
               </div>
@@ -110,13 +112,13 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="general">General</SelectItem>
-                      <SelectItem value="early_bird">Early Bird</SelectItem>
-                      <SelectItem value="adult">Adult</SelectItem>
-                      <SelectItem value="child">Child</SelectItem>
-                      <SelectItem value="member">Member</SelectItem>
-                      <SelectItem value="nonmember">Non-Member</SelectItem>
-                      <SelectItem value="vip">VIP</SelectItem>
+                      <SelectItem value="general">{t('General')}</SelectItem>
+                      <SelectItem value="early_bird">{t('Early Bird')}</SelectItem>
+                      <SelectItem value="adult">{t('Adult')}</SelectItem>
+                      <SelectItem value="child">{t('Child')}</SelectItem>
+                      <SelectItem value="member">{t('Member')}</SelectItem>
+                      <SelectItem value="nonmember">{t('Non-Member')}</SelectItem>
+                      <SelectItem value="vip">{t('VIP')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.category && <p className="text-sm text-red-600 mt-1">{errors.category}</p>}
@@ -140,12 +142,12 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
 
             {/* Availability */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Availability</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('Availability')}</h2>
               
               <div>
                 <Label htmlFor="quantity_available">
-                  Quantity Available
-                  <span className="text-sm text-gray-500 ml-2">(Leave empty for unlimited)</span>
+                  {t('Quantity Available')}
+                  <span className="text-sm text-gray-500 ms-2">(Leave empty for unlimited)</span>
                 </Label>
                 <Input
                   id="quantity_available"
@@ -154,14 +156,14 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
                   value={data.quantity_available}
                   onChange={(e) => setData('quantity_available', e.target.value)}
                   className={errors.quantity_available ? 'border-red-500' : ''}
-                  placeholder="Unlimited"
+                  placeholder={t('Unlimited')}
                 />
                 {errors.quantity_available && <p className="text-sm text-red-600 mt-1">{errors.quantity_available}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="sale_starts">Sale Starts</Label>
+                  <Label htmlFor="sale_starts">{t('Sale Starts')}</Label>
                   <Input
                     id="sale_starts"
                     type="datetime-local"
@@ -173,7 +175,7 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
                 </div>
 
                 <div>
-                  <Label htmlFor="sale_ends">Sale Ends</Label>
+                  <Label htmlFor="sale_ends">{t('Sale Ends')}</Label>
                   <Input
                     id="sale_ends"
                     type="datetime-local"
@@ -188,7 +190,7 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
 
             {/* Settings */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Settings</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('Settings')}</h2>
               
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -196,13 +198,13 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
                   checked={data.active}
                   onCheckedChange={(checked) => setData('active', checked as boolean)}
                 />
-                <Label htmlFor="active">Active (Tickets can be purchased)</Label>
+                <Label htmlFor="active">{t('Active (Tickets can be purchased)')}</Label>
               </div>
 
               <div>
                 <Label htmlFor="sort_order">
-                  Sort Order
-                  <span className="text-sm text-gray-500 ml-2">(Lower numbers appear first)</span>
+                  {t('Sort Order')}
+                  <span className="text-sm text-gray-500 ms-2">(Lower numbers appear first)</span>
                 </Label>
                 <Input
                   id="sort_order"
@@ -219,11 +221,11 @@ export default function TicketTypeCreate({ event }: Readonly<Props>) {
             <div className="flex justify-end gap-2 pt-4 border-t">
               <Link href={`/admin/events/${event.id}/ticket-types`}>
                 <Button type="button" variant="outline" disabled={processing}>
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </Link>
               <Button type="submit" disabled={processing}>
-                <Save className="h-4 w-4 mr-2" />
+                <Save className="h-4 w-4 me-2" />
                 {processing ? 'Creating...' : 'Create Ticket Type'}
               </Button>
             </div>

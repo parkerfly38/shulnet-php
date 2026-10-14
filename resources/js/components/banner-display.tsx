@@ -110,7 +110,7 @@ export function BannerDisplay({ banners, onDismiss, onView, onClick }: Readonly<
             {banner.is_dismissible && (
               <button
                 onClick={() => handleDismiss(banner.id)}
-                className="flex-shrink-0 p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition-colors -mt-1 -mr-1"
+                className="flex-shrink-0 p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/5 transition-colors -mt-1 -me-1"
                 aria-label="Dismiss banner"
               >
                 <X className="h-4 w-4" />

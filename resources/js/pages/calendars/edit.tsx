@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { useMemo, useState } from 'react';
 import { router, useForm, Head } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Users, Globe } from 'lucide-react';
@@ -28,6 +29,7 @@ interface CalendarFormData {
 }
 
 export default function CalendarEdit({ calendar }: CalendarEditProps) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
         {
             title: 'Dashboard',
@@ -61,8 +63,8 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
           {/* Header */}
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Edit Calendar</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Update calendar settings</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Edit Calendar')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Update calendar settings')}</p>
                     </div>
                 </div>
 
@@ -72,10 +74,10 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5" />
-                                Calendar Information
+                                {t('Calendar Information')}
                             </CardTitle>
                             <CardDescription>
-                                Basic details about the calendar
+                                {t('Basic details about the calendar')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -87,7 +89,7 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                     className={errors.name ? 'border-red-500' : ''}
-                                    placeholder="Enter calendar name..."
+                                    placeholder={t('Enter calendar name...')}
                                 />
                                 {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
                             </div>
@@ -99,10 +101,10 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Globe className="h-5 w-5" />
-                                Visibility Settings
+                                {t('Visibility Settings')}
                             </CardTitle>
                             <CardDescription>
-                                Control who can view events in this calendar
+                                {t('Control who can view events in this calendar')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -114,11 +116,11 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                                 />
                                 <Label htmlFor="public" className="flex items-center gap-2">
                                     <Globe className="h-4 w-4" />
-                                    Public Calendar
+                                    {t('Public Calendar')}
                                 </Label>
                             </div>
                             <p className="text-sm text-gray-600">
-                                Public calendars can be viewed by anyone, including non-members
+                                {t('Public calendars can be viewed by anyone, including non-members')}
                             </p>
 
                             <div className="flex items-center space-x-2">
@@ -129,17 +131,17 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                                 />
                                 <Label htmlFor="members_only" className="flex items-center gap-2">
                                     <Users className="h-4 w-4" />
-                                    Members Only
+                                    {t('Members Only')}
                                 </Label>
                             </div>
                             <p className="text-sm text-gray-600">
-                                Members only calendars require authentication to view
+                                {t('Members only calendars require authentication to view')}
                             </p>
 
                             {!data.public && !data.members_only && (
                                 <Alert>
                                     <AlertDescription>
-                                        This calendar will be private and only accessible to administrators.
+                                        {t('This calendar will be private and only accessible to administrators.')}
                                     </AlertDescription>
                                 </Alert>
                             )}
@@ -147,7 +149,7 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                             {data.public && data.members_only && (
                                 <Alert>
                                     <AlertDescription>
-                                        <strong>Note:</strong> This calendar will be visible to members only (members_only takes precedence over public).
+                                        <strong>{t('Note:')}</strong> This calendar will be visible to members only (members_only takes precedence over public).
                                     </AlertDescription>
                                 </Alert>
                             )}
@@ -161,7 +163,7 @@ export default function CalendarEdit({ calendar }: CalendarEditProps) {
                             variant="outline"
                             onClick={() => router.get('/admin/calendars')}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                             {processing ? 'Updating...' : 'Update Calendar'}

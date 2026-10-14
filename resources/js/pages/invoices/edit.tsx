@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -60,6 +61,7 @@ interface FormData {
 }
 
 export default function InvoicesEdit({ invoice, members, membershipTiers, tuitionTiers, chartOfAccounts }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Invoices', href: '/admin/invoices' },
@@ -171,7 +173,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               Edit Invoice {invoice.invoice_number}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">Update invoice details</p>
+            <p className="text-gray-600 dark:text-gray-400">{t('Update invoice details')}</p>
           </div>
         </div>
 
@@ -179,14 +181,14 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Invoice Details</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Invoice Details')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="member_id">Member *</Label>
                 <Select value={data.member_id} onValueChange={(value) => setData('member_id', value)}>
                   <SelectTrigger className={errors.member_id ? 'border-red-500' : ''}>
-                    <SelectValue placeholder="Select member" />
+                    <SelectValue placeholder={t('Select member')} />
                   </SelectTrigger>
                   <SelectContent>
                     {members.map((member) => (
@@ -206,12 +208,12 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="partial">Partial</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="overdue">Overdue</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="draft">{t('Draft')}</SelectItem>
+                    <SelectItem value="open">{t('Open')}</SelectItem>
+                    <SelectItem value="partial">{t('Partial')}</SelectItem>
+                    <SelectItem value="paid">{t('Paid')}</SelectItem>
+                    <SelectItem value="overdue">{t('Overdue')}</SelectItem>
+                    <SelectItem value="cancelled">{t('Cancelled')}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.status && <p className="text-sm text-red-600 mt-1">{errors.status}</p>}
@@ -243,14 +245,14 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
             </div>
 
             <div className="mt-4">
-              <Label htmlFor="notes">Notes</Label>
+              <Label htmlFor="notes">{t('Notes')}</Label>
               <Textarea
                 id="notes"
                 value={data.notes}
                 onChange={(e) => setData('notes', e.target.value)}
                 className={errors.notes ? 'border-red-500' : ''}
                 rows={3}
-                placeholder="Optional notes for this invoice"
+                placeholder={t('Optional notes for this invoice')}
               />
               {errors.notes && <p className="text-sm text-red-600 mt-1">{errors.notes}</p>}
             </div>
@@ -259,10 +261,10 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
           {/* Invoice Items */}
           <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Line Items</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('Line Items')}</h2>
               <Button type="button" onClick={addItem} variant="outline" size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Item
+                <Plus className="h-4 w-4 me-2" />
+                {t('Add Item')}
               </Button>
             </div>
 
@@ -310,16 +312,16 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                     />
                   </div>
                   <div className="w-56">
-                    <Label htmlFor={`item-${index}-gl_account_id`}>GL Account</Label>
+                    <Label htmlFor={`item-${index}-gl_account_id`}>{t('GL Account')}</Label>
                     <Select 
                       value={item.gl_account_id} 
                       onValueChange={(value) => updateItem(index, 'gl_account_id', value)}
                     >
                       <SelectTrigger className={errors[`items.${index}.gl_account_id`] ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Select GL account" />
+                        <SelectValue placeholder={t('Select GL account')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value=" ">None</SelectItem>
+                        <SelectItem value=" ">{t('None')}</SelectItem>
                         {chartOfAccounts.map((account) => (
                           <SelectItem key={account.id} value={account.id.toString()}>
                             {account.account_code} - {account.account_name}
@@ -337,7 +339,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                     </div>
                   </div>
                   <div className="w-32">
-                    <Label htmlFor={`item-${index}-amount_paid`}>Paid</Label>
+                    <Label htmlFor={`item-${index}-amount_paid`}>{t('Paid')}</Label>
                     <Input
                       id={`item-${index}-amount_paid`}
                       type="number"
@@ -372,13 +374,13 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
             {/* Totals */}
             <div className="mt-6 pt-6 border-t space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
+                <span className="text-gray-600 dark:text-gray-400">{t('Subtotal:')}</span>
                 <span className="font-medium text-gray-900 dark:text-gray-100">
                   {formatCurrency(calculateSubtotal())}
                 </span>
               </div>
               <div className="flex justify-between items-center text-sm">
-                <Label htmlFor="tax_amount">Tax:</Label>
+                <Label htmlFor="tax_amount">{t('Tax:')}</Label>
                 <Input
                   id="tax_amount"
                   type="number"
@@ -390,13 +392,13 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                 />
               </div>
               <div className="flex justify-between text-lg font-semibold pt-2 border-t">
-                <span className="text-gray-900 dark:text-gray-100">Total:</span>
+                <span className="text-gray-900 dark:text-gray-100">{t('Total:')}</span>
                 <span className="text-gray-900 dark:text-gray-100">
                   {formatCurrency(calculateTotal())}
                 </span>
               </div>
               <div className="flex justify-between items-center text-sm pt-2">
-                <Label htmlFor="amount_paid" className="text-gray-600 dark:text-gray-400">Amount Paid:</Label>
+                <Label htmlFor="amount_paid" className="text-gray-600 dark:text-gray-400">{t('Amount Paid:')}</Label>
                 <Input
                   id="amount_paid"
                   type="number"
@@ -409,7 +411,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                 />
               </div>
               <div className="flex justify-between text-lg font-semibold pt-2">
-                <span className="text-gray-900 dark:text-gray-100">Balance Due:</span>
+                <span className="text-gray-900 dark:text-gray-100">{t('Balance Due:')}</span>
                 <span className={calculateBalance() > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}>
                   {formatCurrency(calculateBalance())}
                 </span>
@@ -419,7 +421,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
 
           {/* Recurring Settings */}
           <div className="rounded-lg border bg-white dark:bg-black p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recurring Settings</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Recurring Settings')}</h2>
             
             <div className="flex items-center space-x-2 mb-4">
               <Checkbox
@@ -427,11 +429,11 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                 checked={data.recurring}
                 onCheckedChange={(checked) => setData('recurring', checked as boolean)}
               />
-              <Label htmlFor="recurring">Make this invoice recurring</Label>
+              <Label htmlFor="recurring">{t('Make this invoice recurring')}</Label>
             </div>
 
             {data.recurring && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ps-6">
                 <div>
                   <Label htmlFor="recurring_interval">Interval *</Label>
                   <Select value={data.recurring_interval} onValueChange={(value) => setData('recurring_interval', value)}>
@@ -439,10 +441,10 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="yearly">Yearly</SelectItem>
+                      <SelectItem value="daily">{t('Daily')}</SelectItem>
+                      <SelectItem value="weekly">{t('Weekly')}</SelectItem>
+                      <SelectItem value="monthly">{t('Monthly')}</SelectItem>
+                      <SelectItem value="yearly">{t('Yearly')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {errors.recurring_interval && <p className="text-sm text-red-600 mt-1">{errors.recurring_interval}</p>}
@@ -464,7 +466,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                 </div>
 
                 <div>
-                  <Label htmlFor="recurring_end_date">End Date (Optional)</Label>
+                  <Label htmlFor="recurring_end_date">{t('End Date (Optional)')}</Label>
                   <Input
                     id="recurring_end_date"
                     type="date"
@@ -482,7 +484,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
             {invoice.next_invoice_date && (
               <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <p className="text-sm text-blue-900 dark:text-blue-100">
-                  <strong>Next Invoice:</strong> {new Date(invoice.next_invoice_date).toLocaleDateString()}
+                  <strong>{t('Next Invoice:')}</strong> {new Date(invoice.next_invoice_date).toLocaleDateString()}
                 </p>
               </div>
             )}
@@ -497,12 +499,12 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
                 onCheckedChange={(checked) => setData('send_email', checked as boolean)}
               />
               <Label htmlFor="send_email" className="cursor-pointer">
-                Generate PDF and email invoice to member
+                {t('Generate PDF and email invoice to member')}
               </Label>
             </div>
             {data.send_email && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 pl-6">
-                A PDF invoice will be generated and emailed to the member's email address after saving.
+              <p className="text-sm text-gray-600 dark:text-gray-400 ps-6">
+                {t("A PDF invoice will be generated and emailed to the member's email address after saving.")}
               </p>
             )}
           </div>
@@ -511,7 +513,7 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
           <div className="flex justify-end gap-2">
             <Link href={`/admin/invoices/${invoice.id}`}>
               <Button type="button" variant="outline" disabled={processing}>
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button
@@ -519,11 +521,11 @@ export default function InvoicesEdit({ invoice, members, membershipTiers, tuitio
               variant="outline"
               onClick={() => window.open(`/admin/invoices/${invoice.id}/print`, '_blank')}
             >
-              <Printer className="h-4 w-4 mr-2" />
-              Print
+              <Printer className="h-4 w-4 me-2" />
+              {t('Print')}
             </Button>
             <Button type="submit" disabled={processing}>
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-4 w-4 me-2" />
               {processing ? 'Updating...' : 'Update Invoice'}
             </Button>
           </div>

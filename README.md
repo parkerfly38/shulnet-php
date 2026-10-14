@@ -87,7 +87,7 @@ This is a replacement for the previous open source solution based on Zenbership.
 ## Tech Stack
 
 ### Backend
-- **Laravel 12.x** - PHP framework
+- **Laravel 13.x** - PHP framework, version 12.x prior to October 2026
 - **Inertia.js** - Server-side rendering for React
 - **SQLite** - Database (configurable for MySQL/PostgreSQL)
 - **Fortify** - Authentication
@@ -102,7 +102,7 @@ This is a replacement for the previous open source solution based on Zenbership.
 ## Installation
 
 ### Prerequisites
-- PHP 8.2 or higher
+- PHP 8.4.1 or higher (required by Laravel 13)
 - Composer
 - Node.js 18+ and npm
 - SQLite (or MySQL/PostgreSQL)
@@ -195,6 +195,23 @@ npm run lint
 # Format code
 npm run format
 ```
+
+### Internationalization (i18n) and RTL
+
+The UI supports English (`en`), Spanish (`es`) and Hebrew (`he`, right-to-left).
+
+- **Translations** live in `lang/{locale}.json`. Keys are the English strings; missing keys fall back to English.
+- **In React**, use the hook:
+  ```tsx
+  const { t } = useTranslation(); // resources/js/hooks/use-translation.ts
+  <Button>{t('Save')}</Button>
+  <p>{t('Hello, :name', { name: user.name })}</p>
+  ```
+- **Locale resolution** (`SetLocale` middleware): the user's saved `users.locale`, then the `locale` cookie, then the app default.
+- **Switching language**: the `LanguageSwitcher` component (auth screens and sidebar) PATCHes `/settings/locale`.
+- **RTL**: `<html dir>` is set from the locale and Radix `DirectionProvider` is configured. Use Tailwind logical classes (`ms-`, `me-`, `ps-`, `pe-`, `text-start`, `start-`, `end-`) instead of `ml-`/`mr-`/`left-`/`right-`.
+- **Adding a language**: add its code to `supported_locales` in `config/app.php`, create `lang/xx.json`, and add its label to the language switcher.
+- Spanish and Hebrew translations are a first draft and should be reviewed by native speakers. The Hebrew *calendar* features are independent of the UI language.
 
 ## Deployment
 

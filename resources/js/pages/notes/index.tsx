@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -58,6 +59,7 @@ interface Props {
 }
 
 export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
+    const { t } = useTranslation();
     const [search, setSearch] = useState(filters.search ?? '');
     
     const handleSearch = (e: React.FormEvent) => {
@@ -141,7 +143,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Notes Management" />
+            <Head title={t('Notes Management')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
           {/* Header */}
                 <div className="flex items-center justify-between">
@@ -157,14 +159,14 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                         {filters.assigned && (
                             <Link href="/admin/notes">
                                 <Button variant="outline">
-                                    View All Notes
+                                    {t('View All Notes')}
                                 </Button>
                             </Link>
                         )}
                         <Link href="/admin/notes/create">
                             <Button>
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Note
+                                <Plus className="h-4 w-4 me-2" />
+                                {t('Add Note')}
                             </Button>
                         </Link>
                     </div>
@@ -201,7 +203,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
           <form onSubmit={handleSearch} className="flex items-center space-x-2 flex-1 max-w-md">
             <Input
               type="text"
-              placeholder="Search notes..."
+              placeholder={t('Search notes...')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="flex-1"
@@ -216,7 +218,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
               setSearch('');
               router.get('/admin/notes');
             }}>
-              Clear Filters
+              {t('Clear Filters')}
             </Button>
           )}
         </div>
@@ -227,20 +229,20 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Note
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Note')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Priority
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Priority')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Deadline
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Deadline')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Status')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                  <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -268,7 +270,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                           {note.member_care_alert && (
                             <div className="mt-1">
                               <Badge variant="destructive" className="text-xs">
-                                <Heart className="h-3 w-3 mr-1 inline" />
+                                <Heart className="h-3 w-3 me-1 inline" />
                                 {note.member_care_alert === 'hospitalized' && 'Hospitalized'}
                                 {note.member_care_alert === 'mourning' && 'Mourning'}
                                 {note.member_care_alert === 'immediate_follow_up' && 'Immediate Follow-Up'}
@@ -296,25 +298,25 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {note.deadline_date ? (
                           <div className="flex items-center text-gray-900 dark:text-gray-100">
-                            <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                            <Calendar className="h-4 w-4 me-2 text-gray-400" />
                             <span className="text-sm">
                               {new Date(note.deadline_date).toLocaleDateString()}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-gray-500">No deadline</span>
+                          <span className="text-gray-500">{t('No deadline')}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {note.completed_date ? (
-                          <Badge variant="default">Completed</Badge>
+                          <Badge variant="default">{t('Completed')}</Badge>
                         ) : note.deadline_date && new Date(note.deadline_date) < new Date() ? (
-                          <Badge variant="destructive">Overdue</Badge>
+                          <Badge variant="destructive">{t('Overdue')}</Badge>
                         ) : (
-                          <Badge variant="secondary">Pending</Badge>
+                          <Badge variant="secondary">{t('Pending')}</Badge>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <Link href={`/admin/notes/${note.id}`}>
                             <Button variant="outline" size="sm">
@@ -331,7 +333,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                               variant="outline"
                               size="sm"
                               onClick={() => handleDownloadICS(note)}
-                              title="Add to calendar"
+                              title={t('Add to calendar')}
                             >
                               <CalendarPlus className="h-4 w-4" />
                             </Button>
@@ -353,7 +355,7 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                     <td colSpan={5} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center">
                         <FileText className="h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No notes found</h3>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{t('No notes found')}</h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
                           {filters.search
                             ? 'No notes match your search criteria.'
@@ -361,8 +363,8 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                         </p>
                         <Link href="/admin/notes/create">
                           <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Create Note
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('Create Note')}
                           </Button>
                         </Link>
                       </div>
@@ -380,12 +382,12 @@ export default function NotesIndex({notes, stats, filters}: Readonly<Props>) {
                 <div className="flex-1 flex justify-between sm:hidden">
                   {notes.prev_page_url && (
                     <Link href={notes.prev_page_url}>
-                      <Button variant="outline">Previous</Button>
+                      <Button variant="outline">{t('Previous')}</Button>
                     </Link>
                   )}
                   {notes.next_page_url && (
                     <Link href={notes.next_page_url}>
-                      <Button variant="outline">Next</Button>
+                      <Button variant="outline">{t('Next')}</Button>
                     </Link>
                   )}
                 </div>

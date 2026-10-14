@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default function FormsIndex({ forms }: Readonly<Props>) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Forms', href: '/admin/forms' },
@@ -32,15 +34,15 @@ export default function FormsIndex({ forms }: Readonly<Props>) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Forms" />
+            <Head title={t('Forms')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">Forms</h1>
+                    <h1 className="text-3xl font-bold">{t('Forms')}</h1>
                     <Link href="/admin/forms/create">
                         <Button>
-                            <Plus className="w-4 h-4 mr-2" />
-                            Create Form
+                            <Plus className="w-4 h-4 me-2" />
+                            {t('Create Form')}
                         </Button>
                     </Link>
                 </div>
@@ -48,14 +50,14 @@ export default function FormsIndex({ forms }: Readonly<Props>) {
                 {forms.length === 0 ? (
                     <div className="border rounded-lg p-12 text-center">
                         <FileText className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium mb-2">No forms yet</h3>
+                        <h3 className="text-lg font-medium mb-2">{t('No forms yet')}</h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
-                            Create your first custom form to start collecting data.
+                            {t('Create your first custom form to start collecting data.')}
                         </p>
                         <Link href="/admin/forms/create">
                             <Button>
-                                <Plus className="w-4 h-4 mr-2" />
-                                Create Form
+                                <Plus className="w-4 h-4 me-2" />
+                                {t('Create Form')}
                             </Button>
                         </Link>
                     </div>
@@ -84,8 +86,8 @@ export default function FormsIndex({ forms }: Readonly<Props>) {
                                 <div className="flex gap-2">
                                     <Link href={`/admin/forms/${form.id}`} className="flex-1">
                                         <Button variant="outline" size="sm" className="w-full">
-                                            <Eye className="w-4 h-4 mr-2" />
-                                            View
+                                            <Eye className="w-4 h-4 me-2" />
+                                            {t('View')}
                                         </Button>
                                     </Link>
                                     <Link href={`/admin/forms/${form.id}/edit`}>

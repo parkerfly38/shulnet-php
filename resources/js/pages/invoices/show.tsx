@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router, usePage, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -44,6 +45,7 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function InvoicesShow({ invoice }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { currency } = usePage().props as any;
   const [markPaidOpen, setMarkPaidOpen] = useState(false);
 
@@ -129,29 +131,29 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
           <div className="flex items-center gap-2">
             {invoice.recurring && (
               <Button variant="outline" onClick={handleGenerateNext}>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Generate Next
+                <RefreshCw className="h-4 w-4 me-2" />
+                {t('Generate Next')}
               </Button>
             )}
             {invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
               <Dialog open={markPaidOpen} onOpenChange={setMarkPaidOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="text-green-600 hover:text-green-700">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Mark as Paid
+                    <CheckCircle className="h-4 w-4 me-2" />
+                    {t('Mark as Paid')}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <form onSubmit={handleMarkAsPaid}>
                     <DialogHeader>
-                      <DialogTitle>Mark Invoice as Paid</DialogTitle>
+                      <DialogTitle>{t('Mark Invoice as Paid')}</DialogTitle>
                       <DialogDescription>
-                        Record a manual payment for this invoice. A payment record will be created.
+                        {t('Record a manual payment for this invoice. A payment record will be created.')}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
-                        <Label htmlFor="payment_method">Payment Method</Label>
+                        <Label htmlFor="payment_method">{t('Payment Method')}</Label>
                         <Select
                           value={data.payment_method}
                           onValueChange={(value) => setData('payment_method', value)}
@@ -160,15 +162,15 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="check">Check</SelectItem>
-                            <SelectItem value="cash">Cash</SelectItem>
-                            <SelectItem value="wire_transfer">Wire Transfer</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="check">{t('Check')}</SelectItem>
+                            <SelectItem value="cash">{t('Cash')}</SelectItem>
+                            <SelectItem value="wire_transfer">{t('Wire Transfer')}</SelectItem>
+                            <SelectItem value="other">{t('Other')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="amount">Amount</Label>
+                        <Label htmlFor="amount">{t('Amount')}</Label>
                         <Input
                           id="amount"
                           type="number"
@@ -176,19 +178,19 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                           min="0"
                           value={data.amount}
                           onChange={(e) => setData('amount', e.target.value)}
-                          placeholder="Payment amount"
+                          placeholder={t('Payment amount')}
                         />
                         <p className="text-xs text-muted-foreground">
                           Remaining balance: {formatAmount((parseFloat(invoice.total) - parseFloat(invoice.amount_paid)).toString())}
                         </p>
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="note">Note (Optional)</Label>
+                        <Label htmlFor="note">{t('Note (Optional)')}</Label>
                         <Textarea
                           id="note"
                           value={data.note}
                           onChange={(e) => setData('note', e.target.value)}
-                          placeholder="Add any notes about this payment..."
+                          placeholder={t('Add any notes about this payment...')}
                           rows={3}
                         />
                       </div>
@@ -200,7 +202,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                         onClick={() => setMarkPaidOpen(false)}
                         disabled={processing}
                       >
-                        Cancel
+                        {t('Cancel')}
                       </Button>
                       <Button type="submit" disabled={processing}>
                         {processing ? 'Recording...' : 'Record Payment'}
@@ -214,18 +216,18 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
               variant="outline"
               onClick={() => window.open(`/admin/invoices/${invoice.id}/print`, '_blank')}
             >
-              <Printer className="h-4 w-4 mr-2" />
-              Print
+              <Printer className="h-4 w-4 me-2" />
+              {t('Print')}
             </Button>
             <Link href={`/admin/invoices/${invoice.id}/edit`}>
               <Button variant="outline">
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
+                <Edit className="h-4 w-4 me-2" />
+                {t('Edit')}
               </Button>
             </Link>
             <Button variant="outline" onClick={handleDelete} className="text-red-600 hover:text-red-800">
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
+              <Trash2 className="h-4 w-4 me-2" />
+              {t('Delete')}
             </Button>
           </div>
         </div>
@@ -238,7 +240,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-3xl font-bold">INVOICE</CardTitle>
+                    <CardTitle className="text-3xl font-bold">{t('INVOICE')}</CardTitle>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {invoice.invoice_number}
                     </p>
@@ -251,7 +253,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
               <CardContent>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Billed To</h3>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('Billed To')}</h3>
                     <p className="font-semibold text-gray-900 dark:text-gray-100">
                       {invoice.member?.first_name} {invoice.member?.last_name}
                     </p>
@@ -268,15 +270,15 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                       </div>
                     )}
                   </div>
-                  <div className="text-right">
+                  <div className="text-end">
                     <div className="mb-4">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Invoice Date</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('Invoice Date')}</p>
                       <p className="font-medium text-gray-900 dark:text-gray-100">
                         {formatDate(invoice.invoice_date)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Due Date</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('Due Date')}</p>
                       <p className="font-medium text-gray-900 dark:text-gray-100">
                         {formatDate(invoice.due_date)}
                       </p>
@@ -289,28 +291,28 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
             {/* Line Items */}
             <Card>
               <CardHeader>
-                <CardTitle>Items</CardTitle>
+                <CardTitle>{t('Items')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="border-b">
-                      <tr className="text-left">
-                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400">Description</th>
-                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400 text-right">Qty</th>
-                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400 text-right">Price</th>
-                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400 text-right">Total</th>
+                      <tr className="text-start">
+                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400">{t('Description')}</th>
+                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400 text-end">{t('Qty')}</th>
+                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400 text-end">{t('Price')}</th>
+                        <th className="pb-3 font-medium text-gray-500 dark:text-gray-400 text-end">{t('Total')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {invoice.items?.map((item) => (
                         <tr key={item.id} className="border-b">
                           <td className="py-3 text-gray-900 dark:text-gray-100">{item.description}</td>
-                          <td className="py-3 text-right text-gray-600 dark:text-gray-400">{item.quantity}</td>
-                          <td className="py-3 text-right text-gray-600 dark:text-gray-400">
+                          <td className="py-3 text-end text-gray-600 dark:text-gray-400">{item.quantity}</td>
+                          <td className="py-3 text-end text-gray-600 dark:text-gray-400">
                             {formatAmount(item.unit_price)}
                           </td>
-                          <td className="py-3 text-right font-medium text-gray-900 dark:text-gray-100">
+                          <td className="py-3 text-end font-medium text-gray-900 dark:text-gray-100">
                             {formatAmount((parseFloat(item.unit_price) * parseFloat(item.quantity.toString())).toString())}
                           </td>
                         </tr>
@@ -322,21 +324,21 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                 {/* Totals */}
                 <div className="mt-6 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('Subtotal:')}</span>
                     <span className="font-medium text-gray-900 dark:text-gray-100">
                       {formatAmount(invoice.subtotal)}
                     </span>
                   </div>
                   {parseFloat(invoice.tax_amount) > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Tax:</span>
+                      <span className="text-gray-600 dark:text-gray-400">{t('Tax:')}</span>
                       <span className="font-medium text-gray-900 dark:text-gray-100">
                         {formatAmount(invoice.tax_amount)}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between text-lg font-bold pt-2 border-t">
-                    <span className="text-gray-900 dark:text-gray-100">Total:</span>
+                    <span className="text-gray-900 dark:text-gray-100">{t('Total:')}</span>
                     <span className="text-gray-900 dark:text-gray-100">
                       {formatAmount(invoice.total)}
                     </span>
@@ -349,7 +351,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
             {invoice.notes && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Notes</CardTitle>
+                  <CardTitle>{t('Notes')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{invoice.notes}</p>
@@ -365,13 +367,13 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <RefreshCw className="h-5 w-5 mr-2" />
-                    Recurring Invoice
+                    <RefreshCw className="h-5 w-5 me-2" />
+                    {t('Recurring Invoice')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Frequency</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('Frequency')}</p>
                     <p className="font-medium text-gray-900 dark:text-gray-100">
                       Every {invoice.recurring_interval_count > 1 && `${invoice.recurring_interval_count} `}
                       {invoice.recurring_interval}
@@ -379,7 +381,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                   </div>
                   {invoice.next_invoice_date && (
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Next Invoice</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('Next Invoice')}</p>
                       <p className="font-medium text-gray-900 dark:text-gray-100">
                         {formatDate(invoice.next_invoice_date)}
                       </p>
@@ -387,7 +389,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                   )}
                   {invoice.last_invoice_date && (
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Last Generated</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('Last Generated')}</p>
                       <p className="font-medium text-gray-900 dark:text-gray-100">
                         {formatDate(invoice.last_invoice_date)}
                       </p>
@@ -395,7 +397,7 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                   )}
                   {invoice.recurring_end_date && (
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Ends On</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('Ends On')}</p>
                       <p className="font-medium text-gray-900 dark:text-gray-100">
                         {formatDate(invoice.recurring_end_date)}
                       </p>
@@ -408,29 +410,29 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
             {/* Additional Info */}
             <Card>
               <CardHeader>
-                <CardTitle>Details</CardTitle>
+                <CardTitle>{t('Details')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Created</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Created')}</p>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {formatDate(invoice.created_at)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Last Updated</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Last Updated')}</p>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {formatDate(invoice.updated_at)}
                   </p>
                 </div>
                 {invoice.parent_invoice_id && (
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Parent Invoice</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('Parent Invoice')}</p>
                     <Link
                       href={`/admin/invoices/${invoice.parent_invoice_id}`}
                       className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
                     >
-                      View Parent
+                      {t('View Parent')}
                     </Link>
                   </div>
                 )}
@@ -442,8 +444,8 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <DollarSign className="h-5 w-5 mr-2" />
-                    Payment History
+                    <DollarSign className="h-5 w-5 me-2" />
+                    {t('Payment History')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -451,19 +453,19 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                     {/* Payment Summary */}
                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Total Amount:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('Total Amount:')}</span>
                         <span className="font-medium text-gray-900 dark:text-gray-100">
                           {formatAmount(invoice.total)}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Total Paid:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('Total Paid:')}</span>
                         <span className="font-medium text-green-600 dark:text-green-400">
                           {formatAmount(invoice.amount_paid)}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm pt-2 border-t border-gray-200 dark:border-gray-700">
-                        <span className="font-medium text-gray-900 dark:text-gray-100">Balance Due:</span>
+                        <span className="font-medium text-gray-900 dark:text-gray-100">{t('Balance Due:')}</span>
                         <span className="font-medium text-gray-900 dark:text-gray-100">
                           {formatAmount((Number.parseFloat(invoice.total) - Number.parseFloat(invoice.amount_paid)).toFixed(2))}
                         </span>
@@ -495,12 +497,12 @@ export default function InvoicesShow({ invoice }: Readonly<Props>) {
                           </div>
                           <div className="text-xs text-gray-600 dark:text-gray-400">
                             <p>
-                              <span className="font-medium">Method:</span>{' '}
+                              <span className="font-medium">{t('Method:')}</span>{' '}
                               {formatPaymentMethod(payment.payment_method)}
                             </p>
                             {payment.transaction_id && (
                               <p className="mt-1">
-                                <span className="font-medium">Transaction:</span>{' '}
+                                <span className="font-medium">{t('Transaction:')}</span>{' '}
                                 <span className="font-mono">{payment.transaction_id}</span>
                               </p>
                             )}

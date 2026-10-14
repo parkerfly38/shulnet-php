@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, router } from '@inertiajs/react';
 import { useState, FormEvent } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export default function TemplateEdit({ template }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [name, setName] = useState(template.name);
   const [description, setDescription] = useState(template.description || '');
   const [subject, setSubject] = useState(template.subject);
@@ -77,7 +79,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="e.g., Welcome Email"
+                  placeholder={t('e.g., Welcome Email')}
                 />
                 <p className="text-sm text-gray-500">A descriptive name for this template</p>
               </div>
@@ -89,7 +91,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}
-                  placeholder="Optional description of when to use this template"
+                  placeholder={t('Optional description of when to use this template')}
                 />
               </div>
 
@@ -100,7 +102,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   required
-                  placeholder="e.g., Welcome to Our Community!"
+                  placeholder={t('e.g., Welcome to Our Community!')}
                 />
               </div>
 
@@ -109,7 +111,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
                 <RichTextEditor
                   value={content}
                   onChange={setContent}
-                  placeholder="Enter your email content here..."
+                  placeholder={t('Enter your email content here...')}
                   className="min-h-[400px]"
                 />
                 <p className="text-sm text-gray-500">
@@ -124,7 +126,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
                   variant="outline"
                   onClick={() => router.visit('/admin/templates')}
                 >
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </div>
             </div>
@@ -140,7 +142,7 @@ export default function TemplateEdit({ template }: Readonly<Props>) {
                   <iframe
                     srcDoc={content || '<p style="padding: 20px; color: #666;">Email preview will appear here...</p>'}
                     className="w-full min-h-[500px] border-0"
-                    title="Email Preview"
+                    title={t('Email Preview')}
                     sandbox="allow-same-origin"
                   />
                 </div>

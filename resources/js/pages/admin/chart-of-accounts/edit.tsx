@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -39,6 +40,7 @@ interface Props {
 }
 
 export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
+    const { t } = useTranslation();
     const { data, setData, put, processing, errors } = useForm({
         account_code: account.account_code,
         account_name: account.account_name,
@@ -63,13 +65,13 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                         Edit GL Account: {account.account_code}
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400">
-                        Update account details
+                        {t('Update account details')}
                     </p>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Account Details</CardTitle>
+                        <CardTitle>{t('Account Details')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -80,7 +82,7 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                                         id="account_code"
                                         value={data.account_code}
                                         onChange={(e) => setData('account_code', e.target.value)}
-                                        placeholder="e.g., 4000"
+                                        placeholder={t('e.g., 4000')}
                                         required
                                     />
                                     {errors.account_code && (
@@ -94,7 +96,7 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                                         id="account_name"
                                         value={data.account_name}
                                         onChange={(e) => setData('account_name', e.target.value)}
-                                        placeholder="e.g., Membership Dues Revenue"
+                                        placeholder={t('e.g., Membership Dues Revenue')}
                                         required
                                     />
                                     {errors.account_name && (
@@ -114,11 +116,11 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="revenue">Revenue</SelectItem>
-                                            <SelectItem value="expense">Expense</SelectItem>
-                                            <SelectItem value="asset">Asset</SelectItem>
-                                            <SelectItem value="liability">Liability</SelectItem>
-                                            <SelectItem value="equity">Equity</SelectItem>
+                                            <SelectItem value="revenue">{t('Revenue')}</SelectItem>
+                                            <SelectItem value="expense">{t('Expense')}</SelectItem>
+                                            <SelectItem value="asset">{t('Asset')}</SelectItem>
+                                            <SelectItem value="liability">{t('Liability')}</SelectItem>
+                                            <SelectItem value="equity">{t('Equity')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.account_type && (
@@ -127,7 +129,7 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="sort_order">Sort Order</Label>
+                                    <Label htmlFor="sort_order">{t('Sort Order')}</Label>
                                     <Input
                                         id="sort_order"
                                         type="number"
@@ -142,12 +144,12 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
+                                <Label htmlFor="description">{t('Description')}</Label>
                                 <Textarea
                                     id="description"
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
-                                    placeholder="Brief description of this account..."
+                                    placeholder={t('Brief description of this account...')}
                                     rows={3}
                                 />
                                 {errors.description && (
@@ -175,7 +177,7 @@ export default function ChartOfAccountsEdit({ account }: Readonly<Props>) {
                                     variant="outline"
                                     onClick={() => globalThis.history.back()}
                                 >
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                             </div>
                         </form>

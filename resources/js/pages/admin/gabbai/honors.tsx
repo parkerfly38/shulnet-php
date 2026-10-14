@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
@@ -21,6 +22,7 @@ function nextSaturdayISO(fromDate = new Date()) {
 }
 
 export default function GabbaiHonors() {
+    const { t } = useTranslation();
     const [date, setDate] = useState<string>(() => {
         try {
             const params = new URLSearchParams(window.location.search);
@@ -141,13 +143,13 @@ export default function GabbaiHonors() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Assign Torah Honors" />
+            <Head title={t('Assign Torah Honors')} />
 
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4">Assign Torah Honors</h1>
+                <h1 className="text-2xl font-bold mb-4">{t('Assign Torah Honors')}</h1>
 
                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700">Date</label>
+                    <label className="block text-sm font-medium text-gray-700">{t('Date')}</label>
                     <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1 block w-48 rounded-md border" />
                 </div>
 
@@ -157,11 +159,11 @@ export default function GabbaiHonors() {
                     </div>
                 )}
 
-                {loading && <p>Loading readings...</p>}
+                {loading && <p>{t('Loading readings...')}</p>}
                 {error && <p className="text-red-500">{error}</p>}
 
                 <div className="space-y-3">
-                    {honors.length === 0 && <p className="text-sm text-gray-500">No honors found for this date.</p>}
+                    {honors.length === 0 && <p className="text-sm text-gray-500">{t('No honors found for this date.')}</p>}
                     {honors.map((h) => (
                         <div key={h.key} className="flex items-center gap-4 bg-white dark:bg-black p-3 rounded border">
                             <div className="w-40">
@@ -182,7 +184,7 @@ export default function GabbaiHonors() {
 
                 <div className="mt-4">
                     <button onClick={async () => { await save(); if (message) setToast(message); }} disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded">{saving ? 'Saving…' : 'Save Assignments'}</button>
-                    {message && <span className="ml-3 text-sm text-gray-600">{message}</span>}
+                    {message && <span className="ms-3 text-sm text-gray-600">{message}</span>}
                 </div>
 
                 {toast && <Toast message={toast} onClose={() => setToast(null)} />}

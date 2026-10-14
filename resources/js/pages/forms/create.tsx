@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -13,6 +14,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Save, Eye } from 'lucide-react';
 
 export default function CreateForm() {
+    const { t } = useTranslation();
     const [showPreview, setShowPreview] = useState(false);
     const { data, setData, post, processing, errors } = useForm({
         name: '',
@@ -34,23 +36,23 @@ export default function CreateForm() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Form" />
+            <Head title={t('Create Form')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-3xl font-bold">Create Form</h1>
+                    <h1 className="text-3xl font-bold">{t('Create Form')}</h1>
                     <div className="flex gap-2">
                         <Button
                             type="button"
                             variant="outline"
                             onClick={() => setShowPreview(!showPreview)}
                         >
-                            <Eye className="w-4 h-4 mr-2" />
+                            <Eye className="w-4 h-4 me-2" />
                             {showPreview ? 'Hide' : 'Show'} Preview
                         </Button>
                         <Button type="button" onClick={handleSubmit} disabled={processing || data.schema.length === 0}>
-                            <Save className="w-4 h-4 mr-2" />
-                            Create Form
+                            <Save className="w-4 h-4 me-2" />
+                            {t('Create Form')}
                         </Button>
                     </div>
                 </div>
@@ -59,12 +61,12 @@ export default function CreateForm() {
                     <div className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Form Details</CardTitle>
-                                <CardDescription>Basic information about your form</CardDescription>
+                                <CardTitle>{t('Form Details')}</CardTitle>
+                                <CardDescription>{t('Basic information about your form')}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
-                                    <Label htmlFor="name">Form Name</Label>
+                                    <Label htmlFor="name">{t('Form Name')}</Label>
                                     <Input
                                         id="name"
                                         value={data.name}
@@ -75,7 +77,7 @@ export default function CreateForm() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="description">Description (optional)</Label>
+                                    <Label htmlFor="description">{t('Description (optional)')}</Label>
                                     <Textarea
                                         id="description"
                                         value={data.description}
@@ -91,15 +93,15 @@ export default function CreateForm() {
                                         checked={data.is_active}
                                         onCheckedChange={(checked) => setData('is_active', checked as boolean)}
                                     />
-                                    <Label htmlFor="is_active">Form is active and accepting submissions</Label>
+                                    <Label htmlFor="is_active">{t('Form is active and accepting submissions')}</Label>
                                 </div>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Form Fields</CardTitle>
-                                <CardDescription>Add and configure fields for your form</CardDescription>
+                                <CardTitle>{t('Form Fields')}</CardTitle>
+                                <CardDescription>{t('Add and configure fields for your form')}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <FormBuilder
@@ -114,15 +116,15 @@ export default function CreateForm() {
                         <div className="lg:sticky lg:top-4 lg:h-fit">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Preview</CardTitle>
+                                    <CardTitle>{t('Preview')}</CardTitle>
                                     <CardDescription>
-                                        This is how your form will appear to users
+                                        {t('This is how your form will appear to users')}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     {data.schema.length === 0 ? (
                                         <p className="text-center text-gray-500 py-8">
-                                            Add fields to see the preview
+                                            {t('Add fields to see the preview')}
                                         </p>
                                     ) : (
                                         <div className="space-y-4">

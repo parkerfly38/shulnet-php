@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export default function InvoicesPage({ member, invoices }: Props) {
+    const { t } = useTranslation();
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -64,24 +66,24 @@ export default function InvoicesPage({ member, invoices }: Props) {
 
     return (
         <AppLayout>
-            <Head title="My Invoices" />
+            <Head title={t('My Invoices')} />
 
             <div className="p-4 space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">My Invoices</h1>
+                        <h1 className="text-2xl font-bold">{t('My Invoices')}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            View and manage all your invoices
+                            {t('View and manage all your invoices')}
                         </p>
                     </div>
                     <Link
                         href="/member/dashboard"
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center"
                     >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to Dashboard
+                        {t('Back to Dashboard')}
                     </Link>
                 </div>
 
@@ -90,8 +92,8 @@ export default function InvoicesPage({ member, invoices }: Props) {
                         <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Invoices Found</h3>
-                        <p className="text-gray-600 dark:text-gray-400">You don't have any invoices yet.</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('No Invoices Found')}</h3>
+                        <p className="text-gray-600 dark:text-gray-400">{t("You don't have any invoices yet.")}</p>
                     </div>
                 ) : (
                     <div className="bg-white dark:bg-black rounded-lg border overflow-hidden">
@@ -99,29 +101,29 @@ export default function InvoicesPage({ member, invoices }: Props) {
                             <table className="w-full">
                                 <thead className="bg-gray-50 dark:bg-gray-900 border-b">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                             Invoice #
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Date
+                                        <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {t('Date')}
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Due Date
+                                        <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {t('Due Date')}
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Description
+                                        <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {t('Description')}
                                         </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Amount
+                                        <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {t('Amount')}
                                         </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Balance
+                                        <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {t('Balance')}
                                         </th>
                                         <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Status
+                                            {t('Status')}
                                         </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Actions
+                                        <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            {t('Actions')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -145,10 +147,10 @@ export default function InvoicesPage({ member, invoices }: Props) {
                                             <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
                                                 {invoice.notes || 'Invoice'}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-gray-100">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-end font-medium text-gray-900 dark:text-gray-100">
                                                 {formatCurrency(invoice.total)}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-medium">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-end font-medium">
                                                 {invoice.balance > 0 ? (
                                                     <span className="text-red-600 dark:text-red-400">
                                                         {formatCurrency(invoice.balance)}
@@ -164,20 +166,20 @@ export default function InvoicesPage({ member, invoices }: Props) {
                                                     {getStatusText(invoice)}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <div className="flex justify-end gap-2">
                                                     <Link
                                                         href={`/member/invoices/${invoice.id}`}
                                                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                                                     >
-                                                        View
+                                                        {t('View')}
                                                     </Link>
                                                     {invoice.balance > 0 && (
                                                         <Link
                                                             href={`/member/invoices/${invoice.id}/pay`}
                                                             className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
                                                         >
-                                                            Pay
+                                                            {t('Pay')}
                                                         </Link>
                                                     )}
                                                 </div>
@@ -194,19 +196,19 @@ export default function InvoicesPage({ member, invoices }: Props) {
                 {invoices.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Total Invoiced</h3>
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('Total Invoiced')}</h3>
                             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                 {formatCurrency(invoices.reduce((sum, inv) => sum + Number(inv.total), 0))}
                             </p>
                         </div>
                         <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Total Paid</h3>
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('Total Paid')}</h3>
                             <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                                 {formatCurrency(invoices.reduce((sum, inv) => sum + Number(inv.amount_paid), 0))}
                             </p>
                         </div>
                         <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Outstanding Balance</h3>
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('Outstanding Balance')}</h3>
                             <p className="text-2xl font-bold text-red-600 dark:text-red-400">
                                 {formatCurrency(invoices.reduce((sum, inv) => sum + Number(inv.balance), 0))}
                             </p>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, useForm, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -42,6 +43,7 @@ interface Props {
 }
 
 export default function EmailSettingsPage({ settings }: Readonly<Props>) {
+    const { t } = useTranslation();
     const [testEmail, setTestEmail] = useState('');
     const [isTesting, setIsTesting] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -118,34 +120,34 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Email Settings" />
+            <Head title={t('Email Settings')} />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Email Provider Configuration</CardTitle>
+                                <CardTitle>{t('Email Provider Configuration')}</CardTitle>
                                 <CardDescription>
-                                    Configure your email sending provider for campaigns and notifications
+                                    {t('Configure your email sending provider for campaigns and notifications')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="space-y-2">
-                                    <Label htmlFor="provider">Email Provider</Label>
+                                    <Label htmlFor="provider">{t('Email Provider')}</Label>
                                     <Select
                                         value={data.provider}
                                         onValueChange={(value: EmailProvider) => setData('provider', value)}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select provider" />
+                                            <SelectValue placeholder={t('Select provider')} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="smtp">SMTP</SelectItem>
-                                            <SelectItem value="mailgun">Mailgun</SelectItem>
-                                            <SelectItem value="sendgrid">SendGrid</SelectItem>
-                                            <SelectItem value="ses">AWS SES</SelectItem>
-                                            <SelectItem value="log">Log (Testing)</SelectItem>
+                                            <SelectItem value="smtp">{t('SMTP')}</SelectItem>
+                                            <SelectItem value="mailgun">{t('Mailgun')}</SelectItem>
+                                            <SelectItem value="sendgrid">{t('SendGrid')}</SelectItem>
+                                            <SelectItem value="ses">{t('AWS SES')}</SelectItem>
+                                            <SelectItem value="log">{t('Log (Testing)')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.provider && (
@@ -157,7 +159,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
 
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="space-y-2">
-                                        <Label htmlFor="from_address">From Email Address</Label>
+                                        <Label htmlFor="from_address">{t('From Email Address')}</Label>
                                         <Input
                                             id="from_address"
                                             type="email"
@@ -171,13 +173,13 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                     </div>
 
                                     <div className="space-y-2">
-                                        <Label htmlFor="from_name">From Name</Label>
+                                        <Label htmlFor="from_name">{t('From Name')}</Label>
                                         <Input
                                             id="from_name"
                                             type="text"
                                             value={data.from_name || ''}
                                             onChange={(e) => setData('from_name', e.target.value)}
-                                            placeholder="Your Organization"
+                                            placeholder={t('Your Organization')}
                                         />
                                         {errors.from_name && (
                                             <p className="text-sm text-red-600">{errors.from_name}</p>
@@ -189,10 +191,10 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <h3 className="text-lg font-medium">SMTP Configuration</h3>
+                                            <h3 className="text-lg font-medium">{t('SMTP Configuration')}</h3>
                                             <div className="grid gap-4 md:grid-cols-2">
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="smtp_host">SMTP Host</Label>
+                                                    <Label htmlFor="smtp_host">{t('SMTP Host')}</Label>
                                                     <Input
                                                         id="smtp_host"
                                                         type="text"
@@ -206,7 +208,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="smtp_port">SMTP Port</Label>
+                                                    <Label htmlFor="smtp_port">{t('SMTP Port')}</Label>
                                                     <Input
                                                         id="smtp_port"
                                                         type="text"
@@ -220,7 +222,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="smtp_username">SMTP Username</Label>
+                                                    <Label htmlFor="smtp_username">{t('SMTP Username')}</Label>
                                                     <Input
                                                         id="smtp_username"
                                                         type="text"
@@ -233,7 +235,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="smtp_password">SMTP Password</Label>
+                                                    <Label htmlFor="smtp_password">{t('SMTP Password')}</Label>
                                                     <Input
                                                         id="smtp_password"
                                                         type="password"
@@ -247,7 +249,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="smtp_encryption">Encryption</Label>
+                                                    <Label htmlFor="smtp_encryption">{t('Encryption')}</Label>
                                                     <Select
                                                         value={data.smtp_encryption || 'tls'}
                                                         onValueChange={(value) => setData('smtp_encryption', value)}
@@ -256,9 +258,9 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <SelectItem value="tls">TLS</SelectItem>
-                                                            <SelectItem value="ssl">SSL</SelectItem>
-                                                            <SelectItem value="none">None</SelectItem>
+                                                            <SelectItem value="tls">{t('TLS')}</SelectItem>
+                                                            <SelectItem value="ssl">{t('SSL')}</SelectItem>
+                                                            <SelectItem value="none">{t('None')}</SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                     {errors.smtp_encryption && (
@@ -274,10 +276,10 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <h3 className="text-lg font-medium">Mailgun Configuration</h3>
+                                            <h3 className="text-lg font-medium">{t('Mailgun Configuration')}</h3>
                                             <div className="grid gap-4 md:grid-cols-2">
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="mailgun_domain">Mailgun Domain</Label>
+                                                    <Label htmlFor="mailgun_domain">{t('Mailgun Domain')}</Label>
                                                     <Input
                                                         id="mailgun_domain"
                                                         type="text"
@@ -291,7 +293,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="mailgun_secret">Mailgun API Key</Label>
+                                                    <Label htmlFor="mailgun_secret">{t('Mailgun API Key')}</Label>
                                                     <Input
                                                         id="mailgun_secret"
                                                         type="password"
@@ -305,7 +307,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="mailgun_endpoint">Mailgun Endpoint (Optional)</Label>
+                                                    <Label htmlFor="mailgun_endpoint">{t('Mailgun Endpoint (Optional)')}</Label>
                                                     <Input
                                                         id="mailgun_endpoint"
                                                         type="text"
@@ -326,9 +328,9 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <h3 className="text-lg font-medium">SendGrid Configuration</h3>
+                                            <h3 className="text-lg font-medium">{t('SendGrid Configuration')}</h3>
                                             <div className="space-y-2">
-                                                <Label htmlFor="sendgrid_api_key">SendGrid API Key</Label>
+                                                <Label htmlFor="sendgrid_api_key">{t('SendGrid API Key')}</Label>
                                                 <Input
                                                     id="sendgrid_api_key"
                                                     type="password"
@@ -348,10 +350,10 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                     <>
                                         <Separator />
                                         <div className="space-y-4">
-                                            <h3 className="text-lg font-medium">AWS SES Configuration</h3>
+                                            <h3 className="text-lg font-medium">{t('AWS SES Configuration')}</h3>
                                             <div className="grid gap-4 md:grid-cols-2">
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="ses_key">AWS Access Key ID</Label>
+                                                    <Label htmlFor="ses_key">{t('AWS Access Key ID')}</Label>
                                                     <Input
                                                         id="ses_key"
                                                         type="text"
@@ -364,7 +366,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="ses_secret">AWS Secret Access Key</Label>
+                                                    <Label htmlFor="ses_secret">{t('AWS Secret Access Key')}</Label>
                                                     <Input
                                                         id="ses_secret"
                                                         type="password"
@@ -378,7 +380,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="ses_region">AWS Region</Label>
+                                                    <Label htmlFor="ses_region">{t('AWS Region')}</Label>
                                                     <Input
                                                         id="ses_region"
                                                         type="text"
@@ -400,7 +402,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                                         <Separator />
                                         <div className="rounded-lg bg-yellow-50 p-4">
                                             <p className="text-sm text-yellow-800">
-                                                Log provider is for testing only. Emails will be logged to storage/logs/laravel.log instead of being sent.
+                                                {t('Log provider is for testing only. Emails will be logged to storage/logs/laravel.log instead of being sent.')}
                                             </p>
                                         </div>
                                     </>
@@ -410,9 +412,9 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Test Email</CardTitle>
+                                <CardTitle>{t('Test Email')}</CardTitle>
                                 <CardDescription>
-                                    Send a test email to verify your configuration
+                                    {t('Send a test email to verify your configuration')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -462,7 +464,7 @@ export default function EmailSettingsPage({ settings }: Readonly<Props>) {
                     </DialogHeader>
                     <div className="flex justify-end">
                         <Button onClick={() => setDialogOpen(false)}>
-                            Close
+                            {t('Close')}
                         </Button>
                     </div>
                 </DialogContent>

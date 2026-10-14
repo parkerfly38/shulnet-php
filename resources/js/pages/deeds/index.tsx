@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [search, setSearch] = useState(filters.search || '');
   const [memberId, setMemberId] = useState(filters.member || '');
 
@@ -112,19 +114,19 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Deeds" />
+      <Head title={t('Deeds')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Cemetery Deeds</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage burial plot deeds and ownership</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Cemetery Deeds')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage burial plot deeds and ownership')}</p>
           </div>
           <Link href="/admin/deeds/create">
             <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Deed
+              <Plus className="h-4 w-4 me-2" />
+              {t('New Deed')}
             </Button>
           </Link>
         </div>
@@ -161,23 +163,23 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-1">
               <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Search className="absolute start-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search deeds, locations..."
+                  placeholder={t('Search deeds, locations...')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleFilter()}
-                  className="pl-9"
+                  className="ps-9"
                 />
               </div>
             </div>
             <div>
               <Select value={memberId ?? ' '} onValueChange={setMemberId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Members" />
+                  <SelectValue placeholder={t('All Members')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value=" ">All Members</SelectItem>
+                  <SelectItem value=" ">{t('All Members')}</SelectItem>
                   {members.map((member) => (
                     <SelectItem key={member.id} value={member.id.toString()}>
                       {member.first_name} {member.last_name}
@@ -188,11 +190,11 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
             </div>
             <div className="flex gap-2">
               <Button onClick={handleFilter} className="flex-1">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
+                <Filter className="h-4 w-4 me-2" />
+                {t('Filter')}
               </Button>
               <Button onClick={handleClearFilters} variant="outline" className="flex-1">
-                Clear
+                {t('Clear')}
               </Button>
             </div>
           </div>
@@ -204,26 +206,26 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Deed Number
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Deed Number')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Owner
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Owner')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Type
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Type')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Capacity
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Capacity')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Purchase Date
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Purchase Date')}
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Status
+                  <th className="px-4 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Status')}
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
+                  <th className="px-4 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -262,7 +264,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                             {deed.member.first_name} {deed.member.last_name}
                           </Link>
                         ) : (
-                          <span className="text-gray-400">N/A</span>
+                          <span className="text-gray-400">{t('N/A')}</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-sm">
@@ -286,15 +288,15 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                       <td className="px-4 py-3 text-sm">
                         {deed.is_active ? (
                           <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                            Active
+                            {t('Active')}
                           </Badge>
                         ) : (
                           <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">
-                            Inactive
+                            {t('Inactive')}
                           </Badge>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-sm text-right">
+                      <td className="px-4 py-3 text-sm text-end">
                         <div className="flex items-center justify-end gap-2">
                           <Link href={`/admin/deeds/${deed.id}/edit`}>
                             <Button variant="ghost" size="sm">
@@ -321,12 +323,12 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
           {deeds.data.length === 0 && (
             <div className="p-12 text-center">
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No deeds found</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Get started by creating your first cemetery deed.</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('No deeds found')}</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">{t('Get started by creating your first cemetery deed.')}</p>
               <Link href="/admin/deeds/create">
                 <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Deed
+                  <Plus className="me-2 h-4 w-4" />
+                  {t('Create Deed')}
                 </Button>
               </Link>
             </div>
@@ -347,7 +349,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                     router.get(`/admin/deeds?page=${deeds.current_page - 1}`)
                   }
                 >
-                  Previous
+                  {t('Previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -357,7 +359,7 @@ export default function DeedsIndex({ deeds, members, stats, filters }: Readonly<
                     router.get(`/admin/deeds?page=${deeds.current_page + 1}`)
                   }
                 >
-                  Next
+                  {t('Next')}
                 </Button>
               </div>
             </div>

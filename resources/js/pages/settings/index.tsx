@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export default function SettingsIndex({ settings: initialSettings }: Readonly<Props>) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
         { title: 'System', href: '/dashboard' },
         { title: 'Settings', href: '/admin/settings' },
@@ -199,7 +201,7 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Settings" />
+            <Head title={t('Settings')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="flex items-center gap-4">
@@ -207,8 +209,8 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                         <SettingsIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Portal Settings</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Configure portal behavior and preferences</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Portal Settings')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Configure portal behavior and preferences')}</p>
                     </div>
                 </div>
 
@@ -242,7 +244,7 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
 
                     <div className="flex justify-end gap-4">
                         <Button type="submit" disabled={processing}>
-                            <Save className="h-4 w-4 mr-2" />
+                            <Save className="h-4 w-4 me-2" />
                             {processing ? 'Saving...' : 'Save Settings'}
                         </Button>
                     </div>

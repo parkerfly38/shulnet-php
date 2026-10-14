@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import { Bell, Check } from 'lucide-react';
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export function NotificationIcon() {
+    const { t } = useTranslation();
     const { auth } = usePage().props as any;
     const unseenCount = auth.unseenNotifications || 0;
 
@@ -27,7 +29,7 @@ export function NotificationIcon() {
                     {unseenCount > 0 && (
                         <Badge 
                             variant="destructive" 
-                            className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center min-w-[1.25rem]"
+                            className="absolute -top-1 -end-1 h-5 w-5 p-0 text-xs flex items-center justify-center min-w-[1.25rem]"
                         >
                             {unseenCount > 99 ? '99+' : unseenCount}
                         </Badge>
@@ -39,9 +41,9 @@ export function NotificationIcon() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
                 <div className="px-3 py-2 text-sm font-medium">
-                    Notifications
+                    {t('Notifications')}
                     {unseenCount > 0 && (
-                        <Badge variant="secondary" className="ml-2">
+                        <Badge variant="secondary" className="ms-2">
                             {unseenCount}
                         </Badge>
                     )}
@@ -49,13 +51,13 @@ export function NotificationIcon() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                     <Link href="/admin/notes?assigned=true" className="w-full">
-                        View My Notes
+                        {t('View My Notes')}
                     </Link>
                 </DropdownMenuItem>
                 {unseenCount > 0 && (
                     <DropdownMenuItem onClick={handleMarkAllSeen}>
-                        <Check className="h-4 w-4 mr-2" />
-                        Mark All as Seen
+                        <Check className="h-4 w-4 me-2" />
+                        {t('Mark All as Seen')}
                     </DropdownMenuItem>
                 )}
             </DropdownMenuContent>

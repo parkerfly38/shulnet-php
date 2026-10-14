@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function HtmlPageShow({ page }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'HTML Publisher', href: '/admin/html-pages' },
@@ -63,14 +65,14 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Eye className="mr-2 h-4 w-4" />
-                Preview
+                <Eye className="me-2 h-4 w-4" />
+                {t('Preview')}
               </a>
             </Button>
             <Link href={`/admin/html-pages/${page.id}/edit`}>
               <Button>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Page
+                <Edit className="me-2 h-4 w-4" />
+                {t('Edit Page')}
               </Button>
             </Link>
           </div>
@@ -96,7 +98,7 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Layout className="h-4 w-4" />
-                    Custom Header
+                    {t('Custom Header')}
                   </CardTitle>
                   <CardDescription>This page has a custom header (overriding template)</CardDescription>
                 </CardHeader>
@@ -114,7 +116,7 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Layout className="h-4 w-4" />
-                    Custom Navigation
+                    {t('Custom Navigation')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -131,7 +133,7 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Layout className="h-4 w-4" />
-                    Custom Footer
+                    {t('Custom Footer')}
                   </CardTitle>
                   <CardDescription>This page has a custom footer (overriding template)</CardDescription>
                 </CardHeader>
@@ -151,7 +153,7 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />
-                  Page Details
+                  {t('Page Details')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -196,7 +198,7 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
                   <div>
                     <p className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1">
                       <Globe className="h-3 w-3" />
-                      Published
+                      {t('Published')}
                     </p>
                     <p className="mt-1 text-sm">
                       {new Date(page.published_at).toLocaleDateString('en-US', {
@@ -213,7 +215,7 @@ export default function HtmlPageShow({ page }: Readonly<Props>) {
                 <div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
-                    Created
+                    {t('Created')}
                   </p>
                   <p className="mt-1 text-sm">
                     {new Date(page.created_at).toLocaleDateString('en-US', {

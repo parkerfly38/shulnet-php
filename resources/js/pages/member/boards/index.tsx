@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -36,15 +37,16 @@ interface Props {
 }
 
 export default function MyBoards({ boards }: Readonly<Props>) {
+    const { t } = useTranslation();
   return (
     <AppLayout>
-      <Head title="My Boards" />
+      <Head title={t('My Boards')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="mb-4">
-          <h1 className="text-3xl font-bold tracking-tight">My Boards</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('My Boards')}</h1>
           <p className="text-muted-foreground mt-2">
-            Boards you are a member of
+            {t('Boards you are a member of')}
           </p>
         </div>
 
@@ -74,7 +76,7 @@ export default function MyBoards({ boards }: Readonly<Props>) {
                   <CardContent className="space-y-4">
                     {board.pivot?.title && (
                       <div className="text-sm">
-                        <span className="font-medium">Your Role:</span>{' '}
+                        <span className="font-medium">{t('Your Role:')}</span>{' '}
                         <span className="text-muted-foreground">{board.pivot.title}</span>
                       </div>
                     )}
@@ -85,28 +87,28 @@ export default function MyBoards({ boards }: Readonly<Props>) {
                           <Users className="h-4 w-4" />
                         </div>
                         <div className="text-2xl font-bold">{board.members.length}</div>
-                        <div className="text-xs text-muted-foreground">Members</div>
+                        <div className="text-xs text-muted-foreground">{t('Members')}</div>
                       </div>
                       <div className="text-center">
                         <div className="flex items-center justify-center gap-1 text-muted-foreground mb-1">
                           <CalendarDays className="h-4 w-4" />
                         </div>
                         <div className="text-2xl font-bold">{board.upcoming_meetings_count}</div>
-                        <div className="text-xs text-muted-foreground">Upcoming</div>
+                        <div className="text-xs text-muted-foreground">{t('Upcoming')}</div>
                       </div>
                       <div className="text-center">
                         <div className="flex items-center justify-center gap-1 text-muted-foreground mb-1">
                           <FileText className="h-4 w-4" />
                         </div>
                         <div className="text-2xl font-bold">{board.meetings_count}</div>
-                        <div className="text-xs text-muted-foreground">Total Mtgs</div>
+                        <div className="text-xs text-muted-foreground">{t('Total Mtgs')}</div>
                       </div>
                     </div>
 
                     <Link href={`/member/boards/${board.id}`}>
                       <Button className="w-full">
-                        View Details
-                        <ChevronRight className="ml-2 h-4 w-4" />
+                        {t('View Details')}
+                        <ChevronRight className="ms-2 h-4 w-4" />
                       </Button>
                     </Link>
                   </CardContent>
@@ -119,7 +121,7 @@ export default function MyBoards({ boards }: Readonly<Props>) {
             <CardContent className="text-center py-12">
               <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <p className="text-muted-foreground">
-                You are not currently a member of any boards
+                {t('You are not currently a member of any boards')}
               </p>
             </CardContent>
           </Card>
