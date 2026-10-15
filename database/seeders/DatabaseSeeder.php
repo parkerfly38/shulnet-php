@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
             PdfTemplateSeeder::class,
             CemeterySeeder::class,
             SettingSeeder::class,
+            ChartOfAccountsSeeder::class,
             InvoiceSeeder::class,
             EmailTemplateSeeder::class,
 
@@ -66,6 +67,8 @@ class DatabaseSeeder extends Seeder
 
             // Member Portal Test Data
             MemberPortalTestSeeder::class,
+            DemoExperienceSeeder::class,
+            MembershipBillingSeeder::class,
         ]);
     }
 }

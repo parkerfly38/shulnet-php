@@ -33,6 +33,7 @@ class InvoiceSeeder extends Seeder
             'subtotal' => 500.00,
             'tax_amount' => 0.00,
             'total' => 500.00,
+            'amount_paid' => 500.00,
             'notes' => 'Annual membership dues',
             'recurring' => false,
         ]);
@@ -43,6 +44,7 @@ class InvoiceSeeder extends Seeder
             'quantity' => 1,
             'unit_price' => 500.00,
             'total' => 500.00,
+            'amount_paid' => 500.00,
             'sort_order' => 1,
         ]);
 
