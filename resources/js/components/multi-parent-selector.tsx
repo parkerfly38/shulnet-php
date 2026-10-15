@@ -181,13 +181,13 @@ export default function MultiParentSelector({ value, onChange, error }: MultiPar
                 <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-hidden flex flex-col">
                     <div className="p-2 border-b border-gray-200 dark:border-gray-700">
                         <div className="relative">
-                            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                            <Search className="absolute start-2 top-2.5 h-4 w-4 text-gray-400" />
                             <input
                                 type="text"
                                 placeholder="Search parents..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm"
+                                className="w-full ps-8 pe-3 py-2 border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-gray-800 text-sm"
                                 autoFocus
                             />
                         </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Star, Calendar, User, Heart, Info, MessageSquare } from 'lucide-react';
@@ -34,6 +35,7 @@ interface Props {
 }
 
 export default function YahrzeitsPage({ member, yahrzeits }: Props) {
+    const { t } = useTranslation();
     const [requestingChange, setRequestingChange] = useState<Yahrzeit | null>(null);
     
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -102,24 +104,24 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
 
     return (
         <AppLayout>
-            <Head title="My Yahrzeits" />
+            <Head title={t('My Yahrzeits')} />
 
             <div className="p-4 space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">My Yahrzeits</h1>
+                        <h1 className="text-2xl font-bold">{t('My Yahrzeits')}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            Memorial observances for loved ones
+                            {t('Memorial observances for loved ones')}
                         </p>
                     </div>
                     <Link
                         href="/member/dashboard"
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center"
                     >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to Dashboard
+                        {t('Back to Dashboard')}
                     </Link>
                 </div>
 
@@ -127,9 +129,9 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                     <div className="bg-white dark:bg-black rounded-lg border p-8">
                         <div className="text-center">
                             <Star className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                            <h2 className="text-xl font-semibold mb-2">No Yahrzeits Found</h2>
+                            <h2 className="text-xl font-semibold mb-2">{t('No Yahrzeits Found')}</h2>
                             <p className="text-gray-600 dark:text-gray-400">
-                                There are no yahrzeit observances associated with your account.
+                                {t('There are no yahrzeit observances associated with your account.')}
                             </p>
                         </div>
                     </div>
@@ -140,7 +142,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                             <div className="bg-white dark:bg-black rounded-lg border">
                                 <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-4 text-white">
                                     <h2 className="text-xl font-semibold flex items-center">
-                                        <Calendar className="w-5 h-5 mr-2" />
+                                        <Calendar className="w-5 h-5 me-2" />
                                         Upcoming Observances (Next 60 Days)
                                     </h2>
                                 </div>
@@ -169,12 +171,12 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                                             )}
                                                             <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
                                                                 <div className="flex items-center">
-                                                                    <Heart className="w-4 h-4 mr-1" />
+                                                                    <Heart className="w-4 h-4 me-1" />
                                                                     {yahrzeit.relationship}
                                                                 </div>
                                                                 {yahrzeit.date_of_death && (
                                                                     <div className="flex items-center">
-                                                                        <Calendar className="w-4 h-4 mr-1" />
+                                                                        <Calendar className="w-4 h-4 me-1" />
                                                                         {formatDate(yahrzeit.date_of_death)}
                                                                     </div>
                                                                 )}
@@ -188,7 +190,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                                             {yahrzeit.notes && (
                                                                 <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-900 rounded text-sm">
                                                                     <div className="flex items-start">
-                                                                        <Info className="w-4 h-4 mr-2 mt-0.5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                                                                        <Info className="w-4 h-4 me-2 mt-0.5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                                                                         <span className="text-gray-700 dark:text-gray-300">{yahrzeit.notes}</span>
                                                                     </div>
                                                                 </div>
@@ -199,8 +201,8 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                                                     variant="outline"
                                                                     size="sm"
                                                                 >
-                                                                    <MessageSquare className="w-4 h-4 mr-2" />
-                                                                    Request Change
+                                                                    <MessageSquare className="w-4 h-4 me-2" />
+                                                                    {t('Request Change')}
                                                                 </Button>
                                                             </div>
                                                         </div>
@@ -223,8 +225,8 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                             <div className="bg-white dark:bg-black rounded-lg border">
                                 <div className="p-4 border-b">
                                     <h2 className="text-xl font-semibold flex items-center">
-                                        <Star className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" />
-                                        All Yahrzeits
+                                        <Star className="w-5 h-5 me-2 text-purple-600 dark:text-purple-400" />
+                                        {t('All Yahrzeits')}
                                     </h2>
                                 </div>
                                 <div className="p-4">
@@ -249,12 +251,12 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                                         )}
                                                         <div className="flex flex-wrap gap-3 text-sm text-gray-600 dark:text-gray-400">
                                                             <div className="flex items-center">
-                                                                <Heart className="w-4 h-4 mr-1" />
+                                                                <Heart className="w-4 h-4 me-1" />
                                                                 {yahrzeit.relationship}
                                                             </div>
                                                             {yahrzeit.date_of_death && (
                                                                 <div className="flex items-center">
-                                                                    <Calendar className="w-4 h-4 mr-1" />
+                                                                    <Calendar className="w-4 h-4 me-1" />
                                                                     {formatDate(yahrzeit.date_of_death)}
                                                                 </div>
                                                             )}
@@ -273,7 +275,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                                         {yahrzeit.notes && (
                                                             <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-900 rounded text-sm">
                                                                 <div className="flex items-start">
-                                                                    <Info className="w-4 h-4 mr-2 mt-0.5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                                                                    <Info className="w-4 h-4 me-2 mt-0.5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                                                                     <span className="text-gray-700 dark:text-gray-300">{yahrzeit.notes}</span>
                                                                 </div>
                                                             </div>
@@ -284,8 +286,8 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                                                 variant="outline"
                                                                 size="sm"
                                                             >
-                                                                <MessageSquare className="w-4 h-4 mr-2" />
-                                                                Request Change
+                                                                <MessageSquare className="w-4 h-4 me-2" />
+                                                                {t('Request Change')}
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -304,7 +306,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                     <DialogContent className="sm:max-w-[600px]">
                         <DialogHeader>
                             <DialogTitle>
-                                Request Yahrzeit Change
+                                {t('Request Yahrzeit Change')}
                             </DialogTitle>
                         </DialogHeader>
                         
@@ -328,7 +330,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                     id="message"
                                     value={data.message}
                                     onChange={(e) => setData('message', e.target.value)}
-                                    placeholder="Please describe the change you would like to make to this yahrzeit record..."
+                                    placeholder={t('Please describe the change you would like to make to this yahrzeit record...')}
                                     rows={6}
                                     className={errors.message ? 'border-red-500' : ''}
                                 />
@@ -336,7 +338,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                     <p className="text-sm text-red-500 mt-1">{errors.message}</p>
                                 )}
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                    Your request will be sent to the administrator for review.
+                                    {t('Your request will be sent to the administrator for review.')}
                                 </p>
                             </div>
 
@@ -347,7 +349,7 @@ export default function YahrzeitsPage({ member, yahrzeits }: Props) {
                                     onClick={closeChangeDialog}
                                     disabled={processing}
                                 >
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                                 <Button
                                     type="submit"

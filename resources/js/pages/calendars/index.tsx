@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -55,6 +56,7 @@ interface Props {
 }
 
 export default function CalendarsIndex({ calendars, filters }: Props) {
+    const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState(filters.search || '');
 
   const handleSearch = (e: React.FormEvent) => {
@@ -83,18 +85,18 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Calendars" />
+      <Head title={t('Calendars')} />
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Calendars</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage event calendars and their visibility settings</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Calendars')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage event calendars and their visibility settings')}</p>
           </div>
           <Link href="/admin/calendars/create">
             <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Calendar
+              <Plus className="h-4 w-4 me-2" />
+              {t('Add Calendar')}
             </Button>
           </Link>
         </div>
@@ -104,7 +106,7 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
           <form onSubmit={handleSearch} className="flex items-center space-x-2 flex-1 max-w-md">
             <Input
               type="text"
-              placeholder="Search calendars..."
+              placeholder={t('Search calendars...')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
@@ -114,7 +116,7 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
             </Button>
             {filters.search && (
               <Button type="button" variant="outline" size="sm" onClick={clearSearch}>
-                Clear
+                {t('Clear')}
               </Button>
             )}
           </form>
@@ -126,17 +128,17 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Calendar Name
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Calendar Name')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Visibility
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Visibility')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Created
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Created')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                  <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -146,7 +148,7 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
                     <tr key={calendar.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Calendar className="h-5 w-5 text-gray-400 mr-3" />
+                          <Calendar className="h-5 w-5 text-gray-400 me-3" />
                           <div className="font-medium text-gray-900 dark:text-gray-100">
                             {calendar.name}
                           </div>
@@ -156,19 +158,19 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
                         <div className="flex items-center space-x-2">
                           {calendar.public ? (
                             <Badge variant="default" className="bg-green-100 text-green-800">
-                              <Globe className="h-3 w-3 mr-1" />
-                              Public
+                              <Globe className="h-3 w-3 me-1" />
+                              {t('Public')}
                             </Badge>
                           ) : null}
                           {calendar.members_only ? (
                             <Badge variant="secondary">
-                              <Users className="h-3 w-3 mr-1" />
-                              Members Only
+                              <Users className="h-3 w-3 me-1" />
+                              {t('Members Only')}
                             </Badge>
                           ) : null}
                           {(!calendar.public && !calendar.members_only) ? (
                             <Badge variant="outline">
-                              Private
+                              {t('Private')}
                             </Badge>
                           ) : null}
                         </div>
@@ -176,7 +178,7 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">
                         {formatDate(calendar.created_at)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <Link href={`/admin/calendars/${calendar.id}`}>
                             <Button variant="outline" size="sm">
@@ -210,14 +212,14 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
                     <td colSpan={4} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center">
                         <Calendar className="h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No calendars found</h3>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{t('No calendars found')}</h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
                           {filters.search ? 'No calendars match your search criteria.' : 'Get started by creating your first calendar.'}
                         </p>
                         <Link href="/admin/calendars/create">
                           <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Create Calendar
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('Create Calendar')}
                           </Button>
                         </Link>
                       </div>
@@ -235,12 +237,12 @@ export default function CalendarsIndex({ calendars, filters }: Props) {
                 <div className="flex-1 flex justify-between sm:hidden">
                   {calendars.prev_page_url && (
                     <Link href={calendars.prev_page_url}>
-                      <Button variant="outline">Previous</Button>
+                      <Button variant="outline">{t('Previous')}</Button>
                     </Link>
                   )}
                   {calendars.next_page_url && (
                     <Link href={calendars.next_page_url}>
-                      <Button variant="outline">Next</Button>
+                      <Button variant="outline">{t('Next')}</Button>
                     </Link>
                   )}
                 </div>

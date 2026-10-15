@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { FormEvent, useEffect, useState } from 'react';
@@ -102,10 +103,10 @@ function StripePaymentForm({ invoice, member }: { invoice: Invoice; member: Memb
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Payment Amount
+                    {t('Payment Amount')}
                 </label>
                 <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                    <span className="absolute start-3 top-2.5 text-gray-500">$</span>
                     <input
                         type="number"
                         step="0.01"
@@ -113,7 +114,7 @@ function StripePaymentForm({ invoice, member }: { invoice: Invoice; member: Memb
                         max={invoice.balance}
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md pl-8 pr-3 py-2"
+                        className="w-full border border-gray-300 rounded-md ps-8 pe-3 py-2"
                     />
                 </div>
                 <p className="text-sm text-gray-500 mt-1">
@@ -123,7 +124,7 @@ function StripePaymentForm({ invoice, member }: { invoice: Invoice; member: Memb
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Card Information
+                    {t('Card Information')}
                 </label>
                 <div className="border border-gray-300 rounded-md p-3">
                     <CardElement
@@ -183,10 +184,10 @@ function AuthorizeNetPaymentForm({ invoice }: { invoice: Invoice }) {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Payment Amount
+                    {t('Payment Amount')}
                 </label>
                 <div className="relative">
-                    <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                    <span className="absolute start-3 top-2.5 text-gray-500">$</span>
                     <input
                         type="number"
                         step="0.01"
@@ -194,7 +195,7 @@ function AuthorizeNetPaymentForm({ invoice }: { invoice: Invoice }) {
                         max={invoice.balance}
                         value={data.amount}
                         onChange={(e) => setData('amount', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md pl-8 pr-3 py-2"
+                        className="w-full border border-gray-300 rounded-md ps-8 pe-3 py-2"
                         required
                     />
                 </div>
@@ -205,7 +206,7 @@ function AuthorizeNetPaymentForm({ invoice }: { invoice: Invoice }) {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Card Number
+                    {t('Card Number')}
                 </label>
                 <input
                     type="text"
@@ -233,7 +234,7 @@ function AuthorizeNetPaymentForm({ invoice }: { invoice: Invoice }) {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        CVV
+                        {t('CVV')}
                     </label>
                     <input
                         type="text"
@@ -310,7 +311,7 @@ function PayPalPaymentForm({ invoice }: { invoice: Invoice }) {
 
             <div className="text-center">
                 <p className="text-gray-600 mb-4">
-                    Click the PayPal button below to complete your payment
+                    {t('Click the PayPal button below to complete your payment')}
                 </p>
                 <div id="paypal-button-container"></div>
             </div>
@@ -319,6 +320,7 @@ function PayPalPaymentForm({ invoice }: { invoice: Invoice }) {
 }
 
 export default function PaymentPage({ invoice, member, processor, stripePublicKey }: Props) {
+    const { t } = useTranslation();
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -353,45 +355,45 @@ export default function PaymentPage({ invoice, member, processor, stripePublicKe
                             href={`/member/invoices/${invoice.id}`}
                             className="text-blue-600 hover:text-blue-800 flex items-center"
                         >
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
-                            Back to Invoice
+                            {t('Back to Invoice')}
                         </Link>
                     </div>
 
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
-                        <h1 className="text-2xl font-bold text-gray-900 mb-6">Pay Invoice</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('Pay Invoice')}</h1>
 
                         {/* Invoice Summary */}
                         <div className="bg-gray-50 rounded-lg p-4 mb-8">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-gray-600">Invoice Number:</span>
+                                <span className="text-gray-600">{t('Invoice Number:')}</span>
                                 <span className="font-semibold">#{invoice.invoice_number}</span>
                             </div>
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-gray-600">Due Date:</span>
+                                <span className="text-gray-600">{t('Due Date:')}</span>
                                 <span className="font-semibold">{formatDate(invoice.due_date)}</span>
                             </div>
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-gray-600">Total Amount:</span>
+                                <span className="text-gray-600">{t('Total Amount:')}</span>
                                 <span className="font-semibold">{formatCurrency(invoice.total)}</span>
                             </div>
                             {invoice.amount_paid > 0 && (
                                 <div className="flex justify-between items-center mb-2">
-                                    <span className="text-gray-600">Amount Paid:</span>
+                                    <span className="text-gray-600">{t('Amount Paid:')}</span>
                                     <span className="font-semibold text-green-600">{formatCurrency(invoice.amount_paid)}</span>
                                 </div>
                             )}
                             <div className="flex justify-between items-center pt-2 border-t border-gray-200">
-                                <span className="text-lg font-bold text-gray-900">Balance Due:</span>
+                                <span className="text-lg font-bold text-gray-900">{t('Balance Due:')}</span>
                                 <span className="text-lg font-bold text-gray-900">{formatCurrency(invoice.balance)}</span>
                             </div>
                         </div>
 
                         {/* Payment Form */}
                         <div>
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">Payment Method</h2>
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('Payment Method')}</h2>
                             
                             {processor === 'stripe' && stripePromise && (
                                 <Elements stripe={stripePromise}>
@@ -415,13 +417,13 @@ export default function PaymentPage({ invoice, member, processor, stripePublicKe
                                                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                             </svg>
                                         </div>
-                                        <div className="ml-3">
+                                        <div className="ms-3">
                                             <h3 className="text-sm font-medium text-yellow-800">
-                                                Payment Processing Not Configured
+                                                {t('Payment Processing Not Configured')}
                                             </h3>
                                             <div className="mt-2 text-sm text-yellow-700">
                                                 <p>
-                                                    Online payment processing is not currently available. Please contact the office to arrange payment for this invoice.
+                                                    {t('Online payment processing is not currently available. Please contact the office to arrange payment for this invoice.')}
                                                 </p>
                                             </div>
                                             <div className="mt-4">
@@ -439,7 +441,7 @@ export default function PaymentPage({ invoice, member, processor, stripePublicKe
                         </div>
 
                         <div className="mt-6 text-center text-sm text-gray-500">
-                            <p>Your payment information is secure and encrypted.</p>
+                            <p>{t('Your payment information is secure and encrypted.')}</p>
                         </div>
                     </div>
                 </div>

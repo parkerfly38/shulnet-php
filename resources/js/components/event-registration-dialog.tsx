@@ -182,7 +182,7 @@ export default function EventRegistrationDialog({ event, isOpen, onClose }: Prop
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Number of Guests
                                         {event.max_guests && event.max_guests > 0 && (
-                                            <span className="text-gray-500 ml-2">(Maximum: {event.max_guests})</span>
+                                            <span className="text-gray-500 ms-2">(Maximum: {event.max_guests})</span>
                                         )}
                                     </label>
                                     <input
@@ -232,7 +232,7 @@ export default function EventRegistrationDialog({ event, isOpen, onClose }: Prop
                                                 value="invoice"
                                                 checked={data.payment_option === 'invoice'}
                                                 onChange={(e) => setData('payment_option', e.target.value as 'invoice' | 'pay_now')}
-                                                className="mr-3"
+                                                className="me-3"
                                             />
                                             <div>
                                                 <p className="font-medium">Invoice Me Later</p>
@@ -245,7 +245,7 @@ export default function EventRegistrationDialog({ event, isOpen, onClose }: Prop
                                                 value="pay_now"
                                                 checked={data.payment_option === 'pay_now'}
                                                 onChange={(e) => setData('payment_option', e.target.value as 'invoice' | 'pay_now')}
-                                                className="mr-3"
+                                                className="me-3"
                                             />
                                             <div>
                                                 <p className="font-medium">Pay Now</p>

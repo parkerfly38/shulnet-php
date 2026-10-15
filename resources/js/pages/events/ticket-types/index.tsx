@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -39,6 +40,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Events', href: '/admin/events' },
@@ -77,16 +79,16 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
           <div className="flex items-center gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                <Ticket className="inline h-6 w-6 mr-2" />
-                Ticket Types
+                <Ticket className="inline h-6 w-6 me-2" />
+                {t('Ticket Types')}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">{event.name}</p>
             </div>
           </div>
           <Link href={`/admin/events/${event.id}/ticket-types/create`}>
             <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Ticket Type
+              <Plus className="h-4 w-4 me-2" />
+              {t('Add Ticket Type')}
             </Button>
           </Link>
         </div>
@@ -97,26 +99,26 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Name
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Name')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Category
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Category')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Price
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Price')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Availability
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Availability')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Sale Period
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Sale Period')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Status
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Status')}
                   </th>
                   <th className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
+                    <span className="sr-only">{t('Actions')}</span>
                   </th>
                 </tr>
               </thead>
@@ -141,7 +143,7 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm font-medium text-gray-900 dark:text-gray-100">
-                          <DollarSign className="h-4 w-4 mr-1 text-green-600" />
+                          <DollarSign className="h-4 w-4 me-1 text-green-600" />
                           {formatCurrency(ticketType.price)}
                         </div>
                       </td>
@@ -167,7 +169,7 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
                           {ticketType.active ? 'Active' : 'Inactive'}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex justify-end gap-2">
                           <Link href={`/admin/events/${event.id}/ticket-types/${ticketType.id}/edit`}>
                             <Button variant="ghost" size="sm">
@@ -190,12 +192,12 @@ export default function TicketTypesIndex({ event, ticketTypes }: Readonly<Props>
                     <td colSpan={7} className="px-6 py-12 text-center">
                       <div className="text-gray-500 dark:text-gray-400">
                         <Ticket className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                        <p className="text-lg font-medium">No ticket types found</p>
-                        <p className="text-sm mt-1">Get started by creating your first ticket type.</p>
+                        <p className="text-lg font-medium">{t('No ticket types found')}</p>
+                        <p className="text-sm mt-1">{t('Get started by creating your first ticket type.')}</p>
                         <Link href={`/admin/events/${event.id}/ticket-types/create`} className="mt-4 inline-block">
                           <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Ticket Type
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('Add Ticket Type')}
                           </Button>
                         </Link>
                       </div>

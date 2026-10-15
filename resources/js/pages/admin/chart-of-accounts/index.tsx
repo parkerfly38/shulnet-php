@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,6 +41,7 @@ const accountTypeColors = {
 };
 
 export default function ChartOfAccountsIndex({ accounts }: Readonly<Props>) {
+    const { t } = useTranslation();
     const handleDelete = (account: ChartOfAccount) => {
         if (confirm(`Are you sure you want to delete GL Account ${account.account_code} - ${account.account_name}?`)) {
             router.delete(`/admin/chart-of-accounts/${account.id}`);
@@ -56,21 +58,21 @@ export default function ChartOfAccountsIndex({ accounts }: Readonly<Props>) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Chart of Accounts" />
+            <Head title={t('Chart of Accounts')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Chart of Accounts</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Chart of Accounts')}</h1>
                         <p className="text-gray-600 dark:text-gray-400">
-                            Manage GL account codes for financial reporting and exports
+                            {t('Manage GL account codes for financial reporting and exports')}
                         </p>
                     </div>
                     <Link href="/admin/chart-of-accounts/create">
                         <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            New GL Account
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('New GL Account')}
                         </Button>
                     </Link>
                 </div>
@@ -96,12 +98,12 @@ export default function ChartOfAccountsIndex({ accounts }: Readonly<Props>) {
                                     <table className="w-full">
                                         <thead>
                                             <tr className="border-b">
-                                                <th className="text-left py-3 px-4 font-semibold">Code</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Name</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Description</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Type</th>
-                                                <th className="text-left py-3 px-4 font-semibold">Status</th>
-                                                <th className="text-right py-3 px-4 font-semibold">Actions</th>
+                                                <th className="text-start py-3 px-4 font-semibold">{t('Code')}</th>
+                                                <th className="text-start py-3 px-4 font-semibold">{t('Name')}</th>
+                                                <th className="text-start py-3 px-4 font-semibold">{t('Description')}</th>
+                                                <th className="text-start py-3 px-4 font-semibold">{t('Type')}</th>
+                                                <th className="text-start py-3 px-4 font-semibold">{t('Status')}</th>
+                                                <th className="text-end py-3 px-4 font-semibold">{t('Actions')}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -127,11 +129,11 @@ export default function ChartOfAccountsIndex({ accounts }: Readonly<Props>) {
                                                     <td className="py-3 px-4">
                                                         {account.is_active ? (
                                                             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
-                                                                Active
+                                                                {t('Active')}
                                                             </Badge>
                                                         ) : (
                                                             <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-300">
-                                                                Inactive
+                                                                {t('Inactive')}
                                                             </Badge>
                                                         )}
                                                     </td>
@@ -165,14 +167,14 @@ export default function ChartOfAccountsIndex({ accounts }: Readonly<Props>) {
                     <Card>
                         <CardContent className="py-12 text-center">
                             <DollarSign className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                            <h3 className="text-lg font-semibold mb-2">No GL Accounts</h3>
+                            <h3 className="text-lg font-semibold mb-2">{t('No GL Accounts')}</h3>
                             <p className="text-muted-foreground mb-4">
-                                Get started by creating your first GL account or run the seeder to populate default accounts.
+                                {t('Get started by creating your first GL account or run the seeder to populate default accounts.')}
                             </p>
                             <Link href="/admin/chart-of-accounts/create">
                                 <Button>
-                                    <Plus className="h-4 w-4 mr-2" />
-                                    Create GL Account
+                                    <Plus className="h-4 w-4 me-2" />
+                                    {t('Create GL Account')}
                                 </Button>
                             </Link>
                         </CardContent>

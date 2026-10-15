@@ -23,7 +23,7 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
     
     protected $pendingParentSyncs = [];
 
-    public function model(array $row)
+    public function model(array $row) : \Illuminate\Database\Eloquent\Model|array|null
     {
         // Check if student exists by email (if email is provided)
         $student = null;
@@ -58,6 +58,11 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
                 'date_of_birth' => $row['date_of_birth'] ?? $student->date_of_birth,
                 'dob' => $row['dob'] ?? $student->dob,
                 'address' => $row['address'] ?? $student->address,
+                'hebrew_name' => $row['hebrew_name'] ?? $student->hebrew_name,
+                'pronouns' => $row['pronouns'] ?? $student->pronouns,
+                'preferred_name' => $row['preferred_name'] ?? $student->preferred_name,
+                'allergies' => $row['allergies'] ?? $student->allergies,
+                'special_accomodations' => $row['special_accomodations'] ?? $student->special_accomodations,
                 'picture_url' => $row['picture_url'] ?? $student->picture_url,
                 'is_parent_email' => isset($row['is_parent_email']) ? (bool) $row['is_parent_email'] : $student->is_parent_email,
             ]);
@@ -84,6 +89,11 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
             'date_of_birth' => $row['date_of_birth'] ?? null,
             'dob' => $row['dob'] ?? null,
             'address' => $row['address'] ?? null,
+            'hebrew_name' => $row['hebrew_name'] ?? null,
+            'pronouns' => $row['pronouns'] ?? null,
+            'preferred_name' => $row['preferred_name'] ?? null,
+            'allergies' => $row['allergies'] ?? null,
+            'special_accomodations' => $row['special_accomodations'] ?? null,
             'picture_url' => $row['picture_url'] ?? null,
             'is_parent_email' => isset($row['is_parent_email']) ? (bool) $row['is_parent_email'] : false,
         ]);
@@ -107,6 +117,11 @@ class StudentsImport implements SkipsOnError, SkipsOnFailure, ToModel, WithHeadi
             'date_of_birth' => 'nullable|date',
             'dob' => 'nullable|date',
             'parent_id' => 'nullable|integer|exists:parents,id',
+            'hebrew_name' => 'nullable|string|max:255',
+            'pronouns' => 'nullable|string|max:255',
+            'preferred_name' => 'nullable|string|max:255',
+            'allergies' => 'nullable|string|max:255',
+            'special_accomodations' => 'nullable|string|max:255',
         ];
     }
 

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Committee, Board, Meeting, BreadcrumbItem } from '@/types';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function Edit({ meetable, meetableType, meeting }: Readonly<Props>) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: meetableType === 'committee' ? 'Committees' : 'Boards', href: `/admin/${meetableType}s` },
@@ -55,14 +57,14 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                     >
                         ← Back to Meeting
                     </Link>
-                    <h1 className="text-3xl font-bold">Edit Meeting</h1>
+                    <h1 className="text-3xl font-bold">{t('Edit Meeting')}</h1>
                     <p className="text-muted-foreground mt-1">{meetable.name}</p>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Meeting Details</CardTitle>
-                        <CardDescription>Update meeting information and add minutes</CardDescription>
+                        <CardTitle>{t('Meeting Details')}</CardTitle>
+                        <CardDescription>{t('Update meeting information and add minutes')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -72,7 +74,7 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                                     id="title"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
-                                    placeholder="e.g., Monthly Planning Meeting"
+                                    placeholder={t('e.g., Monthly Planning Meeting')}
                                     required
                                 />
                                 {errors.title && (
@@ -95,12 +97,12 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="location">Location</Label>
+                                <Label htmlFor="location">{t('Location')}</Label>
                                 <Input
                                     id="location"
                                     value={data.location}
                                     onChange={(e) => setData('location', e.target.value)}
-                                    placeholder="e.g., Conference Room, Synagogue Office"
+                                    placeholder={t('e.g., Conference Room, Synagogue Office')}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     Optional: Physical location for in-person meetings
@@ -111,13 +113,13 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="meeting_link">Meeting Link</Label>
+                                <Label htmlFor="meeting_link">{t('Meeting Link')}</Label>
                                 <Input
                                     id="meeting_link"
                                     type="url"
                                     value={data.meeting_link}
                                     onChange={(e) => setData('meeting_link', e.target.value)}
-                                    placeholder="https://zoom.us/j/..."
+                                    placeholder={t('https://zoom.us/j/...')}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     Optional: Zoom, Google Meet, or other video conferencing link
@@ -128,12 +130,12 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="agenda">Agenda</Label>
+                                <Label htmlFor="agenda">{t('Agenda')}</Label>
                                 <Textarea
                                     id="agenda"
                                     value={data.agenda}
                                     onChange={(e) => setData('agenda', e.target.value)}
-                                    placeholder="Meeting agenda and discussion topics..."
+                                    placeholder={t('Meeting agenda and discussion topics...')}
                                     rows={8}
                                 />
                                 {errors.agenda && (
@@ -142,16 +144,16 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="minutes">Meeting Minutes</Label>
+                                <Label htmlFor="minutes">{t('Meeting Minutes')}</Label>
                                 <Textarea
                                     id="minutes"
                                     value={data.minutes}
                                     onChange={(e) => setData('minutes', e.target.value)}
-                                    placeholder="Record meeting minutes, decisions, and action items..."
+                                    placeholder={t('Record meeting minutes, decisions, and action items...')}
                                     rows={12}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Add meeting minutes after the meeting has concluded
+                                    {t('Add meeting minutes after the meeting has concluded')}
                                 </p>
                                 {errors.minutes && (
                                     <p className="text-sm text-destructive">{errors.minutes}</p>
@@ -160,7 +162,7 @@ export default function Edit({ meetable, meetableType, meeting }: Readonly<Props
 
                             <div className="flex justify-end gap-2">
                                 <Button type="button" variant="outline" asChild>
-                                    <Link href={getBackRoute()}>Cancel</Link>
+                                    <Link href={getBackRoute()}>{t('Cancel')}</Link>
                                 </Button>
                                 <Button type="submit" disabled={processing}>
                                     {processing ? 'Saving...' : 'Save Changes'}

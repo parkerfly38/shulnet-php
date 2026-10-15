@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -70,6 +71,7 @@ interface SchoolDashboardProps {
 }
 
 export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, activeClasses }: Readonly<SchoolDashboardProps>) {
+    const { t } = useTranslation();
     const quickActions = [
         { 
             title: 'Mark Attendance', 
@@ -119,18 +121,18 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="School Management Dashboard" />
+            <Head title={t('School Management Dashboard')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">School Management</h1>
-                <p className="mt-2 text-gray-600 dark:text-gray-400">Overview of your school's administration and activities</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('School Management')}</h1>
+                <p className="mt-2 text-gray-600 dark:text-gray-400">{t("Overview of your school's administration and activities")}</p>
             </div>
 
             {/* Quick Actions */}
             <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Quick Actions</h2>
+                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{t('Quick Actions')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {quickActions.map((action) => (
                         <Link key={action.href} href={action.href}>
@@ -154,7 +156,7 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
 
             {/* Statistics Overview */}
             <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Overview</h2>
+                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{t('Overview')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                     {managementSections.map((section) => (
                         <Link key={section.href} href={section.href}>
@@ -183,12 +185,12 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
-                                <CardTitle>Recent Students</CardTitle>
-                                <CardDescription>Recently enrolled students</CardDescription>
+                                <CardTitle>{t('Recent Students')}</CardTitle>
+                                <CardDescription>{t('Recently enrolled students')}</CardDescription>
                             </div>
                             <Link href="/admin/school/students">
                                 <Button variant="ghost" size="sm">
-                                    View All <ArrowRight className="ml-2 h-4 w-4" />
+                                    View All <ArrowRight className="ms-2 h-4 w-4" />
                                 </Button>
                             </Link>
                         </div>
@@ -223,10 +225,10 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                             ) : (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                                    <p>No students enrolled yet</p>
+                                    <p>{t('No students enrolled yet')}</p>
                                     <Link href="/admin/school/students/create">
                                         <Button variant="link" size="sm" className="mt-2">
-                                            Add your first student
+                                            {t('Add your first student')}
                                         </Button>
                                     </Link>
                                 </div>
@@ -240,12 +242,12 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
-                                <CardTitle>Upcoming Exams</CardTitle>
-                                <CardDescription>Scheduled examinations</CardDescription>
+                                <CardTitle>{t('Upcoming Exams')}</CardTitle>
+                                <CardDescription>{t('Scheduled examinations')}</CardDescription>
                             </div>
                             <Link href="/admin/school/exams">
                                 <Button variant="ghost" size="sm">
-                                    View All <ArrowRight className="ml-2 h-4 w-4" />
+                                    View All <ArrowRight className="ms-2 h-4 w-4" />
                                 </Button>
                             </Link>
                         </div>
@@ -276,10 +278,10 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                             ) : (
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                                    <p>No upcoming exams</p>
+                                    <p>{t('No upcoming exams')}</p>
                                     <Link href="/admin/school/exams/create">
                                         <Button variant="link" size="sm" className="mt-2">
-                                            Schedule an exam
+                                            {t('Schedule an exam')}
                                         </Button>
                                     </Link>
                                 </div>
@@ -293,12 +295,12 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                     <CardHeader>
                         <div className="flex items-center justify-between">
                             <div>
-                                <CardTitle>Active Classes</CardTitle>
-                                <CardDescription>Current class roster</CardDescription>
+                                <CardTitle>{t('Active Classes')}</CardTitle>
+                                <CardDescription>{t('Current class roster')}</CardDescription>
                             </div>
                             <Link href="/admin/school/class-definitions">
                                 <Button variant="ghost" size="sm">
-                                    View All <ArrowRight className="ml-2 h-4 w-4" />
+                                    View All <ArrowRight className="ms-2 h-4 w-4" />
                                 </Button>
                             </Link>
                         </div>
@@ -330,10 +332,10 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                             ) : (
                                 <div className="col-span-full text-center py-8 text-gray-500 dark:text-gray-400">
                                     <School className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                                    <p>No active classes</p>
+                                    <p>{t('No active classes')}</p>
                                     <Link href="/admin/school/class-definitions/create">
                                         <Button variant="link" size="sm" className="mt-2">
-                                            Create your first class
+                                            {t('Create your first class')}
                                         </Button>
                                     </Link>
                                 </div>

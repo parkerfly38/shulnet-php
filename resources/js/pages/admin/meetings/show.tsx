@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Committee, Board, Meeting, BreadcrumbItem } from '@/types';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function Show({ meetable, meetableType, meeting }: Readonly<Props>) {
+    const { t } = useTranslation();
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             weekday: 'long',
@@ -72,7 +74,7 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                     {/* Meeting Details Card */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Meeting Details</CardTitle>
+                            <CardTitle>{t('Meeting Details')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex items-center gap-3">
@@ -81,7 +83,7 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                                     <p className="font-medium">
                                         {formatDate(meeting.meeting_date)}
                                     </p>
-                                    <p className="text-sm text-muted-foreground">Date</p>
+                                    <p className="text-sm text-muted-foreground">{t('Date')}</p>
                                 </div>
                             </div>
 
@@ -89,7 +91,7 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                                 <Clock className="h-5 w-5 text-muted-foreground" />
                                 <div>
                                     <p className="font-medium">{formatTime(meeting.meeting_date)}</p>
-                                    <p className="text-sm text-muted-foreground">Time</p>
+                                    <p className="text-sm text-muted-foreground">{t('Time')}</p>
                                 </div>
                             </div>
 
@@ -100,7 +102,7 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                                         <MapPin className="h-5 w-5 text-muted-foreground" />
                                         <div>
                                             <p className="font-medium">{meeting.location}</p>
-                                            <p className="text-sm text-muted-foreground">Location</p>
+                                            <p className="text-sm text-muted-foreground">{t('Location')}</p>
                                         </div>
                                     </div>
                                 </>
@@ -118,9 +120,9 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                                                 rel="noopener noreferrer"
                                                 className="font-medium text-primary hover:underline"
                                             >
-                                                Join Meeting
+                                                {t('Join Meeting')}
                                             </a>
-                                            <p className="text-sm text-muted-foreground">Video Conference Link</p>
+                                            <p className="text-sm text-muted-foreground">{t('Video Conference Link')}</p>
                                         </div>
                                     </div>
                                 </>
@@ -132,7 +134,7 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                     {meeting.agenda && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Agenda</CardTitle>
+                                <CardTitle>{t('Agenda')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="whitespace-pre-line text-sm">{meeting.agenda}</div>
@@ -146,7 +148,7 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                             <CardHeader>
                                 <div className="flex items-center gap-2">
                                     <FileText className="h-5 w-5" />
-                                    <CardTitle>Meeting Minutes</CardTitle>
+                                    <CardTitle>{t('Meeting Minutes')}</CardTitle>
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -159,14 +161,14 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                         <Card className="border-dashed">
                             <CardContent className="py-8 text-center">
                                 <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-3" />
-                                <h3 className="font-semibold mb-2">No Minutes Available</h3>
+                                <h3 className="font-semibold mb-2">{t('No Minutes Available')}</h3>
                                 <p className="text-sm text-muted-foreground mb-4">
-                                    Add meeting minutes to document decisions and action items
+                                    {t('Add meeting minutes to document decisions and action items')}
                                 </p>
                                 <Button variant="outline" asChild>
                                     <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}/edit`}>
-                                        <Pencil className="mr-2 h-4 w-4" />
-                                        Add Minutes
+                                        <Pencil className="me-2 h-4 w-4" />
+                                        {t('Add Minutes')}
                                     </Link>
                                 </Button>
                             </CardContent>
@@ -176,24 +178,24 @@ export default function Show({ meetable, meetableType, meeting }: Readonly<Props
                     {/* Actions */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>Actions</CardTitle>
+                            <CardTitle>{t('Actions')}</CardTitle>
                         </CardHeader>
                         <CardContent className="flex flex-wrap gap-2">
                             {!isMeetingPast && (
                                 <Button onClick={handleSendInvitations}>
-                                    <Mail className="mr-2 h-4 w-4" />
-                                    Send Invitations
+                                    <Mail className="me-2 h-4 w-4" />
+                                    {t('Send Invitations')}
                                 </Button>
                             )}
                             <Button variant="outline" asChild>
                                 <Link href={`/admin/meetings/${meetableType}/${meetable.id}/${meeting.id}/edit`}>
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Edit Meeting
+                                    <Pencil className="me-2 h-4 w-4" />
+                                    {t('Edit Meeting')}
                                 </Link>
                             </Button>
                             <Button variant="destructive" onClick={handleDelete}>
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete Meeting
+                                <Trash2 className="me-2 h-4 w-4" />
+                                {t('Delete Meeting')}
                             </Button>
                         </CardContent>
                     </Card>

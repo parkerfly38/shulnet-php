@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ChartOfAccountsCreate() {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         account_code: '',
         account_name: '',
@@ -41,19 +43,19 @@ export default function ChartOfAccountsCreate() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create GL Account" />
+            <Head title={t('Create GL Account')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create GL Account</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create GL Account')}</h1>
                     <p className="text-gray-600 dark:text-gray-400">
-                        Add a new account to your Chart of Accounts
+                        {t('Add a new account to your Chart of Accounts')}
                     </p>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Account Details</CardTitle>
+                        <CardTitle>{t('Account Details')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -64,7 +66,7 @@ export default function ChartOfAccountsCreate() {
                                         id="account_code"
                                         value={data.account_code}
                                         onChange={(e) => setData('account_code', e.target.value)}
-                                        placeholder="e.g., 4000"
+                                        placeholder={t('e.g., 4000')}
                                         required
                                     />
                                     {errors.account_code && (
@@ -78,7 +80,7 @@ export default function ChartOfAccountsCreate() {
                                         id="account_name"
                                         value={data.account_name}
                                         onChange={(e) => setData('account_name', e.target.value)}
-                                        placeholder="e.g., Membership Dues Revenue"
+                                        placeholder={t('e.g., Membership Dues Revenue')}
                                         required
                                     />
                                     {errors.account_name && (
@@ -98,11 +100,11 @@ export default function ChartOfAccountsCreate() {
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="revenue">Revenue</SelectItem>
-                                            <SelectItem value="expense">Expense</SelectItem>
-                                            <SelectItem value="asset">Asset</SelectItem>
-                                            <SelectItem value="liability">Liability</SelectItem>
-                                            <SelectItem value="equity">Equity</SelectItem>
+                                            <SelectItem value="revenue">{t('Revenue')}</SelectItem>
+                                            <SelectItem value="expense">{t('Expense')}</SelectItem>
+                                            <SelectItem value="asset">{t('Asset')}</SelectItem>
+                                            <SelectItem value="liability">{t('Liability')}</SelectItem>
+                                            <SelectItem value="equity">{t('Equity')}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.account_type && (
@@ -111,7 +113,7 @@ export default function ChartOfAccountsCreate() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="sort_order">Sort Order</Label>
+                                    <Label htmlFor="sort_order">{t('Sort Order')}</Label>
                                     <Input
                                         id="sort_order"
                                         type="number"
@@ -126,12 +128,12 @@ export default function ChartOfAccountsCreate() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
+                                <Label htmlFor="description">{t('Description')}</Label>
                                 <Textarea
                                     id="description"
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
-                                    placeholder="Brief description of this account..."
+                                    placeholder={t('Brief description of this account...')}
                                     rows={3}
                                 />
                                 {errors.description && (
@@ -159,7 +161,7 @@ export default function ChartOfAccountsCreate() {
                                     variant="outline"
                                     onClick={() => globalThis.history.back()}
                                 >
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                             </div>
                         </form>

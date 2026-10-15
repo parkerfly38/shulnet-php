@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function BoardsIndex({ boards }: Readonly<Props>) {
+    const { t } = useTranslation();
   const handleDelete = (board: BoardWithCounts) => {
     if (confirm(`Are you sure you want to delete "${board.name}"?`)) {
       router.delete(`/admin/boards/${board.id}`);
@@ -29,20 +31,20 @@ export default function BoardsIndex({ boards }: Readonly<Props>) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Boards" />
+      <Head title={t('Boards')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Boards</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('Boards')}</h1>
             <p className="text-muted-foreground mt-2">
-              Manage boards and their members
+              {t('Manage boards and their members')}
             </p>
           </div>
           <Link href="/admin/boards/create">
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Board
+              <Plus className="me-2 h-4 w-4" />
+              {t('Add Board')}
             </Button>
           </Link>
         </div>
@@ -50,7 +52,7 @@ export default function BoardsIndex({ boards }: Readonly<Props>) {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Boards</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Boards')}</CardTitle>
               <Briefcase className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -59,7 +61,7 @@ export default function BoardsIndex({ boards }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Members</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Members')}</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -70,7 +72,7 @@ export default function BoardsIndex({ boards }: Readonly<Props>) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Memberships</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Active Memberships')}</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -98,17 +100,17 @@ export default function BoardsIndex({ boards }: Readonly<Props>) {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Total Members:</span>
+                      <span className="text-muted-foreground">{t('Total Members:')}</span>
                       <span className="font-medium">{board.members_count}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Active:</span>
+                      <span className="text-muted-foreground">{t('Active:')}</span>
                       <span className="font-medium">{board.active_members_count}</span>
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Link href={`/admin/boards/${board.id}`} className="flex-1">
                         <Button variant="outline" size="sm" className="w-full">
-                          View Details
+                          {t('View Details')}
                         </Button>
                       </Link>
                       <Link href={`/admin/boards/${board.id}/edit`}>
@@ -131,14 +133,14 @@ export default function BoardsIndex({ boards }: Readonly<Props>) {
           ) : (
             <div className="col-span-full text-center py-12">
               <Briefcase className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-medium mb-2">No boards found</h3>
+              <h3 className="text-lg font-medium mb-2">{t('No boards found')}</h3>
               <p className="text-muted-foreground mb-4">
-                Get started by creating your first board
+                {t('Get started by creating your first board')}
               </p>
               <Link href="/admin/boards/create">
                 <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Board
+                  <Plus className="me-2 h-4 w-4" />
+                  {t('Create Board')}
                 </Button>
               </Link>
             </div>

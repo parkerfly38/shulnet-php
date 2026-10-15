@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function IntermentsCreate({ deeds, members, selectedDeed }: Readonly<Props>) {
+    const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm({
     deed_id: selectedDeed || '',
     gravesite_id: '',
@@ -47,19 +49,19 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create Interment" />
+      <Head title={t('Create Interment')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create New Interment</h1>
-            <p className="text-gray-600 dark:text-gray-400">Add a new burial record</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create New Interment')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Add a new burial record')}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Deceased Information</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Deceased Information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -85,7 +87,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="middle_name">Middle Name</Label>
+                <Label htmlFor="middle_name">{t('Middle Name')}</Label>
                 <Input
                   id="middle_name"
                   value={data.middle_name}
@@ -94,7 +96,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="hebrew_name">Hebrew Name</Label>
+                <Label htmlFor="hebrew_name">{t('Hebrew Name')}</Label>
                 <Input
                   id="hebrew_name"
                   value={data.hebrew_name}
@@ -103,7 +105,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="date_of_birth">Date of Birth</Label>
+                <Label htmlFor="date_of_birth">{t('Date of Birth')}</Label>
                 <Input
                   id="date_of_birth"
                   type="date"
@@ -138,7 +140,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cause_of_death">Cause of Death</Label>
+                <Label htmlFor="cause_of_death">{t('Cause of Death')}</Label>
                 <Input
                   id="cause_of_death"
                   value={data.cause_of_death}
@@ -149,7 +151,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
           </div>
 
           <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Plot & Service Information</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Plot & Service Information')}</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -159,7 +161,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
                   setData('gravesite_id', ''); // Reset gravesite when deed changes
                 }}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select deed" />
+                    <SelectValue placeholder={t('Select deed')} />
                   </SelectTrigger>
                   <SelectContent>
                     {deeds.map((deed) => {
@@ -199,13 +201,13 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="member_id">Related Member</Label>
+                <Label htmlFor="member_id">{t('Related Member')}</Label>
                 <Select value={data.member_id ?? ' '} onValueChange={(value) => setData('member_id', value)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select member (optional)" />
+                    <SelectValue placeholder={t('Select member (optional)')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value=" ">None</SelectItem>
+                    <SelectItem value=" ">{t('None')}</SelectItem>
                     {members.map((member) => (
                       <SelectItem key={member.id} value={member.id.toString()}>
                         {member.first_name} {member.last_name}
@@ -216,7 +218,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="funeral_home">Funeral Home</Label>
+                <Label htmlFor="funeral_home">{t('Funeral Home')}</Label>
                 <Input
                   id="funeral_home"
                   value={data.funeral_home}
@@ -225,7 +227,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="rabbi_officiating">Rabbi Officiating</Label>
+                <Label htmlFor="rabbi_officiating">{t('Rabbi Officiating')}</Label>
                 <Input
                   id="rabbi_officiating"
                   value={data.rabbi_officiating}
@@ -234,13 +236,13 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
               </div>
 
               <div className="md:col-span-2 space-y-2">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">{t('Notes')}</Label>
                 <Textarea
                   id="notes"
                   value={data.notes}
                   onChange={(e) => setData('notes', e.target.value)}
                   rows={4}
-                  placeholder="Additional notes..."
+                  placeholder={t('Additional notes...')}
                 />
               </div>
             </div>
@@ -249,7 +251,7 @@ export default function IntermentsCreate({ deeds, members, selectedDeed }: Reado
           <div className="flex justify-end gap-4">
             <Link href="/admin/interments">
               <Button type="button" variant="outline">
-                Cancel
+                {t('Cancel')}
               </Button>
             </Link>
             <Button type="submit" disabled={processing}>

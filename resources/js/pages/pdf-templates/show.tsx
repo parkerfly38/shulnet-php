@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function Show({ template }: Props) {
+    const { t } = useTranslation();
     const { csrf_token } = usePage<{ csrf_token: string }>().props;
     
     const [fieldValues, setFieldValues] = useState<Record<string, string>>(
@@ -95,14 +97,14 @@ export default function Show({ template }: Props) {
                     <div className="flex items-center gap-2">
                         <Link href="/admin/pdf-templates">
                             <Button variant="outline" size="sm">
-                                <ArrowLeft className="h-4 w-4 mr-1" />
-                                Back
+                                <ArrowLeft className="h-4 w-4 me-1" />
+                                {t('Back')}
                             </Button>
                         </Link>
                         <Link href={`/admin/pdf-templates/${template.id}/edit`}>
                             <Button>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                Edit Template
+                                <Pencil className="me-2 h-4 w-4" />
+                                {t('Edit Template')}
                             </Button>
                         </Link>
                     </div>
@@ -126,9 +128,9 @@ export default function Show({ template }: Props) {
                                                     {template.category}
                                                 </Badge>
                                                 {template.is_active ? (
-                                                    <Badge className="bg-green-100 text-green-800">Active</Badge>
+                                                    <Badge className="bg-green-100 text-green-800">{t('Active')}</Badge>
                                                 ) : (
-                                                    <Badge className="bg-red-100 text-red-800">Inactive</Badge>
+                                                    <Badge className="bg-red-100 text-red-800">{t('Inactive')}</Badge>
                                                 )}
                                             </div>
                                         </div>
@@ -142,15 +144,15 @@ export default function Show({ template }: Props) {
                             {/* Fill Fields */}
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Fill Template Fields</CardTitle>
-                                    <CardDescription>Enter values for each field to generate the document</CardDescription>
+                                    <CardTitle>{t('Fill Template Fields')}</CardTitle>
+                                    <CardDescription>{t('Enter values for each field to generate the document')}</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     {template.available_fields.map((field) => (
                                         <div key={field.name}>
                                             <Label htmlFor={field.name}>
                                                 {field.label}
-                                                {field.required && <span className="text-red-500 ml-1">*</span>}
+                                                {field.required && <span className="text-red-500 ms-1">*</span>}
                                             </Label>
                                             {field.description && (
                                                 <p className="text-sm text-gray-500 mb-2">{field.description}</p>
@@ -183,11 +185,11 @@ export default function Show({ template }: Props) {
 
                                     <div className="flex gap-3 pt-4">
                                         <Button onClick={handlePreview} variant="outline" className="flex-1">
-                                            Preview
+                                            {t('Preview')}
                                         </Button>
                                         <Button onClick={handleGenerate} className="flex-1">
-                                            <Download className="mr-2 h-4 w-4" />
-                                            Generate PDF
+                                            <Download className="me-2 h-4 w-4" />
+                                            {t('Generate PDF')}
                                         </Button>
                                     </div>
                                 </CardContent>
@@ -197,7 +199,7 @@ export default function Show({ template }: Props) {
                             {showPreview && (
                                 <Card>
                                     <CardHeader>
-                                        <CardTitle>Preview</CardTitle>
+                                        <CardTitle>{t('Preview')}</CardTitle>
                                     </CardHeader>
                                     <CardContent>
                                         <div 
@@ -213,19 +215,19 @@ export default function Show({ template }: Props) {
                         <div className="space-y-6">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Template Details</CardTitle>
+                                    <CardTitle>{t('Template Details')}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div>
-                                        <Label className="text-sm text-gray-500">Slug</Label>
+                                        <Label className="text-sm text-gray-500">{t('Slug')}</Label>
                                         <p className="font-mono text-sm">{template.slug}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">Category</Label>
+                                        <Label className="text-sm text-gray-500">{t('Category')}</Label>
                                         <p className="capitalize">{template.category}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">Available Fields</Label>
+                                        <Label className="text-sm text-gray-500">{t('Available Fields')}</Label>
                                         <p>{template.available_fields.length} fields</p>
                                         <div className="mt-2 space-y-1">
                                             {template.available_fields.map((field) => (
@@ -238,15 +240,15 @@ export default function Show({ template }: Props) {
                                         </div>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">Status</Label>
+                                        <Label className="text-sm text-gray-500">{t('Status')}</Label>
                                         <p>{template.is_active ? 'Active' : 'Inactive'}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">Created</Label>
+                                        <Label className="text-sm text-gray-500">{t('Created')}</Label>
                                         <p className="text-sm">{new Date(template.created_at).toLocaleDateString()}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">Last Updated</Label>
+                                        <Label className="text-sm text-gray-500">{t('Last Updated')}</Label>
                                         <p className="text-sm">{new Date(template.updated_at).toLocaleDateString()}</p>
                                     </div>
                                 </CardContent>
@@ -254,7 +256,7 @@ export default function Show({ template }: Props) {
 
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>HTML Template</CardTitle>
+                                    <CardTitle>{t('HTML Template')}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <pre className="text-xs bg-gray-50 p-4 rounded-lg overflow-auto max-h-96 font-mono">

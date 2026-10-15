@@ -150,7 +150,7 @@ export default function SchoolCrud({ title, endpoint, fields }: { title: string;
                     <div className="overflow-x-auto bg-white dark:bg-black rounded border">
                         <table className="min-w-full text-sm">
                             <thead>
-                                <tr className="text-left">
+                                <tr className="text-start">
                                     <th className="p-2">#</th>
                                     {fields.slice(0, 4).map((f) => (
                                         <th key={f.name} className="p-2">{f.label ?? f.name}</th>

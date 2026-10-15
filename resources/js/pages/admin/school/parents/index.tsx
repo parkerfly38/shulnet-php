@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useEffect, useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -20,6 +21,7 @@ function fetchJson(url: string, opts: any = {}) {
 }
 
 export default function ParentsIndex() {
+    const { t } = useTranslation();
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [search, setSearch] = useState<string>(new URLSearchParams(window.location.search).get('search') || '');
@@ -87,24 +89,24 @@ export default function ParentsIndex() {
 
     return (
         <AppLayout breadcrumbs={breadcrums} >
-            <Head title="Parents - School Management" />
+            <Head title={t('Parents - School Management')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Parents</h1>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Manage parent and guardian information</p>
+                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{t('Parents')}</h1>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{t('Manage parent and guardian information')}</p>
                     </div>
                     <Link href="/admin/school/parents/create">
                         <Button className="flex items-center gap-2">
                             <Plus className="h-4 w-4" />
-                            Add Parent
+                            {t('Add Parent')}
                         </Button>
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     <div className="bg-white dark:bg-black rounded-lg border p-4"> 
-                        <p className="text-sm text-gray-600">Total Parents</p>
+                        <p className="text-sm text-gray-600">{t('Total Parents')}</p>
                         <p className="text-2xl font-bold mt-1 text-gray-900 dark:text-gray-100">{total}</p>
                     </div>
                 </div>
@@ -112,10 +114,10 @@ export default function ParentsIndex() {
                 <div className="flex gap-4 items-end">
                     <form onSubmit={handleSearch} className="flex gap-2 flex-1">
                         <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input type="text" placeholder="Search parents by name or email..." value={search} onChange={(e) => setSearch((e.target as HTMLInputElement).value)} className="pl-10" />
+                            <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Input type="text" placeholder={t('Search parents by name or email...')} value={search} onChange={(e) => setSearch((e.target as HTMLInputElement).value)} className="ps-10" />
                         </div>
-                        <Button type="submit" variant="outline">Search</Button>
+                        <Button type="submit" variant="outline">{t('Search')}</Button>
                     </form>
                 </div>
 
@@ -126,11 +128,11 @@ export default function ParentsIndex() {
                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead className="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date of Birth</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Address</th>
-                                    <th className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('Name')}</th>
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('Email')}</th>
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('Date of Birth')}</th>
+                                    <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('Address')}</th>
+                                    <th className="relative px-6 py-3"><span className="sr-only">{t('Actions')}</span></th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-gray-700">
@@ -143,7 +145,7 @@ export default function ParentsIndex() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{it.email}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{it.date_of_birth}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{it.address}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <div className="flex gap-2 justify-end">
                                                     <Link href={`/admin/school/parents/${it.id}`}>
                                                         <Button variant="outline" size="sm"><Eye className="h-4 w-4" /></Button>
@@ -166,8 +168,8 @@ export default function ParentsIndex() {
                                 ) : (
                                     <tr>
                                         <td colSpan={5} className="px-6 py-12 text-center">
-                                            <div className="text-gray-500 dark:text-gray-400">No parents found.</div>
-                                            <Link href="/admin/school/parents/create" className="mt-2 inline-block"><Button>Add your first parent</Button></Link>
+                                            <div className="text-gray-500 dark:text-gray-400">{t('No parents found.')}</div>
+                                            <Link href="/admin/school/parents/create" className="mt-2 inline-block"><Button>{t('Add your first parent')}</Button></Link>
                                         </td>
                                     </tr>
                                 )}
@@ -179,8 +181,8 @@ export default function ParentsIndex() {
                 {lastPage > 1 && (
                     <div className="flex items-center justify-between">
                         <div className="flex gap-2">
-                            {page > 1 && <Button variant="outline" onClick={() => goToPage(page - 1)}>Previous</Button>}
-                            {page < lastPage && <Button variant="outline" onClick={() => goToPage(page + 1)}>Next</Button>}
+                            {page > 1 && <Button variant="outline" onClick={() => goToPage(page - 1)}>{t('Previous')}</Button>}
+                            {page < lastPage && <Button variant="outline" onClick={() => goToPage(page + 1)}>{t('Next')}</Button>}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">Page {page} of {lastPage}</div>
                     </div>

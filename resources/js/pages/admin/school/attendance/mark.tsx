@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export default function MarkAttendance({ students, classes }: Props) {
+    const { t } = useTranslation();
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [classId, setClassId] = useState<number | null>(null);
     const [attendanceData, setAttendanceData] = useState<Record<number, { status: string; notes: string }>>({});
@@ -133,15 +135,15 @@ export default function MarkAttendance({ students, classes }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Mark Attendance" />
+            <Head title={t('Mark Attendance')} />
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4">Mark Attendance</h1>
+                <h1 className="text-2xl font-bold mb-4">{t('Mark Attendance')}</h1>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4 bg-white dark:bg-black p-4 rounded border space-y-3">
                         <div className="flex gap-4">
                             <div className="flex-1">
-                                <label className="block text-sm font-medium mb-1">Date</label>
+                                <label className="block text-sm font-medium mb-1">{t('Date')}</label>
                                 <input
                                     type="date"
                                     value={date}
@@ -151,13 +153,13 @@ export default function MarkAttendance({ students, classes }: Props) {
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-sm font-medium mb-1">Class (Optional)</label>
+                                <label className="block text-sm font-medium mb-1">{t('Class (Optional)')}</label>
                                 <select
                                     value={classId || ''}
                                     onChange={(e) => setClassId(e.target.value ? parseInt(e.target.value) : null)}
                                     className="w-full rounded border p-2"
                                 >
-                                    <option value="">General Attendance</option>
+                                    <option value="">{t('General Attendance')}</option>
                                     {classes.map(cls => (
                                         <option key={cls.id} value={cls.id}>
                                             {cls.name}
@@ -169,8 +171,8 @@ export default function MarkAttendance({ students, classes }: Props) {
                         </div>
                         <div>
                             <Button type="button" variant="outline" onClick={markAllPresent}>
-                                <Check className="w-4 h-4 mr-2" />
-                                Mark All Present
+                                <Check className="w-4 h-4 me-2" />
+                                {t('Mark All Present')}
                             </Button>
                         </div>
                     </div>
@@ -179,9 +181,9 @@ export default function MarkAttendance({ students, classes }: Props) {
                         <table className="w-full">
                             <thead className="bg-gray-50 dark:bg-gray-900">
                                 <tr>
-                                    <th className="px-4 py-2 text-left">Student</th>
-                                    <th className="px-4 py-2 text-left">Status</th>
-                                    <th className="px-4 py-2 text-left">Notes</th>
+                                    <th className="px-4 py-2 text-start">{t('Student')}</th>
+                                    <th className="px-4 py-2 text-start">{t('Status')}</th>
+                                    <th className="px-4 py-2 text-start">{t('Notes')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -197,28 +199,28 @@ export default function MarkAttendance({ students, classes }: Props) {
                                                     className={getStatusButtonClass(student.id, 'present')}
                                                     onClick={() => handleStatusChange(student.id, 'present')}
                                                 >
-                                                    Present
+                                                    {t('Present')}
                                                 </button>
                                                 <button
                                                     type="button"
                                                     className={getStatusButtonClass(student.id, 'absent')}
                                                     onClick={() => handleStatusChange(student.id, 'absent')}
                                                 >
-                                                    Absent
+                                                    {t('Absent')}
                                                 </button>
                                                 <button
                                                     type="button"
                                                     className={getStatusButtonClass(student.id, 'tardy')}
                                                     onClick={() => handleStatusChange(student.id, 'tardy')}
                                                 >
-                                                    Tardy
+                                                    {t('Tardy')}
                                                 </button>
                                                 <button
                                                     type="button"
                                                     className={getStatusButtonClass(student.id, 'excused')}
                                                     onClick={() => handleStatusChange(student.id, 'excused')}
                                                 >
-                                                    Excused
+                                                    {t('Excused')}
                                                 </button>
                                             </div>
                                         </td>
@@ -227,7 +229,7 @@ export default function MarkAttendance({ students, classes }: Props) {
                                                 type="text"
                                                 value={attendanceData[student.id]?.notes || ''}
                                                 onChange={(e) => handleNotesChange(student.id, e.target.value)}
-                                                placeholder="Optional notes..."
+                                                placeholder={t('Optional notes...')}
                                                 className="w-full rounded border p-1 text-sm"
                                             />
                                         </td>
@@ -246,8 +248,8 @@ export default function MarkAttendance({ students, classes }: Props) {
                     <div className="flex gap-2 justify-end">
                         <Link href="/admin/school/attendance">
                             <Button type="button" variant="outline">
-                                <X className="w-4 h-4 mr-2" />
-                                Cancel
+                                <X className="w-4 h-4 me-2" />
+                                {t('Cancel')}
                             </Button>
                         </Link>
                         <Button type="submit" disabled={saving || Object.keys(attendanceData).length === 0}>

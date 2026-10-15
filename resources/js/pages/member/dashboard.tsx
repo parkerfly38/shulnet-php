@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -88,9 +89,10 @@ function formatDate(dateString: string) {
 }
 
 export default function MemberDashboard({ member, invoices, students, yahrzeits, assignments, events, isBirthday, isAnniversary }: Readonly<Props>) {
+    const { t } = useTranslation();
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Member Portal" />
+            <Head title={t('Member Portal')} />
 
             <div className="p-4 space-y-6">
                 <div className="flex items-center justify-between">
@@ -108,11 +110,11 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                         )}
                         {isAnniversary && (
                             <h2 className="text-2xl font-bold text-purple-900 dark:text-purple-100 mb-1">
-                                Happy Anniversary!
+                                {t('Happy Anniversary!')}
                             </h2>
                         )}
                         <p className="text-purple-700 dark:text-purple-300">
-                            Wishing you a wonderful day filled with blessings and joy!
+                            {t('Wishing you a wonderful day filled with blessings and joy!')}
                         </p>
                     </div>
                 )}
@@ -121,7 +123,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                     {/* Invoices */}
                     <div className="bg-white dark:bg-black rounded-lg p-6 border">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold">My Invoices</h2>
+                            <h2 className="text-lg font-semibold">{t('My Invoices')}</h2>
                             <Link 
                                 href="/member/invoices"
                                 className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
@@ -130,7 +132,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                             </Link>
                         </div>
                         {invoices.length === 0 ? (
-                            <p className="text-sm text-gray-500">No invoices found.</p>
+                            <p className="text-sm text-gray-500">{t('No invoices found.')}</p>
                         ) : (
                             <div className="space-y-3">
                                 {invoices.map((invoice) => (
@@ -145,7 +147,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                                                 <div className="text-sm text-gray-600 dark:text-gray-400">{invoice.description}</div>
                                                 <div className="text-xs text-gray-500 mt-1">Due: {formatDate(invoice.due_date)}</div>
                                             </div>
-                                            <div className="text-right">
+                                            <div className="text-end">
                                                 <div className="font-medium">{formatCurrency(invoice.total_amount)}</div>
                                                 <div className={`text-xs px-2 py-1 rounded mt-1 inline-block ${
                                                     invoice.status === 'paid' 
@@ -168,9 +170,9 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
 
                     {/* Upcoming Aliyah Assignments */}
                     <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                        <h2 className="text-lg font-semibold mb-4">My Upcoming Aliyah Assignments</h2>
+                        <h2 className="text-lg font-semibold mb-4">{t('My Upcoming Aliyah Assignments')}</h2>
                         {assignments.length === 0 ? (
-                            <p className="text-sm text-gray-500">No upcoming assignments.</p>
+                            <p className="text-sm text-gray-500">{t('No upcoming assignments.')}</p>
                         ) : (
                             <div className="space-y-3">
                                 {assignments.map((assignment) => (
@@ -195,7 +197,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                     {students.length > 0 && (
                         <div className="bg-white dark:bg-black rounded-lg p-6 border lg:col-span-2">
                             <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-lg font-semibold">My Children</h2>
+                                <h2 className="text-lg font-semibold">{t('My Children')}</h2>
                                 <Link
                                     href="/member/students"
                                     className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
@@ -216,7 +218,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                                         )}
                                         {student.classes.length > 0 && (
                                             <div>
-                                                <div className="text-sm font-semibold mb-2">Classes:</div>
+                                                <div className="text-sm font-semibold mb-2">{t('Classes:')}</div>
                                                 <div className="space-y-2">
                                                     {student.classes.map((cls) => (
                                                         <div key={cls.id} className="text-sm">
@@ -239,7 +241,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                     {/* Upcoming Yahrzeits */}
                     <div className="bg-white dark:bg-black rounded-lg p-6 border">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold">Upcoming Yahrzeits</h2>
+                            <h2 className="text-lg font-semibold">{t('Upcoming Yahrzeits')}</h2>
                             <Link
                                 href="/member/yahrzeits"
                                 className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
@@ -248,7 +250,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
                             </Link>
                         </div>
                         {yahrzeits.length === 0 ? (
-                            <p className="text-sm text-gray-500">No upcoming yahrzeits in the next 60 days.</p>
+                            <p className="text-sm text-gray-500">{t('No upcoming yahrzeits in the next 60 days.')}</p>
                         ) : (
                             <div className="space-y-3">
                                 {yahrzeits.map((yahrzeit) => (
@@ -268,9 +270,9 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
 
                     {/* Upcoming Events */}
                     <div className="bg-white dark:bg-black rounded-lg p-6 border">
-                        <h2 className="text-lg font-semibold mb-4">Upcoming Events</h2>
+                        <h2 className="text-lg font-semibold mb-4">{t('Upcoming Events')}</h2>
                         {events.length === 0 ? (
-                            <p className="text-sm text-gray-500">No upcoming events.</p>
+                            <p className="text-sm text-gray-500">{t('No upcoming events.')}</p>
                         ) : (
                             <div className="space-y-3">
                                 {events.map((event) => (

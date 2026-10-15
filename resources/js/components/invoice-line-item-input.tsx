@@ -131,7 +131,7 @@ export function InvoiceLineItemInput({
                   <button
                     key={`membership-${tier.id}`}
                     type="button"
-                    className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
+                    className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-start"
                     onClick={() => handleSelectTier(tier)}
                     onMouseDown={(e) => {
                       e.preventDefault();
@@ -165,7 +165,7 @@ export function InvoiceLineItemInput({
                   <button
                     key={`tuition-${tier.id}`}
                     type="button"
-                    className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
+                    className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-start"
                     onClick={() => handleSelectTier(tier)}
                     onMouseDown={(e) => {
                       e.preventDefault();

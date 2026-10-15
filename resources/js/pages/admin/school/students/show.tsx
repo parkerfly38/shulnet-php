@@ -17,7 +17,7 @@ export default function StudentsShow() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Student: ${data.first_name} ${data.last_name}` ?? ''} />
+            <Head title={`Student: ${data.first_name} ${data.last_name}`} />
             <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-2xl font-bold">{data.first_name} {data.middle_name} {data.last_name}</h1>
@@ -33,6 +33,11 @@ export default function StudentsShow() {
                         <div><strong>Middle Name:</strong> {data.middle_name}</div>
                         <div><strong>Last Name:</strong> {data.last_name}</div>
                         <div><strong>Gender:</strong> {data.gender}</div>
+                        <div><strong>Hebrew Name:</strong> {data.hebrew_name}</div>
+                        <div><strong>Pronouns:</strong> {data.pronouns}</div>
+                        <div><strong>Preferred Name:</strong> {data.preferred_name}</div>
+                        <div><strong>Allergies:</strong> {data.allergies}</div>
+                        <div><strong>Special Accomodations:</strong> {data.special_accomodations}</div>
                         <div><strong>Date of Birth:</strong> {data.date_of_birth || data.dob}</div>
                         <div><strong>Email:</strong> {data.email}</div>
                         <div><strong>Parent Email:</strong> {data.is_parent_email ? 'Yes' : 'No'}</div>
@@ -41,9 +46,9 @@ export default function StudentsShow() {
                             {data.parents && data.parents.length > 0 ? (
                                 <div className="mt-1 space-y-1">
                                     {data.parents.map((parent: any) => (
-                                        <div key={parent.id} className="inline-block mr-2 mb-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded">
+                                        <div key={parent.id} className="inline-block me-2 mb-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded">
                                             {parent.first_name} {parent.last_name}
-                                            {parent.email && <span className="text-sm ml-2">({parent.email})</span>}
+                                            {parent.email && <span className="text-sm ms-2">({parent.email})</span>}
                                         </div>
                                     ))}
                                 </div>

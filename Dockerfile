@@ -16,6 +16,18 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Fix NGINX and other vulnerabilities
+# Update package sources and explicitly update nginx to the patched version
+RUN apt-get update && \
+    apt-get install -y --only-upgrade nginx || apt-get install -y --no-install-recommends nginx && \
+    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y openssl \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip calendar
 
@@ -65,8 +77,13 @@ FROM base AS wayfinder
 WORKDIR /var/www/html
 
 # Install Node.js in the PHP image
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
+# --- Change this in your "wayfinder" stage ---
+# Install Node.js 20, matching the frontend build stage.
+RUN apt-get update && apt-get install -y ca-certificates curl gnupg \
+    && mkdir -p /usr/share/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+    && apt-get update && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

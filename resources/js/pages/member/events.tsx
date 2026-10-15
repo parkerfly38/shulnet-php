@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Calendar, MapPin, Users, Clock } from 'lucide-react';
@@ -45,6 +46,7 @@ interface Props {
 }
 
 export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }: Props) {
+    const { t } = useTranslation();
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -82,24 +84,24 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
 
     return (
         <AppLayout>
-            <Head title="My Events" />
+            <Head title={t('My Events')} />
 
             <div className="p-4 space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">My Events</h1>
+                        <h1 className="text-2xl font-bold">{t('My Events')}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            View your RSVPs and upcoming events
+                            {t('View your RSVPs and upcoming events')}
                         </p>
                     </div>
                     <Link
                         href="/member/dashboard"
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center"
                     >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to Dashboard
+                        {t('Back to Dashboard')}
                     </Link>
                 </div>
 
@@ -107,14 +109,14 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                 <div className="bg-white dark:bg-black rounded-lg border">
                     <div className="p-4 border-b">
                         <h2 className="text-xl font-semibold flex items-center">
-                            <Calendar className="w-5 h-5 mr-2" />
-                            My Upcoming Events
+                            <Calendar className="w-5 h-5 me-2" />
+                            {t('My Upcoming Events')}
                         </h2>
                     </div>
                     <div className="p-4">
                         {upcomingRsvps.length === 0 ? (
                             <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                                You have no upcoming event RSVPs
+                                {t('You have no upcoming event RSVPs')}
                             </p>
                         ) : (
                             <div className="space-y-4">
@@ -133,18 +135,18 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                                                 )}
                                                 <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
                                                     <div className="flex items-center">
-                                                        <Clock className="w-4 h-4 mr-1" />
+                                                        <Clock className="w-4 h-4 me-1" />
                                                         {formatDateTime(rsvp.event.event_start, rsvp.event.all_day)}
                                                     </div>
                                                     {rsvp.event.location && (
                                                         <div className="flex items-center">
-                                                            <MapPin className="w-4 h-4 mr-1" />
+                                                            <MapPin className="w-4 h-4 me-1" />
                                                             {rsvp.event.location}
                                                         </div>
                                                     )}
                                                     {rsvp.guests > 0 && (
                                                         <div className="flex items-center">
-                                                            <Users className="w-4 h-4 mr-1" />
+                                                            <Users className="w-4 h-4 me-1" />
                                                             {rsvp.guests} guest{rsvp.guests !== 1 ? 's' : ''}
                                                         </div>
                                                     )}
@@ -170,14 +172,14 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                 <div className="bg-white dark:bg-black rounded-lg border">
                     <div className="p-4 border-b">
                         <h2 className="text-xl font-semibold flex items-center">
-                            <Calendar className="w-5 h-5 mr-2" />
-                            Available Events
+                            <Calendar className="w-5 h-5 me-2" />
+                            {t('Available Events')}
                         </h2>
                     </div>
                     <div className="p-4">
                         {availableEvents.length === 0 ? (
                             <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                                No events available for registration at this time
+                                {t('No events available for registration at this time')}
                             </p>
                         ) : (
                             <div className="space-y-4">
@@ -196,19 +198,19 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                                                 )}
                                                 <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
                                                     <div className="flex items-center">
-                                                        <Clock className="w-4 h-4 mr-1" />
+                                                        <Clock className="w-4 h-4 me-1" />
                                                         {formatDateTime(event.event_start, event.all_day)}
                                                     </div>
                                                     {event.location && (
                                                         <div className="flex items-center">
-                                                            <MapPin className="w-4 h-4 mr-1" />
+                                                            <MapPin className="w-4 h-4 me-1" />
                                                             {event.location}
                                                         </div>
                                                     )}
                                                     {event.allow_guests && (
                                                         <div className="flex items-center text-green-600 dark:text-green-400">
-                                                            <Users className="w-4 h-4 mr-1" />
-                                                            Guests allowed
+                                                            <Users className="w-4 h-4 me-1" />
+                                                            {t('Guests allowed')}
                                                             {event.max_guests && ` (max ${event.max_guests})`}
                                                         </div>
                                                     )}
@@ -223,7 +225,7 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                                                 onClick={() => handleRegisterClick(event)}
                                                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
                                             >
-                                                Register
+                                                {t('Register')}
                                             </button>
                                         </div>
                                     </div>
@@ -238,8 +240,8 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                     <div className="bg-white dark:bg-black rounded-lg border">
                         <div className="p-4 border-b">
                             <h2 className="text-xl font-semibold flex items-center">
-                                <Calendar className="w-5 h-5 mr-2" />
-                                Past Events
+                                <Calendar className="w-5 h-5 me-2" />
+                                {t('Past Events')}
                             </h2>
                         </div>
                         <div className="p-4">
@@ -259,18 +261,18 @@ export default function EventsPage({ upcomingRsvps, pastRsvps, availableEvents }
                                                 )}
                                                 <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
                                                     <div className="flex items-center">
-                                                        <Clock className="w-4 h-4 mr-1" />
+                                                        <Clock className="w-4 h-4 me-1" />
                                                         {formatDateTime(rsvp.event.event_start, rsvp.event.all_day)}
                                                     </div>
                                                     {rsvp.event.location && (
                                                         <div className="flex items-center">
-                                                            <MapPin className="w-4 h-4 mr-1" />
+                                                            <MapPin className="w-4 h-4 me-1" />
                                                             {rsvp.event.location}
                                                         </div>
                                                     )}
                                                     {rsvp.guests > 0 && (
                                                         <div className="flex items-center">
-                                                            <Users className="w-4 h-4 mr-1" />
+                                                            <Users className="w-4 h-4 me-1" />
                                                             {rsvp.guests} guest{rsvp.guests !== 1 ? 's' : ''}
                                                         </div>
                                                     )}

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Create() {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         subject_code: '',
@@ -31,14 +33,14 @@ export default function Create() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Subject" />
+            <Head title={t('Create Subject')} />
 
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold leading-tight text-gray-800">
-                    Create Subject
+                    {t('Create Subject')}
                 </h2>
                 <Link href={subjects.index.url()}>
-                    <Button variant="outline">Back to List</Button>
+                    <Button variant="outline">{t('Back to List')}</Button>
                 </Link>
             </div>
 
@@ -46,7 +48,7 @@ export default function Create() {
                 <div className="">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Subject Information</CardTitle>
+                            <CardTitle>{t('Subject Information')}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={submit} className="space-y-6">
@@ -66,7 +68,7 @@ export default function Create() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="subject_code">Subject Code</Label>
+                                    <Label htmlFor="subject_code">{t('Subject Code')}</Label>
                                     <Input
                                         id="subject_code"
                                         type="text"
@@ -80,7 +82,7 @@ export default function Create() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="class_id">Class ID</Label>
+                                    <Label htmlFor="class_id">{t('Class ID')}</Label>
                                     <Input
                                         id="class_id"
                                         type="number"
@@ -94,7 +96,7 @@ export default function Create() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="teacher_id">Teacher ID</Label>
+                                    <Label htmlFor="teacher_id">{t('Teacher ID')}</Label>
                                     <Input
                                         id="teacher_id"
                                         type="number"
@@ -108,7 +110,7 @@ export default function Create() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="books">Books</Label>
+                                    <Label htmlFor="books">{t('Books')}</Label>
                                     <Textarea
                                         id="books"
                                         value={data.books}
@@ -124,11 +126,11 @@ export default function Create() {
                                 <div className="flex justify-end gap-2">
                                     <Link href={subjects.index.url()}>
                                         <Button type="button" variant="outline">
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
                                     </Link>
                                     <Button type="submit" disabled={processing}>
-                                        Create Subject
+                                        {t('Create Subject')}
                                     </Button>
                                 </div>
                             </form>

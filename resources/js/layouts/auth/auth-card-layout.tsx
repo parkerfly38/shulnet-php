@@ -1,3 +1,5 @@
+import { LanguageSwitcher } from '@/components/language-switcher';
+import { useTranslation } from '@/hooks/use-translation';
 import AppLogoIcon from '@/components/app-logo-icon';
 import {
     Card,
@@ -19,8 +21,10 @@ export default function AuthCardLayout({
     title?: string;
     description?: string;
 }>) {
+    const { t } = useTranslation();
     return (
         <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+            <div className="absolute end-4 top-4 z-10"><LanguageSwitcher /></div>
             <div className="flex w-full max-w-md flex-col gap-6">
                 <Link
                     href={home()}
@@ -34,8 +38,8 @@ export default function AuthCardLayout({
                 <div className="flex flex-col gap-6">
                     <Card className="rounded-xl">
                         <CardHeader className="px-10 pt-8 pb-0 text-center">
-                            <CardTitle className="text-xl">{title}</CardTitle>
-                            <CardDescription>{description}</CardDescription>
+                            <CardTitle className="text-xl">{title ? t(title) : title}</CardTitle>
+                            <CardDescription>{description ? t(description) : description}</CardDescription>
                         </CardHeader>
                         <CardContent className="px-10 py-8">
                             {children}

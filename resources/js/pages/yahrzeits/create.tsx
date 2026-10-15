@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useTranslation } from '@/hooks/use-translation';
 import { router, useForm, Head } from '@inertiajs/react';
 import { ArrowLeft, Calendar, Star, User, Plus, X } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { type BreadcrumbItem } from '@/types';
+import MemberCombobox from '@/components/member-combobox';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -65,6 +66,7 @@ const OBSERVANCE_OPTIONS = [
 ];
 
 export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm<YahrzeitFormData>({
         name: '',
         hebrew_name: '',
@@ -74,44 +76,18 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
         members: []
     });
 
-    const [memberSearches, setMemberSearches] = useState<string[]>([]);
-    const [filteredMembers, setFilteredMembers] = useState<Member[][]>([members]);
-
-    useEffect(() => {
-        const newFilteredMembers = memberSearches.map(search => {
-            if (search) {
-                return members.filter(member =>
-                    `${member.first_name} ${member.last_name}`.toLowerCase().includes(search.toLowerCase()) ||
-                    (member.hebrew_name && member.hebrew_name.toLowerCase().includes(search.toLowerCase()))
-                );
-            } else {
-                return members;
-            }
-        });
-        setFilteredMembers(newFilteredMembers);
-    }, [memberSearches, members]);
-
     const addMember = () => {
         setData('members', [...data.members, { member_id: '', relationship: '' }]);
-        setMemberSearches([...memberSearches, '']);
     };
 
     const removeMember = (index: number) => {
-        const newMembers = data.members.filter((_, i) => i !== index);
-        setData('members', newMembers);
-        setMemberSearches(memberSearches.filter((_, i) => i !== index));
+        setData('members', data.members.filter((_, i) => i !== index));
     };
 
     const updateMember = (index: number, field: keyof MemberRelationship, value: string) => {
         const newMembers = [...data.members];
         newMembers[index] = { ...newMembers[index], [field]: value };
         setData('members', newMembers);
-    };
-
-    const updateMemberSearch = (index: number, search: string) => {
-        const newSearches = [...memberSearches];
-        newSearches[index] = search;
-        setMemberSearches(newSearches);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -121,13 +97,13 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Add Yahrzeit Record" />
+            <Head title={t('Add Yahrzeit Record')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
           {/* Header */}
                 <div className="flex items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Add Yahrzeit Record</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Create a new memorial observance record</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Add Yahrzeit Record')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Create a new memorial observance record')}</p>
                     </div>
                 </div>
 
@@ -137,10 +113,10 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Star className="h-5 w-5" />
-                                Deceased Information
+                                {t('Deceased Information')}
                             </CardTitle>
                             <CardDescription>
-                                Information about the person being remembered
+                                {t('Information about the person being remembered')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -152,20 +128,20 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                     className={errors.name ? 'border-red-500' : ''}
-                                    placeholder="Full name of the deceased"
+                                    placeholder={t('Full name of the deceased')}
                                 />
                                 {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
                             </div>
 
                             <div>
-                                <Label htmlFor="hebrew_name">Hebrew Name</Label>
+                                <Label htmlFor="hebrew_name">{t('Hebrew Name')}</Label>
                                 <Input
                                     id="hebrew_name"
                                     type="text"
                                     value={data.hebrew_name}
                                     onChange={(e) => setData('hebrew_name', e.target.value)}
                                     className={errors.hebrew_name ? 'border-red-500' : ''}
-                                    placeholder="Hebrew name (optional)"
+                                    placeholder={t('Hebrew name (optional)')}
                                 />
                                 {errors.hebrew_name && <p className="text-sm text-red-600 mt-1">{errors.hebrew_name}</p>}
                             </div>
@@ -177,10 +153,10 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5" />
-                                Date and Observance Details
+                                {t('Date and Observance Details')}
                             </CardTitle>
                             <CardDescription>
-                                Date of death and observance preferences. Hebrew dates will be calculated automatically.
+                                {t('Date of death and observance preferences. Hebrew dates will be calculated automatically.')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -195,7 +171,7 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                 />
                                 {errors.date_of_death && <p className="text-sm text-red-600 mt-1">{errors.date_of_death}</p>}
                                 <p className="text-sm text-gray-600 mt-1">
-                                    Hebrew calendar date will be calculated automatically. For Hebrew-only dates, use the CSV import.
+                                    {t('Hebrew calendar date will be calculated automatically. For Hebrew-only dates, use the CSV import.')}
                                 </p>
                             </div>
 
@@ -217,13 +193,13 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                             </div>
 
                             <div>
-                                <Label htmlFor="notes">Notes</Label>
+                                <Label htmlFor="notes">{t('Notes')}</Label>
                                 <Textarea
                                     id="notes"
                                     value={data.notes}
                                     onChange={(e) => setData('notes', e.target.value)}
                                     className={errors.notes ? 'border-red-500' : ''}
-                                    placeholder="Additional notes or special instructions (optional)"
+                                    placeholder={t('Additional notes or special instructions (optional)')}
                                     rows={3}
                                 />
                                 {errors.notes && <p className="text-sm text-red-600 mt-1">{errors.notes}</p>}
@@ -239,14 +215,14 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                 Family Members (Optional)
                             </CardTitle>
                             <CardDescription>
-                                Add congregation members who will observe this yahrzeit and their relationship to the deceased
+                                {t('Add congregation members who will observe this yahrzeit and their relationship to the deceased')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {data.members.length === 0 ? (
                                 <Alert>
                                     <AlertDescription>
-                                        No family members added yet. Click the button below to add members who will observe this yahrzeit.
+                                        {t('No family members added yet. Click the button below to add members who will observe this yahrzeit.')}
                                     </AlertDescription>
                                 </Alert>
                             ) : (
@@ -266,39 +242,14 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                         </div>
                                         
                                         <div>
-                                            <Label htmlFor={`member_search_${index}`}>Search Member</Label>
-                                            <Input
-                                                id={`member_search_${index}`}
-                                                type="text"
-                                                placeholder="Search by name or Hebrew name..."
-                                                value={memberSearches[index] || ''}
-                                                onChange={(e) => updateMemberSearch(index, e.target.value)}
-                                                className="mb-2"
-                                            />
-                                        </div>
-
-                                        <div>
                                             <Label htmlFor={`member_id_${index}`}>Select Member *</Label>
-                                            <Select 
-                                                value={memberData.member_id} 
-                                                onValueChange={(value) => updateMember(index, 'member_id', value)}
-                                            >
-                                                <SelectTrigger className={errors[`members.${index}.member_id`] ? 'border-red-500' : ''}>
-                                                    <SelectValue placeholder="Choose a member..." />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {(filteredMembers[index] || []).map((member) => (
-                                                        <SelectItem key={member.id} value={member.id.toString()}>
-                                                            <div>
-                                                                <div>{member.first_name} {member.last_name}</div>
-                                                                {member.hebrew_name && (
-                                                                    <div className="text-sm text-gray-600">{member.hebrew_name}</div>
-                                                                )}
-                                                            </div>
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                            <MemberCombobox
+                                                id={`member_id_${index}`}
+                                                members={members}
+                                                value={memberData.member_id}
+                                                onChange={(value) => updateMember(index, 'member_id', value)}
+                                                hasError={!!errors[`members.${index}.member_id`]}
+                                            />
                                             {errors[`members.${index}.member_id`] && (
                                                 <p className="text-sm text-red-600 mt-1">{errors[`members.${index}.member_id`]}</p>
                                             )}
@@ -311,7 +262,7 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                                 onValueChange={(value) => updateMember(index, 'relationship', value)}
                                             >
                                                 <SelectTrigger className={errors[`members.${index}.relationship`] ? 'border-red-500' : ''}>
-                                                    <SelectValue placeholder="Select relationship..." />
+                                                    <SelectValue placeholder={t('Select relationship...')} />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     {RELATIONSHIP_OPTIONS.map((relationship) => (
@@ -335,8 +286,8 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                                 onClick={addMember}
                                 className="w-full"
                             >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Family Member
+                                <Plus className="h-4 w-4 me-2" />
+                                {t('Add Family Member')}
                             </Button>
                         </CardContent>
                     </Card>
@@ -348,7 +299,7 @@ export default function YahrzeitCreate({ members }: YahrzeitCreateProps) {
                             variant="outline"
                             onClick={() => router.get('/admin/yahrzeits')}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                             {processing ? 'Creating...' : 'Create Yahrzeit Record'}

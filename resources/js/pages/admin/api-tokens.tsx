@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, router } from '@inertiajs/react';
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function ApiTokensPage({ tokens }: Readonly<Props>) {
+    const { t } = useTranslation();
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [tokenName, setTokenName] = useState('');
     const [email, setEmail] = useState('');
@@ -169,7 +171,7 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="API Tokens" />
+            <Head title={t('API Tokens')} />
             
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 {/* Header */}
@@ -179,13 +181,13 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                             <Key className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">API Tokens</h1>
-                            <p className="text-gray-600 dark:text-gray-400">Manage API tokens for server-to-server authentication</p>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('API Tokens')}</h1>
+                            <p className="text-gray-600 dark:text-gray-400">{t('Manage API tokens for server-to-server authentication')}</p>
                         </div>
                     </div>
                     <Button onClick={() => setShowCreateDialog(true)}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Create Token
+                        <Plus className="h-4 w-4 me-2" />
+                        {t('Create Token')}
                     </Button>
                 </div>
 
@@ -193,7 +195,7 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                 <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                        API tokens allow external servers to authenticate with your ShulNet API. Treat tokens like passwords and never share them publicly.
+                        {t('API tokens allow external servers to authenticate with your ShulNet API. Treat tokens like passwords and never share them publicly.')}
                     </AlertDescription>
                 </Alert>
 
@@ -201,7 +203,7 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle>Active Tokens</CardTitle>
+                            <CardTitle>{t('Active Tokens')}</CardTitle>
                             <CardDescription>
                                 {tokens.length} {tokens.length === 1 ? 'token' : 'tokens'} active
                             </CardDescription>
@@ -212,8 +214,8 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                                 size="sm"
                                 onClick={handleDeleteAllTokens}
                             >
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Revoke All
+                                <Trash2 className="h-4 w-4 me-2" />
+                                {t('Revoke All')}
                             </Button>
                         )}
                     </CardHeader>
@@ -222,14 +224,14 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                             <div className="text-center py-12">
                                 <Key className="h-12 w-12 mx-auto text-gray-400 mb-4" />
                                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-                                    No API tokens
+                                    {t('No API tokens')}
                                 </h3>
                                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                                    Create your first API token to start integrating with external systems
+                                    {t('Create your first API token to start integrating with external systems')}
                                 </p>
                                 <Button onClick={() => setShowCreateDialog(true)}>
-                                    <Plus className="h-4 w-4 mr-2" />
-                                    Create Token
+                                    <Plus className="h-4 w-4 me-2" />
+                                    {t('Create Token')}
                                 </Button>
                             </div>
                         ) : (
@@ -273,18 +275,18 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                 {/* Documentation */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Using API Tokens</CardTitle>
-                        <CardDescription>How to authenticate with your API token</CardDescription>
+                        <CardTitle>{t('Using API Tokens')}</CardTitle>
+                        <CardDescription>{t('How to authenticate with your API token')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
-                            <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">Authentication Header</h4>
+                            <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">{t('Authentication Header')}</h4>
                             <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm">
                                 Authorization: Bearer YOUR_TOKEN_HERE
                             </div>
                         </div>
                         <div>
-                            <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">Example cURL Request</h4>
+                            <h4 className="font-medium mb-2 text-gray-900 dark:text-gray-100">{t('Example cURL Request')}</h4>
                             <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-sm overflow-x-auto">
                                 curl -X GET {typeof window !== 'undefined' ? window.location.origin : ''}/api/admin/members \<br />
                                 &nbsp;&nbsp;-H "Authorization: Bearer YOUR_TOKEN_HERE" \<br />
@@ -293,7 +295,7 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                         </div>
                         <div>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                                For full API documentation, visit{' '}
+                                {t('For full API documentation, visit')}{' '}
                                 <a href="/docs/api" className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
                                     /docs/api
                                 </a>
@@ -323,11 +325,11 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                             <Alert>
                                 <CheckCircle className="h-4 w-4" />
                                 <AlertDescription>
-                                    Make sure to copy your token now. You won't be able to see it again!
+                                    {t("Make sure to copy your token now. You won't be able to see it again!")}
                                 </AlertDescription>
                             </Alert>
                             <div className="space-y-2">
-                                <Label>Your API Token</Label>
+                                <Label>{t('Your API Token')}</Label>
                                 <div className="flex gap-2">
                                     <Input
                                         value={newToken}
@@ -356,30 +358,30 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
                                 </Alert>
                             )}
                             <div className="space-y-2">
-                                <Label htmlFor="token-name">Token Name</Label>
+                                <Label htmlFor="token-name">{t('Token Name')}</Label>
                                 <Input
                                     id="token-name"
-                                    placeholder="e.g., Production Server"
+                                    placeholder={t('e.g., Production Server')}
                                     value={tokenName}
                                     onChange={(e) => setTokenName(e.target.value)}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="email">Your Email</Label>
+                                <Label htmlFor="email">{t('Your Email')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="admin@example.com"
+                                    placeholder={t('admin@example.com')}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="password">Your Password</Label>
+                                <Label htmlFor="password">{t('Your Password')}</Label>
                                 <Input
                                     id="password"
                                     type="password"
-                                    placeholder="Enter your password"
+                                    placeholder={t('Enter your password')}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
@@ -389,11 +391,11 @@ export default function ApiTokensPage({ tokens }: Readonly<Props>) {
 
                     <DialogFooter>
                         {newToken ? (
-                            <Button onClick={handleCloseDialog}>Done</Button>
+                            <Button onClick={handleCloseDialog}>{t('Done')}</Button>
                         ) : (
                             <>
                                 <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
-                                    Cancel
+                                    {t('Cancel')}
                                 </Button>
                                 <Button onClick={handleCreateToken} disabled={isCreating}>
                                     {isCreating ? 'Creating...' : 'Create Token'}

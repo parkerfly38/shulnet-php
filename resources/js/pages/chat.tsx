@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { ChatFrame } from '@/components/chat-frame';
 import { type BreadcrumbItem } from '@/types';
@@ -13,6 +14,7 @@ interface ChatPageProps {
 }
 
 export default function ChatPage({ chatConfig }: ChatPageProps) {
+    const { t } = useTranslation();
     const breadcrumbs: BreadcrumbItem[] = [
         { label: 'Dashboard', href: '/dashboard' },
         { label: chatConfig.title, href: '/chat' },
@@ -24,7 +26,7 @@ export default function ChatPage({ chatConfig }: ChatPageProps) {
                 <div className="p-6">
                     <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                         <p className="text-yellow-800 dark:text-yellow-200">
-                            Chat is currently disabled. Please contact your administrator.
+                            {t('Chat is currently disabled. Please contact your administrator.')}
                         </p>
                     </div>
                 </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -70,6 +71,7 @@ interface Props {
 }
 
 export default function EventsIndex({ events, calendars, filters }: Props) {
+    const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState(filters.search || '');
   const [selectedCalendar, setSelectedCalendar] = useState(filters.calendar || 'all');
 
@@ -131,18 +133,18 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Events" />
+      <Head title={t('Events')} />
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Events</h1>
-            <p className="text-gray-600 dark:text-gray-400">Manage calendar events and their details</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Events')}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{t('Manage calendar events and their details')}</p>
           </div>
           <Link href="/admin/events/create">
             <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Event
+              <Plus className="h-4 w-4 me-2" />
+              {t('Add Event')}
             </Button>
           </Link>
         </div>
@@ -152,7 +154,7 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
           <form onSubmit={handleSearch} className="flex items-center space-x-2 flex-1 max-w-md">
             <Input
               type="text"
-              placeholder="Search events..."
+              placeholder={t('Search events...')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
@@ -164,10 +166,10 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
 
           <Select value={selectedCalendar || "all"} onValueChange={handleCalendarFilter}>
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="All calendars" />
+              <SelectValue placeholder={t('All calendars')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All calendars</SelectItem>
+              <SelectItem value="all">{t('All calendars')}</SelectItem>
               {calendars.map((calendar) => (
                 <SelectItem key={calendar.id} value={calendar.id.toString()}>
                   {calendar.name}
@@ -178,7 +180,7 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
 
           {(filters.search || (filters.calendar && filters.calendar !== '')) && (
             <Button variant="outline" onClick={clearFilters}>
-              Clear Filters
+              {t('Clear Filters')}
             </Button>
           )}
         </div>
@@ -189,20 +191,20 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Event
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Event')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Calendar
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Calendar')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Date & Time
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Date & Time')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Visibility
+                  <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Visibility')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Actions
+                  <th className="px-6 py-3 text-end text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('Actions')}
                   </th>
                 </tr>
               </thead>
@@ -224,11 +226,11 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-gray-900 dark:text-gray-100">
-                          <Clock className="h-4 w-4 mr-2 text-gray-400" />
+                          <Clock className="h-4 w-4 me-2 text-gray-400" />
                           <div>
                             <div className="text-sm">{formatDateRange(event)}</div>
                             {event.all_day ? (
-                              <div className="text-xs text-gray-500">All day</div>
+                              <div className="text-xs text-gray-500">{t('All day')}</div>
                             ) : null}
                           </div>
                         </div>
@@ -236,16 +238,16 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {event.members_only ? (
                           <Badge variant="secondary">
-                            <Users className="h-3 w-3 mr-1" />
-                            Members Only
+                            <Users className="h-3 w-3 me-1" />
+                            {t('Members Only')}
                           </Badge>
                         ) : (
                           <Badge variant="outline">
-                            Public
+                            {t('Public')}
                           </Badge>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <Link href={`/admin/events/${event.id}`}>
                             <Button variant="outline" size="sm">
@@ -274,7 +276,7 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
                     <td colSpan={6} className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center">
                         <Calendar className="h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No events found</h3>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{t('No events found')}</h3>
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
                           {filters.search || (filters.calendar && filters.calendar !== '') 
                             ? 'No events match your search criteria.' 
@@ -282,8 +284,8 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
                         </p>
                         <Link href="/admin/events/create">
                           <Button>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Create Event
+                            <Plus className="h-4 w-4 me-2" />
+                            {t('Create Event')}
                           </Button>
                         </Link>
                       </div>
@@ -301,12 +303,12 @@ export default function EventsIndex({ events, calendars, filters }: Props) {
                 <div className="flex-1 flex justify-between sm:hidden">
                   {events.prev_page_url && (
                     <Link href={events.prev_page_url}>
-                      <Button variant="outline">Previous</Button>
+                      <Button variant="outline">{t('Previous')}</Button>
                     </Link>
                   )}
                   {events.next_page_url && (
                     <Link href={events.next_page_url}>
-                      <Button variant="outline">Next</Button>
+                      <Button variant="outline">{t('Next')}</Button>
                     </Link>
                   )}
                 </div>

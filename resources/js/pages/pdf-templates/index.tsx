@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function Index({ templates, filters }: Props) {
+    const { t } = useTranslation();
     const [search, setSearch] = useState(filters.search || '');
     const [category, setCategory] = useState(filters.category || '');
     const [isActive, setIsActive] = useState(filters.is_active || '');
@@ -58,19 +60,19 @@ export default function Index({ templates, filters }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="PDF Templates" />
+            <Head title={t('PDF Templates')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">PDF Templates</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Manage document templates with dynamic field replacement</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('PDF Templates')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Manage document templates with dynamic field replacement')}</p>
                     </div>
                     <Link href="/admin/pdf-templates/create">
                         <Button>
-                            <Plus className="mr-2 h-4 w-4" />
-                            Create Template
+                            <Plus className="me-2 h-4 w-4" />
+                            {t('Create Template')}
                         </Button>
                     </Link>
                 </div>
@@ -83,7 +85,7 @@ export default function Index({ templates, filters }: Props) {
                                 <div className="flex items-center space-x-2">
                                     <Search className="h-4 w-4 text-gray-500" />
                                     <Input
-                                        placeholder="Search templates..."
+                                        placeholder={t('Search templates...')}
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         onKeyPress={(e) => e.key === 'Enter' && handleFilter()}
@@ -92,29 +94,29 @@ export default function Index({ templates, filters }: Props) {
 
                                 <Select value={category} onValueChange={setCategory}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="All Categories" />
+                                        <SelectValue placeholder={t('All Categories')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">All Categories</SelectItem>
-                                        <SelectItem value="letter">Letter</SelectItem>
-                                        <SelectItem value="form">Form</SelectItem>
-                                        <SelectItem value="invoice">Invoice</SelectItem>
-                                        <SelectItem value="general">General</SelectItem>
+                                        <SelectItem value="">{t('All Categories')}</SelectItem>
+                                        <SelectItem value="letter">{t('Letter')}</SelectItem>
+                                        <SelectItem value="form">{t('Form')}</SelectItem>
+                                        <SelectItem value="invoice">{t('Invoice')}</SelectItem>
+                                        <SelectItem value="general">{t('General')}</SelectItem>
                                     </SelectContent>
                                 </Select>
 
                                 <Select value={isActive} onValueChange={setIsActive}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="All Status" />
+                                        <SelectValue placeholder={t('All Status')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">All Status</SelectItem>
-                                        <SelectItem value="1">Active</SelectItem>
-                                        <SelectItem value="0">Inactive</SelectItem>
+                                        <SelectItem value="">{t('All Status')}</SelectItem>
+                                        <SelectItem value="1">{t('Active')}</SelectItem>
+                                        <SelectItem value="0">{t('Inactive')}</SelectItem>
                                     </SelectContent>
                                 </Select>
 
-                                <Button onClick={handleFilter}>Filter</Button>
+                                <Button onClick={handleFilter}>{t('Filter')}</Button>
                             </div>
                         </CardContent>
                     </Card>
@@ -136,9 +138,9 @@ export default function Index({ templates, filters }: Props) {
                                                         {template.category}
                                                     </Badge>
                                                     {template.is_active ? (
-                                                        <Badge className="bg-green-100 text-green-800">Active</Badge>
+                                                        <Badge className="bg-green-100 text-green-800">{t('Active')}</Badge>
                                                     ) : (
-                                                        <Badge className="bg-red-100 text-red-800">Inactive</Badge>
+                                                        <Badge className="bg-red-100 text-red-800">{t('Inactive')}</Badge>
                                                     )}
                                                 </div>
                                             </div>
@@ -158,8 +160,8 @@ export default function Index({ templates, filters }: Props) {
                                     <div className="flex items-center justify-between pt-4 border-t">
                                         <Link href={`/admin/pdf-templates/${template.id}`}>
                                             <Button variant="outline" size="sm">
-                                                <Eye className="h-4 w-4 mr-1" />
-                                                View
+                                                <Eye className="h-4 w-4 me-1" />
+                                                {t('View')}
                                             </Button>
                                         </Link>
                                         <div className="flex gap-2">
@@ -202,12 +204,12 @@ export default function Index({ templates, filters }: Props) {
                         <Card>
                             <CardContent className="p-12 text-center">
                                 <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">No templates found</h3>
-                                <p className="text-gray-600 mb-4">Get started by creating your first PDF template.</p>
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('No templates found')}</h3>
+                                <p className="text-gray-600 mb-4">{t('Get started by creating your first PDF template.')}</p>
                                 <Link href="/admin/pdf-templates/create">
                                     <Button>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        Create Template
+                                        <Plus className="me-2 h-4 w-4" />
+                                        {t('Create Template')}
                                     </Button>
                                 </Link>
                             </CardContent>

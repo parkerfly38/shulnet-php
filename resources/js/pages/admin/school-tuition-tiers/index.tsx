@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -42,6 +43,7 @@ const billingPeriodLabels: Record<string, string> = {
 };
 
 export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
+    const { t } = useTranslation();
   const { currency } = usePage().props as unknown as { currency: string };
 
   const handleDelete = (tier: SchoolTuitionTier) => {
@@ -58,21 +60,21 @@ export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="School Tuition Tiers" />
+      <Head title={t('School Tuition Tiers')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">School Tuition Tiers</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('School Tuition Tiers')}</h1>
             <p className="text-muted-foreground mt-2">
-              Manage school tuition tier types and pricing
+              {t('Manage school tuition tier types and pricing')}
             </p>
           </div>
           <Link href="/admin/school-tuition-tiers/create">
             <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Tier
+              <Plus className="me-2 h-4 w-4" />
+              {t('Add Tier')}
             </Button>
           </Link>
         </div>
@@ -81,7 +83,7 @@ export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Tiers</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Total Tiers')}</CardTitle>
               <GraduationCap className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -90,7 +92,7 @@ export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Tiers</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Active Tiers')}</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -99,7 +101,7 @@ export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Potential Annual Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('Potential Annual Revenue')}</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -113,9 +115,9 @@ export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
         {/* Tiers Table */}
         <Card>
           <CardHeader>
-            <CardTitle>Tuition Tiers</CardTitle>
+            <CardTitle>{t('Tuition Tiers')}</CardTitle>
             <CardDescription>
-              All tuition tier types with pricing information
+              {t('All tuition tier types with pricing information')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -123,20 +125,20 @@ export default function SchoolTuitionTiersIndex({ tiers, stats }: Props) {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium">Name</th>
-                    <th className="text-left py-3 px-4 font-medium">Price</th>
-                    <th className="text-left py-3 px-4 font-medium">Billing Period</th>
-                    <th className="text-left py-3 px-4 font-medium">Max Students</th>
-                    <th className="text-left py-3 px-4 font-medium">Status</th>
-                    <th className="text-left py-3 px-4 font-medium">Sort Order</th>
-                    <th className="text-right py-3 px-4 font-medium">Actions</th>
+                    <th className="text-start py-3 px-4 font-medium">{t('Name')}</th>
+                    <th className="text-start py-3 px-4 font-medium">{t('Price')}</th>
+                    <th className="text-start py-3 px-4 font-medium">{t('Billing Period')}</th>
+                    <th className="text-start py-3 px-4 font-medium">{t('Max Students')}</th>
+                    <th className="text-start py-3 px-4 font-medium">{t('Status')}</th>
+                    <th className="text-start py-3 px-4 font-medium">{t('Sort Order')}</th>
+                    <th className="text-end py-3 px-4 font-medium">{t('Actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tiers.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="text-center py-8 text-muted-foreground">
-                        No tuition tiers found. Create your first tier to get started.
+                        {t('No tuition tiers found. Create your first tier to get started.')}
                       </td>
                     </tr>
                   ) : (

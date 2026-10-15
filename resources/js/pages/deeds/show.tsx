@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function DeedsShow({ deed }: Readonly<Props>) {
+    const { t } = useTranslation();
   const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Cemetery', href: '/admin/deeds' },
@@ -74,19 +76,19 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
               <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 Deed {deed.deed_number}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">View and manage deed details</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('View and manage deed details')}</p>
             </div>
           </div>
           <div className="flex gap-2">
             <Link href={`/admin/deeds/${deed.id}/edit`}>
               <Button variant="outline">
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
+                <Edit className="h-4 w-4 me-2" />
+                {t('Edit')}
               </Button>
             </Link>
             <Button variant="outline" onClick={handleDelete}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
+              <Trash2 className="h-4 w-4 me-2" />
+              {t('Delete')}
             </Button>
           </div>
         </div>
@@ -95,27 +97,27 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
           {/* Main Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Deed Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Deed Information')}</h2>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Deed Number</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Deed Number')}</p>
                   <p className="font-medium text-gray-900 dark:text-gray-100">{deed.deed_number}</p>
                 </div>
                 
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Status')}</p>
                   <Badge className="mt-1" variant={deed.is_active ? 'default' : 'secondary'}>
                     {deed.is_active ? 'Active' : 'Inactive'}
                   </Badge>
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Capacity</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Capacity')}</p>
                   <p className="font-medium text-gray-900 dark:text-gray-100">
                     {deed.occupied || 0} / {totalCapacity} occupied
                     {availableSpace > 0 && (
-                      <span className="text-green-600 dark:text-green-400 ml-2">
+                      <span className="text-green-600 dark:text-green-400 ms-2">
                         ({availableSpace} available)
                       </span>
                     )}
@@ -123,17 +125,17 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Purchase Date</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Purchase Date')}</p>
                   <p className="font-medium text-gray-900 dark:text-gray-100">{formatDate(deed.purchase_date)}</p>
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Purchase Price</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Purchase Price')}</p>
                   <p className="font-medium text-gray-900 dark:text-gray-100">{formatCurrency(deed.purchase_price)}</p>
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Status')}</p>
                   <Badge className="mt-1" variant={deed.is_active ? 'default' : 'secondary'}>
                     {deed.is_active ? 'Active' : 'Inactive'}
                   </Badge>
@@ -141,7 +143,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
 
                 {deed.notes && (
                   <div className="col-span-2">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Notes</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('Notes')}</p>
                     <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap">{deed.notes}</p>
                   </div>
                 )}
@@ -151,11 +153,11 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
             {/* Interments */}
             <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Interments</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('Interments')}</h2>
                 <Link href={`/admin/interments/create?deed=${deed.id}`}>
                   <Button size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Interment
+                    <Plus className="h-4 w-4 me-2" />
+                    {t('Add Interment')}
                   </Button>
                 </Link>
               </div>
@@ -188,14 +190,14 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
                 </div>
               ) : (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                  No interments recorded yet
+                  {t('No interments recorded yet')}
                 </p>
               )}
             </div>
 
             {/* Gravesites */}
             <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Associated Gravesites</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Associated Gravesites')}</h2>
 
               {deed.gravesites && deed.gravesites.length > 0 ? (
                 <div className="space-y-3">
@@ -234,7 +236,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
                             >
                               {gravesite.status}
                             </Badge>
-                            <Badge className="ml-2" variant="outline">
+                            <Badge className="ms-2" variant="outline">
                               {gravesite.gravesite_type}
                             </Badge>
                           </div>
@@ -245,7 +247,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
                 </div>
               ) : (
                 <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                  No gravesites associated with this deed
+                  {t('No gravesites associated with this deed')}
                 </p>
               )}
             </div>
@@ -254,7 +256,7 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
           {/* Sidebar */}
           <div className="space-y-4">
             <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Owner</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Owner')}</h2>
               {deed.member ? (
                 <div className="flex items-start gap-3">
                   <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-full">
@@ -273,19 +275,19 @@ export default function DeedsShow({ deed }: Readonly<Props>) {
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-500 dark:text-gray-400">No owner assigned</p>
+                <p className="text-gray-500 dark:text-gray-400">{t('No owner assigned')}</p>
               )}
             </div>
 
             <div className="bg-white dark:bg-black rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Metadata</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('Metadata')}</h2>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Created</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Created')}</p>
                   <p className="text-sm text-gray-900 dark:text-gray-100">{formatDate(deed.created_at)}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Last Updated</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('Last Updated')}</p>
                   <p className="text-sm text-gray-900 dark:text-gray-100">{formatDate(deed.updated_at)}</p>
                 </div>
               </div>

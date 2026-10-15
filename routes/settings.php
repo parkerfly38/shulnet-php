@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Settings\LocaleController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::patch('settings/locale', [LocaleController::class, 'update'])->name('locale.update');
 
 Route::middleware('auth')->group(function () {
     Route::redirect('settings', '/settings/profile');

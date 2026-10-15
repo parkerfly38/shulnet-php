@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, router } from '@inertiajs/react';
 import { useState, FormEvent } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export default function CampaignEdit({ campaign }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: campaign.name,
     description: campaign.description || '',
@@ -69,9 +71,9 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div>
-          <h1 className="text-3xl font-bold">Edit Campaign</h1>
+          <h1 className="text-3xl font-bold">{t('Edit Campaign')}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Update campaign settings and content
+            {t('Update campaign settings and content')}
           </p>
         </div>
 
@@ -88,7 +90,7 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{t('Description')}</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -126,7 +128,7 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
 
             <div className="flex items-center justify-between border rounded-lg p-4">
               <div>
-                <Label>Active Campaign</Label>
+                <Label>{t('Active Campaign')}</Label>
                 <p className="text-sm text-gray-500">
                   {formData.is_active
                     ? 'Campaign is active and can accept subscribers'
@@ -146,11 +148,11 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
 
           {formData.opt_in_type === 'double' && (
             <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold mb-4">Confirmation Email (Double Opt-in)</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('Confirmation Email (Double Opt-in)')}</h3>
               
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="confirmation_subject">Confirmation Subject</Label>
+                  <Label htmlFor="confirmation_subject">{t('Confirmation Subject')}</Label>
                   <Input
                     id="confirmation_subject"
                     value={formData.confirmation_subject}
@@ -162,7 +164,7 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
                 </div>
 
                 <div>
-                  <Label htmlFor="confirmation_content">Confirmation Body</Label>
+                  <Label htmlFor="confirmation_content">{t('Confirmation Body')}</Label>
                   <Textarea
                     id="confirmation_content"
                     value={formData.confirmation_content}
@@ -170,7 +172,7 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
                       setFormData({ ...formData, confirmation_content: e.target.value })
                     }
                     rows={6}
-                    placeholder="Please click the link below to confirm your subscription..."
+                    placeholder={t('Please click the link below to confirm your subscription...')}
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     A confirmation link will be automatically included. Use {'{confirmation_url}'} to customize placement.
@@ -186,9 +188,9 @@ export default function CampaignEdit({ campaign }: Readonly<Props>) {
               variant="outline"
               onClick={() => router.visit('/admin/campaigns')}
             >
-              Cancel
+              {t('Cancel')}
             </Button>
-            <Button type="submit">Update Campaign</Button>
+            <Button type="submit">{t('Update Campaign')}</Button>
           </div>
         </form>
       </div>

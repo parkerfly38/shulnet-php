@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function ShowForm({ form }: Readonly<Props>) {
+    const { t } = useTranslation();
     const [isCopied, setIsCopied] = useState(false);
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -114,23 +116,23 @@ ${fieldsHtml}    <button type="submit" style="width: 100%; padding: 10px 16px; b
                     </div>
                     <Link href={`/admin/forms/${form.id}/edit`}>
                         <Button>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit Form
+                            <Edit className="w-4 h-4 me-2" />
+                            {t('Edit Form')}
                         </Button>
                     </Link>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="border rounded-lg p-4">
-                        <p className="text-sm text-gray-500">Total Submissions</p>
+                        <p className="text-sm text-gray-500">{t('Total Submissions')}</p>
                         <p className="text-2xl font-bold">{form.submissions_count}</p>
                     </div>
                     <div className="border rounded-lg p-4">
-                        <p className="text-sm text-gray-500">Form Fields</p>
+                        <p className="text-sm text-gray-500">{t('Form Fields')}</p>
                         <p className="text-2xl font-bold">{form.schema.length}</p>
                     </div>
                     <div className="border rounded-lg p-4">
-                        <p className="text-sm text-gray-500">Status</p>
+                        <p className="text-sm text-gray-500">{t('Status')}</p>
                         <p className="text-2xl font-bold">{form.is_active ? 'Active' : 'Inactive'}</p>
                     </div>
                 </div>
@@ -138,11 +140,11 @@ ${fieldsHtml}    <button type="submit" style="width: 100%; padding: 10px 16px; b
                 {form.submissions_count > 0 && (
                     <div className="border rounded-lg p-6">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-lg font-semibold">Submissions</h2>
+                            <h2 className="text-lg font-semibold">{t('Submissions')}</h2>
                             <Link href={`/admin/forms/${form.id}/submissions`}>
                                 <Button variant="outline" size="sm">
-                                    <FileText className="w-4 h-4 mr-2" />
-                                    View All Submissions
+                                    <FileText className="w-4 h-4 me-2" />
+                                    {t('View All Submissions')}
                                 </Button>
                             </Link>
                         </div>
@@ -154,23 +156,23 @@ ${fieldsHtml}    <button type="submit" style="width: 100%; padding: 10px 16px; b
 
                 <div className="border rounded-lg p-6">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold">Embeddable Form Code</h2>
+                        <h2 className="text-lg font-semibold">{t('Embeddable Form Code')}</h2>
                         <Button variant="outline" size="sm" onClick={handleCopy}>
                             {isCopied ? (
                                 <>
-                                    <Check className="w-4 h-4 mr-2" />
-                                    Copied!
+                                    <Check className="w-4 h-4 me-2" />
+                                    {t('Copied!')}
                                 </>
                             ) : (
                                 <>
-                                    <Copy className="w-4 h-4 mr-2" />
-                                    Copy Code
+                                    <Copy className="w-4 h-4 me-2" />
+                                    {t('Copy Code')}
                                 </>
                             )}
                         </Button>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        Copy this code and paste it into any webpage to embed this form.
+                        {t('Copy this code and paste it into any webpage to embed this form.')}
                     </p>
                     <Textarea
                         value={generateEmbedCode()}
@@ -181,7 +183,7 @@ ${fieldsHtml}    <button type="submit" style="width: 100%; padding: 10px 16px; b
                 </div>
 
                 <div className="border rounded-lg p-6">
-                    <h2 className="text-lg font-semibold mb-4">Form Fields</h2>
+                    <h2 className="text-lg font-semibold mb-4">{t('Form Fields')}</h2>
                     <div className="space-y-4">
                         {form.schema.map((field, index) => (
                             <div key={field.id} className="border rounded-lg p-4">
@@ -189,7 +191,7 @@ ${fieldsHtml}    <button type="submit" style="width: 100%; padding: 10px 16px; b
                                     <span className="text-sm text-gray-500">#{index + 1}</span>
                                     <h3 className="font-medium">{field.label}</h3>
                                     <Badge variant="outline">{field.type}</Badge>
-                                    {field.required && <Badge variant="destructive">Required</Badge>}
+                                    {field.required && <Badge variant="destructive">{t('Required')}</Badge>}
                                 </div>
                                 {field.description && (
                                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
@@ -198,7 +200,7 @@ ${fieldsHtml}    <button type="submit" style="width: 100%; padding: 10px 16px; b
                                 )}
                                 {(field.type === 'select' || field.type === 'multiselect') && field.options && (
                                     <div className="mt-2">
-                                        <p className="text-xs text-gray-500 mb-1">Options:</p>
+                                        <p className="text-xs text-gray-500 mb-1">{t('Options:')}</p>
                                         <div className="flex flex-wrap gap-1">
                                             {field.options.map((option) => (
                                                 <Badge key={option} variant="secondary">

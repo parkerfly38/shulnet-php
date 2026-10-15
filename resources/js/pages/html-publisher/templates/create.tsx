@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, router } from '@inertiajs/react';
 import { useState, FormEvent } from 'react';
 import AppLayout from '@/layouts/app-layout';
@@ -28,6 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function HtmlTemplateCreate() {
+    const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [header, setHeader] = useState('');
@@ -45,7 +47,7 @@ export default function HtmlTemplateCreate() {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Create HTML Template" />
+      <Head title={t('Create HTML Template')} />
 
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
         <div>
@@ -63,7 +65,7 @@ export default function HtmlTemplateCreate() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder="e.g., Main Site Template"
+                  placeholder={t('e.g., Main Site Template')}
                 />
                 <p className="text-sm text-gray-500">A descriptive name for this template</p>
               </div>
@@ -75,7 +77,7 @@ export default function HtmlTemplateCreate() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}
-                  placeholder="Optional description of when to use this template"
+                  placeholder={t('Optional description of when to use this template')}
                 />
               </div>
 
@@ -84,11 +86,11 @@ export default function HtmlTemplateCreate() {
                 <RichTextEditor
                   value={header}
                   onChange={setHeader}
-                  placeholder="Enter header HTML (navigation, logo, etc.)..."
+                  placeholder={t('Enter header HTML (navigation, logo, etc.)...')}
                   className="min-h-[200px]"
                 />
                 <p className="text-sm text-gray-500">
-                  This will appear at the top of all pages using this template
+                  {t('This will appear at the top of all pages using this template')}
                 </p>
               </div>
 
@@ -97,11 +99,11 @@ export default function HtmlTemplateCreate() {
                 <RichTextEditor
                   value={footer}
                   onChange={setFooter}
-                  placeholder="Enter footer HTML (copyright, links, etc.)..."
+                  placeholder={t('Enter footer HTML (copyright, links, etc.)...')}
                   className="min-h-[200px]"
                 />
                 <p className="text-sm text-gray-500">
-                  This will appear at the bottom of all pages using this template
+                  {t('This will appear at the bottom of all pages using this template')}
                 </p>
               </div>
 
@@ -112,7 +114,7 @@ export default function HtmlTemplateCreate() {
                   variant="outline"
                   onClick={() => router.visit('/admin/html-templates')}
                 >
-                  Cancel
+                  {t('Cancel')}
                 </Button>
               </div>
             </div>

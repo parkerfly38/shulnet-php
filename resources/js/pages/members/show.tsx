@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo, useState } from 'react';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -33,6 +34,7 @@ interface Props {
 }
 
 export default function MembersShow({ member, contributionData, relationshipTypes }: Readonly<Props>) {
+    const { t } = useTranslation();
   const [showAddFamilyMember, setShowAddFamilyMember] = useState(false);
   const [showAddRelationship, setShowAddRelationship] = useState(false);
   const [memberSearch, setMemberSearch] = useState('');
@@ -204,8 +206,8 @@ export default function MembersShow({ member, contributionData, relationshipType
           </div>
           <Link href={`/admin/members/${member.id}/edit`}>
             <Button>
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Member
+              <Edit className="h-4 w-4 me-2" />
+              {t('Edit Member')}
             </Button>
           </Link>
         </div>
@@ -215,13 +217,13 @@ export default function MembersShow({ member, contributionData, relationshipType
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                <User className="h-5 w-5 mr-2" />
-                Personal Information
+                <User className="h-5 w-5 me-2" />
+                {t('Personal Information')}
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Type')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     <span className="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset capitalize
                       {member.member_type === 'member' ? 'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/20 dark:text-green-400 dark:ring-green-500/20' : ''}
@@ -236,10 +238,10 @@ export default function MembersShow({ member, contributionData, relationshipType
 
                 {member.deceased && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Status')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100">
                       <Badge variant="secondary" className="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                        Deceased
+                        {t('Deceased')}
                       </Badge>
                     </dd>
                   </div>
@@ -247,40 +249,40 @@ export default function MembersShow({ member, contributionData, relationshipType
 
                 {member.title && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Title</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Title')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100">{member.title}</dd>
                   </div>
                 )}
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">First Name</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('First Name')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">{member.first_name}</dd>
                 </div>
                 
                 {member.middle_name && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Middle Name</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Middle Name')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100">{member.middle_name}</dd>
                   </div>
                 )}
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Last Name</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Last Name')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">{member.last_name}</dd>
                 </div>
                 
                 {member.gender && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Gender</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Gender')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100 capitalize">{member.gender}</dd>
                   </div>
                 )}
                 
                 {member.dob && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date of Birth</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Date of Birth')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
+                      <Calendar className="h-4 w-4 me-1" />
                       {formatDate(member.dob)}
                     </dd>
                   </div>
@@ -288,9 +290,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                 
                 {member.anniversary_date && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Anniversary Date</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Anniversary Date')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
+                      <Calendar className="h-4 w-4 me-1" />
                       {formatDate(member.anniversary_date)}
                     </dd>
                   </div>
@@ -298,13 +300,13 @@ export default function MembersShow({ member, contributionData, relationshipType
                 
                 {member.parent ? (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Parent Account</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Parent Account')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100">
                       <Link 
                         href={`/admin/parents/${member.parent.id}`}
                         className="text-blue-600 dark:text-blue-400 hover:underline flex items-center"
                       >
-                        <User className="h-4 w-4 mr-1" />
+                        <User className="h-4 w-4 me-1" />
                         {member.parent.first_name} {member.parent.last_name}
                         {member.parent.email && ` (${member.parent.email})`}
                       </Link>
@@ -312,7 +314,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                   </div>
                 ) : (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Parent Account</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Parent Account')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100">
                       <form 
                         onSubmit={(e) => {
@@ -330,11 +332,11 @@ export default function MembersShow({ member, contributionData, relationshipType
                           className="flex items-center gap-1"
                         >
                           <Plus className="h-3 w-3" />
-                          Create Parent Account
+                          {t('Create Parent Account')}
                         </Button>
                       </form>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        Creates a parent account using this member's information
+                        {t("Creates a parent account using this member's information")}
                       </p>
                     </dd>
                   </div>
@@ -345,103 +347,103 @@ export default function MembersShow({ member, contributionData, relationshipType
             {/* Jewish Details */}
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                Jewish Details
+                {t('Jewish Details')}
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Hebrew Name</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Hebrew Name')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
-                    {member.hebrew_name || <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                    {member.hebrew_name || <span className="text-gray-400 dark:text-gray-500">{t('Not set')}</span>}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Father's Hebrew Name</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("Father's Hebrew Name")}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
-                    {member.father_hebrew_name || <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                    {member.father_hebrew_name || <span className="text-gray-400 dark:text-gray-500">{t('Not set')}</span>}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Mother's Hebrew Name</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("Mother's Hebrew Name")}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
-                    {member.mother_hebrew_name || <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                    {member.mother_hebrew_name || <span className="text-gray-400 dark:text-gray-500">{t('Not set')}</span>}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Tribe</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Tribe')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
-                    {member.tribe ? <span className="capitalize">{member.tribe}</span> : <span className="text-gray-400 dark:text-gray-500">Not set</span>}
+                    {member.tribe ? <span className="capitalize">{member.tribe}</span> : <span className="text-gray-400 dark:text-gray-500">{t('Not set')}</span>}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">B'nai Mitzvah Date</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("B'nai Mitzvah Date")}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.bnaimitzvahdate ? (
                       <span className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1" />
+                        <Calendar className="h-4 w-4 me-1" />
                         {formatDate(member.bnaimitzvahdate)}
                       </span>
                     ) : (
-                      <span className="text-gray-400 dark:text-gray-500">Not set</span>
+                      <span className="text-gray-400 dark:text-gray-500">{t('Not set')}</span>
                     )}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Aliyah</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Aliyah')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.aliyah ? (
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">{t('Yes')}</Badge>
                     ) : (
-                      <Badge variant="secondary">No</Badge>
+                      <Badge variant="secondary">{t('No')}</Badge>
                     )}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Chazanut</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Chazanut')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.chazanut ? (
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">{t('Yes')}</Badge>
                     ) : (
-                      <Badge variant="secondary">No</Badge>
+                      <Badge variant="secondary">{t('No')}</Badge>
                     )}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Dvar Torah</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Dvar Torah')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.dvartorah ? (
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">{t('Yes')}</Badge>
                     ) : (
-                      <Badge variant="secondary">No</Badge>
+                      <Badge variant="secondary">{t('No')}</Badge>
                     )}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Maftir</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Maftir')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.maftir ? (
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">{t('Yes')}</Badge>
                     ) : (
-                      <Badge variant="secondary">No</Badge>
+                      <Badge variant="secondary">{t('No')}</Badge>
                     )}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Bria Ba'Torah</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t("Bria Ba'Torah")}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {member.brianbatorah ? (
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Yes</Badge>
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">{t('Yes')}</Badge>
                     ) : (
-                      <Badge variant="secondary">No</Badge>
+                      <Badge variant="secondary">{t('No')}</Badge>
                     )}
                   </dd>
                 </div>
@@ -451,15 +453,15 @@ export default function MembersShow({ member, contributionData, relationshipType
             {/* Contact Information */}
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                <Mail className="h-5 w-5 mr-2" />
-                Contact Information
+                <Mail className="h-5 w-5 me-2" />
+                {t('Contact Information')}
               </h2>
               
               <div className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Email Address</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Email Address')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                    <Mail className="h-4 w-4 mr-1" />
+                    <Mail className="h-4 w-4 me-1" />
                     <a href={`mailto:${member.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">
                       {member.email}
                     </a>
@@ -468,9 +470,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                 
                 {member.phone1 && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Primary Phone</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Primary Phone')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                      <Phone className="h-4 w-4 mr-1" />
+                      <Phone className="h-4 w-4 me-1" />
                       <a href={`tel:${member.phone1}`} className="text-blue-600 dark:text-blue-400 hover:underline">
                         {member.phone1}
                       </a>
@@ -480,9 +482,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                 
                 {member.phone2 && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Secondary Phone</dt>
+                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Secondary Phone')}</dt>
                     <dd className="text-sm text-gray-900 dark:text-gray-100 flex items-center">
-                      <Phone className="h-4 w-4 mr-1" />
+                      <Phone className="h-4 w-4 me-1" />
                       <a href={`tel:${member.phone2}`} className="text-blue-600 dark:text-blue-400 hover:underline">
                         {member.phone2}
                       </a>
@@ -496,13 +498,13 @@ export default function MembersShow({ member, contributionData, relationshipType
             {getFullAddress() && (
               <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                  <MapPin className="h-5 w-5 mr-2" />
-                  Address Information
+                  <MapPin className="h-5 w-5 me-2" />
+                  {t('Address Information')}
                 </h2>
                 
                 <div className="text-sm text-gray-900 dark:text-gray-100">
                   <div className="flex items-start">
-                    <MapPin className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+                    <MapPin className="h-4 w-4 me-1 mt-0.5 flex-shrink-0" />
                     <div>
                       {member.address_line_1 && <div>{member.address_line_1}</div>}
                       {member.address_line_2 && <div>{member.address_line_2}</div>}
@@ -520,8 +522,8 @@ export default function MembersShow({ member, contributionData, relationshipType
             {/* Email Contact History */}
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                <Mail className="h-5 w-5 mr-2" />
-                Email Contact History
+                <Mail className="h-5 w-5 me-2" />
+                {t('Email Contact History')}
               </h2>
               
               {member.email_records && member.email_records.length > 0 ? (
@@ -544,23 +546,23 @@ export default function MembersShow({ member, contributionData, relationshipType
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs mt-3">
                         <div>
-                          <span className="font-medium text-gray-500 dark:text-gray-400">From:</span>
-                          <span className="ml-1 text-gray-900 dark:text-gray-100">{email.from}</span>
+                          <span className="font-medium text-gray-500 dark:text-gray-400">{t('From:')}</span>
+                          <span className="ms-1 text-gray-900 dark:text-gray-100">{email.from}</span>
                         </div>
                         <div>
-                          <span className="font-medium text-gray-500 dark:text-gray-400">To:</span>
-                          <span className="ml-1 text-gray-900 dark:text-gray-100">{email.to}</span>
+                          <span className="font-medium text-gray-500 dark:text-gray-400">{t('To:')}</span>
+                          <span className="ms-1 text-gray-900 dark:text-gray-100">{email.to}</span>
                         </div>
                         {email.cc && (
                           <div>
-                            <span className="font-medium text-gray-500 dark:text-gray-400">CC:</span>
-                            <span className="ml-1 text-gray-900 dark:text-gray-100">{email.cc}</span>
+                            <span className="font-medium text-gray-500 dark:text-gray-400">{t('CC:')}</span>
+                            <span className="ms-1 text-gray-900 dark:text-gray-100">{email.cc}</span>
                           </div>
                         )}
                         {email.conversation_id && (
                           <div className="md:col-span-2">
-                            <span className="font-medium text-gray-500 dark:text-gray-400">Conversation ID:</span>
-                            <span className="ml-1 text-gray-900 dark:text-gray-100 font-mono text-xs">{email.conversation_id}</span>
+                            <span className="font-medium text-gray-500 dark:text-gray-400">{t('Conversation ID:')}</span>
+                            <span className="ms-1 text-gray-900 dark:text-gray-100 font-mono text-xs">{email.conversation_id}</span>
                           </div>
                         )}
                       </div>
@@ -570,7 +572,7 @@ export default function MembersShow({ member, contributionData, relationshipType
               ) : (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <Mail className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p>No email contact history recorded.</p>
+                  <p>{t('No email contact history recorded.')}</p>
                 </div>
               )}
             </div>
@@ -579,10 +581,10 @@ export default function MembersShow({ member, contributionData, relationshipType
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
-                  <Users className="h-5 w-5 mr-2" />
-                  Relationships
+                  <Users className="h-5 w-5 me-2" />
+                  {t('Relationships')}
                   {member.related_members && member.related_members.length > 0 && (
-                    <Badge variant="secondary" className="ml-2">
+                    <Badge variant="secondary" className="ms-2">
                       {member.related_members.length}
                     </Badge>
                   )}
@@ -591,13 +593,13 @@ export default function MembersShow({ member, contributionData, relationshipType
                   <Dialog open={showAddFamilyMember} onOpenChange={setShowAddFamilyMember}>
                     <DialogTrigger asChild>
                       <Button size="sm">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Family Member
+                        <Plus className="h-4 w-4 me-2" />
+                        {t('Add Family Member')}
                       </Button>
                     </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle>Add Family Member</DialogTitle>
+                      <DialogTitle>{t('Add Family Member')}</DialogTitle>
                       <DialogDescription>
                         Add a new family member under {member.first_name} {member.last_name}'s account.
                         The address will be automatically inherited from the primary account.
@@ -626,7 +628,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                           {errors.last_name && <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>}
                         </div>
                         <div>
-                          <Label htmlFor="middle_name">Middle Name</Label>
+                          <Label htmlFor="middle_name">{t('Middle Name')}</Label>
                           <Input
                             id="middle_name"
                             value={data.middle_name}
@@ -634,16 +636,16 @@ export default function MembersShow({ member, contributionData, relationshipType
                           />
                         </div>
                         <div>
-                          <Label htmlFor="title">Title</Label>
+                          <Label htmlFor="title">{t('Title')}</Label>
                           <Input
                             id="title"
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
-                            placeholder="Mr., Mrs., Dr., etc."
+                            placeholder={t('Mr., Mrs., Dr., etc.')}
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email">Email</Label>
+                          <Label htmlFor="email">{t('Email')}</Label>
                           <Input
                             id="email"
                             type="email"
@@ -653,7 +655,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
                         <div>
-                          <Label htmlFor="phone1">Phone</Label>
+                          <Label htmlFor="phone1">{t('Phone')}</Label>
                           <Input
                             id="phone1"
                             value={data.phone1}
@@ -661,7 +663,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                           />
                         </div>
                         <div>
-                          <Label htmlFor="dob">Date of Birth</Label>
+                          <Label htmlFor="dob">{t('Date of Birth')}</Label>
                           <Input
                             id="dob"
                             type="date"
@@ -670,15 +672,15 @@ export default function MembersShow({ member, contributionData, relationshipType
                           />
                         </div>
                         <div>
-                          <Label htmlFor="gender">Gender</Label>
+                          <Label htmlFor="gender">{t('Gender')}</Label>
                           <Select value={data.gender} onValueChange={(value) => setData('gender', value)}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select gender" />
+                              <SelectValue placeholder={t('Select gender')} />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="male">{t('Male')}</SelectItem>
+                              <SelectItem value="female">{t('Female')}</SelectItem>
+                              <SelectItem value="other">{t('Other')}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -689,10 +691,10 @@ export default function MembersShow({ member, contributionData, relationshipType
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="member">Member</SelectItem>
-                              <SelectItem value="contact">Contact</SelectItem>
-                              <SelectItem value="prospect">Prospect</SelectItem>
-                              <SelectItem value="former">Former</SelectItem>
+                              <SelectItem value="member">{t('Member')}</SelectItem>
+                              <SelectItem value="contact">{t('Contact')}</SelectItem>
+                              <SelectItem value="prospect">{t('Prospect')}</SelectItem>
+                              <SelectItem value="former">{t('Former')}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -714,10 +716,10 @@ export default function MembersShow({ member, contributionData, relationshipType
                       </div>
                       
                       <div className="border-t pt-4">
-                        <h3 className="text-sm font-medium mb-3">Jewish Details (Optional)</h3>
+                        <h3 className="text-sm font-medium mb-3">{t('Jewish Details (Optional)')}</h3>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="hebrew_name">Hebrew Name</Label>
+                            <Label htmlFor="hebrew_name">{t('Hebrew Name')}</Label>
                             <Input
                               id="hebrew_name"
                               value={data.hebrew_name}
@@ -725,7 +727,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                             />
                           </div>
                           <div>
-                            <Label htmlFor="father_hebrew_name">Father's Hebrew Name</Label>
+                            <Label htmlFor="father_hebrew_name">{t("Father's Hebrew Name")}</Label>
                             <Input
                               id="father_hebrew_name"
                               value={data.father_hebrew_name}
@@ -733,7 +735,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                             />
                           </div>
                           <div>
-                            <Label htmlFor="mother_hebrew_name">Mother's Hebrew Name</Label>
+                            <Label htmlFor="mother_hebrew_name">{t("Mother's Hebrew Name")}</Label>
                             <Input
                               id="mother_hebrew_name"
                               value={data.mother_hebrew_name}
@@ -745,7 +747,7 @@ export default function MembersShow({ member, contributionData, relationshipType
 
                       <DialogFooter>
                         <Button type="button" variant="outline" onClick={() => setShowAddFamilyMember(false)}>
-                          Cancel
+                          {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={processing}>
                           {processing ? 'Adding...' : 'Add Family Member'}
@@ -757,25 +759,25 @@ export default function MembersShow({ member, contributionData, relationshipType
                 <Dialog open={showAddRelationship} onOpenChange={setShowAddRelationship}>
                   <DialogTrigger asChild>
                     <Button size="sm" variant="outline">
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Link Existing Member
+                      <UserPlus className="h-4 w-4 me-2" />
+                      {t('Link Existing Member')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Add Relationship to Existing Member</DialogTitle>
+                      <DialogTitle>{t('Add Relationship to Existing Member')}</DialogTitle>
                       <DialogDescription>
                         Link {member.first_name} {member.last_name} to an existing member.
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleAddRelationship} className="space-y-4">
                       <div>
-                        <Label htmlFor="member_search">Search for Member</Label>
+                        <Label htmlFor="member_search">{t('Search for Member')}</Label>
                         <Input
                           id="member_search"
                           value={memberSearch}
                           onChange={(e) => setMemberSearch(e.target.value)}
-                          placeholder="Type name to search..."
+                          placeholder={t('Type name to search...')}
                         />
                         {memberSearchResults.length > 0 && (
                           <div className="mt-2 border rounded-md max-h-48 overflow-y-auto">
@@ -789,7 +791,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                                   setMemberSearch(`${searchMember.first_name} ${searchMember.last_name}`);
                                   setMemberSearchResults([]);
                                 }}
-                                className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800 border-b last:border-b-0"
+                                className="w-full px-3 py-2 text-start hover:bg-gray-100 dark:hover:bg-gray-800 border-b last:border-b-0"
                               >
                                 <div className="font-medium">{searchMember.first_name} {searchMember.last_name}</div>
                                 {searchMember.email && (
@@ -832,7 +834,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                           setMemberSearch('');
                           relationshipForm.reset();
                         }}>
-                          Cancel
+                          {t('Cancel')}
                         </Button>
                         <Button type="submit" disabled={relationshipForm.processing || !selectedMember}>
                           {relationshipForm.processing ? 'Adding...' : 'Add Relationship'}
@@ -857,11 +859,11 @@ export default function MembersShow({ member, contributionData, relationshipType
                           href={`/admin/members/${relatedMember.id}`}
                           className="flex items-center text-blue-600 dark:text-blue-400 hover:underline"
                         >
-                          <User className="h-4 w-4 mr-2" />
+                          <User className="h-4 w-4 me-2" />
                           <span className="font-medium">
                             {relatedMember.first_name} {relatedMember.last_name}
                           </span>
-                          <Badge variant="outline" className="ml-2 text-xs capitalize">
+                          <Badge variant="outline" className="ms-2 text-xs capitalize">
                             {relatedMember.pivot.relationship_type}
                           </Badge>
                         </Link>
@@ -899,7 +901,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
                             {relatedMember.email && (
                               <div className="flex items-center">
-                                <Mail className="h-3 w-3 mr-1" />
+                                <Mail className="h-3 w-3 me-1" />
                                 <a href={`mailto:${relatedMember.email}`} className="hover:underline">
                                   {relatedMember.email}
                                 </a>
@@ -907,7 +909,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                             )}
                             {relatedMember.phone1 && (
                               <div className="flex items-center">
-                                <Phone className="h-3 w-3 mr-1" />
+                                <Phone className="h-3 w-3 me-1" />
                                 <a href={`tel:${relatedMember.phone1}`} className="hover:underline">
                                   {relatedMember.phone1}
                                 </a>
@@ -915,7 +917,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                             )}
                             {relatedMember.dob && (
                               <div className="flex items-center">
-                                <Calendar className="h-3 w-3 mr-1" />
+                                <Calendar className="h-3 w-3 me-1" />
                                 {formatDate(relatedMember.dob)}
                               </div>
                             )}
@@ -943,8 +945,8 @@ export default function MembersShow({ member, contributionData, relationshipType
               ) : (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                   <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                  <p>No relationships added yet.</p>
-                  <p className="text-sm mt-1">Add family members or link to existing members to create relationships.</p>
+                  <p>{t('No relationships added yet.')}</p>
+                  <p className="text-sm mt-1">{t('Add family members or link to existing members to create relationships.')}</p>
                 </div>
               )}
             </div>
@@ -954,25 +956,25 @@ export default function MembersShow({ member, contributionData, relationshipType
           <div className="space-y-6">
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                Member Status
+                {t('Member Status')}
               </h3>
               
               <div className="space-y-3">
                 <div>
                   <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                    Active Member
+                    {t('Active Member')}
                   </Badge>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Joined</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Joined')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {formatDate(member.created_at)}
                   </dd>
                 </div>
                 
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</dt>
+                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('Last Updated')}</dt>
                   <dd className="text-sm text-gray-900 dark:text-gray-100">
                     {formatDate(member.updated_at)}
                   </dd>
@@ -982,29 +984,29 @@ export default function MembersShow({ member, contributionData, relationshipType
 
             <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                Quick Actions
+                {t('Quick Actions')}
               </h3>
               
               <div className="space-y-2">
                 <Link href={`/admin/members/${member.id}/edit`} className="block">
                   <Button variant="outline" className="w-full justify-start">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Information
+                    <Edit className="h-4 w-4 me-2" />
+                    {t('Edit Information')}
                   </Button>
                 </Link>
                 
                 <a href={`mailto:${member.email}`} className="block">
                   <Button variant="outline" className="w-full justify-start">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Send Email
+                    <Mail className="h-4 w-4 me-2" />
+                    {t('Send Email')}
                   </Button>
                 </a>
                 
                 {member.phone1 && (
                   <a href={`tel:${member.phone1}`} className="block">
                     <Button variant="outline" className="w-full justify-start">
-                      <Phone className="h-4 w-4 mr-2" />
-                      Call Primary
+                      <Phone className="h-4 w-4 me-2" />
+                      {t('Call Primary')}
                     </Button>
                   </a>
                 )}
@@ -1024,8 +1026,8 @@ export default function MembersShow({ member, contributionData, relationshipType
                     variant="outline" 
                     className="w-full justify-start"
                   >
-                    <GraduationCap className="h-4 w-4 mr-2" />
-                    Convert to Student
+                    <GraduationCap className="h-4 w-4 me-2" />
+                    {t('Convert to Student')}
                   </Button>
                 </form>
               </div>
@@ -1036,8 +1038,8 @@ export default function MembersShow({ member, contributionData, relationshipType
         {/* Member Value Contribution Chart */}
         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
           <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-6 flex items-center">
-            <TrendingUp className="h-5 w-5 mr-2" />
-            Member Value Contribution
+            <TrendingUp className="h-5 w-5 me-2" />
+            {t('Member Value Contribution')}
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -1051,9 +1053,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                   {contributionData.boards_count}
                 </span>
               </div>
-              <h3 className="text-sm font-medium text-blue-900 dark:text-blue-200">Boards</h3>
+              <h3 className="text-sm font-medium text-blue-900 dark:text-blue-200">{t('Boards')}</h3>
               <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
-                Board memberships
+                {t('Board memberships')}
               </p>
             </div>
 
@@ -1067,9 +1069,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                   {contributionData.committees_count}
                 </span>
               </div>
-              <h3 className="text-sm font-medium text-purple-900 dark:text-purple-200">Committees</h3>
+              <h3 className="text-sm font-medium text-purple-900 dark:text-purple-200">{t('Committees')}</h3>
               <p className="text-xs text-purple-700 dark:text-purple-400 mt-1">
-                Committee memberships
+                {t('Committee memberships')}
               </p>
             </div>
 
@@ -1083,9 +1085,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                   {formatCurrency(contributionData.dues_total)}
                 </span>
               </div>
-              <h3 className="text-sm font-medium text-green-900 dark:text-green-200">Dues</h3>
+              <h3 className="text-sm font-medium text-green-900 dark:text-green-200">{t('Dues')}</h3>
               <p className="text-xs text-green-700 dark:text-green-400 mt-1">
-                Total membership dues paid
+                {t('Total membership dues paid')}
               </p>
             </div>
 
@@ -1099,9 +1101,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                   {formatCurrency(contributionData.donations_total)}
                 </span>
               </div>
-              <h3 className="text-sm font-medium text-amber-900 dark:text-amber-200">Donations</h3>
+              <h3 className="text-sm font-medium text-amber-900 dark:text-amber-200">{t('Donations')}</h3>
               <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
-                Total donations contributed
+                {t('Total donations contributed')}
               </p>
             </div>
 
@@ -1115,9 +1117,9 @@ export default function MembersShow({ member, contributionData, relationshipType
                   {formatCurrency(contributionData.other_purchases_total)}
                 </span>
               </div>
-              <h3 className="text-sm font-medium text-indigo-900 dark:text-indigo-200">Other Purchases</h3>
+              <h3 className="text-sm font-medium text-indigo-900 dark:text-indigo-200">{t('Other Purchases')}</h3>
               <p className="text-xs text-indigo-700 dark:text-indigo-400 mt-1">
-                Events, products, and services
+                {t('Events, products, and services')}
               </p>
             </div>
           </div>
@@ -1127,13 +1129,13 @@ export default function MembersShow({ member, contributionData, relationshipType
         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
-              <Calendar className="h-5 w-5 mr-2" />
-              Membership Periods
+              <Calendar className="h-5 w-5 me-2" />
+              {t('Membership Periods')}
             </h2>
             <Link href={`/admin/members/${member.id}/membership-periods/create`}>
               <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Period
+                <Plus className="h-4 w-4 me-2" />
+                {t('Add Period')}
               </Button>
             </Link>
           </div>
@@ -1163,11 +1165,11 @@ export default function MembersShow({ member, contributionData, relationshipType
                         
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
-                            <dt className="font-medium text-gray-500 dark:text-gray-400">Start Date</dt>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">{t('Start Date')}</dt>
                             <dd className="text-gray-900 dark:text-gray-100">{formatDate(period.begin_date)}</dd>
                           </div>
                           <div>
-                            <dt className="font-medium text-gray-500 dark:text-gray-400">End Date</dt>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">{t('End Date')}</dt>
                             <dd className="text-gray-900 dark:text-gray-100">
                               {period.end_date ? formatDate(period.end_date) : 'Ongoing'}
                             </dd>
@@ -1176,7 +1178,7 @@ export default function MembersShow({ member, contributionData, relationshipType
 
                         {period.invoice && (
                           <div className="mt-2 flex items-center text-sm text-gray-600 dark:text-gray-400">
-                            <CreditCard className="h-4 w-4 mr-1" />
+                            <CreditCard className="h-4 w-4 me-1" />
                             <Link 
                               href={`/admin/invoices/${period.invoice.id}`}
                               className="text-blue-600 dark:text-blue-400 hover:underline"
@@ -1197,7 +1199,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                         )}
                       </div>
 
-                      <div className="flex gap-2 ml-4">
+                      <div className="flex gap-2 ms-4">
                         <Link href={`/admin/members/${member.id}/membership-periods/${period.id}/edit`}>
                           <Button variant="outline" size="sm">
                             <Edit className="h-4 w-4" />
@@ -1223,11 +1225,11 @@ export default function MembersShow({ member, contributionData, relationshipType
           ) : (
             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               <Calendar className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>No membership periods recorded.</p>
+              <p>{t('No membership periods recorded.')}</p>
               <Link href={`/admin/members/${member.id}/membership-periods/create`} className="inline-block mt-2">
                 <Button variant="outline" size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add First Period
+                  <Plus className="h-4 w-4 me-2" />
+                  {t('Add First Period')}
                 </Button>
               </Link>
             </div>
@@ -1238,8 +1240,8 @@ export default function MembersShow({ member, contributionData, relationshipType
         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
-              <User className="h-5 w-5 mr-2" />
-              Committee Memberships
+              <User className="h-5 w-5 me-2" />
+              {t('Committee Memberships')}
             </h2>
           </div>
 
@@ -1266,7 +1268,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                         
                         {committee.pivot?.title && (
                           <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                            <span className="font-medium">Position:</span> {committee.pivot.title}
+                            <span className="font-medium">{t('Position:')}</span> {committee.pivot.title}
                           </div>
                         )}
 
@@ -1278,13 +1280,13 @@ export default function MembersShow({ member, contributionData, relationshipType
                         
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
-                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term Start</dt>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">{t('Term Start')}</dt>
                             <dd className="text-gray-900 dark:text-gray-100">
                               {committee.pivot?.term_start_date ? formatDate(committee.pivot.term_start_date) : 'N/A'}
                             </dd>
                           </div>
                           <div>
-                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term End</dt>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">{t('Term End')}</dt>
                             <dd className="text-gray-900 dark:text-gray-100">
                               {committee.pivot?.term_end_date ? formatDate(committee.pivot.term_end_date) : 'Ongoing'}
                             </dd>
@@ -1299,7 +1301,7 @@ export default function MembersShow({ member, contributionData, relationshipType
           ) : (
             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               <User className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>No committee memberships recorded.</p>
+              <p>{t('No committee memberships recorded.')}</p>
             </div>
           )}
         </div>
@@ -1308,8 +1310,8 @@ export default function MembersShow({ member, contributionData, relationshipType
         <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 flex items-center">
-              <User className="h-5 w-5 mr-2" />
-              Board Memberships
+              <User className="h-5 w-5 me-2" />
+              {t('Board Memberships')}
             </h2>
           </div>
 
@@ -1336,7 +1338,7 @@ export default function MembersShow({ member, contributionData, relationshipType
                         
                         {board.pivot?.title && (
                           <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                            <span className="font-medium">Position:</span> {board.pivot.title}
+                            <span className="font-medium">{t('Position:')}</span> {board.pivot.title}
                           </div>
                         )}
 
@@ -1348,13 +1350,13 @@ export default function MembersShow({ member, contributionData, relationshipType
                         
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
-                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term Start</dt>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">{t('Term Start')}</dt>
                             <dd className="text-gray-900 dark:text-gray-100">
                               {board.pivot?.term_start_date ? formatDate(board.pivot.term_start_date) : 'N/A'}
                             </dd>
                           </div>
                           <div>
-                            <dt className="font-medium text-gray-500 dark:text-gray-400">Term End</dt>
+                            <dt className="font-medium text-gray-500 dark:text-gray-400">{t('Term End')}</dt>
                             <dd className="text-gray-900 dark:text-gray-100">
                               {board.pivot?.term_end_date ? formatDate(board.pivot.term_end_date) : 'Ongoing'}
                             </dd>
@@ -1369,7 +1371,7 @@ export default function MembersShow({ member, contributionData, relationshipType
           ) : (
             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               <User className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>No board memberships recorded.</p>
+              <p>{t('No board memberships recorded.')}</p>
             </div>
           )}
         </div>

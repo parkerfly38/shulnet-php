@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { FormEvent } from 'react';
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function ProfilePage({ member }: Readonly<Props>) {
+    const { t } = useTranslation();
     // Format date for HTML date input (YYYY-MM-DD)
     const formatDateForInput = (dateValue: string | null): string => {
         if (!dateValue) return '';
@@ -60,31 +62,31 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
     return (
         <AppLayout>
-            <Head title="My Information" />
+            <Head title={t('My Information')} />
 
             <div className="p-4 space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">My Information</h1>
+                        <h1 className="text-2xl font-bold">{t('My Information')}</h1>
                         <p className="text-gray-600 dark:text-gray-400 mt-1">
-                            Update your personal information
+                            {t('Update your personal information')}
                         </p>
                     </div>
                     <Link
                         href="/member/dashboard"
                         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center"
                     >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
-                        Back to Dashboard
+                        {t('Back to Dashboard')}
                     </Link>
                 </div>
 
                 <form onSubmit={handleSubmit} className="bg-white dark:bg-black rounded-lg border p-6 space-y-6">
                     {/* Personal Information */}
                     <div>
-                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">Personal Information</h2>
+                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">{t('Personal Information')}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -136,7 +138,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Date of Birth
+                                    {t('Date of Birth')}
                                 </label>
                                 <input
                                     type="date"
@@ -151,7 +153,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Anniversary Date
+                                    {t('Anniversary Date')}
                                 </label>
                                 <input
                                     type="date"
@@ -168,11 +170,11 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                     {/* Contact Information */}
                     <div>
-                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">Contact Information</h2>
+                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">{t('Contact Information')}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Primary Phone
+                                    {t('Primary Phone')}
                                 </label>
                                 <input
                                     type="tel"
@@ -187,7 +189,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Secondary Phone
+                                    {t('Secondary Phone')}
                                 </label>
                                 <input
                                     type="tel"
@@ -204,11 +206,11 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                     {/* Address Information */}
                     <div>
-                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">Address</h2>
+                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">{t('Address')}</h2>
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Address Line 1
+                                    {t('Address Line 1')}
                                 </label>
                                 <input
                                     type="text"
@@ -223,7 +225,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Address Line 2
+                                    {t('Address Line 2')}
                                 </label>
                                 <input
                                     type="text"
@@ -239,7 +241,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        City
+                                        {t('City')}
                                     </label>
                                     <input
                                         type="text"
@@ -254,7 +256,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        State
+                                        {t('State')}
                                     </label>
                                     <input
                                         type="text"
@@ -270,7 +272,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        ZIP Code
+                                        {t('ZIP Code')}
                                     </label>
                                     <input
                                         type="text"
@@ -288,11 +290,11 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                     {/* Hebrew Information */}
                     <div>
-                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">Hebrew Information</h2>
+                        <h2 className="text-lg font-semibold mb-4 pb-2 border-b">{t('Hebrew Information')}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Hebrew Name
+                                    {t('Hebrew Name')}
                                 </label>
                                 <input
                                     type="text"
@@ -307,7 +309,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Father's Hebrew Name
+                                    {t("Father's Hebrew Name")}
                                 </label>
                                 <input
                                     type="text"
@@ -322,7 +324,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Mother's Hebrew Name
+                                    {t("Mother's Hebrew Name")}
                                 </label>
                                 <input
                                     type="text"
@@ -343,7 +345,7 @@ export default function ProfilePage({ member }: Readonly<Props>) {
                             href="/member/dashboard"
                             className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900"
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Link>
                         <button
                             type="submit"

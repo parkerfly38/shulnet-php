@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import { router, Head } from '@inertiajs/react';
 import { Calendar, Star, Edit, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
@@ -60,6 +61,7 @@ const OBSERVANCE_LABELS = {
 } as const;
 
 export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
+    const { t } = useTranslation();
     const handleDelete = () => {
         if (confirm(`Are you sure you want to delete the yahrzeit record for ${yahrzeit.name}? This action cannot be undone.`)) {
             router.delete(`/admin/yahrzeits/${yahrzeit.id}`, {
@@ -116,8 +118,8 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Yahrzeit Record</h1>
-                            <p className="text-gray-600 dark:text-gray-400">Memorial observance details</p>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Yahrzeit Record')}</h1>
+                            <p className="text-gray-600 dark:text-gray-400">{t('Memorial observance details')}</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -125,15 +127,15 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                             variant="outline"
                             onClick={() => router.get(`/admin/yahrzeits/${yahrzeit.id}/edit`)}
                         >
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit
+                            <Edit className="h-4 w-4 me-2" />
+                            {t('Edit')}
                         </Button>
                         <Button 
                             variant="destructive"
                             onClick={handleDelete}
                         >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            <Trash2 className="h-4 w-4 me-2" />
+                            {t('Delete')}
                         </Button>
                     </div>
                 </div>
@@ -144,18 +146,18 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Star className="h-5 w-5" />
-                                Deceased Information
+                                {t('Deceased Information')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Name</label>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Name')}</label>
                                 <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">{yahrzeit.name}</p>
                             </div>
 
                             {yahrzeit.hebrew_name && (
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Hebrew Name</label>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Hebrew Name')}</label>
                                     <p className="text-lg text-gray-900 dark:text-gray-100">{yahrzeit.hebrew_name}</p>
                                 </div>
                             )}
@@ -166,7 +168,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                Related Family Members
+                                {t('Related Family Members')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -192,7 +194,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                                 </div>
                             ) : (
                                 <p className="text-gray-500 dark:text-gray-400 text-sm">
-                                    No family members associated with this yahrzeit.
+                                    {t('No family members associated with this yahrzeit.')}
                                 </p>
                             )}
                         </CardContent>
@@ -205,19 +207,19 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Calendar className="h-5 w-5" />
-                            Date and Observance Details
+                            {t('Date and Observance Details')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Gregorian Date of Death</label>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Gregorian Date of Death')}</label>
                                     <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{yahrzeit.date_of_death ? formatDate(yahrzeit.date_of_death) : 'Unavailable'}</p>
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Hebrew Date of Death</label>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Hebrew Date of Death')}</label>
                                     <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">
                                         {formatHebrewDate(yahrzeit.hebrew_day_of_death, yahrzeit.hebrew_month_of_death)}
                                     </p>
@@ -225,7 +227,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
 
                                 {yahrzeit.previous_observance_date && (
                                     <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Previous Observance</label>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Previous Observance')}</label>
                                         <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{formatDate(yahrzeit.previous_observance_date)}</p>
                                     </div>
                                 )}
@@ -233,7 +235,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Observance Type</label>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Observance Type')}</label>
                                     <div className="mt-1">
                                         <Badge className={OBSERVANCE_COLORS[yahrzeit.observance_type]}>
                                             {OBSERVANCE_LABELS[yahrzeit.observance_type]}
@@ -243,7 +245,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
 
                                 {yahrzeit.next_observance_date && (
                                     <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Next Observance</label>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Next Observance')}</label>
                                         <p className="text-lg text-gray-900 dark:text-gray-100 mt-1">{formatDate(yahrzeit.next_observance_date)}</p>
                                     </div>
                                 )}
@@ -254,7 +256,7 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                             <>
                                 <Separator className="my-6" />
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Notes</label>
+                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Notes')}</label>
                                     <p className="text-gray-900 dark:text-gray-100 mt-2 whitespace-pre-line">{yahrzeit.notes}</p>
                                 </div>
                             </>
@@ -265,16 +267,16 @@ export default function YahrzeitShow({ yahrzeit }: YahrzeitShowProps) {
                 {/* Record Information */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Record Information</CardTitle>
+                        <CardTitle>{t('Record Information')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="grid gap-4 md:grid-cols-2">
                             <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Created</label>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Created')}</label>
                                 <p className="text-gray-900 dark:text-gray-100 mt-1">{formatDateTime(yahrzeit.created_at)}</p>
                             </div>
                             <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">Last Updated</label>
+                                <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{t('Last Updated')}</label>
                                 <p className="text-gray-900 dark:text-gray-100 mt-1">{formatDateTime(yahrzeit.updated_at)}</p>
                             </div>
                         </div>

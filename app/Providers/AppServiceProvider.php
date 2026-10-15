@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Event;
+use Illuminate\Support\Facades\URL;use App\Models\Event;
 use App\Models\Meeting;
 use App\Observers\EventObserver;
 use App\Observers\MeetingObserver;
@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS globally if running behind your production domain proxy
+        if (config('app.env') !== 'local' || request()->header('X-Forwarded-Proto') === 'https') {
+            URL::forceScheme('https');
+        }
+        
         // Register model observers
         Event::observe(EventObserver::class);
         Meeting::observe(MeetingObserver::class);

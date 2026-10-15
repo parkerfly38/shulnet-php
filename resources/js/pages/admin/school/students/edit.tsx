@@ -15,13 +15,18 @@ export default function StudentsEdit() {
     const pageProps: any = props;
     const item = pageProps.item ?? {};
 
-    const breadcrumbs: BreadcrumbItem[] = [...breadcrumbsBase, { title: `${item.first_name} ${item.last_name}` ?? 'Edit', href: `/admin/school/students/${item.id}/edit` }];
+    const breadcrumbs: BreadcrumbItem[] = [...breadcrumbsBase, { title: `${item.first_name} ${item.last_name}`, href: `/admin/school/students/${item.id}/edit` }];
 
     const form = useForm({
         first_name: item.first_name ?? '',
         middle_name: item.middle_name ?? '',
         last_name: item.last_name ?? '',
         gender: item.gender ?? '',
+        hebrew_name: item.hebrew_name ?? '',
+        pronouns: item.pronouns ?? '',
+        preferred_name: item.preferred_name ?? '',
+        allergies: item.allergies ?? '',
+        special_accomodations: item.special_accomodations ?? '',
         date_of_birth: item.date_of_birth ?? item.dob ?? '',
         email: item.email ?? '',
         is_parent_email: item.is_parent_email ?? false,
@@ -39,7 +44,7 @@ export default function StudentsEdit() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Edit: ${item.first_name} ${item.last_name}` ?? ''} />
+            <Head title={`Edit: ${item.first_name} ${item.last_name}`} />
             <div className="p-4">
                 <h1 className="text-2xl font-bold mb-4">Edit Student</h1>
                 <form onSubmit={submit} className="space-y-3 bg-white dark:bg-black p-4 rounded border">
@@ -55,6 +60,32 @@ export default function StudentsEdit() {
                         <div className="flex-1">
                             <label className="block text-sm font-medium">Last Name</label>
                             <input value={form.data.last_name} onChange={(e) => form.setData('last_name', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Hebrew Name</label>
+                            <input value={form.data.hebrew_name} onChange={(e) => form.setData('hebrew_name', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Pronouns</label>
+                            <input value={form.data.pronouns} onChange={(e) => form.setData('pronouns', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Preferred Name</label>
+                            <input value={form.data.preferred_name} onChange={(e) => form.setData('preferred_name', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Allergies</label>
+                            <input value={form.data.allergies} onChange={(e) => form.setData('allergies', e.target.value)} className="w-full rounded border p-2" />
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex-1">
+                            <label className="block text-sm font-medium">Special Accomodations</label>
+                            <input value={form.data.special_accomodations} onChange={(e) => form.setData('special_accomodations', e.target.value)} className="w-full rounded border p-2" />
                         </div>
                     </div>
                     <div className="flex gap-2">

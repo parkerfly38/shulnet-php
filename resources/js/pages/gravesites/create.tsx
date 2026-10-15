@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React, { useMemo } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function GravesitesCreate({ members }: Readonly<Props>) {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors } = useForm({
         cemetery_name: '',
         section: '',
@@ -54,23 +56,23 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Gravesite" />
+            <Head title={t('Create Gravesite')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create Gravesite</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Add a new cemetery gravesite</p>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Create Gravesite')}</h1>
+                        <p className="text-gray-600 dark:text-gray-400">{t('Add a new cemetery gravesite')}</p>
                     </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Location Information</h2>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{t('Location Information')}</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="cemetery_name">Cemetery Name</Label>
+                                <Label htmlFor="cemetery_name">{t('Cemetery Name')}</Label>
                                 <Input
                                     id="cemetery_name"
                                     value={data.cemetery_name}
@@ -91,7 +93,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="section">Section</Label>
+                                <Label htmlFor="section">{t('Section')}</Label>
                                 <Input
                                     id="section"
                                     value={data.section}
@@ -101,7 +103,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="row">Row</Label>
+                                <Label htmlFor="row">{t('Row')}</Label>
                                 <Input
                                     id="row"
                                     value={data.row}
@@ -111,7 +113,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="block">Block</Label>
+                                <Label htmlFor="block">{t('Block')}</Label>
                                 <Input
                                     id="block"
                                     value={data.block}
@@ -121,7 +123,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="gps_coordinates">GPS Coordinates</Label>
+                                <Label htmlFor="gps_coordinates">{t('GPS Coordinates')}</Label>
                                 <Input
                                     id="gps_coordinates"
                                     placeholder="40.7128,-74.0060"
@@ -134,7 +136,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                     </div>
 
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Site Details</h2>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{t('Site Details')}</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
@@ -144,9 +146,9 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="available">Available</SelectItem>
-                                        <SelectItem value="reserved">Reserved</SelectItem>
-                                        <SelectItem value="occupied">Occupied</SelectItem>
+                                        <SelectItem value="available">{t('Available')}</SelectItem>
+                                        <SelectItem value="reserved">{t('Reserved')}</SelectItem>
+                                        <SelectItem value="occupied">{t('Occupied')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 {errors.status && <p className="text-sm text-red-600 mt-1">{errors.status}</p>}
@@ -159,17 +161,17 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="single">Single</SelectItem>
-                                        <SelectItem value="double">Double</SelectItem>
-                                        <SelectItem value="family">Family</SelectItem>
-                                        <SelectItem value="cremation">Cremation</SelectItem>
+                                        <SelectItem value="single">{t('Single')}</SelectItem>
+                                        <SelectItem value="double">{t('Double')}</SelectItem>
+                                        <SelectItem value="family">{t('Family')}</SelectItem>
+                                        <SelectItem value="cremation">{t('Cremation')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 {errors.gravesite_type && <p className="text-sm text-red-600 mt-1">{errors.gravesite_type}</p>}
                             </div>
 
                             <div>
-                                <Label htmlFor="size_length">Length (feet)</Label>
+                                <Label htmlFor="size_length">{t('Length (feet)')}</Label>
                                 <Input
                                     id="size_length"
                                     type="number"
@@ -181,7 +183,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="size_width">Width (feet)</Label>
+                                <Label htmlFor="size_width">{t('Width (feet)')}</Label>
                                 <Input
                                     id="size_width"
                                     type="number"
@@ -199,24 +201,24 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                                         checked={data.perpetual_care}
                                         onCheckedChange={(checked) => setData('perpetual_care', checked as boolean)}
                                     />
-                                    <Label htmlFor="perpetual_care">Perpetual Care</Label>
+                                    <Label htmlFor="perpetual_care">{t('Perpetual Care')}</Label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Ownership Information</h2>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{t('Ownership Information')}</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="member_id">Owner (Member)</Label>
+                                <Label htmlFor="member_id">{t('Owner (Member)')}</Label>
                                 <Select value={data.member_id ?? ' '} onValueChange={(value) => setData('member_id', value)}>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select member" />
+                                        <SelectValue placeholder={t('Select member')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value=" ">None</SelectItem>
+                                        <SelectItem value=" ">{t('None')}</SelectItem>
                                         {members.map((member) => (
                                             <SelectItem key={member.id} value={member.id.toString()}>
                                                 {member.first_name} {member.last_name}
@@ -228,7 +230,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="purchase_date">Purchase Date</Label>
+                                <Label htmlFor="purchase_date">{t('Purchase Date')}</Label>
                                 <Input
                                     id="purchase_date"
                                     type="date"
@@ -239,7 +241,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="purchase_price">Purchase Price</Label>
+                                <Label htmlFor="purchase_price">{t('Purchase Price')}</Label>
                                 <Input
                                     id="purchase_price"
                                     type="number"
@@ -251,7 +253,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="reserved_date">Reserved Date</Label>
+                                <Label htmlFor="reserved_date">{t('Reserved Date')}</Label>
                                 <Input
                                     id="reserved_date"
                                     type="date"
@@ -262,7 +264,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="reserved_by">Reserved By</Label>
+                                <Label htmlFor="reserved_by">{t('Reserved By')}</Label>
                                 <Input
                                     id="reserved_by"
                                     value={data.reserved_by}
@@ -274,11 +276,11 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                     </div>
 
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Occupancy Information</h2>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{t('Occupancy Information')}</h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <Label htmlFor="deceased_name">Deceased Name</Label>
+                                <Label htmlFor="deceased_name">{t('Deceased Name')}</Label>
                                 <Input
                                     id="deceased_name"
                                     value={data.deceased_name}
@@ -288,7 +290,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="deceased_hebrew_name">Hebrew Name</Label>
+                                <Label htmlFor="deceased_hebrew_name">{t('Hebrew Name')}</Label>
                                 <Input
                                     id="deceased_hebrew_name"
                                     value={data.deceased_hebrew_name}
@@ -298,7 +300,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="date_of_birth">Date of Birth</Label>
+                                <Label htmlFor="date_of_birth">{t('Date of Birth')}</Label>
                                 <Input
                                     id="date_of_birth"
                                     type="date"
@@ -309,7 +311,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="date_of_death">Date of Death</Label>
+                                <Label htmlFor="date_of_death">{t('Date of Death')}</Label>
                                 <Input
                                     id="date_of_death"
                                     type="date"
@@ -320,7 +322,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div>
-                                <Label htmlFor="burial_date">Burial Date</Label>
+                                <Label htmlFor="burial_date">{t('Burial Date')}</Label>
                                 <Input
                                     id="burial_date"
                                     type="date"
@@ -331,7 +333,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                             </div>
 
                             <div className="md:col-span-2">
-                                <Label htmlFor="monument_inscription">Monument Inscription</Label>
+                                <Label htmlFor="monument_inscription">{t('Monument Inscription')}</Label>
                                 <Textarea
                                     id="monument_inscription"
                                     value={data.monument_inscription}
@@ -344,10 +346,10 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
                     </div>
 
                     <div className="bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Additional Notes</h2>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">{t('Additional Notes')}</h2>
                         
                         <div>
-                            <Label htmlFor="notes">Notes</Label>
+                            <Label htmlFor="notes">{t('Notes')}</Label>
                             <Textarea
                                 id="notes"
                                 value={data.notes}
@@ -360,7 +362,7 @@ export default function GravesitesCreate({ members }: Readonly<Props>) {
 
                     <div className="flex justify-end gap-4">
                         <Link href="/admin/gravesites">
-                            <Button type="button" variant="outline">Cancel</Button>
+                            <Button type="button" variant="outline">{t('Cancel')}</Button>
                         </Link>
                         <Button type="submit" disabled={processing}>
                             {processing ? 'Creating...' : 'Create Gravesite'}
