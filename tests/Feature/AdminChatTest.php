@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Ai\Agents\AdminAssistant;
+use App\Ai\Tools\FinancialReport;
 use App\Ai\Tools\SearchMembers;
 use App\Models\Member;
 use App\Models\User;
@@ -41,5 +42,26 @@ class AdminChatTest extends TestCase
 
         $this->actingAs(User::factory()->create(['roles' => ['admin']]));
         $this->assertStringContainsString('Zelda Cohen', (string) $tool->handle(new Request(['search' => 'Zelda'])));
+    }
+
+    public function test_financial_report_tool_validates_input_and_enforces_admin(): void
+    {
+        $tool = app(FinancialReport::class);
+
+        $this->actingAs(User::factory()->create(['roles' => ['member']]));
+        $this->assertStringContainsString('not authorized', (string) $tool->handle(new Request(['report' => 'aging'])));
+
+        $this->actingAs(User::factory()->create(['roles' => ['admin']]));
+        $this->assertStringContainsString('needs valid start_date', (string) $tool->handle(new Request(['report' => 'income_summary'])));
+        $this->assertStringContainsString('Unknown report', (string) $tool->handle(new Request(['report' => 'nope'])));
+
+        $income = json_decode((string) $tool->handle(new Request([
+            'report' => 'income_summary', 'start_date' => '2026-01-01', 'end_date' => '2026-12-31',
+        ])), true);
+        $this->assertArrayHasKey('total_revenue', $income);
+
+        $aging = json_decode((string) $tool->handle(new Request(['report' => 'aging'])), true);
+        $this->assertIsArray($aging);
+        $this->assertArrayNotHasKey('error', $aging);
     }
 }

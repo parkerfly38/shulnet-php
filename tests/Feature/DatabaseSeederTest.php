@@ -28,7 +28,7 @@ class DatabaseSeederTest extends TestCase
         $this->seed(YahrzeitSeeder::class);
         $this->seed(YahrzeitSeeder::class);
 
-        $this->assertCount(42, Yahrzeit::withCount('members')->get());
+        $this->assertCount(39, Yahrzeit::withCount('members')->get());
         $this->assertSame(6, Member::where('email', 'like', '%.yahrzeit-demo@example.test')->count());
         $this->assertSame(4, MemberRelationship::count());
         $this->assertTrue(Yahrzeit::withCount('members')->get()->every(
@@ -57,11 +57,11 @@ class DatabaseSeederTest extends TestCase
             ->where('notes', 'Demo yahrzeit record; linked to the sample family.')
             ->withCount('members')
             ->get();
-        $this->assertCount(42, $seededYahrzeits);
+        $this->assertCount(39, $seededYahrzeits);
 
         foreach ([
-            'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar',
-            'Adar I', 'Adar II', 'Nisan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul',
+            'Tishrei', 'Cheshvan', 'Kislev', 'Tevet', 'Shevat', 'Adar'
+            , 'Adar II', 'Nisan', 'Iyar', 'Sivan', 'Tammuz', 'Av', 'Elul',
         ] as $month) {
             $this->assertSame(3, $seededYahrzeits->where('hebrew_month_of_death', $month)->count());
         }
