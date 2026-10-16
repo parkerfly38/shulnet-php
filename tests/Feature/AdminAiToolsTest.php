@@ -8,7 +8,12 @@ use App\Ai\Tools\MemberDetail;
 use App\Models\EventRSVP;
 use App\Ai\Tools\SearchEvents;
 use App\Ai\Tools\SearchInvoices;
+use App\Ai\Tools\SearchStudents;
 use App\Ai\Tools\SearchYahrzeits;
+use App\Ai\Tools\StudentDetail;
+use App\Models\Attendance;
+use App\Models\ClassDefinition;
+use App\Models\Student;
 use App\Ai\Tools\UpcomingYahrzeits;
 use App\Models\Calendar;
 use App\Models\Event;
@@ -224,5 +229,49 @@ class AdminAiToolsTest extends TestCase
 
         $this->actingAs(User::factory()->create(['roles' => ['member']]));
         $this->assertArrayHasKey('error', $this->runTool(app(EventRsvps::class), ['event_id' => 1]));
+    }
+
+    public function test_search_students_matches_by_name(): void
+    {
+        $this->actingAs(User::factory()->create(['roles' => ['admin']]));
+        Student::create(['first_name' => 'Noam', 'last_name' => 'Katz']);
+        Student::create(['first_name' => 'Tamar', 'last_name' => 'Green']);
+
+        $result = $this->runTool(app(SearchStudents::class), ['search' => 'Katz']);
+
+        $this->assertSame(1, $result['total']);
+        $this->assertSame('Noam Katz', $result['students'][0]['name']);
+    }
+
+    public function test_student_detail_summarizes_attendance(): void
+    {
+        $this->actingAs(User::factory()->create(['roles' => ['admin']]));
+        $student = Student::create(['first_name' => 'Noam', 'last_name' => 'Katz', 'allergies' => 'peanuts']);
+        $class = ClassDefinition::create(['name' => 'Hebrew 3']);
+        foreach (['present', 'present', 'absent'] as $i => $status) {
+            Attendance::create([
+                'student_id' => $student->id,
+                'class_definition_id' => $class->id,
+                'attendance_date' => now()->subDays($i)->toDateString(),
+                'status' => $status,
+            ]);
+        }
+
+        $result = $this->runTool(app(StudentDetail::class), ['student_id' => $student->id]);
+
+        $this->assertSame('peanuts', $result['allergies']);
+        $this->assertSame(2, $result['attendance']['present']);
+        $this->assertSame(1, $result['attendance']['absent']);
+        $this->assertCount(1, $result['recent_absences_and_tardies']);
+    }
+
+    public function test_student_tools_reject_non_admins_and_unknown_ids(): void
+    {
+        $this->actingAs(User::factory()->create(['roles' => ['admin']]));
+        $this->assertArrayHasKey('error', $this->runTool(app(StudentDetail::class), ['student_id' => 999]));
+
+        $this->actingAs(User::factory()->create(['roles' => ['member']]));
+        $this->assertArrayHasKey('error', $this->runTool(app(SearchStudents::class)));
+        $this->assertArrayHasKey('error', $this->runTool(app(StudentDetail::class), ['student_id' => 1]));
     }
 }

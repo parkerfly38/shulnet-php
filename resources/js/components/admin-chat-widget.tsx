@@ -81,7 +81,7 @@ export function AdminChatWidget() {
             <div className="flex-1 space-y-2 overflow-y-auto p-3 text-sm">
                 {messages.length === 0 && (
                     <p className="text-muted-foreground">
-                        Ask about members, yahrzeits, events, invoices or finances.
+                        Ask about members, yahrzeits, events, students, invoices or finances.
                     </p>
                 )}
                 {messages.map((m, i) => (
