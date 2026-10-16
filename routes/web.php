@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\AdminChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoleSwitchController;
 use Illuminate\Support\Facades\Route;
@@ -31,8 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('switch-role', [RoleSwitchController::class, 'switch'])->name('role.switch');
     Route::get('available-roles', [RoleSwitchController::class, 'availableRoles'])->name('role.available');
     
-    // Chat page
-    Route::get('chat', [ChatController::class, 'index'])->name('chat');
+    // Admin AI assistant
+    Route::post('admin/chat', [AdminChatController::class, 'store'])->middleware('role:admin')->name('admin.chat');
 });
 
 // Include modular route files

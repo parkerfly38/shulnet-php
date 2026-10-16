@@ -3,8 +3,7 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { BannerDisplay } from '@/components/banner-display';
-import { AdminChatWidget } from '@/components/admin-chat-widget';
-import { type BreadcrumbItem, type Banner, type SharedData } from '@/types';
+import { type BreadcrumbItem, type Banner } from '@/types';
 import { usePage, router } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 import axios from 'axios';
@@ -40,8 +39,6 @@ export default function AppSidebarLayout({
             console.error('Failed to mark banner as clicked:', error);
         }
     };
-    const { auth } = usePage<SharedData>().props;
-    const isAdmin = Array.isArray(auth?.user?.roles) && auth.user.roles.includes('admin');
 
     return (
         <AppShell variant="sidebar">
@@ -60,7 +57,6 @@ export default function AppSidebarLayout({
                 )}
                 {children}
             </AppContent>
-            {isAdmin && <AdminChatWidget />}
         </AppShell>
     );
 }
