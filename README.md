@@ -794,8 +794,9 @@ The image runs PHP-FPM, nginx, the queue worker and the scheduler under supervis
 
 1. Create a feature branch
 2. Make your changes
-3. Run tests and linting
-4. Submit a pull request
+3. Make sure to create appropriate tests
+4. Run tests and linting
+5. Submit a pull request against the current, in-progress version branch
 
 ## License
 
