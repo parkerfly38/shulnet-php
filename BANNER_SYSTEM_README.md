@@ -78,9 +78,9 @@ The following routes are automatically registered:
 - `POST /api/member/banners/{banner}/clicked` - Track banner click
 
 **Admin API Routes (Admin Only):**
-- `GET /api/banners/push-notifications` - Get banners pending push notification
-- `POST /api/banners/{banner}/push-notification-sent` - Mark push notification as sent
-- `GET /api/banners/{banner}/statistics` - Get banner statistics
+- `GET /api/admin/banners/push-notifications` - Get banners pending push notification
+- `POST /api/admin/banners/{banner}/push-notification-sent` - Mark push notification as sent
+- `GET /api/admin/banners/{banner}/statistics` - Get banner statistics
 
 **Public API Route (API Key Required):**
 - `GET /api/public/banners` - Get active banners (for WordPress plugin)
@@ -164,7 +164,7 @@ View banner performance:
 
 Access via API:
 ```bash
-GET /api/banners/{banner}/statistics
+GET /api/admin/banners/{banner}/statistics
 Authorization: Bearer {your_token}
 ```
 
@@ -329,42 +329,23 @@ Banners can optionally be sent as push notifications to mobile apps.
 ### Setup
 
 1. Enable "Send as Push Notification" when creating a banner
-2. Implement a scheduled job to check for pending push notifications:
+2. Configure Firebase (see [FIREBASE_IMPLEMENTATION.md](FIREBASE_IMPLEMENTATION.md)) and make sure the scheduler is running (see "Scheduled Jobs" in the [README](README.md#scheduled-jobs)).
 
-```php
-// In app/Console/Kernel.php
-protected function schedule(Schedule $schedule)
-{
-    $schedule->call(function () {
-        // Get pending push notification banners
-        $banners = Banner::active()
-            ->where('send_as_push_notification', true)
-            ->whereNull('push_notification_sent_at')
-            ->where('start_date', '<=', now())
-            ->get();
-        
-        foreach ($banners as $banner) {
-            // Send push notification using your preferred service
-            // (Firebase, OneSignal, etc.)
-            
-            // Mark as sent
-            $banner->update([
-                'push_notification_sent_at' => now()
-            ]);
-        }
-    })->everyMinute();
-}
+The `banners:send-push-notifications` command (`app/Console/Commands/SendBannerPushNotifications.php`) is scheduled every 15 minutes in `routes/console.php`. It finds active banners with "Send as Push Notification" enabled that have started and have not been sent, sends them through Firebase Cloud Messaging to the devices of the banner's audience, and records `push_notification_sent_at`. To send immediately:
+
+```bash
+php artisan banners:send-push-notifications
 ```
 
 ### API Endpoints
 
 ```http
-GET /api/banners/push-notifications
+GET /api/admin/banners/push-notifications
 Authorization: Bearer {admin_token}
 ```
 
 ```http
-POST /api/banners/{banner}/push-notification-sent
+POST /api/admin/banners/{banner}/push-notification-sent
 Authorization: Bearer {admin_token}
 ```
 

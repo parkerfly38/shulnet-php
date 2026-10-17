@@ -18,3 +18,8 @@ Schedule::command('membership:generate-dues')
     ->at('01:00')
     ->withoutOverlapping()
     ->runInBackground();
+
+Schedule::command('ai:prune-conversations --days=30')
+    ->daily()
+    ->at('02:00')
+    ->withoutOverlapping();

@@ -15,12 +15,27 @@ export function AdminChatWidget() {
     const { auth } = usePage<SharedData>().props;
     const isAdmin = Array.isArray(auth?.user?.roles) && auth.user.roles.includes('admin');
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(() => sessionStorage.getItem('admin-chat-open') === '1');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [conversationId, setConversationId] = useState<string | null>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        sessionStorage.setItem('admin-chat-open', isOpen ? '1' : '0');
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (!isAdmin) return;
+        axios
+            .get('/admin/chat')
+            .then(({ data }) => {
+                setConversationId(data.conversation_id);
+                setMessages((prev) => (prev.length ? prev : data.messages));
+            })
+            .catch(() => {});
+    }, [isAdmin]);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -73,9 +88,23 @@ export function AdminChatWidget() {
         <div className="fixed bottom-4 end-4 z-50 flex h-[520px] w-96 flex-col rounded-lg border border-border bg-background shadow-2xl">
             <div className="flex items-center justify-between border-b border-border px-3 py-2">
                 <h3 className="text-sm font-semibold">Assistant</h3>
+                <div className="flex items-center gap-1">
+                    <Button
+                        onClick={() => {
+                            setMessages([]);
+                            setConversationId(null);
+                        }}
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-xs"
+                        disabled={loading || messages.length === 0}
+                    >
+                        New chat
+                    </Button>
                 <Button onClick={() => setIsOpen(false)} variant="ghost" size="icon" className="h-6 w-6" title="Close">
                     <X className="h-4 w-4" />
                 </Button>
+                </div>
             </div>
 
             <div className="flex-1 space-y-2 overflow-y-auto p-3 text-sm">

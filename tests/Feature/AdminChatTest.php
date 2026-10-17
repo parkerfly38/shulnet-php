@@ -64,4 +64,48 @@ class AdminChatTest extends TestCase
         $this->assertIsArray($aging);
         $this->assertArrayNotHasKey('error', $aging);
     }
+
+    public function test_chat_history_is_restored_for_the_same_admin_only(): void
+    {
+        AdminAssistant::fake(['Hello admin']);
+        $admin = User::factory()->create(['roles' => ['admin']]);
+        $other = User::factory()->create(['roles' => ['admin']]);
+
+        $this->actingAs($admin)->postJson('/admin/chat', ['message' => 'hi'])->assertOk();
+
+        $this->actingAs($admin)->getJson('/admin/chat')
+            ->assertOk()
+            ->assertJsonPath('messages.0.role', 'user')
+            ->assertJsonPath('messages.0.content', 'hi')
+            ->assertJsonPath('messages.1.content', 'Hello admin');
+
+        $this->actingAs($other)->getJson('/admin/chat')
+            ->assertOk()
+            ->assertJsonPath('conversation_id', null)
+            ->assertJsonPath('messages', []);
+    }
+
+    public function test_non_admins_cannot_read_chat_history(): void
+    {
+        $this->actingAs(User::factory()->create(['roles' => ['member']]))->getJson('/admin/chat')->assertForbidden();
+    }
+
+    public function test_prune_command_removes_only_conversations_older_than_30_days(): void
+    {
+        AdminAssistant::fake(['Hello admin']);
+        $admin = User::factory()->create(['roles' => ['admin']]);
+
+        $this->actingAs($admin)->postJson('/admin/chat', ['message' => 'old'])->assertOk();
+        \DB::table('agent_conversations')->update(['updated_at' => now()->subDays(31)]);
+
+        $this->getJson('/admin/chat')->assertJsonPath('messages', []);
+
+        $this->actingAs($admin)->postJson('/admin/chat', ['message' => 'new'])->assertOk();
+        $this->assertSame(2, \DB::table('agent_conversations')->count());
+
+        $this->artisan('ai:prune-conversations')->assertSuccessful();
+
+        $this->assertSame(1, \DB::table('agent_conversations')->count());
+        $this->assertSame(2, \DB::table('agent_conversation_messages')->count());
+    }
 }

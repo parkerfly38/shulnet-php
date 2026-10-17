@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Templates - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+            <li><a href="account-settings.html">Account Settings</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+            <li><a href="rides.html">Ride Sharing</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees &amp; Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Ritual &amp; Cemetery</div>
+          <ul>
+            <li><a href="gabbai.html">Gabbai Dashboard</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="membership-billing.html">Membership Billing</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+            <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+            <li><a href="custom-forms.html">Custom Forms</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="ai-assistant.html">AI Assistant</a></li>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html">Notes &amp; Tasks</a></li>
+            <li><a href="pdf-templates.html" class="active">PDF Templates</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>PDF Templates</h1>
+
+      <p class="lead">PDF Templates turn reusable documents, such as yahrzeit donation acknowledgments, honor letters or certificates, into fill-in-the-blank forms. Enter the values and ShulNET produces a finished PDF.</p>
+
+      <h2>Accessing PDF Templates</h2>
+
+      <p>Go to <code>/admin/pdf-templates</code>. The list can be filtered by category and status and searched by name.</p>
+
+      <h2>Creating a Template</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Basic information</h4>
+          <p>Click <strong>Create Template</strong> and enter a name (for example "Yahrzeit Donation Letter"), a slug (for example <code>yahrzeit-donation-letter</code>), a description and a category: <strong>General</strong>, <strong>Letter</strong>, <strong>Invoice</strong> or <strong>Form</strong>.</p>
+        </li>
+        <li>
+          <h4>Define the fields</h4>
+          <p>Under <strong>Available Fields</strong>, click <strong>Add Field</strong> for each value the document needs. Give each field a label (for example "Deceased Name"), a field name (for example <code>deceased_name</code>), a type (<strong>Text</strong>, <strong>Text Area</strong>, <strong>Number</strong> or <strong>Date</strong>), an optional default value, and whether it is required.</p>
+        </li>
+        <li>
+          <h4>Write the HTML content</h4>
+          <p>Write the document in HTML. Insert a field by placing its name in double curly braces.</p>
+          <div class="code-block">Dear {{ donor_name }},&lt;br&gt;
+Thank you for your gift in memory of {{ deceased_name }}.</div>
+        </li>
+        <li>
+          <h4>Save</h4>
+          <p>Click <strong>Create PDF Template</strong>.</p>
+        </li>
+      </ol>
+
+      <h2>Generating a PDF</h2>
+
+      <ol>
+        <li>Open the template from the list</li>
+        <li>Under <strong>Fill Template Fields</strong>, enter a value for each field</li>
+        <li>Click <strong>Preview</strong> to check the result, then <strong>Generate PDF</strong> to download it</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>Letterhead:</strong> The PDF header logo and footer text are set by an administrator in <strong>General Settings</strong>.
+      </div>
+
+      <h2>Related Documentation</h2>
+      <ul>
+        <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+        <li><a href="invoices.html">Managing Invoices</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

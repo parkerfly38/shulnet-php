@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ride Sharing - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+            <li><a href="account-settings.html">Account Settings</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+            <li><a href="rides.html" class="active">Ride Sharing</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees &amp; Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Ritual &amp; Cemetery</div>
+          <ul>
+            <li><a href="gabbai.html">Gabbai Dashboard</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="membership-billing.html">Membership Billing</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+            <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+            <li><a href="custom-forms.html">Custom Forms</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="ai-assistant.html">AI Assistant</a></li>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html">Notes &amp; Tasks</a></li>
+            <li><a href="pdf-templates.html">PDF Templates</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Ride Sharing</h1>
+
+      <p class="lead">Ride Sharing helps members who need transportation get to services. Members post a ride request, and fellow members volunteer to drive.</p>
+
+      <h2>Accessing Ride Sharing</h2>
+
+      <p>Members open <strong>Ride Sharing</strong> from the member menu (<code>/member/rides</code>). The page lists all upcoming ride requests, soonest first. Requests disappear from the list once the service time has passed.</p>
+
+      <h2>Requesting a Ride</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Open the request form</h4>
+          <p>Click <strong>Post ride request</strong>.</p>
+        </li>
+        <li>
+          <h4>Enter the details</h4>
+          <ul>
+            <li><strong>Service date and time</strong> (must be in the future)</li>
+            <li><strong>Pickup location</strong></li>
+            <li><strong>Number of passengers</strong> (1 to 8)</li>
+            <li><strong>Notes</strong> (optional), such as mobility needs or a preferred entrance</li>
+          </ul>
+        </li>
+        <li>
+          <h4>Post it</h4>
+          <p>Your request appears in the list marked <span class="badge badge-primary">Your request</span>. When someone volunteers, their name is shown on it.</p>
+        </li>
+      </ol>
+
+      <h2>Volunteering to Drive</h2>
+
+      <ol>
+        <li>Find an open request in the list</li>
+        <li>Click <strong>Volunteer to drive</strong></li>
+        <li>The request is marked <span class="badge badge-success">You are driving</span>, and you can now see the requester's email and phone number so you can coordinate pickup</li>
+      </ol>
+
+      <div class="alert alert-info">
+        <strong>One driver per request:</strong> If someone else volunteers first, you will see "This ride request is no longer available." You cannot volunteer for your own request.
+      </div>
+
+      <h2>For Administrators</h2>
+
+      <ul>
+        <li>Administrators can post a ride request on behalf of any member by searching for the member in the request form. This is useful when a member calls the office.</li>
+        <li>Administrators can see contact details for every request, so the office can help match drivers.</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Privacy:</strong> A requester's contact information is shown only to their driver and to administrators. Other members see the requester's name, time, pickup location and passenger count.
+      </div>
+
+      <h2>Related Documentation</h2>
+      <ul>
+        <li><a href="member-portal.html">Member Portal</a></li>
+        <li><a href="events.html">Managing Events</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

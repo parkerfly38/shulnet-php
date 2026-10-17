@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('available-roles', [RoleSwitchController::class, 'availableRoles'])->name('role.available');
     
     // Admin AI assistant
+    Route::get('admin/chat', [AdminChatController::class, 'show'])->middleware('role:admin')->name('admin.chat.show');
     Route::post('admin/chat', [AdminChatController::class, 'store'])->middleware('role:admin')->name('admin.chat');
 });
 
