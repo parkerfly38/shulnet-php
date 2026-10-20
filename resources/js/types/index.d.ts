@@ -112,6 +112,7 @@ export interface RelatedMember extends Omit<Member, 'related_members' | 'related
 export interface MembershipPeriod {
     id: number;
     member_id: number;
+    membership_tier_id?: number | null;
     invoice_id?: number;
     begin_date: string;
     end_date?: string;

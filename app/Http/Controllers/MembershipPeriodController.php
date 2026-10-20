@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\Member;
 use App\Models\MembershipPeriod;
+use App\Models\MembershipTier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,6 +24,7 @@ class MembershipPeriodController extends Controller
         return Inertia::render('members/membership-periods/create', [
             'member' => $member->only(['id', 'first_name', 'last_name', 'email']),
             'invoices' => $invoices,
+            'tiers' => MembershipTier::active()->ordered()->get(['id', 'name', 'price', 'billing_period']),
         ]);
     }
 
@@ -35,6 +37,7 @@ class MembershipPeriodController extends Controller
             'begin_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:begin_date',
             'membership_type' => 'nullable|string|max:255',
+            'membership_tier_id' => 'nullable|exists:membership_tiers,id',
             'invoice_id' => 'nullable|exists:invoices,id',
             'notes' => 'nullable|string',
         ]);
@@ -72,6 +75,7 @@ class MembershipPeriodController extends Controller
             'member' => $member->only(['id', 'first_name', 'last_name', 'email']),
             'membershipPeriod' => $membershipPeriod,
             'invoices' => $invoices,
+            'tiers' => MembershipTier::active()->ordered()->get(['id', 'name', 'price', 'billing_period']),
         ]);
     }
 
@@ -89,6 +93,7 @@ class MembershipPeriodController extends Controller
             'begin_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:begin_date',
             'membership_type' => 'nullable|string|max:255',
+            'membership_tier_id' => 'nullable|exists:membership_tiers,id',
             'invoice_id' => 'nullable|exists:invoices,id',
             'notes' => 'nullable|string',
         ]);

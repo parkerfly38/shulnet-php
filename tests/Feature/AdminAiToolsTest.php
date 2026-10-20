@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Ai\Tools\EventRsvps;
+use App\Ai\Tools\FinancialReport;
 use App\Ai\Tools\HebrewCalendar;
 use App\Ai\Tools\MemberDetail;
 use App\Models\EventRSVP;
@@ -273,5 +274,39 @@ class AdminAiToolsTest extends TestCase
         $this->actingAs(User::factory()->create(['roles' => ['member']]));
         $this->assertArrayHasKey('error', $this->runTool(app(SearchStudents::class)));
         $this->assertArrayHasKey('error', $this->runTool(app(StudentDetail::class), ['student_id' => 1]));
+    }
+
+    public function test_financial_report_tool_validates_input_and_returns_results(): void
+    {
+        $this->actingAs(User::factory()->create(['roles' => ['admin']]));
+        $tool = app(FinancialReport::class);
+
+        $this->assertArrayHasKey('error', $this->runTool($tool, ['report' => 'nonsense']));
+        $this->assertArrayHasKey('error', $this->runTool($tool, ['report' => 'income_summary']));
+        $this->assertArrayHasKey('error', $this->runTool($tool, ['report' => 'income_summary', 'start_date' => '2026-02-30', 'end_date' => '2026-03-01']));
+        $this->assertArrayHasKey('error', $this->runTool($tool, ['report' => 'income_summary', 'start_date' => '2026-05-01', 'end_date' => '2026-01-01']));
+
+        $ok = $this->runTool($tool, ['report' => 'income_summary', 'start_date' => '2026-01-01', 'end_date' => '2026-12-31']);
+        $this->assertArrayNotHasKey('error', $ok);
+        $this->assertArrayHasKey('total_revenue', $ok);
+
+        $this->assertArrayHasKey('aging_buckets', $this->runTool($tool, ['report' => 'aging']));
+        $this->assertArrayHasKey('collection_rate', $this->runTool($tool, ['report' => 'tuition_revenue', 'start_date' => 'bad']));
+    }
+
+    public function test_financial_report_tool_truncates_long_lists_and_rejects_non_admins(): void
+    {
+        $this->actingAs(User::factory()->create(['roles' => ['admin']]));
+        foreach (range(1, 30) as $i) {
+            Invoice::factory()->create(['status' => 'open', 'total' => 100, 'amount_paid' => 0]);
+        }
+
+        $result = $this->runTool(app(FinancialReport::class), ['report' => 'outstanding_balances']);
+
+        $this->assertCount(25, $result['balances']);
+        $this->assertSame('Showing 25 of 30', $result['balances_truncated']);
+
+        $this->actingAs(User::factory()->create(['roles' => ['member']]));
+        $this->assertArrayHasKey('error', $this->runTool(app(FinancialReport::class), ['report' => 'aging']));
     }
 }
