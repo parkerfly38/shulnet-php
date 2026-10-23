@@ -204,7 +204,7 @@ class DemoExperienceSeeder extends Seeder
                 'is_dismissible' => true,
                 'show_on_login' => true,
                 'show_on_dashboard' => true,
-                'action_url' => '/events',
+                'action_url' => '/member/events',
                 'action_text' => 'View events',
                 'created_by' => $admin->id,
             ]

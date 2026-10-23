@@ -328,12 +328,6 @@ export function AppSidebar() {
     const activeSectionId = visibleSections.find((section) =>
         section.items.some((item) => isNavItemActive(page.url, item.href)),
     )?.id;
-    const orderedSections = [...visibleSections].sort(
-        (left, right) =>
-            Number(right.id === activeSectionId) -
-            Number(left.id === activeSectionId),
-    );
-
     const handleSearchClick = () => {
         window.dispatchEvent(new CustomEvent('open-search'));
     };
@@ -371,7 +365,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                {orderedSections.map((section) => (
+                {visibleSections.map((section) => (
                     <NavMain
                         key={`${activeSectionId ?? 'none'}-${section.id}`}
                         items={section.items}

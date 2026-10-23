@@ -15,6 +15,7 @@ use App\Models\Payment;
 use App\Models\Report;
 use App\Models\RideRequest;
 use App\Models\Yahrzeit;
+use Database\Seeders\MemberTimelineSeeder;
 use Database\Seeders\YahrzeitSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -34,6 +35,34 @@ class DatabaseSeederTest extends TestCase
         $this->assertTrue(Yahrzeit::withCount('members')->get()->every(
             fn (Yahrzeit $yahrzeit) => $yahrzeit->members_count === 3
         ));
+    }
+
+    public function test_member_join_dates_are_spread_over_the_past_twelve_months(): void
+    {
+        $this->seed();
+
+        $dates = Member::orderBy('created_at')->pluck('created_at');
+
+        $this->assertTrue($dates->first()->gte(now()->subMonths(12)->startOfDay()));
+        $this->assertTrue($dates->last()->lt(now()));
+        $this->assertGreaterThanOrEqual(10, $dates->groupBy(fn ($d) => $d->format('Y-m'))->count());
+        $this->assertSame(Member::count(), Member::whereColumn('created_at', 'updated_at')->count());
+    }
+
+    public function test_default_seed_includes_contacts_prospects_and_former_members(): void
+    {
+        $this->seed();
+
+        foreach (['contact', 'prospect', 'former'] as $type) {
+            $this->assertGreaterThan(0, Member::where('member_type', $type)->count(), $type);
+        }
+    }
+
+    public function test_member_timeline_seeder_does_nothing_without_members(): void
+    {
+        $this->seed(MemberTimelineSeeder::class);
+
+        $this->assertSame(0, Member::count());
     }
 
     public function test_default_seed_creates_connected_demo_data_for_core_workflows(): void

@@ -92,6 +92,7 @@ class DashboardController extends Controller
             DB::raw('COUNT(*) as count')
         )
             ->whereYear('created_at', $currentYear)
+            ->where('member_type', 'member')
             ->groupBy('month')
             ->orderBy('month')
             ->get()
@@ -340,9 +341,10 @@ class DashboardController extends Controller
             ->values()
             ->take(10);
 
-        // Get members who joined in the last 12 months
+        // Get members who joined in the last 60 days
         $recentMembers = Member::select('id', 'first_name', 'last_name', 'email', 'created_at')
-            ->where('created_at', '>=', now()->subMonths(12))
+            ->where('member_type', 'member')
+            ->where('created_at', '>=', now()->subDays(60))
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get()
@@ -353,7 +355,8 @@ class DashboardController extends Controller
                     'last_name' => $member->last_name,
                     'email' => $member->email,
                     'created_at' => $member->created_at->format('Y-m-d'),
-                    'months_ago' => $member->created_at->diffInMonths(now()),
+                    'months_ago' => (int) round($member->created_at->diffInMonths(now())),
+                    'days_ago' => (int) floor($member->created_at->diffInDays(now())),
                 ];
             });
 
@@ -649,7 +652,7 @@ class DashboardController extends Controller
 
             DB::commit();
 
-            return redirect()->route('dashboard')->with('success', count($students).' student(s) onboarded successfully!');
+            return back()->with('success', count($students).' student(s) onboarded successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
 

@@ -69,6 +69,11 @@ class DatabaseSeeder extends Seeder
             MemberPortalTestSeeder::class,
             DemoExperienceSeeder::class,
             MembershipBillingSeeder::class,
+
+            MemberTypeSeeder::class,
+
+            // Must run last: spreads member join dates over the past 12 months
+            MemberTimelineSeeder::class,
         ]);
     }
 }
