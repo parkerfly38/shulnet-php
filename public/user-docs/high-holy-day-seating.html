@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>High Holy Day Seating - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+            <li><a href="account-settings.html">Account Settings</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+            <li><a href="rides.html">Ride Sharing</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees &amp; Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Ritual &amp; Cemetery</div>
+          <ul>
+            <li><a href="gabbai.html">Gabbai Dashboard</a></li>
+            <li><a href="high-holy-day-seating.html" class="active">High Holy Day Seating</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="membership-billing.html">Membership Billing</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+            <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+            <li><a href="custom-forms.html">Custom Forms</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="ai-assistant.html">AI Assistant</a></li>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html">Notes &amp; Tasks</a></li>
+            <li><a href="pdf-templates.html">PDF Templates</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>High Holy Day Seating</h1>
+
+      <p class="lead">Sell High Holy Day seats the way an airline sells seats. Upload a floor plan of your sanctuary, place the seats on it, and then assign and invoice seats from the office or let members choose their own seats online.</p>
+
+      <div class="alert alert-info">
+        <strong>Who can do what:</strong> Administrators set up seating charts and seasons, and can assign, invoice and release any seat. Members can choose seats, pay, and confirm last year's seats in the member portal when the season is open to them.
+      </div>
+
+      <h2>How It Fits Together</h2>
+
+      <table>
+        <thead>
+          <tr><th>Term</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Seating chart</strong></td><td>A floor plan of the sanctuary with seats placed on it. You set it up once and reuse it every year.</td></tr>
+          <tr><td><strong>Section</strong></td><td>A color-coded group of seats, such as Front, Main Floor or Balcony.</td></tr>
+          <tr><td><strong>Seat</strong></td><td>A labelled seat (for example <code>A12</code>) with a member price and a non-member price.</td></tr>
+          <tr><td><strong>Season</strong></td><td>One year's High Holy Days, such as "High Holy Days 5787". A seat purchase covers every service in the season.</td></tr>
+          <tr><td><strong>Renewal</strong></td><td>Last year's seat, held for the same family until a deadline so they get first claim on it.</td></tr>
+        </tbody>
+      </table>
+
+      <p>Administrators open <strong>High Holy Day Seating</strong> from the Shul Administration menu (<code>/admin/seating-seasons</code>). Seating charts are under <strong>Seating Charts</strong> on that page.</p>
+
+      <h2>Setting Up a Seating Chart</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Create the chart</h4>
+          <p>Go to <strong>Seating Charts</strong> and click <strong>New Chart</strong>. Give it a name (for example "Main Sanctuary") and upload a floor plan image in PNG, JPG or WebP format, up to 10 MB. A scan or photo of an architect's plan works well. Convert PDF plans to an image first. You can also start on a blank grid and add the image later.</p>
+        </li>
+        <li>
+          <h4>Add your sections</h4>
+          <p>In the editor, click <strong>Add</strong> under <strong>Sections</strong> and name each area of the sanctuary. Pick a color for each one. Members see seats in their section's color.</p>
+        </li>
+        <li>
+          <h4>Set the defaults for new seats</h4>
+          <p>Before placing seats, choose the section, the row letter, the first seat number and the member and non-member prices under <strong>New Seat Defaults</strong>.</p>
+        </li>
+        <li>
+          <h4>Place the seats</h4>
+          <p>Use <strong>Add Row</strong> to click where a row begins and where it ends. The number of seats in <strong>Per row</strong> is spaced evenly between those points and labelled A1, A2, A3 and so on. The row letter then moves on to B for the next row. Use <strong>Add Seat</strong> to place single seats.</p>
+        </li>
+        <li>
+          <h4>Adjust and save</h4>
+          <p>Switch to <strong>Select</strong> to fine-tune the layout, then click <strong>Save Layout</strong>.</p>
+        </li>
+      </ol>
+
+      <h3>Editing Seats</h3>
+
+      <ul>
+        <li><strong>Select seats:</strong> click a seat, shift-click to add more, or drag a box around a group</li>
+        <li><strong>Move seats:</strong> drag them, or use the arrow keys to nudge (hold Shift to move further)</li>
+        <li><strong>Change details:</strong> with seats selected, change their section, prices, label, <strong>Accessible seat</strong> or <strong>Available for sale</strong> setting. Changes apply to every selected seat.</li>
+        <li><strong>Straighten a row:</strong> select it and click <strong>Align</strong> to put the seats on one line, or <strong>Space evenly</strong> to even out the gaps</li>
+        <li><strong>Renumber:</strong> select seats and use <strong>Relabel as row</strong> to number them from left to right</li>
+        <li><strong>Delete:</strong> press Delete or click <strong>Delete seats</strong></li>
+        <li><strong>Zoom:</strong> use the + and - buttons above the map for detailed work</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Seats that have been sold can't be deleted.</strong> That keeps past seasons' records intact. To take a broken or removed seat out of service, uncheck <strong>Available for sale</strong> instead. It is then drawn as an outline and nobody can choose it.
+      </div>
+
+      <p>To replace the floor plan, click <strong>Details &amp; Image</strong>. Seats are positioned relative to the image, so a replacement with the same proportions keeps every seat in place. If you leave the editor with unsaved changes, ShulNET asks before discarding them.</p>
+
+      <h2>Creating a Season</h2>
+
+      <p>On the <strong>High Holy Day Seating</strong> page, click <strong>New Season</strong> and fill in:</p>
+
+      <table>
+        <thead>
+          <tr><th>Field</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Name</td><td>Shown to members and on invoices, for example "High Holy Days 5787".</td></tr>
+          <tr><td>Seating chart</td><td>The sanctuary layout to sell. It can't be changed once seats have been assigned.</td></tr>
+          <tr><td>First service (Erev Rosh Hashanah)</td><td>Used as the due date on seat invoices.</td></tr>
+          <tr><td>Let members choose seats in the member portal</td><td>Turn this on to sell seats online. Leave it off to assign seats only from the office.</td></tr>
+          <tr><td>Renewal deadline</td><td>Last year's seat holders keep their seats until this date and time.</td></tr>
+          <tr><td>General sale opens / Sale closes</td><td>When members can choose new seats. To give renewals priority, set the opening after the renewal deadline.</td></tr>
+          <tr><td>Max seats per member</td><td>Optional limit on how many seats a family can reserve online. The office can go over it.</td></tr>
+          <tr><td>Revenue GL account</td><td>The account seat sales are recorded under, for example "High Holiday Seats". See <a href="gl-export.html">Chart of Accounts &amp; GL Export</a>.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Assigning and Invoicing Seats (Office)</h2>
+
+      <p>Open a season to see the seat map. The colors show the state of every seat:</p>
+
+      <ul>
+        <li><strong>Section color:</strong> available</li>
+        <li><strong>Red with a ring:</strong> selected</li>
+        <li><strong>Amber:</strong> held for a renewal</li>
+        <li><strong>Light gray:</strong> reserved, not yet paid</li>
+        <li><strong>Dark gray:</strong> reserved and paid</li>
+        <li><strong>Outline only:</strong> out of service</li>
+        <li><strong>Round:</strong> accessible seat</li>
+      </ul>
+
+      <ol class="steps">
+        <li>
+          <h4>Select the seats</h4>
+          <p>Click each available seat the family wants. Hover over a seat to see its member and non-member price.</p>
+        </li>
+        <li>
+          <h4>Choose the member and pricing</h4>
+          <p>Search for the member, then choose <strong>Member price</strong> or <strong>Non-member price</strong>.</p>
+        </li>
+        <li>
+          <h4>Assign and invoice</h4>
+          <p>Leave <strong>Create an invoice for these seats</strong> checked and click <strong>Assign &amp; Invoice</strong>. ShulNET creates one invoice with a line for each seat, such as "High Holy Days 5787 - Seat A12 (Main Floor)". The invoice appears in the member's invoices, where it can be sent, paid and tracked like any other invoice.</p>
+        </li>
+      </ol>
+
+      <h3>Managing a Seat</h3>
+
+      <p>Click a taken seat on the map, or a row in the <strong>Seat Holders</strong> table below it, to see who holds it and the invoice status. From there you can:</p>
+
+      <ul>
+        <li><strong>Record an occupant name:</strong> who will actually sit in the seat, which is useful for ushers and for guests of a member family</li>
+        <li><strong>Open the invoice</strong> to record a payment or send it</li>
+        <li><strong>Release Seat:</strong> frees the seat and removes its line from the invoice. If that was the only seat on the invoice, the invoice is cancelled.</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Paid seats can't be released directly.</strong> If the invoice already has a payment, adjust or refund the invoice first. See <a href="invoices.html">Managing Invoices</a>.
+      </div>
+
+      <p>Use the search box above the <strong>Seat Holders</strong> table to find a family, a seat or an invoice number. The totals at the top of the page show seats reserved, seats still available, renewals pending, and the amount invoiced and paid.</p>
+
+      <h2>Renewing Last Year's Seats</h2>
+
+      <p>Many families sit in the same seats every year. Renewals hold each family's seats for them before anyone else can take them.</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Set a renewal deadline</h4>
+          <p>Click <strong>Edit Season</strong> and set the <strong>Renewal deadline</strong>. Without one, renewal offers don't hold seats.</p>
+        </li>
+        <li>
+          <h4>Offer the renewals</h4>
+          <p>Click <strong>Offer Renewals</strong>, choose last year's season, and click <strong>Create Renewal Offers</strong>. Every seat sold last year is held for the same family at this year's prices, and occupant names carry over. Last year's season must use the same seating chart.</p>
+        </li>
+        <li>
+          <h4>Families confirm</h4>
+          <p>Until the deadline, families see their held seats in the member portal and can confirm them in one step. The office can also confirm a renewal by clicking the seat and choosing <strong>Confirm Renewal &amp; Invoice</strong>, or withdraw it with <strong>Withdraw Renewal Offer</strong>.</p>
+        </li>
+        <li>
+          <h4>Unclaimed seats are released</h4>
+          <p>After the deadline, any renewal that wasn't confirmed becomes available to everyone automatically.</p>
+        </li>
+      </ol>
+
+      <h2 id="members">Choosing Seats as a Member</h2>
+
+      <p>When your synagogue opens seat sales online, open <strong>High Holy Day Seats</strong> from the member menu (<code>/member/seating</code>) and choose the season.</p>
+
+      <ol class="steps">
+        <li>
+          <h4>Pick your seats</h4>
+          <p>Tap available seats on the map to select them. Taken seats are grayed out, and your own seats are shown in teal. Use the + and - buttons to zoom in on a section. Your selection and the total appear beside the map, at member or non-member prices depending on your membership.</p>
+        </li>
+        <li>
+          <h4>Choose how to pay</h4>
+          <ul>
+            <li><strong>Pay now by card:</strong> your seats are reserved and you go straight to the payment page</li>
+            <li><strong>Add to my account and pay later:</strong> your seats are reserved and an invoice is added to <strong>My Invoices</strong></li>
+          </ul>
+        </li>
+        <li>
+          <h4>Reserve</h4>
+          <p>Click <strong>Reserve &amp; Pay</strong> or <strong>Reserve Seats</strong>. Your seats are yours as soon as you reserve them, even if you choose to pay later.</p>
+        </li>
+      </ol>
+
+      <h3>Keeping Last Year's Seats</h3>
+
+      <p>If you had seats last year, you may see a notice that says <strong>"We're holding your seats from last year"</strong>, with the date they are held until. Those seats are already selected on the map. Choose a payment option and click <strong>Reserve</strong> to keep them. You can do this before the general sale opens. If you don't confirm by the deadline, the seats are released to other members.</p>
+
+      <div class="alert alert-info">
+        <strong>Good to know:</strong>
+        <ul>
+          <li>Other members can see which seats are taken, but not who has them.</li>
+          <li>Your synagogue may limit how many seats one family can reserve online. Call the office if you need more.</li>
+          <li>If a seat is taken by someone else while you're choosing, ShulNET asks you to choose again. You are never charged for a seat you didn't get.</li>
+          <li>To change or give up seats you've already reserved, contact the synagogue office.</li>
+        </ul>
+      </div>
+
+      <p>Your reserved seats and their invoices are listed under <strong>My Seats</strong> on the High Holy Day Seats page.</p>
+
+      <h2>Related Documentation</h2>
+      <ul>
+        <li><a href="invoices.html">Managing Invoices</a></li>
+        <li><a href="payments.html">Processing Payments</a></li>
+        <li><a href="member-portal.html">Member Portal</a></li>
+        <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

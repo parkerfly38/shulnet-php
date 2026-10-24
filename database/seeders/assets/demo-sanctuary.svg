@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" font-family="Georgia, 'Times New Roman', serif">
+<rect width="1200" height="800" fill="#ece6da"/>
+<rect x="40" y="30" width="1120" height="700" rx="14" fill="#faf7f0" stroke="#7a6248" stroke-width="8"/>
+<rect x="34" y="120" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="1154" y="120" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="34" y="230" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="1154" y="230" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="34" y="340" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="1154" y="340" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="34" y="450" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="1154" y="450" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="34" y="560" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<rect x="1154" y="560" width="12" height="60" fill="#bcd7ea" stroke="#7a6248" stroke-width="2"/>
+<path d="M360 40 H840 V170 Q840 195 815 195 H385 Q360 195 360 170 Z" fill="#eadfc6" stroke="#b39867" stroke-width="3"/>
+<line x1="400" y1="199" x2="800" y2="199" stroke="#b39867" stroke-width="3"/>
+<line x1="412" y1="205" x2="788" y2="205" stroke="#b39867" stroke-width="3"/>
+<rect x="520" y="44" width="160" height="48" rx="4" fill="#6f4e31" stroke="#4a3320" stroke-width="3"/>
+<path d="M520 44 Q600 14 680 44" fill="#6f4e31" stroke="#4a3320" stroke-width="3"/>
+<text x="600" y="75" text-anchor="middle" font-size="16" fill="#f6e7c1" letter-spacing="2">ARON KODESH</text>
+<circle cx="600" cy="106" r="7" fill="#f2b632" stroke="#b07d12" stroke-width="2"/>
+<text x="600" y="128" text-anchor="middle" font-size="11" fill="#8a7458">Ner Tamid</text>
+<rect x="548" y="138" width="104" height="44" rx="6" fill="#b08d57" stroke="#7a5e34" stroke-width="3"/>
+<text x="600" y="166" text-anchor="middle" font-size="16" fill="#fffaf0" letter-spacing="2">BIMAH</text>
+<rect x="420" y="132" width="28" height="22" rx="3" fill="#c8ac7c" stroke="#7a5e34" stroke-width="2"/>
+<text x="434" y="172" text-anchor="middle" font-size="12" fill="#8a7458">Rabbi</text>
+<rect x="752" y="132" width="28" height="22" rx="3" fill="#c8ac7c" stroke="#7a5e34" stroke-width="2"/>
+<text x="766" y="172" text-anchor="middle" font-size="12" fill="#8a7458">Cantor</text>
+<rect x="210" y="235" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="261" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="235" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="261" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="256" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">A</text>
+<text x="1014" y="256" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">A</text>
+<rect x="210" y="279" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="305" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="279" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="305" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="300" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">B</text>
+<text x="1014" y="300" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">B</text>
+<rect x="210" y="323" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="349" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="323" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="349" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="344" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">C</text>
+<text x="1014" y="344" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">C</text>
+<rect x="210" y="367" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="393" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="367" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="393" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="388" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">D</text>
+<text x="1014" y="388" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">D</text>
+<rect x="210" y="411" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="437" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="411" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="437" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="432" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">E</text>
+<text x="1014" y="432" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">E</text>
+<rect x="210" y="455" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="481" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="455" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="481" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="476" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">F</text>
+<text x="1014" y="476" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">F</text>
+<rect x="210" y="499" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="525" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="499" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="525" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="520" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">G</text>
+<text x="1014" y="520" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">G</text>
+<rect x="210" y="543" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="569" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="543" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="569" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="564" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">H</text>
+<text x="1014" y="564" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">H</text>
+<rect x="210" y="587" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="613" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="587" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="613" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="608" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">J</text>
+<text x="1014" y="608" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">J</text>
+<rect x="210" y="631" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="210" y="657" width="348" height="6" rx="3" fill="#a88b5d"/>
+<rect x="642" y="631" width="348" height="30" rx="6" fill="#dcc7a1" stroke="#a88b5d" stroke-width="2"/>
+<rect x="642" y="657" width="348" height="6" rx="3" fill="#a88b5d"/>
+<text x="186" y="652" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">K</text>
+<text x="1014" y="652" text-anchor="middle" font-size="18" font-weight="bold" fill="#7a6248">K</text>
+<text x="600" y="450" text-anchor="middle" font-size="14" fill="#a8977a" letter-spacing="6" transform="rotate(-90 600 450)">CENTER AISLE</text>
+<text x="110" y="450" text-anchor="middle" font-size="12" fill="#a8977a" letter-spacing="5" transform="rotate(-90 110 450)">SIDE AISLE</text>
+<text x="1090" y="450" text-anchor="middle" font-size="12" fill="#a8977a" letter-spacing="5" transform="rotate(-90 1090 450)">SIDE AISLE</text>
+<rect x="44" y="676" width="210" height="50" fill="#efe8da" stroke="#b39867" stroke-width="2"/>
+<text x="149" y="707" text-anchor="middle" font-size="13" fill="#8a7458">Coat Room</text>
+<rect x="946" y="676" width="210" height="50" fill="#efe8da" stroke="#b39867" stroke-width="2"/>
+<text x="1051" y="707" text-anchor="middle" font-size="13" fill="#8a7458">Ushers</text>
+<rect x="500" y="722" width="200" height="16" fill="#faf7f0"/>
+<path d="M500 730 A50 50 0 0 1 550 680 M700 730 A50 50 0 0 0 650 680" fill="none" stroke="#b39867" stroke-width="2" stroke-dasharray="4 3"/>
+<line x1="500" y1="730" x2="550" y2="730" stroke="#7a6248" stroke-width="3"/><line x1="650" y1="730" x2="700" y2="730" stroke="#7a6248" stroke-width="3"/>
+<text x="600" y="768" text-anchor="middle" font-size="16" fill="#7a6248" letter-spacing="4">MAIN ENTRANCE</text>
+</svg>

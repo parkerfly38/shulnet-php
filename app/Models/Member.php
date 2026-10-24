@@ -195,6 +195,11 @@ class Member extends Model
         return $this->hasMany(EventRSVP::class);
     }
 
+    public function seatAssignments(): HasMany
+    {
+        return $this->hasMany(SeatAssignment::class);
+    }
+
     public function rideRequests(): HasMany
     {
         return $this->hasMany(RideRequest::class, 'requester_id');

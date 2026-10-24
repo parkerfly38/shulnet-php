@@ -15,7 +15,7 @@ import { isNavItemActive } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone, CreditCard, Car } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, UserPlus, Star, Calendar, CalendarDays, Receipt, MapPin, FileText, Settings, FileSpreadsheet, Award, Mail, ClipboardList, Home, UserCircle, UserCheck, GraduationCap, Key, Search, Layout, Image, Briefcase, Users2, TrendingUp, Megaphone, CreditCard, Car, Armchair } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -52,6 +52,11 @@ const memberNavItems: NavItem[] = [
         title: 'My Events',
         href: '/member/events',
         icon: CalendarDays,
+    },
+    {
+        title: 'High Holy Day Seats',
+        href: '/member/seating',
+        icon: Armchair,
     },
     {
         title: 'Ride Sharing',
@@ -116,6 +121,11 @@ const adminNavItems: NavItem[] = [
         title: 'Yahrzeits',
         href: '/admin/yahrzeits',
         icon: Star,
+    },
+    {
+        title: 'High Holy Day Seating',
+        href: '/admin/seating-seasons',
+        icon: Armchair,
     },
     {
         title: 'Email Campaigns',

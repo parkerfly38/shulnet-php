@@ -71,6 +71,14 @@ This is a replacement for the previous open source solution based on Zenbership.
 - **Anniversaries and B'nai Mitzvah** - Upcoming wedding anniversaries and B'nai Mitzvah anniversaries for a date range
 - **Aliyah Pledges** - Unpaid aliyah pledges from invoice line items
 
+### High Holy Day Seating
+- **Seat maps** - Upload a floor plan of the sanctuary and place seats on it, one at a time or a row at a time, grouped into color-coded sections
+- **Member and non-member pricing** - Each seat has its own member and non-member price
+- **Admin assignment** - Pick seats on the map, assign them to a member and invoice them in one step
+- **Member self-service** - Members choose seats on the map and pay by card or add the charge to their account
+- **Renewals** - Hold last year's seats for their holders until a renewal deadline before general sales open
+- See [SEATING_README.md](SEATING_README.md)
+
 ### Rides to Services
 - Members request rides to services with pickup location and passenger count
 - Volunteer drivers claim open requests from the member portal
@@ -589,6 +597,7 @@ Access committee management at `/admin/committees` and board management at `/adm
 - **[Committees and Boards](COMMITTEES_BOARDS_README.md)** - Committees, boards, meetings, minutes and reports
 - **[Membership Billing](MEMBERSHIP_BILLING_README.md)** and **[Quickstart](MEMBERSHIP_BILLING_QUICKSTART.md)** - Automated dues generation
 - **[GL Batch Export](GL_BATCH_EXPORT_README.md)** - Chart of accounts and accounting exports
+- **[High Holy Day Seating](SEATING_README.md)** - Seat maps, seat assignment, member seat sales and renewals
 - **[Banner System](BANNER_SYSTEM_README.md)** - Banners and push notifications
 - **[Firebase](FIREBASE_IMPLEMENTATION.md)** - Push notification setup
 - **[Zoom Integration](ZOOM_INTEGRATION.md)** - Zoom meetings for events and committee meetings
