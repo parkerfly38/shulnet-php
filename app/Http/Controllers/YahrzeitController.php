@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Yahrzeits\ListYahrzeits;
 use App\Imports\YahrzeitsImport;
 use App\Mail\YahrzeitReminderMail;
 use App\Models\Member;
 use App\Models\Yahrzeit;
 use App\Services\HebrewCalendarService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -41,77 +43,18 @@ class YahrzeitController extends Controller
     /**
      * Display a listing of yahrzeits.
      */
-    public function index(Request $request)
+    public function index(Request $request, ListYahrzeits $listYahrzeits)
     {
         $search = $request->get('search');
-        $perPage = $request->get('per_page', 15);
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
 
-        $query = Yahrzeit::query()
-            ->with(['members' => function ($query) {
-                $query->select(['members.id', 'first_name', 'last_name', 'hebrew_name'])
-                    ->withPivot('relationship');
-            }])
-            ->select([
-                'id', 'name', 'hebrew_name', 'date_of_death',
-                'hebrew_day_of_death', 'hebrew_month_of_death', 'hebrew_year_of_death',
-                'observance_type', 'notes', 'created_at', 'updated_at',
-            ])
-            ->orderByRaw('SUBSTRING_INDEX(name, \' \', -1) ASC')
-            ->orderBy('hebrew_month_of_death')
-            ->orderBy('hebrew_day_of_death');
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('hebrew_name', 'like', "%{$search}%")
-                    ->orWhereHas('members', function ($memberQuery) use ($search) {
-                        $memberQuery->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%")
-                            ->orWhere('hebrew_name', 'like', "%{$search}%")
-                            ->orWhere('member_yahrzeit.relationship', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        if ($startDate && $endDate) {
-            $searchDates = $this->hebrewCalendar->getHebrewDatesBetween($startDate, $endDate);
-
-            $query->where(function ($q) use ($searchDates) {
-                foreach ($searchDates as $date) {
-                    $q->orWhere(function ($q2) use ($date) {
-                        $q2->where('hebrew_day_of_death', $date['day'])
-                           ->where('hebrew_month_of_death', $date['month']);
-                    });
-                }
-            });
-        }
-
-        $yahrzeits = $query->paginate($perPage);
-        
-        // Calculate next observance date for each yahrzeit
-        $yahrzeits->getCollection()->transform(function ($yahrzeit) {
-            try {
-                if ($yahrzeit->hebrew_day_of_death && $yahrzeit->hebrew_month_of_death) {
-                    // convert Hebrew month name to number if necessary
-                    $hebMonth = null;
-                    if (is_string($yahrzeit->hebrew_month_of_death)) {
-                        $hebMonth = $this->hebrewCalendar->getMonthNumberFromName($yahrzeit->hebrew_month_of_death);
-                    }
-                    $yahrzeit->next_observance_date = $this->hebrewCalendar->getNextYahrzeitDate(
-                        $yahrzeit->hebrew_day_of_death,
-                        $hebMonth ?? $yahrzeit->hebrew_month_of_death
-                    );
-                } else {
-                    $yahrzeit->next_observance_date = null;
-                }
-            } catch (\Exception $e) {
-                // If calculation fails, set to null
-                $yahrzeit->next_observance_date = null;
-            }
-            return $yahrzeit;
-        });
+        $yahrzeits = $listYahrzeits->handle(
+            $search,
+            $startDate,
+            $endDate,
+            (int) $request->get('per_page', 15),
+        );
 
         return Inertia::render('yahrzeits/index', [
             'yahrzeits' => $yahrzeits,

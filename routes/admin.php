@@ -33,6 +33,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SchoolTuitionTierController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Seating\SeatingChartController;
+use App\Http\Controllers\Seating\SeatingSeasonController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YahrzeitController;
@@ -325,6 +327,27 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     ]);
     Route::post('pdf-templates/{pdfTemplate}/preview', [PdfTemplateController::class, 'preview'])->name('pdf-templates.preview');
     Route::post('pdf-templates/{pdfTemplate}/generate', [PdfTemplateController::class, 'generate'])->name('pdf-templates.generate');
+
+    // High Holy Day Seating
+    Route::resource('seating-charts', SeatingChartController::class)->except(['create', 'show'])->names([
+        'index' => 'seating-charts.index',
+        'store' => 'seating-charts.store',
+        'edit' => 'seating-charts.edit',
+        'update' => 'seating-charts.update',
+        'destroy' => 'seating-charts.destroy',
+    ]);
+    Route::put('seating-charts/{seatingChart}/layout', [SeatingChartController::class, 'updateLayout'])->name('seating-charts.layout');
+    Route::resource('seating-seasons', SeatingSeasonController::class)->only(['index', 'store', 'show', 'update', 'destroy'])->names([
+        'index' => 'seating-seasons.index',
+        'store' => 'seating-seasons.store',
+        'show' => 'seating-seasons.show',
+        'update' => 'seating-seasons.update',
+        'destroy' => 'seating-seasons.destroy',
+    ]);
+    Route::post('seating-seasons/{seatingSeason}/assignments', [SeatingSeasonController::class, 'assign'])->name('seating-seasons.assign');
+    Route::patch('seating-seasons/{seatingSeason}/assignments/{assignment}', [SeatingSeasonController::class, 'updateAssignment'])->name('seating-seasons.assignments.update');
+    Route::delete('seating-seasons/{seatingSeason}/assignments/{assignment}', [SeatingSeasonController::class, 'release'])->name('seating-seasons.release');
+    Route::post('seating-seasons/{seatingSeason}/renewals', [SeatingSeasonController::class, 'renewals'])->name('seating-seasons.renewals');
 
     // Cemetery Management
     Route::resource('gravesites', GravesiteController::class)->names([

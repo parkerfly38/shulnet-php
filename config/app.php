@@ -20,11 +20,13 @@ return [
     | Application Version
     |--------------------------------------------------------------------------
     |
-    | This value is the version of your application.
+    | This value is the version of your application. It is read from the
+    | VERSION file in the project root, so it ships with each deployment.
+    | Bump that file for each release and tag the release v{VERSION}.
     |
     */
 
-    'version' => env('APP_VERSION', '1.0.0'),
+    'version' => trim((string) @file_get_contents(base_path('VERSION'))) ?: 'dev',
 
     /*
     |--------------------------------------------------------------------------

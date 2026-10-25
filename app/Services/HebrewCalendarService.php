@@ -15,13 +15,13 @@ class HebrewCalendarService
         3 => 'Kislev',
         4 => 'Tevet',
         5 => 'Shevat',
-        6 => 'Adar',
-        7 => 'Nisan',
-        8 => 'Iyar',
-        9 => 'Sivan',
-        10 => 'Tammuz',
-        11 => 'Av',
-        12 => 'Elul',
+        7 => 'Adar',
+        8 => 'Nisan',
+        9 => 'Iyar',
+        10 => 'Sivan',
+        11 => 'Tammuz',
+        12 => 'Av',
+        13 => 'Elul',
     ];
 
     /**
@@ -166,13 +166,11 @@ class HebrewCalendarService
      */
     public function isHebrewLeapYear(int $year): bool
     {
-        // A Hebrew leap year has an Adar II (month 7)
-        // Try to create a valid date in Adar II - if it works, it's a leap year
-        $jd = jewishtojd(7, 1, $year);
-        
-        // Convert back and check if we still have month 7
+        // Month 6 (Adar I) only exists in leap years; in a regular year PHP rolls it over to month 7
+        $jd = jewishtojd(6, 1, $year);
+
         $parts = explode('/', jdtojewish($jd));
-        return isset($parts[0]) && (int)$parts[0] === 7;
+        return isset($parts[0]) && (int) $parts[0] === 6;
     }
 
     /**
@@ -242,30 +240,30 @@ class HebrewCalendarService
             'adar a' => 6,
             
             // Nisan variations (month 7 in regular year, 8 in leap year)
-            'nisan' => 7,
-            'nissan' => 7,
+            'nisan' => 8,
+            'nissan' => 8,
             
-            // Iyar variations (month 8 in regular year, 9 in leap year)
-            'iyar' => 8,
-            'iyyar' => 8,
+            // Iyar variations (month 9 in regular year, 10 in leap year)
+            'iyar' => 9,
+            'iyyar' => 9,
             
-            // Sivan variations (month 9 in regular year, 10 in leap year)
-            'sivan' => 9,
-            'siwan' => 9,
+            // Sivan variations (month 10 in regular year, 11 in leap year)
+            'sivan' => 10,
+            'siwan' => 10,
             
-            // Tammuz variations (month 10 in regular year, 11 in leap year)
-            'tammuz' => 10,
-            'tamuz' => 10,
-            'thammuz' => 10,
+            // Tammuz variations (month 11 in regular year, 12 in leap year)
+            'tammuz' => 11,
+            'tamuz' => 11,
+            'thammuz' => 11,
             
-            // Av variations (month 11 in regular year, 12 in leap year)
-            'av' => 11,
-            'ab' => 11,
-            'ov' => 11,
+            // Av variations (month 12 in regular year, 13 in leap year)
+            'av' => 12,
+            'ab' => 12,
+            'ov' => 12,
             
-            // Elul variations (month 12 in regular year, 13 in leap year)
-            'elul' => 12,
-            'ellul' => 12,
+            // Elul variations (month 13 in regular year, 14 in leap year)
+            'elul' => 13,
+            'ellul' => 13,
         ];
 
         $monthNumber = $variations[$normalizedName] ?? null;

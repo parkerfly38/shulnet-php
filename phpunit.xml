@@ -16,6 +16,14 @@
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <!-- Thin wrappers around external SDKs/APIs; not meaningfully testable without live services -->
+            <file>app/Services/AuthorizeNetPaymentGateway.php</file>
+            <file>app/Services/PayPalPaymentGateway.php</file>
+            <file>app/Services/StripePaymentGateway.php</file>
+            <file>app/Services/FirebaseService.php</file>
+            <file>app/Services/ZoomService.php</file>
+        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>

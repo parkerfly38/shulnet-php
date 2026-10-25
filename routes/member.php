@@ -3,6 +3,7 @@
 use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Member\PaymentController;
 use App\Http\Controllers\Member\RideRequestController;
+use App\Http\Controllers\Member\SeatingController as MemberSeatingController;
 use App\Http\Controllers\Member\CommitteeController as MemberCommitteeController;
 use App\Http\Controllers\Member\BoardController as MemberBoardController;
 use App\Http\Controllers\DashboardController;
@@ -33,6 +34,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('committees/{committee}', [MemberCommitteeController::class, 'show'])->name('member.committees.show');
         Route::get('boards', [MemberBoardController::class, 'index'])->name('member.boards.index');
         Route::get('boards/{board}', [MemberBoardController::class, 'show'])->name('member.boards.show');
+
+        // High Holy Day seating
+        Route::get('seating', [MemberSeatingController::class, 'index'])->name('member.seating.index');
+        Route::get('seating/{seatingSeason}', [MemberSeatingController::class, 'show'])->name('member.seating.show');
+        Route::post('seating/{seatingSeason}/reserve', [MemberSeatingController::class, 'reserve'])->name('member.seating.reserve');
 
         // Payment Routes
         Route::get('invoices/{id}/pay', [PaymentController::class, 'create'])->name('member.invoices.pay');

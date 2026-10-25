@@ -78,7 +78,8 @@ class FinancialReportService
     {
         $invoices = Invoice::where('status', '!=', 'paid')
             ->where('status', '!=', 'cancelled')
-            ->whereRaw('total - amount_paid > ?', [$minBalance])
+            // Inlined (as a float) because SQLite compares a bound float parameter as text, matching nothing
+            ->whereRaw(sprintf('total - amount_paid > %F', $minBalance))
             ->with('member:id,first_name,last_name,email,phone1,member_type')
             ->get();
 

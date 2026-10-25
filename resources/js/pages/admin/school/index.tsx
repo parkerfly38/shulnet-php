@@ -1,10 +1,12 @@
 import { useTranslation } from '@/hooks/use-translation';
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { BreadcrumbItem } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { StudentOnboardingWorkflow, type SchoolTuitionTier, type Parent, type Member } from '@/components/student-onboarding-workflow';
 import { 
     Users, 
     GraduationCap, 
@@ -68,10 +70,14 @@ interface SchoolDashboardProps {
     recentStudents: Student[];
     upcomingExams: Exam[];
     activeClasses: ClassDefinition[];
+    schoolTuitionTiers: SchoolTuitionTier[];
+    parents: Parent[];
+    members: Member[];
 }
 
-export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, activeClasses }: Readonly<SchoolDashboardProps>) {
+export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, activeClasses, schoolTuitionTiers, parents, members }: Readonly<SchoolDashboardProps>) {
     const { t } = useTranslation();
+    const [showStudentOnboarding, setShowStudentOnboarding] = useState(false);
     const quickActions = [
         { 
             title: 'Mark Attendance', 
@@ -134,8 +140,8 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
             <div className="mb-8">
                 <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{t('Quick Actions')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {quickActions.map((action) => (
-                        <Link key={action.href} href={action.href}>
+                    {quickActions.map((action) => {
+                        const card = (
                             <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
                                 <CardContent>
                                     <div className="flex items-start space-x-3">
@@ -149,10 +155,36 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                                     </div>
                                 </CardContent>
                             </Card>
-                        </Link>
-                    ))}
+                        );
+
+                        // Adding a student opens the onboarding dialog instead of navigating
+                        return action.href === '/admin/school/students/create' ? (
+                            <button key={action.href} type="button" className="text-start" onClick={() => setShowStudentOnboarding(true)}>
+                                {card}
+                            </button>
+                        ) : (
+                            <Link key={action.href} href={action.href}>{card}</Link>
+                        );
+                    })}
                 </div>
             </div>
+
+            <Dialog open={showStudentOnboarding} onOpenChange={setShowStudentOnboarding}>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>{t('Onboard New Student')}</DialogTitle>
+                        <DialogDescription>
+                            Create student profile(s), assign or create a parent, select tuition tier, and generate an invoice.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <StudentOnboardingWorkflow
+                        schoolTuitionTiers={schoolTuitionTiers}
+                        parents={parents}
+                        members={members}
+                        onClose={() => setShowStudentOnboarding(false)}
+                    />
+                </DialogContent>
+            </Dialog>
 
             {/* Statistics Overview */}
             <div className="mb-8">
@@ -226,11 +258,9 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
                                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                     <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
                                     <p>{t('No students enrolled yet')}</p>
-                                    <Link href="/admin/school/students/create">
-                                        <Button variant="link" size="sm" className="mt-2">
-                                            {t('Add your first student')}
-                                        </Button>
-                                    </Link>
+                                    <Button variant="link" size="sm" className="mt-2" onClick={() => setShowStudentOnboarding(true)}>
+                                        {t('Add your first student')}
+                                    </Button>
                                 </div>
                             )}
                         </div>

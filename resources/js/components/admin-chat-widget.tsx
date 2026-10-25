@@ -1,93 +1,145 @@
-import { MessageCircle, X, Maximize2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
+import axios from 'axios';
+import { MessageCircle, Send, X } from 'lucide-react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { router, usePage } from '@inertiajs/react';
-import { type ChatConfig } from '@/types';
+import { Input } from '@/components/ui/input';
+import { type SharedData } from '@/types';
+
+interface ChatMessage {
+    role: 'user' | 'assistant';
+    content: string;
+}
 
 export function AdminChatWidget() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
-    const { chatConfig } = usePage().props as { chatConfig?: ChatConfig };
+    const { auth } = usePage<SharedData>().props;
+    const isAdmin = Array.isArray(auth?.user?.roles) && auth.user.roles.includes('admin');
+
+    const [isOpen, setIsOpen] = useState(() => sessionStorage.getItem('admin-chat-open') === '1');
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [conversationId, setConversationId] = useState<string | null>(null);
+    const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const isDark = document.documentElement.classList.contains('dark');
-        setTheme(isDark ? 'dark' : 'light');
+        sessionStorage.setItem('admin-chat-open', isOpen ? '1' : '0');
+    }, [isOpen]);
 
-        const observer = new MutationObserver(() => {
-            const isDark = document.documentElement.classList.contains('dark');
-            setTheme(isDark ? 'dark' : 'light');
-        });
+    useEffect(() => {
+        if (!isAdmin) return;
+        axios
+            .get('/admin/chat')
+            .then(({ data }) => {
+                setConversationId(data.conversation_id);
+                setMessages((prev) => (prev.length ? prev : data.messages));
+            })
+            .catch(() => {});
+    }, [isAdmin]);
 
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class'],
-        });
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages, loading]);
 
-        return () => observer.disconnect();
-    }, []);
-
-    if (!chatConfig?.enabled) {
+    if (!isAdmin) {
         return null;
     }
 
-    const openFullScreen = () => {
-        setIsOpen(false);
-        router.visit('/chat');
+    const send = async (e: FormEvent) => {
+        e.preventDefault();
+        const message = input.trim();
+        if (!message || loading) return;
+
+        setMessages((prev) => [...prev, { role: 'user', content: message }]);
+        setInput('');
+        setLoading(true);
+
+        try {
+            const { data } = await axios.post('/admin/chat', {
+                message,
+                conversation_id: conversationId,
+            });
+            setConversationId(data.conversation_id);
+            setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
+        } catch {
+            setMessages((prev) => [
+                ...prev,
+                { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' },
+            ]);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    if (!isOpen) {
+        return (
+            <Button
+                onClick={() => setIsOpen(true)}
+                className="fixed bottom-4 end-4 z-50 h-12 w-12 rounded-full shadow-lg"
+                size="icon"
+                title="Open assistant"
+            >
+                <MessageCircle className="h-5 w-5" />
+            </Button>
+        );
+    }
+
     return (
-        <>
-            {/* Toggle Button with subtle ping ring */}
-            {!isOpen && (
-                <span className="fixed bottom-4 end-4 z-50 flex h-12 w-12">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-10" />
+        <div className="fixed bottom-4 end-4 z-50 flex h-[520px] w-96 flex-col rounded-lg border border-border bg-background shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border px-3 py-2">
+                <h3 className="text-sm font-semibold">Assistant</h3>
+                <div className="flex items-center gap-1">
                     <Button
-                        onClick={() => setIsOpen(true)}
-                        className="relative h-12 w-12 rounded-full shadow-lg"
-                        size="icon"
-                        title={`Open ${chatConfig.title}`}
+                        onClick={() => {
+                            setMessages([]);
+                            setConversationId(null);
+                        }}
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-xs"
+                        disabled={loading || messages.length === 0}
                     >
-                        <MessageCircle className="h-5 w-5" />
+                        New chat
                     </Button>
-                </span>
-            )}
-
-            {/* Chat Window */}
-            {isOpen && (
-                <div className="fixed bottom-4 end-4 w-96 h-[520px] bg-background border border-border rounded-lg shadow-2xl flex flex-col z-50">
-                    <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                        <h3 className="font-semibold text-sm">{chatConfig.title}</h3>
-                        <div className="flex items-center gap-1">
-                            <Button
-                                onClick={openFullScreen}
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                title="Open full screen"
-                            >
-                                <Maximize2 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                                onClick={() => setIsOpen(false)}
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                title="Close"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 overflow-hidden">
-                        <iframe
-                            src={`${chatConfig.url}?theme=${theme}`}
-                            className="w-full h-full border-0"
-                            title={chatConfig.title}
-                        />
-                    </div>
+                <Button onClick={() => setIsOpen(false)} variant="ghost" size="icon" className="h-6 w-6" title="Close">
+                    <X className="h-4 w-4" />
+                </Button>
                 </div>
-            )}
-        </>
+            </div>
+
+            <div className="flex-1 space-y-2 overflow-y-auto p-3 text-sm">
+                {messages.length === 0 && (
+                    <p className="text-muted-foreground">
+                        Ask about members, yahrzeits, events, students, invoices or finances.
+                    </p>
+                )}
+                {messages.map((m, i) => (
+                    <div
+                        key={i}
+                        className={`max-w-[85%] whitespace-pre-wrap rounded-lg px-3 py-2 ${
+                            m.role === 'user'
+                                ? 'ms-auto bg-primary text-primary-foreground'
+                                : 'bg-muted'
+                        }`}
+                    >
+                        {m.content}
+                    </div>
+                ))}
+                {loading && <div className="text-muted-foreground">Thinking…</div>}
+                <div ref={bottomRef} />
+            </div>
+
+            <form onSubmit={send} className="flex gap-2 border-t border-border p-2">
+                <Input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Type a message…"
+                    disabled={loading}
+                />
+                <Button type="submit" size="icon" disabled={loading || !input.trim()}>
+                    <Send className="h-4 w-4" />
+                </Button>
+            </form>
+        </div>
     );
 }

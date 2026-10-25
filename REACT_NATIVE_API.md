@@ -806,7 +806,7 @@ export async function getYahrzeits() {
 
 ## CORS Configuration
 
-Make sure your Laravel application is configured to accept requests from your React Native app. Update `config/cors.php`:
+Make sure your Laravel application is configured to accept requests from your React Native app. Laravel does not ship `config/cors.php` by default; publish it with `php artisan config:publish cors`, then update it:
 
 ```php
 'paths' => ['api/*', 'sanctum/csrf-cookie'],

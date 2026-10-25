@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gabbai Dashboard - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+            <li><a href="account-settings.html">Account Settings</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+            <li><a href="rides.html">Ride Sharing</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees &amp; Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Ritual &amp; Cemetery</div>
+          <ul>
+            <li><a href="gabbai.html" class="active">Gabbai Dashboard</a></li>
+            <li><a href="high-holy-day-seating.html">High Holy Day Seating</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="membership-billing.html">Membership Billing</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+            <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+            <li><a href="custom-forms.html">Custom Forms</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="ai-assistant.html">AI Assistant</a></li>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html">Notes &amp; Tasks</a></li>
+            <li><a href="pdf-templates.html">PDF Templates</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Gabbai Dashboard</h1>
+
+      <p class="lead">The Gabbai Dashboard brings together what you need to plan services: the upcoming Torah reading, honor assignments, unpaid aliyah pledges, and members with upcoming anniversaries and B'nai Mitzvah dates.</p>
+
+      <h2>Accessing the Dashboard</h2>
+
+      <p>Navigate to <strong>Gabbai Dashboard</strong> in the admin menu (<code>/admin/gabbai</code>).</p>
+
+      <h2>Dashboard Panels</h2>
+
+      <div class="card">
+        <h3>Upcoming Parashah</h3>
+        <p>Shows the next Shabbat Torah reading with its aliyot, loaded from the Hebcal calendar service, along with a summary of the portion from Sefaria. If the reading cannot be loaded, check the server's internet connection and try again later.</p>
+      </div>
+
+      <div class="card">
+        <h3>Assign Honors — Next Shabbos</h3>
+        <p>A quick view of who has been assigned each aliyah for the coming Shabbat, with a link to edit the assignments.</p>
+      </div>
+
+      <div class="card">
+        <h3>Pledges (Aliyah)</h3>
+        <p>Lists unpaid invoice items whose description includes "aliyah", so you can follow up on outstanding pledges.</p>
+      </div>
+
+      <div class="card">
+        <h3>Upcoming Anniversaries &amp; B'nai Mitzvah</h3>
+        <p>Members with a wedding anniversary or B'nai Mitzvah anniversary in the next 30 days, drawn from their member records. Click <strong>View all</strong> to choose a different date range.</p>
+      </div>
+
+      <h2>Assigning Torah Honors</h2>
+
+      <ol class="steps">
+        <li>
+          <h4>Open Assign Torah Honors</h4>
+          <p>Click <strong>Edit assignments for this date</strong> on the dashboard, or go to <code>/admin/gabbai/honors</code>.</p>
+        </li>
+        <li>
+          <h4>Pick the date</h4>
+          <p>Choose the service date. ShulNET loads the readings for that date and lists each honor (Aliyah 1, Aliyah 2 and so on, and Maftir).</p>
+        </li>
+        <li>
+          <h4>Assign members</h4>
+          <p>For each honor, search for and select a member. Leave an honor blank if it is not yet assigned.</p>
+        </li>
+        <li>
+          <h4>Save</h4>
+          <p>Saving replaces any earlier assignments for that date.</p>
+        </li>
+      </ol>
+
+      <h2>Annual or Triennial Cycle</h2>
+
+      <p>ShulNET supports both the annual (full kriyah) and triennial Torah reading cycles. An administrator sets the cycle in <strong>General Settings</strong> with the Torah reading cycle setting: <strong>Annual (Full Torah)</strong> or <strong>Triennial Cycle</strong>. The Jewish calendar location setting (<strong>Diaspora</strong> or <strong>Israel</strong>) also affects which portion is read. The readings and aliyot shown on the dashboard and honors page follow this setting.</p>
+
+      <div class="alert alert-info">
+        <strong>Tip:</strong> Anniversary and B'nai Mitzvah lists depend on dates entered in member profiles. Keep the anniversary and B'nai Mitzvah dates up to date in <a href="members.html">Managing Members</a>.
+      </div>
+
+      <h2>Related Documentation</h2>
+      <ul>
+        <li><a href="members.html">Managing Members</a></li>
+        <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+        <li><a href="invoices.html">Managing Invoices</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

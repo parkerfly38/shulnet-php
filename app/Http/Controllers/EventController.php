@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Events\ListEvents;
 use App\Exports\EventRSVPExport;
 use App\Models\Calendar;
 use App\Models\Event;
@@ -18,46 +19,27 @@ class EventController extends Controller
     /**
      * Display a listing of events.
      */
-    public function index(Request $request)
+    public function index(Request $request, ListEvents $listEvents)
     {
         $search = $request->get('search');
         $calendar = $request->get('calendar');
-        $perPage = $request->get('per_page', 15);
 
-        $query = Event::query()
-            ->with(['calendar'])
-            ->select([
-                'id', 'calendar_id', 'name', 'description', 'event_start', 'event_end',
-                'all_day', 'location', 'members_only', 'created_at', 'updated_at',
-            ])
-            ->orderBy('event_start', 'desc');
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+        $events = $listEvents->handle($search, $calendar, (int) $request->get('per_page', 15))
+            ->through(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'title' => $event->name, // Map name to title for frontend
+                    'description' => $event->description,
+                    'start_date' => $event->event_start, // Map event_start to start_date for frontend
+                    'end_date' => $event->event_end, // Map event_end to end_date for frontend
+                    'all_day' => $event->all_day,
+                    'location' => $event->location,
+                    'members_only' => $event->members_only,
+                    'calendar' => $event->calendar,
+                    'created_at' => $event->created_at,
+                    'updated_at' => $event->updated_at,
+                ];
             });
-        }
-
-        if ($calendar) {
-            $query->where('calendar_id', $calendar);
-        }
-
-        $events = $query->paginate($perPage)->through(function ($event) {
-            return [
-                'id' => $event->id,
-                'title' => $event->name, // Map name to title for frontend
-                'description' => $event->description,
-                'start_date' => $event->event_start, // Map event_start to start_date for frontend
-                'end_date' => $event->event_end, // Map event_end to end_date for frontend
-                'all_day' => $event->all_day,
-                'location' => $event->location,
-                'members_only' => $event->members_only,
-                'calendar' => $event->calendar,
-                'created_at' => $event->created_at,
-                'updated_at' => $event->updated_at,
-            ];
-        });
         $calendars = Calendar::select('id', 'name')->orderBy('name')->get();
 
         return Inertia::render('events/index', [

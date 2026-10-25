@@ -39,7 +39,6 @@ export interface SharedData {
     };
     currency: string;
     roleSwitch?: RoleSwitch;
-    chatConfig?: ChatConfig;
     [key: string]: unknown;
 }
 
@@ -113,6 +112,7 @@ export interface RelatedMember extends Omit<Member, 'related_members' | 'related
 export interface MembershipPeriod {
     id: number;
     member_id: number;
+    membership_tier_id?: number | null;
     invoice_id?: number;
     begin_date: string;
     end_date?: string;
@@ -556,11 +556,4 @@ export interface RoleSwitch {
     enabled: boolean;
     activeRole: string;
     roles: RoleInfo[];
-}
-
-export interface ChatConfig {
-    enabled: boolean;
-    url: string;
-    mode: 'popup' | 'fullpage';
-    title: string;
 }

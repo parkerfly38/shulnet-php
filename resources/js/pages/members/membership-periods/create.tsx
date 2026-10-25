@@ -10,6 +10,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Save, Calendar } from 'lucide-react';
 import { type BreadcrumbItem } from '@/types';
 
+interface Tier {
+  id: number;
+  name: string;
+  price: string;
+  billing_period: string;
+}
+
 interface Props {
   member: {
     id: number;
@@ -17,6 +24,7 @@ interface Props {
     last_name: string;
     email: string;
   };
+  tiers: Tier[];
   invoices: Array<{
     id: number;
     invoice_number: string;
@@ -27,6 +35,7 @@ interface Props {
 }
 
 interface MembershipPeriodForm {
+  membership_tier_id: string;
   begin_date: string;
   end_date: string;
   membership_type: string;
@@ -34,9 +43,10 @@ interface MembershipPeriodForm {
   notes: string;
 }
 
-export default function MembershipPeriodsCreate({ member, invoices }: Readonly<Props>) {
+export default function MembershipPeriodsCreate({ member, invoices, tiers }: Readonly<Props>) {
     const { t } = useTranslation();
   const { data, setData, post, processing, errors } = useForm<MembershipPeriodForm>({
+    membership_tier_id: '',
     begin_date: '',
     end_date: '',
     membership_type: 'annual',
@@ -125,6 +135,32 @@ export default function MembershipPeriodsCreate({ member, invoices }: Readonly<P
                 </p>
                 {errors.end_date && (
                   <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.end_date}</p>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="membership_tier_id">{t('Membership Tier')}</Label>
+                <Select
+                  value={data.membership_tier_id || 'none'}
+                  onValueChange={(value) => setData('membership_tier_id', value === 'none' ? '' : value)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder={t('Select tier')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{t('None')}</SelectItem>
+                    {tiers.map((tier) => (
+                      <SelectItem key={tier.id} value={tier.id.toString()}>
+                        {tier.name} - ${tier.price} ({tier.billing_period})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {t('Required for automatic dues invoicing')}
+                </p>
+                {errors.membership_tier_id && (
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.membership_tier_id}</p>
                 )}
               </div>
 

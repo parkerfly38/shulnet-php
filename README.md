@@ -4,7 +4,7 @@ A modern synagogue management system built with Laravel and React.
 
 ## Overview
 
-ShulNET is a comprehensive web application designed to help synagogues manage their members, events, yahrzeits, invoices, and other essential operations. It features a clean, modern interface with support for Hebrew calendar integration.
+ShulNET is a comprehensive web application designed to help synagogues manage their members, religious school, events, yahrzeits, finances, leadership, communications, cemetery and ritual life in one place. It features a clean, modern interface, Hebrew calendar integration, an English/Spanish/Hebrew (RTL) interface, REST APIs for mobile apps and WordPress, and an AI assistant for administrators.
 
 This is a replacement for the previous open source solution based on Zenbership.  It is a complete ground-up rewrite designed to use best of breed, contemporary technology that is approachable for small organizations to maintain and extend.
 
@@ -17,6 +17,17 @@ This is a replacement for the previous open source solution based on Zenbership.
 - Role-based access control (Admin, Office, Member, Guest)
 - Member types: Member, Contact, Prospect, Former Member
 - **Member Onboarding Workflow** - Step-by-step wizard for onboarding new members with membership tier selection and automatic invoice generation
+- **Family Relationships** - Link related members (spouses, children, etc.)
+- **Notes and Member Care Alerts** - Notes on member records, with care alerts (Hospitalized, Mourning, Immediate Follow-Up, Other Emergency) surfaced on the dashboard
+- **Excel Import** - Bulk import members from a downloadable template
+
+### Member Portal
+- Personal dashboard, profile editing and linked students
+- View and pay invoices online
+- View yahrzeits and request changes
+- Register for events
+- Request or volunteer for rides to services
+- View their committees, boards, meetings and reports
 
 ### School Management
 - **Student Management** - Complete student profiles with parent/guardian linking
@@ -27,12 +38,16 @@ This is a replacement for the previous open source solution based on Zenbership.
   - Convert members to parents automatically
   - Select tuition tiers with quantity-based pricing
   - Generate invoices for tuition payments
+- **Academics** - Class definitions, subjects, teachers, exams and grades (class, subject and exam)
+- **Attendance** - Attendance records by class and student
+- **School API** - Token-authenticated API for teacher and parent mobile apps (see [MOBILE_SCHOOL_API.md](MOBILE_SCHOOL_API.md))
 
 ### Event Management
-- Calendar and event creation
-- Event RSVP tracking
+- Multiple calendars (public or members-only) and event creation
+- Event RSVP tracking with Excel export
 - Ticket type management
 - Event policies and permissions
+- **Zoom Integration** - Automatic Zoom meeting creation and registration for events and meetings (see [ZOOM_INTEGRATION.md](ZOOM_INTEGRATION.md))
 
 ### Committee and Board Management
 - **Committee Management** - Create and manage synagogue committees
@@ -47,17 +62,52 @@ This is a replacement for the previous open source solution based on Zenbership.
 ### Yahrzeit Tracking
 - Hebrew calendar integration
 - Yahrzeit date management
-- Hebrew month filtering
+- Hebrew month filtering and monthly yahrzeit lists
 - Automatic date conversions
+- Excel import and export
+
+### Ritual Life (Gabbai)
+- **Honors Scheduling** - Assign members to aliyot and other honors by service date, with annual or triennial Torah reading cycle support
+- **Anniversaries and B'nai Mitzvah** - Upcoming wedding anniversaries and B'nai Mitzvah anniversaries for a date range
+- **Aliyah Pledges** - Unpaid aliyah pledges from invoice line items
+
+### High Holy Day Seating
+- **Seat maps** - Upload a floor plan of the sanctuary and place seats on it, one at a time or a row at a time, grouped into color-coded sections
+- **Member and non-member pricing** - Each seat has its own member and non-member price
+- **Admin assignment** - Pick seats on the map, assign them to a member and invoice them in one step
+- **Member self-service** - Members choose seats on the map and pay by card or add the charge to their account
+- **Renewals** - Hold last year's seats for their holders until a renewal deadline before general sales open
+- See [SEATING_README.md](SEATING_README.md)
+
+### Rides to Services
+- Members request rides to services with pickup location and passenger count
+- Volunteer drivers claim open requests from the member portal
+
+### Cemetery Management
+- **Gravesites** - Cemetery, section, row and plot, status, dimensions, GPS coordinates, perpetual care and monument inscriptions
+- **Deeds** - Plot ownership records linked to members
+- **Interments** - Burial records with Hebrew name, dates, funeral home and officiating rabbi
 
 ### Financial Management
 - Invoice creation and tracking
 - Invoice items and line-by-line details
 - Invoice aging reports
 - Membership period billing
+- **Automated dues billing** - Nightly generation of membership dues invoices on anniversary or fixed-date schedules (see [MEMBERSHIP_BILLING_README.md](MEMBERSHIP_BILLING_README.md))
 - **Automated invoice generation** from onboarding workflows
+- **Online payments** - Members pay invoices through Stripe, PayPal or Authorize.Net (selected in Settings)
 - **Print functionality** for invoices (index and edit pages)
 - **Email invoices** with PDF attachments
+- **Chart of Accounts and GL Batch Export** - Map revenue to GL accounts and export batches for your accounting system (see [GL_BATCH_EXPORT_README.md](GL_BATCH_EXPORT_README.md))
+- **Financial Reports** - Income summary, outstanding balances, aging, revenue by source, member growth, tuition revenue, payment methods, event revenue and budget vs. actual
+- **Exports** - Members, invoices, students, financial summaries and yahrzeits
+
+### AI Assistant
+- Chat widget for administrators that answers questions from live data ("Who has a yahrzeit this week?", "Which families owe more than $500?")
+- 11 read-only tools covering members, yahrzeits, events, RSVPs, students, invoices, financial reports and the Hebrew calendar
+- OpenAI by default via the Laravel AI SDK; Ollama, Anthropic, Gemini and other providers are a configuration change
+- Admin role enforced on the route and on every tool call; conversations persist for 30 days
+- See [AI_ASSISTANT.md](AI_ASSISTANT.md)
 
 ### Content Management (HTML Publisher)
 - **HTML Page Management** - Create and publish web pages with rich text editor
@@ -77,11 +127,32 @@ This is a replacement for the previous open source solution based on Zenbership.
 - **Email Templates** - Reusable templates with variable substitution
 - **Compliance** - CAN-SPAM and GDPR-ready features
 
+### Banners and Push Notifications
+- Site and app banners targeted by audience, with start and end dates
+- Optional push notifications to mobile apps through Firebase Cloud Messaging
+- Public banner feed for the WordPress plugin (see [BANNER_SYSTEM_README.md](BANNER_SYSTEM_README.md) and [FIREBASE_IMPLEMENTATION.md](FIREBASE_IMPLEMENTATION.md))
+
+### Forms and PDF Templates
+- **Forms** - Build forms, preview them, accept public submissions and review responses
+- **PDF Templates** - HTML templates with merge fields for generating letters and documents as PDFs
+
+### Integrations and APIs
+- **REST API** - Sanctum token API for admin, member and school mobile apps (see [REACT_NATIVE_API.md](REACT_NATIVE_API.md)), with OpenAPI docs generated by Scramble
+- **API Tokens** - Admins issue and revoke tokens at `/admin/api-tokens`
+- **WordPress Plugin** - Shows ShulNET banners on a WordPress site by auto-display, shortcode or widget (see [wordpress-plugin/README.md](wordpress-plugin/README.md))
+
+### Platform
+- **Multilingual** - English, Spanish and Hebrew with right-to-left layout
+- **Two-factor authentication** for user accounts
+- **Role switching** - Users with several roles switch between them without signing out
+- **Global search** across the admin area
+
 ### Dashboard
 - Members joined trend analysis (line chart)
 - Current Hebrew month yahrzeits
 - Upcoming events preview
 - Open invoices by aging (0-30, 31-60, 61-90, 90+ days)
+- Member care alerts
 - **Quick action workflows** - One-click access to member and student onboarding
 
 ## Tech Stack
@@ -90,7 +161,11 @@ This is a replacement for the previous open source solution based on Zenbership.
 - **Laravel 13.x** - PHP framework, version 12.x prior to October 2026
 - **Inertia.js** - Server-side rendering for React
 - **SQLite** - Database (configurable for MySQL/PostgreSQL)
-- **Fortify** - Authentication
+- **Fortify** - Authentication, including two-factor
+- **Sanctum** - API tokens for mobile apps and integrations
+- **Laravel AI SDK** - AI assistant agent and tools
+- **Scramble** - OpenAPI documentation
+- **DomPDF** and **Laravel Excel** - PDF generation, imports and exports
 
 ### Frontend
 - **React 19.x** - UI library
@@ -215,6 +290,10 @@ The UI supports English (`en`), Spanish (`es`) and Hebrew (`he`, right-to-left).
 
 ## Deployment
 
+### Versioning
+
+The application version lives in the `VERSION` file in the project root. It ships with each deployment and is shown in the sidebar and the API docs. For a release, update `VERSION`, commit it, and tag the commit `v` plus the version (for example `v1.0.9.3`). If you cache config (`php artisan config:cache`), re-run it after deploying so the new version is picked up.
+
 ### TinyMCE Installation
 
 TinyMCE is excluded from the repository (listed in `.gitignore`) and must be installed during deployment.
@@ -260,8 +339,13 @@ php artisan view:cache
 
 ```
 app/
-├── Actions/          # Custom actions (Fortify, etc.)
-├── Enums/            # Enum definitions (UserRole)
+├── Actions/          # Reusable queries shared by controllers and AI tools (Fortify actions too)
+├── Ai/
+│   ├── Agents/       # AdminAssistant agent
+│   └── Tools/        # Read-only tools the assistant can call
+├── Console/
+│   └── Commands/     # Scheduled commands (dues, push notifications, AI pruning)
+├── Enums/            # Enum definitions (UserRole, MemberCareAlert)
 ├── Http/
 │   ├── Controllers/  # Application controllers
 │   │   ├── Member/   # Member-facing controllers
@@ -288,6 +372,11 @@ app/
 ├── Policies/         # Authorization policies
 ├── Services/         # Business logic services
 │   ├── HebrewCalendarService.php
+│   ├── FinancialReportService.php
+│   ├── MembershipBillingService.php
+│   ├── PaymentService.php        # Stripe, PayPal and Authorize.Net gateways
+│   ├── FirebaseService.php
+│   ├── ZoomService.php
 │   └── SettingsService.php
 └── Traits/           # Reusable traits
 
@@ -503,20 +592,25 @@ Access committee management at `/admin/committees` and board management at `/adm
 
 ## Documentation
 
-Comprehensive user documentation is available at `/docs` (or visit [public/docs/index.html](public/docs/index.html) directly):
+**User guide:** step-by-step documentation for administrators, office staff and members is served by the app at `/user-docs/` (linked as "Documentation" in the sidebar). The source is in [public/user-docs](public/user-docs/index.html).
 
-- **[Committee and Board Management](public/docs/committees-boards.html)** - Complete guide to managing committees, boards, meetings, and reports
-- **[Content Management System](public/docs/content-management.html)** - HTML publisher, templates, assets, and SEO features
-- **[Email Campaign Management](public/docs/email-campaigns.html)** - Email campaigns, subscriber management, and campaign emails
-- **[User Roles](public/docs/user-roles.html)** - User role system and access control
-- **[Member Management](public/docs/members.html)** - Managing member records and information
-- **[Student Management](public/docs/students.html)** - School administration and student tracking
-- **[Event Management](public/docs/events.html)** - Calendar events and RSVP tracking
-- **[Financial Management](public/docs/invoices.html)** - Invoices, payments, and reports
-- **[Yahrzeit Tracking](public/docs/yahrzeits.html)** - Hebrew calendar integration
+**Developer guides** in this repository:
 
-Additional documentation:
+- **[AI Assistant](AI_ASSISTANT.md)** - Admin assistant, tools, providers and conversation retention
 - **[Roles and Permissions](ROLES_README.md)** - Developer guide to the role system
+- **[Committees and Boards](COMMITTEES_BOARDS_README.md)** - Committees, boards, meetings, minutes and reports
+- **[Membership Billing](MEMBERSHIP_BILLING_README.md)** and **[Quickstart](MEMBERSHIP_BILLING_QUICKSTART.md)** - Automated dues generation
+- **[GL Batch Export](GL_BATCH_EXPORT_README.md)** - Chart of accounts and accounting exports
+- **[High Holy Day Seating](SEATING_README.md)** - Seat maps, seat assignment, member seat sales and renewals
+- **[Banner System](BANNER_SYSTEM_README.md)** - Banners and push notifications
+- **[Firebase](FIREBASE_IMPLEMENTATION.md)** - Push notification setup
+- **[Zoom Integration](ZOOM_INTEGRATION.md)** - Zoom meetings for events and committee meetings
+- **[HTML Publisher Seeded Content](HTML_PUBLISHER_SEEDED_CONTENT.md)** - Demo pages, templates and assets
+- **[Mobile API](REACT_NATIVE_API.md)** - REST API for React Native and other mobile apps
+- **[Mobile School API](MOBILE_SCHOOL_API.md)** - Teacher and parent app endpoints
+- **[WordPress Plugin](wordpress-plugin/README.md)** - Showing ShulNET banners on WordPress
+
+Interactive API documentation is generated by Scramble at `/docs/api`.
 
 ## Configuration
 
@@ -555,6 +649,79 @@ MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
+### AI Assistant
+
+The assistant uses the provider named by `AI_PROVIDER` (OpenAI when unset). Providers are defined in `config/ai.php`.
+
+```env
+# OpenAI
+AI_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+
+# Or a local Ollama model, keeping data on your own server
+AI_PROVIDER=ollama
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=gemma4:12b
+```
+
+See [AI_ASSISTANT.md](AI_ASSISTANT.md) for details.
+
+### Payments, Zoom and Push Notifications
+
+Each integration is optional and configured in `.env` (keys are read in `config/services.php`):
+
+```env
+STRIPE_PUBLIC_KEY=
+STRIPE_SECRET_KEY=
+PAYPAL_CLIENT_ID=
+PAYPAL_SECRET=
+PAYPAL_MODE=sandbox
+AUTHORIZE_NET_API_LOGIN_ID=
+AUTHORIZE_NET_TRANSACTION_KEY=
+AUTHORIZE_NET_ENVIRONMENT=sandbox
+
+ZOOM_ACCOUNT_ID=
+ZOOM_CLIENT_ID=
+ZOOM_CLIENT_SECRET=
+
+FIREBASE_CREDENTIALS=/storage/firebase/firebase-credentials.json
+```
+
+Choose the active payment processor in Settings (`/admin/settings`).
+
+### Scheduled Jobs
+
+Recurring tasks are defined in `routes/console.php` and run by Laravel's scheduler. The scheduler does nothing on its own: your server must invoke `php artisan schedule:run` **every minute**.
+
+| Command | Schedule | Purpose |
+|---------|----------|---------|
+| `banners:send-push-notifications` | Every 15 minutes | Sends push notifications for pending banners |
+| `membership:generate-dues` | Daily at 01:00 | Generates membership dues invoices based on billing settings (anniversary or fixed date) |
+| `ai:prune-conversations --days=30` | Daily at 02:00 | Deletes admin assistant conversations inactive for more than 30 days |
+
+Times use the application timezone (`APP_TIMEZONE`).
+
+**Enable the scheduler** with a single cron entry on the server:
+
+```bash
+* * * * * cd /path/to/shulnet-php && php artisan schedule:run >> /dev/null 2>&1
+```
+
+For local development you can run `php artisan schedule:work` instead. The bundled Docker image runs the scheduler for you: supervisor starts a `laravel-scheduler` program (`schedule:work`) alongside PHP-FPM, nginx and the queue worker, so no host cron entry is needed. If you run multiple container replicas, run the scheduler on only one of them (or use `->onOneServer()` with a shared cache) to avoid duplicate runs.
+
+**Useful commands:**
+
+```bash
+php artisan schedule:list                          # Show all scheduled tasks and next run times
+php artisan schedule:test                          # Pick a scheduled task and run it now
+php artisan membership:generate-dues --dry-run     # Preview dues invoices without creating them
+php artisan membership:generate-dues --date=2026-09-01   # Check renewals as of a given date
+php artisan membership:generate-dues --force       # Generate even if auto-generation is disabled
+php artisan ai:prune-conversations --days=14       # Prune with a different retention window
+```
+
+**Changing a schedule or retention window:** edit the `Schedule::command(...)` entries in `routes/console.php`. For example, change `--days=30` there to keep assistant conversations for a different period. The assistant widget also ignores conversations older than 30 days when restoring history, which is set in `AdminChatController::show`.
+
 ### Asset Storage
 
 Configure asset storage for the HTML Publisher in `.env`:
@@ -587,7 +754,7 @@ Set the active storage provider in Settings (`/admin/settings`) under "Asset Sto
 php artisan test
 
 # Run specific test file
-php artisan test tests/Feature/MemberTest.php
+php artisan test tests/Feature/AdminChatTest.php
 
 # Run with coverage
 php artisan test --coverage
@@ -625,24 +792,24 @@ docker buildx imagetools inspect <imagename> --format '{{ json .Provenance }}'
 docker buildx imagetools inspect <imagename> --format '{{ json .SBOM }}'
 ```
 
-**Build Locally with Attestations:**
+**Build Locally:**
 ```bash
-# Local build (single platform, loaded to Docker)
-./scripts/build-docker-with-attestations.sh latest
+# Single platform, loaded to Docker
+docker build -t shulnet-php:local .
 
-# Multi-platform build (cached in buildx, not pushed)
-./scripts/build-docker-with-attestations.sh latest --multi-platform
-
-# Multi-platform build and push to registry
-./scripts/build-docker-with-attestations.sh latest --multi-platform --push
+# With provenance and SBOM attestations
+docker buildx build --provenance=true --sbom=true -t shulnet-php:local --load .
 ```
+
+The image runs PHP-FPM, nginx, the queue worker and the scheduler under supervisor.
 
 ## Contributing
 
 1. Create a feature branch
 2. Make your changes
-3. Run tests and linting
-4. Submit a pull request
+3. Make sure to create appropriate tests
+4. Run tests and linting
+5. Submit a pull request against the current, in-progress version branch
 
 ## License
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEventRSVPRequest;
 use App\Http\Requests\UpdateEventRSVPRequest;
+use App\Actions\Events\ListEventRsvps;
 use App\Models\EventRSVP;
 use App\Models\Event;
 use App\Services\ZoomService;
@@ -24,16 +25,9 @@ class EventRSVPController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, ListEventRsvps $listEventRsvps)
     {
-        $query = EventRSVP::with(['event', 'member', 'ticketType'])
-            ->orderBy('created_at', 'desc');
-
-        if ($request->has('event_id')) {
-            $query->where('event_id', $request->event_id);
-        }
-
-        return $query->paginate(50);
+        return $listEventRsvps->handle($request->input('event_id'));
     }
 
     /**
