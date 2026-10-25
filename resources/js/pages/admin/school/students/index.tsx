@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Plus, Eye, Edit, Trash2, Upload, Download } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
+import { StudentOnboardingWorkflow, type SchoolTuitionTier, type Parent, type Member } from '@/components/student-onboarding-workflow';
 import {
   Dialog,
   DialogContent,
@@ -28,7 +29,14 @@ function fetchJson(url: string, opts: any = {}) {
     return fetch(url, Object.assign({ credentials: 'same-origin', headers }, opts)).then((r) => r.ok ? r.json() : Promise.reject(r));
 }
 
-export default function StudentsIndex() {
+interface StudentsIndexProps {
+    schoolTuitionTiers: SchoolTuitionTier[];
+    parents: Parent[];
+    members: Member[];
+}
+
+export default function StudentsIndex({ schoolTuitionTiers, parents, members }: StudentsIndexProps) {
+    const [showOnboarding, setShowOnboarding] = useState(false);
     const { t } = useTranslation();
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -198,12 +206,31 @@ export default function StudentsIndex() {
                             </DialogContent>
                         </Dialog>
                         
-                        <Link href="/admin/school/students/create">
-                            <Button className="flex items-center gap-2">
-                                <Plus className="h-4 w-4" />
-                                {t('Add Student')}
-                            </Button>
-                        </Link>
+                        <Dialog open={showOnboarding} onOpenChange={setShowOnboarding}>
+                            <DialogTrigger asChild>
+                                <Button className="flex items-center gap-2">
+                                    <Plus className="h-4 w-4" />
+                                    {t('Add Student')}
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                                <DialogHeader>
+                                    <DialogTitle>{t('Onboard New Student')}</DialogTitle>
+                                    <DialogDescription>
+                                        Create student profile(s), assign or create a parent, select tuition tier, and generate an invoice.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <StudentOnboardingWorkflow
+                                    schoolTuitionTiers={schoolTuitionTiers}
+                                    parents={parents}
+                                    members={members}
+                                    onClose={() => {
+                                        setShowOnboarding(false);
+                                        load(1, search);
+                                    }}
+                                />
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
 

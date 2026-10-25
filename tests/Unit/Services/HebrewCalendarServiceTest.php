@@ -98,8 +98,8 @@ class HebrewCalendarServiceTest extends TestCase
     {
         $months = $this->service->getHebrewMonths();
 
-        $this->assertArrayHasKey(7, $months);
-        $this->assertEquals('Nisan', $months[7]);
+        $this->assertArrayHasKey(8, $months);
+        $this->assertEquals('Nisan', $months[8]);
     }
 
     public function test_get_month_number_from_name_handles_tishrei_variations()
@@ -153,8 +153,8 @@ class HebrewCalendarServiceTest extends TestCase
 
     public function test_get_month_number_from_name_handles_nisan_variations()
     {
-        $this->assertEquals(7, $this->service->getMonthNumberFromName('Nisan'));
-        $this->assertEquals(7, $this->service->getMonthNumberFromName('Nissan'));
+        $this->assertEquals(8, $this->service->getMonthNumberFromName('Nisan'));
+        $this->assertEquals(8, $this->service->getMonthNumberFromName('Nissan'));
     }
 
     public function test_get_month_number_from_name_handles_kislev_variations()

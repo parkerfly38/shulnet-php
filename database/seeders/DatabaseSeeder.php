@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
             PdfTemplateSeeder::class,
             CemeterySeeder::class,
             SettingSeeder::class,
+            ChartOfAccountsSeeder::class,
             InvoiceSeeder::class,
             EmailTemplateSeeder::class,
 
@@ -66,6 +67,16 @@ class DatabaseSeeder extends Seeder
 
             // Member Portal Test Data
             MemberPortalTestSeeder::class,
+            DemoExperienceSeeder::class,
+            MembershipBillingSeeder::class,
+
+            MemberTypeSeeder::class,
+
+            // High Holy Day seating: runs after member types so non-members get non-member prices
+            SeatingSeeder::class,
+
+            // Must run last: spreads member join dates over the past 12 months
+            MemberTimelineSeeder::class,
         ]);
     }
 }

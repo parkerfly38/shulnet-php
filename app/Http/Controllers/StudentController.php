@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Students\ListStudents;
 use App\Imports\StudentsImport;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -18,21 +19,12 @@ class StudentController extends Controller
      *
      * @authenticated
      */
-    public function index(Request $request)
+    public function index(Request $request, ListStudents $listStudents)
     {
-        $perPage = (int) $request->input('per_page', 25);
-        $q = $request->input('q');
-
-        $query = Student::with('parents');
-        if ($q) {
-            $query->where(function ($s) use ($q) {
-                $s->where('first_name', 'like', "%{$q}%")
-                    ->orWhere('last_name', 'like', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%");
-            });
-        }
-
-        return response()->json($query->paginate($perPage));
+        return response()->json($listStudents->handle(
+            $request->input('q'),
+            (int) $request->input('per_page', 25),
+        ));
     }
 
     /**

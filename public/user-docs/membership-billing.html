@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership Billing - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+            <li><a href="account-settings.html">Account Settings</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+            <li><a href="rides.html">Ride Sharing</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees &amp; Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Ritual &amp; Cemetery</div>
+          <ul>
+            <li><a href="gabbai.html">Gabbai Dashboard</a></li>
+            <li><a href="high-holy-day-seating.html">High Holy Day Seating</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="membership-billing.html" class="active">Membership Billing</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+            <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+            <li><a href="custom-forms.html">Custom Forms</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="ai-assistant.html">AI Assistant</a></li>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html">Notes &amp; Tasks</a></li>
+            <li><a href="pdf-templates.html">PDF Templates</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>Membership Billing</h1>
+
+      <p class="lead">Membership Billing generates membership dues invoices automatically, so renewals go out on time without anyone having to create them by hand.</p>
+
+      <h2>Accessing Membership Billing</h2>
+
+      <p>Navigate to <strong>Membership Billing</strong> under Settings in the admin menu (<code>/admin/settings/membership-billing</code>).</p>
+
+      <h2>Billing Methods</h2>
+
+      <div class="card">
+        <h3>Anniversary Billing (Individual join dates)</h3>
+        <p>Each member is billed on the anniversary of their membership start date. Renewals are spread throughout the year.</p>
+      </div>
+
+      <div class="card">
+        <h3>Fixed Date Billing (All on same date)</h3>
+        <p>All members are billed on the same date each year. Choose the <strong>Billing Month</strong> and <strong>Billing Day</strong>, for example July 1 for a fiscal year that starts in July.</p>
+      </div>
+
+      <h2>Settings</h2>
+
+      <ul>
+        <li><strong>Automatic Invoice Generation:</strong> When on, ShulNET checks for renewals every night and creates dues invoices.</li>
+        <li><strong>Payment Due (Days):</strong> The number of days after the invoice date when payment is due.</li>
+        <li><strong>Grace Period (Days):</strong> How many days before or after the billing date ShulNET looks for renewals. It also prevents a member from being billed twice for the same period.</li>
+      </ul>
+
+      <p>Click <strong>Save Settings</strong> after making changes.</p>
+
+      <h2>Generating Invoices Manually</h2>
+
+      <p>Under <strong>Manual Operations</strong>, you can preview which members are due for renewal and click <strong>Generate Invoices Now</strong> to create their invoices immediately. This works even when automatic generation is turned off.</p>
+
+      <h2>How Invoice Amounts Are Set</h2>
+
+      <p>ShulNET bills each member's active <a href="membership-periods.html">membership period</a> at the price of that period's <strong>membership tier</strong>. Keep tier prices current in <strong>Membership Tiers</strong> before your billing date. With anniversary billing, the renewal date comes from the member's last renewal date, or the start of the membership period if there is none.</p>
+
+      <div class="alert alert-warning">
+        <strong>Before the first run:</strong> Make sure every member you want billed has an active membership period with an active membership tier. Periods without a tier, or with an inactive tier, are skipped.
+      </div>
+
+      <div class="alert alert-info">
+        <strong>For system administrators:</strong> Automatic generation runs nightly at 1:00 AM through the ShulNET scheduler. If invoices are not appearing, confirm the scheduler is running (see the Scheduled Jobs section of the project README).
+      </div>
+
+      <h2>Related Documentation</h2>
+      <ul>
+        <li><a href="membership-periods.html">Membership Periods</a></li>
+        <li><a href="invoices.html">Managing Invoices</a></li>
+        <li><a href="payments.html">Processing Payments</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

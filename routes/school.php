@@ -6,9 +6,19 @@ use Inertia\Inertia;
 // All routes in this file are prefixed with 'admin/school' and require admin role
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->group(function () {
     
+    // Data the student onboarding dialog needs on any school page that opens it
+    $studentOnboardingProps = fn () => [
+        'schoolTuitionTiers' => \App\Models\SchoolTuitionTier::active()->ordered()
+            ->get(['id', 'name', 'slug', 'description', 'price', 'billing_period', 'features']),
+        'parents' => \App\Models\ParentModel::select('id', 'first_name', 'last_name', 'email')
+            ->orderBy('last_name')->orderBy('first_name')->get(),
+        'members' => \App\Models\Member::select('id', 'first_name', 'last_name', 'email')
+            ->orderBy('last_name')->orderBy('first_name')->get(),
+    ];
+
     // School Dashboard
-    Route::get('/', function () {
-        return Inertia::render('admin/school/index', [
+    Route::get('/', function () use ($studentOnboardingProps) {
+        return Inertia::render('admin/school/index', $studentOnboardingProps() + [
             'stats' => [
                 'students' => \App\Models\Student::count(),
                 'teachers' => \App\Models\Teacher::count(),
@@ -77,7 +87,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
     })->name('admin.school.parents.edit');
 
     // Students
-    Route::get('students', fn() => Inertia::render('admin/school/students/index'))->name('admin.school.students.index');
+    Route::get('students', fn() => Inertia::render('admin/school/students/index', $studentOnboardingProps()))->name('admin.school.students.index');
     Route::get('students/create', fn() => Inertia::render('admin/school/students/create'))->name('admin.school.students.create');
     Route::get('students/{id}', function ($id) {
         $model = \App\Models\Student::with('parents')->findOrFail($id);

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Invoices\GetInvoiceStats;
+use App\Actions\Invoices\ListInvoices;
 use App\Mail\InvoiceMail;
 use App\Models\ChartOfAccount;
 use App\Models\Invoice;
@@ -20,37 +22,13 @@ class InvoiceController extends Controller
     /**
      * Display a listing of invoices.
      */
-    public function index(Request $request)
+    public function index(Request $request, ListInvoices $listInvoices, GetInvoiceStats $getInvoiceStats)
     {
         $search = $request->get('search');
         $status = $request->get('status');
         $memberId = $request->get('member');
-        $perPage = $request->get('per_page', 15);
 
-        $query = Invoice::query()
-            ->with(['member'])
-            ->orderBy('invoice_date', 'desc');
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('invoice_number', 'like', "%{$search}%")
-                    ->orWhere('notes', 'like', "%{$search}%")
-                    ->orWhereHas('member', function ($q) use ($search) {
-                        $q->where('first_name', 'like', "%{$search}%")
-                            ->orWhere('last_name', 'like', "%{$search}%");
-                    });
-            });
-        }
-
-        if ($status) {
-            $query->where('status', $status);
-        }
-
-        if ($memberId) {
-            $query->where('member_id', $memberId);
-        }
-
-        $invoices = $query->paginate($perPage);
+        $invoices = $listInvoices->handle($search, $status, $memberId, (int) $request->get('per_page', 15));
 
         $members = Member::select('id', 'first_name', 'last_name')
             ->where('member_type', 'member')
@@ -58,21 +36,7 @@ class InvoiceController extends Controller
             ->orderBy('first_name')
             ->get();
 
-        // Calculate invoice statistics
-        $stats = [
-            'total_count' => Invoice::count(),
-            'total_amount' => Invoice::sum('total'),
-            'draft_count' => Invoice::where('status', 'draft')->count(),
-            'draft_amount' => Invoice::where('status', 'draft')->sum('total'),
-            'open_count' => Invoice::where('status', 'open')->count(),
-            'open_amount' => Invoice::where('status', 'open')->sum('total'),
-            'paid_count' => Invoice::where('status', 'paid')->count(),
-            'paid_amount' => Invoice::where('status', 'paid')->sum('total'),
-            'overdue_count' => Invoice::where('status', 'overdue')->count(),
-            'overdue_amount' => Invoice::where('status', 'overdue')->sum('total'),
-            'unpaid_count' => Invoice::whereIn('status', ['open', 'overdue'])->count(),
-            'unpaid_amount' => Invoice::whereIn('status', ['open', 'overdue'])->sum('total'),
-        ];
+        $stats = $getInvoiceStats->handle();
 
         return Inertia::render('invoices/index', [
             'invoices' => $invoices,

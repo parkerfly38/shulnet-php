@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assistant - ShulNET 2.0</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">ShulNET 2.0</a>
+      <nav class="header-nav">
+        <a href="index.html">Documentation</a>
+        <a href="../">Back to App</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Getting Started</div>
+          <ul>
+            <li><a href="index.html">Overview</a></li>
+            <li><a href="getting-started.html">Getting Started</a></li>
+            <li><a href="user-roles.html">User Roles</a></li>
+            <li><a href="account-settings.html">Account Settings</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Member Management</div>
+          <ul>
+            <li><a href="members.html">Managing Members</a></li>
+            <li><a href="member-onboarding.html">Member Onboarding</a></li>
+            <li><a href="membership-periods.html">Membership Periods</a></li>
+            <li><a href="member-portal.html">Member Portal</a></li>
+            <li><a href="rides.html">Ride Sharing</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">School Management</div>
+          <ul>
+            <li><a href="students.html">Managing Students</a></li>
+            <li><a href="student-onboarding.html">Student Onboarding</a></li>
+            <li><a href="tuition-tiers.html">Tuition Tiers</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Leadership</div>
+          <ul>
+            <li><a href="committees-boards.html">Committees &amp; Boards</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Ritual &amp; Cemetery</div>
+          <ul>
+            <li><a href="gabbai.html">Gabbai Dashboard</a></li>
+            <li><a href="high-holy-day-seating.html">High Holy Day Seating</a></li>
+            <li><a href="cemetery.html">Cemetery Management</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Events</div>
+          <ul>
+            <li><a href="events.html">Managing Events</a></li>
+            <li><a href="calendars.html">Calendars</a></li>
+            <li><a href="rsvps.html">Event RSVPs</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Financial</div>
+          <ul>
+            <li><a href="invoices.html">Managing Invoices</a></li>
+            <li><a href="payments.html">Processing Payments</a></li>
+            <li><a href="membership-billing.html">Membership Billing</a></li>
+            <li><a href="reports.html">Financial Reports</a></li>
+            <li><a href="gl-export.html">Chart of Accounts &amp; GL Export</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Communication</div>
+          <ul>
+            <li><a href="email-campaigns.html">Email Campaigns</a></li>
+            <li><a href="banners.html">Banner Messages</a></li>
+            <li><a href="content-management.html">Content Management</a></li>
+            <li><a href="custom-forms.html">Custom Forms</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Other Features</div>
+          <ul>
+            <li><a href="ai-assistant.html" class="active">AI Assistant</a></li>
+            <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+            <li><a href="notes-tasks.html">Notes &amp; Tasks</a></li>
+            <li><a href="pdf-templates.html">PDF Templates</a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Developer Resources</div>
+          <ul>
+            <li><a href="api-access.html">API Access</a></li>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <h1>AI Assistant</h1>
+
+      <p class="lead">The AI Assistant answers questions about your congregation's data in plain language. Ask who has a yahrzeit this week, which families have an outstanding balance, or how many people have RSVPed to an event, and it looks up the answer for you.</p>
+
+      <div class="alert alert-info">
+        <strong>Administrators only:</strong> The assistant is available to users with the Admin role. Other users do not see it.
+      </div>
+
+      <h2>Opening the Assistant</h2>
+
+      <ol>
+        <li>Sign in with an administrator account</li>
+        <li>Click the round <strong>chat button</strong> in the bottom corner of any page</li>
+        <li>Type your question and press <strong>Send</strong></li>
+      </ol>
+
+      <p>The chat window stays open as you move between pages. Close it with the <strong>X</strong> in its header.</p>
+
+      <h2>What You Can Ask</h2>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <h3>Members</h3>
+          <p>Find members by name, email, city or state, and get one member's contact details, family, membership history, committee roles, balance and giving.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🕯️</div>
+          <h3>Yahrzeits</h3>
+          <p>Search yahrzeits by name or related member, or list those being observed in the coming days.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Events and RSVPs</h3>
+          <p>Find events and get RSVP totals by status (pending, confirmed, cancelled).</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎓</div>
+          <h3>Students</h3>
+          <p>Look up a student's profile, allergies and accommodations, parents, grades and attendance.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Invoices and Reports</h3>
+          <p>Search invoices and run reports: income summary, revenue by source, payment methods, event revenue, member growth, outstanding balances and aging.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✡️</div>
+          <h3>Hebrew Calendar</h3>
+          <p>Get today's Hebrew date or convert any Gregorian date.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Example Questions</h3>
+        <ul>
+          <li>"Who has a yahrzeit this week?"</li>
+          <li>"Which families owe more than $500?"</li>
+          <li>"How many confirmed RSVPs do we have for the Chanukah party?"</li>
+          <li>"Show me the attendance for Sarah Cohen."</li>
+          <li>"What was our income by category from January through June?"</li>
+          <li>"What is the Hebrew date on March 14, 2027?"</li>
+        </ul>
+      </div>
+
+      <h2>Follow-up Questions</h2>
+
+      <p>The assistant remembers the conversation, so you can ask follow-ups such as "What about next week?" or "Show me her family." Your conversation is restored when you return to ShulNET, as long as you used it within the last 30 days.</p>
+
+      <h2>What the Assistant Will Not Do</h2>
+
+      <ul>
+        <li><strong>It does not change data.</strong> The assistant can only look things up. To edit a member, create an invoice or record a payment, use the regular screens.</li>
+        <li><strong>It does not guess.</strong> If it cannot find a record, it tells you so rather than inventing an answer.</li>
+        <li><strong>It only sees ShulNET data.</strong> It cannot read email, files or other systems.</li>
+      </ul>
+
+      <div class="alert alert-warning">
+        <strong>Check important answers:</strong> The assistant is a convenience, not a system of record. Before acting on a financial figure or contacting a family, confirm the details on the relevant screen.
+      </div>
+
+      <h2>Privacy</h2>
+
+      <p>Depending on how your administrator has configured ShulNET, questions and the data needed to answer them may be sent to an AI provider such as OpenAI, or processed by a model running on your own server. Ask your system administrator which applies to your installation.</p>
+
+      <p>Conversations that have not been used for 30 days are deleted automatically each night.</p>
+
+      <h2>Troubleshooting</h2>
+
+      <div class="card">
+        <ul>
+          <li><strong>No chat button:</strong> Your account does not have the Admin role. See <a href="user-roles.html">User Roles</a>.</li>
+          <li><strong>"Sorry, something went wrong":</strong> The AI service is unavailable or not configured. Contact your system administrator.</li>
+          <li><strong>Earlier conversation is gone:</strong> Conversations are cleared after 30 days without use.</li>
+        </ul>
+      </div>
+
+      <h2>Related Documentation</h2>
+      <ul>
+        <li><a href="members.html">Managing Members</a></li>
+        <li><a href="yahrzeits.html">Yahrzeit Tracking</a></li>
+        <li><a href="reports.html">Financial Reports</a></li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>
