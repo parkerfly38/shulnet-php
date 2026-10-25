@@ -22,7 +22,7 @@ return [
         /*
          * API version.
          */
-        'version' => env('API_VERSION', '1.0.9.3'),
+        'version' => trim((string) @file_get_contents(base_path('VERSION'))) ?: 'dev',
 
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).

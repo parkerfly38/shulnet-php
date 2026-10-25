@@ -290,6 +290,10 @@ The UI supports English (`en`), Spanish (`es`) and Hebrew (`he`, right-to-left).
 
 ## Deployment
 
+### Versioning
+
+The application version lives in the `VERSION` file in the project root. It ships with each deployment and is shown in the sidebar and the API docs. For a release, update `VERSION`, commit it, and tag the commit `v` plus the version (for example `v1.0.9.3`). If you cache config (`php artisan config:cache`), re-run it after deploying so the new version is picked up.
+
 ### TinyMCE Installation
 
 TinyMCE is excluded from the repository (listed in `.gitignore`) and must be installed during deployment.
