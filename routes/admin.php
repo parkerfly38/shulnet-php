@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     Route::get('users', [UserController::class, 'index'])->name('admin.users');
     Route::post('users/{user}/password-reset-link', [UserController::class, 'sendPasswordResetLink'])->name('admin.users.password-reset-link');
     Route::put('users/{user}/password', [UserController::class, 'setPassword'])->name('admin.users.password');
+    Route::delete('users/{user}/two-factor', [UserController::class, 'disableTwoFactor'])->name('admin.users.two-factor.destroy');
 
     // Global search
     Route::get('api/search', [SearchController::class, 'globalSearch'])->name('search.global');

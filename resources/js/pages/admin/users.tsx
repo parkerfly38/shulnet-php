@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Edit, KeyRound, Search, Users } from 'lucide-react';
+import { Edit, KeyRound, Search, ShieldCheck, ShieldOff, Users } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -36,6 +36,7 @@ interface User {
   is_student: boolean;
   is_member: boolean;
   is_default_admin: boolean;
+  two_factor_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -152,6 +153,13 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
     }
   };
 
+  const removeTwoFactor = (user: User) => {
+    if (!confirm(t('Remove two-factor authentication for :name? They will be able to sign in with just their password until they set it up again.', { name: user.name }))) {
+      return;
+    }
+    router.delete(`/admin/users/${user.id}/two-factor`, { preserveScroll: true });
+  };
+
   const getRoleBadgeClass = (role: string) => {
     const colors = {
       admin: 'bg-red-100 text-red-800',
@@ -243,7 +251,14 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div className="font-medium text-gray-900 dark:text-gray-100">{user.name}</div>
+                          <div className="flex items-center gap-1.5 font-medium text-gray-900 dark:text-gray-100">
+                            {user.name}
+                            {user.two_factor_enabled && (
+                              <ShieldCheck className="h-4 w-4 text-green-600 dark:text-green-400" aria-label={t('Two-factor authentication on')}>
+                                <title>{t('Two-factor authentication on')}</title>
+                              </ShieldCheck>
+                            )}
+                          </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                         </div>
                       </td>
@@ -299,6 +314,16 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                             <KeyRound className="h-4 w-4 me-2" />
                             {t('Reset Password')}
                           </Button>
+                          {user.two_factor_enabled && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeTwoFactor(user)}
+                            >
+                              <ShieldOff className="h-4 w-4 me-2" />
+                              {t('Remove 2FA')}
+                            </Button>
+                          )}
                         </div>
                       </td>
                     </tr>
