@@ -16,7 +16,7 @@ import AppLayout from '@/layouts/app-layout';
 import { formatCurrency } from '@/lib/utils';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Armchair, CircleDollarSign, Clock, Pencil, RefreshCw, Search, Trash2, UserCheck, X } from 'lucide-react';
+import { Armchair, CircleDollarSign, Clock, Pencil, Printer, RefreshCw, Search, Trash2, UserCheck, X } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
 interface Props {
@@ -167,6 +167,9 @@ export default function SeatingSeasonShow({ season, assignments, stats, renewalS
                         <Button variant="outline" onClick={() => setRenewalsOpen(true)}><RefreshCw className="mr-2 h-4 w-4" />{t('Offer Renewals')}</Button>
                         <Button variant="outline" asChild>
                             <Link href={`/admin/seating-charts/${season.chart.id}/edit`}>{t('Edit Seat Map')}</Link>
+                        </Button>
+                        <Button variant="outline" asChild>
+                            <a href={`/admin/seating-seasons/${season.id}/print`} target="_blank" rel="noopener"><Printer className="mr-2 h-4 w-4" />{t('Print')}</a>
                         </Button>
                         <Button variant="outline" onClick={() => setEditing(true)}><Pencil className="mr-2 h-4 w-4" />{t('Edit Season')}</Button>
                         <Button variant="ghost" size="icon" aria-label={t('Delete season')} onClick={destroySeason}><Trash2 className="h-4 w-4" /></Button>

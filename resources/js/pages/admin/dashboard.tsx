@@ -352,7 +352,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                     {currentMonthYahrzeits.map((yahrzeit) => (
                                         <div 
                                             key={yahrzeit.id}
-                                            className="border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                                            className="border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                         >
                                             <div className="flex items-start gap-2">
                                                 <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
@@ -425,7 +425,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                             <Link
                                                 key={event.id}
                                                 href={`/admin/events/${event.id}`}
-                                                className="block border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                                                className="block border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                             >
                                                 <div className="flex items-start gap-2">
                                                     <div className="flex-shrink-0 w-12 text-center">
@@ -555,7 +555,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                             <Link
                                                 key={invoice.id}
                                                 href={`/admin/invoices/${invoice.id}`}
-                                                className="block border border-gray-200 dark:border-gray-700 rounded p-1.5 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors text-xs"
+                                                className="block border border-gray-200 dark:border-gray-700 rounded p-1.5 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
                                             >
                                                 <div className="flex items-center justify-between gap-2">
                                                     <div className="flex-1 min-w-0">

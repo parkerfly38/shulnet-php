@@ -29,7 +29,12 @@ class PdfTemplate extends Model
      */
     public function renderWithFields(array $fieldValues): string
     {
-        $content = $this->html_content;
+        // {{#if field}}...{{/if}} keeps its contents only when the field has a value.
+        $content = preg_replace_callback(
+            '/\{\{#if\s+([\w.]+)\s*\}\}(.*?)\{\{\/if\}\}/s',
+            fn ($m) => trim((string) ($fieldValues[$m[1]] ?? '')) !== '' ? $m[2] : '',
+            $this->html_content
+        );
 
         foreach ($fieldValues as $fieldName => $value) {
             // Replace {{field_name}} with the actual value

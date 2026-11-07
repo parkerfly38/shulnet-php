@@ -128,6 +128,11 @@ const adminNavItems: NavItem[] = [
         icon: Armchair,
     },
     {
+        title: 'Ride Sharing',
+        href: '/member/rides',
+        icon: Car,
+    },
+    {
         title: 'Email Campaigns',
         href: '/admin/campaigns',
         icon: Mail,
@@ -271,6 +276,11 @@ const systemNavItems: NavItem[] = [
     {
         title: 'Email Templates',
         href: '/admin/templates',
+        icon: FileText,
+    },
+    {
+        title: 'PDF Templates',
+        href: '/admin/pdf-templates',
         icon: FileText,
     },
 ];

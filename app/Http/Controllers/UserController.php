@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -87,6 +92,57 @@ class UserController extends Controller
                 'role_labels' => $user->role_labels,
             ],
         ]);
+    }
+
+    /**
+     * Email the user the standard "reset your password" link.
+     */
+    public function sendPasswordResetLink(Request $request, User $user)
+    {
+        try {
+            $status = Password::sendResetLink(['email' => $user->email]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return back()->with('error', "The reset email to {$user->email} could not be sent. Check the email settings, or set a password instead.");
+        }
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            // Usually throttling: a link was sent to this address within the last minute.
+            return back()->with('error', __($status));
+        }
+
+        Log::info('Admin sent password reset link', ['admin_id' => $request->user()->id, 'user_id' => $user->id]);
+
+        return back()->with('success', "A password reset link was emailed to {$user->email}.");
+    }
+
+    /**
+     * Set a new password for the user and sign them out everywhere else.
+     */
+    public function setPassword(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'password' => ['required', 'string', PasswordRule::defaults(), 'confirmed'],
+        ]);
+
+        $user->forceFill([
+            'password' => $validated['password'],
+            'remember_token' => Str::random(60),
+        ])->save();
+
+        // End the user's existing sessions and API tokens so the old password stops working everywhere.
+        if (config('session.driver') === 'database') {
+            DB::table(config('session.table', 'sessions'))
+                ->where('user_id', $user->id)
+                ->when($user->is($request->user()), fn ($q) => $q->where('id', '!=', $request->session()->getId()))
+                ->delete();
+        }
+        $user->tokens()->delete();
+
+        Log::info('Admin set user password', ['admin_id' => $request->user()->id, 'user_id' => $user->id]);
+
+        return back()->with('success', "The password for {$user->name} was changed. They have been signed out of other sessions.");
     }
 
     /**

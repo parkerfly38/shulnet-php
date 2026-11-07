@@ -1,0 +1,45 @@
+<style>
+    .yz-letter { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.6; color: #000; }
+    .yz-letter .letterhead { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #333; }
+    .yz-letter .letterhead h1 { margin: 0; font-size: 24pt; color: #333; }
+    .yz-letter .date { text-align: right; margin-bottom: 30px; }
+    .yz-letter .relationship-note { font-style: italic; color: #666; font-size: 11pt; margin-top: 5px; }
+    .yz-letter .details { background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #6b46c1; }
+    .yz-letter .details h3 { margin-top: 0; color: #6b46c1; }
+    .yz-letter .details p { margin: 8px 0; }
+    .yz-letter .signature { margin-top: 50px; }
+</style>
+
+<div class="yz-letter">
+    <div class="letterhead">
+        <h1>{{organization_name}}</h1>
+        <p>Memorial Observance Reminder</p>
+    </div>
+
+    <div class="date">{{letter_date}}</div>
+
+    <p>Dear {{member_full_name}},</p>
+    {{#if relationship}}<p class="relationship-note">In memory of your {{relationship}}</p>{{/if}}
+
+    <p>We want to remind you of the upcoming yahrzeit (anniversary of passing) of your beloved:</p>
+
+    <div class="details">
+        <h3>{{deceased_name}}</h3>
+        {{#if deceased_hebrew_name}}<p><em>{{deceased_hebrew_name}}</em></p>{{/if}}
+        <p><strong>Hebrew Date:</strong> {{hebrew_date}}</p>
+        <p><strong>This Year (Gregorian Calendar):</strong> {{gregorian_date}}</p>
+        {{#if date_of_death}}<p><strong>Date of Passing:</strong> {{date_of_death}}</p>{{/if}}
+        {{#if observance_type}}<p><strong>Observance Type:</strong> {{observance_type}}</p>{{/if}}
+        {{#if notes}}<p><strong>Notes:</strong><br>{{notes}}</p>{{/if}}
+    </div>
+
+    <p>May their memory be a blessing. We invite you to join us in remembering and honoring your loved one on this special day.</p>
+
+    <p>If you would like to arrange for memorial prayers (Kaddish), light a memorial candle, or make a donation in their memory, please contact our office.</p>
+
+    <div class="signature">
+        <p>With warm regards,</p>
+        <p style="margin-top: 50px;">_______________________</p>
+        <p>{{organization_name}}</p>
+    </div>
+</div>

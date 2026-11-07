@@ -8,6 +8,7 @@ use App\Mail\YahrzeitReminderMail;
 use App\Models\Member;
 use App\Models\Yahrzeit;
 use App\Services\HebrewCalendarService;
+use App\Services\YahrzeitLetterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -402,7 +403,8 @@ class YahrzeitController extends Controller
                 new YahrzeitReminderMail(
                     $yahrzeit,
                     $validated['gregorian_date'],
-                    $validated['recipient_name']
+                    $validated['recipient_name'],
+                    $yahrzeit->members()->where('email', $validated['recipient_email'])->first()
                 )
             );
 
@@ -415,7 +417,7 @@ class YahrzeitController extends Controller
     /**
      * Print yahrzeit reminder letter
      */
-    public function printReminder(Yahrzeit $yahrzeit, Request $request)
+    public function printReminder(Yahrzeit $yahrzeit, Request $request, YahrzeitLetterService $letters)
     {
         $validated = $request->validate([
             'member_ids' => 'required|string',
@@ -429,14 +431,11 @@ class YahrzeitController extends Controller
             $query->whereIn('members.id', $memberIds)->withPivot('relationship');
         }]);
 
-        // Get Hebrew month name
-        $hebrewMonthName = $this->hebrewCalendar->getHebrewMonths()[$yahrzeit->hebrew_month_of_death] ?? 'Unknown';
-
         return view('yahrzeits.print-reminder', [
             'yahrzeit' => $yahrzeit,
-            'members' => $yahrzeit->members,
-            'gregorianDate' => $validated['gregorian_date'],
-            'hebrewMonthName' => $hebrewMonthName,
+            'letters' => $yahrzeit->members->map(fn (Member $member) => $letters->render(
+                $yahrzeit, $validated['gregorian_date'], "{$member->first_name} {$member->last_name}", $member
+            )),
         ]);
     }
 
@@ -506,7 +505,7 @@ class YahrzeitController extends Controller
         $validated = $request->validate([
             'yahrzeit_ids' => 'required|array',
             'yahrzeit_ids.*' => 'exists:yahrzeit,id',
-            'month' => 'nullable|integer|min:1|max:12',
+            'month' => 'nullable|string|max:20',
         ]);
 
         $successCount = 0;
@@ -520,11 +519,7 @@ class YahrzeitController extends Controller
                 continue;
             }
 
-            // Calculate Gregorian date
-            $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
-                $yahrzeit->hebrew_day_of_death,
-                $yahrzeit->hebrew_month_of_death
-            );
+            $gregorianDate = $this->gregorianDateThisYear($yahrzeit);
 
             // Send email to each member with an email address
             foreach ($yahrzeit->members as $member) {
@@ -534,7 +529,8 @@ class YahrzeitController extends Controller
                             new YahrzeitReminderMail(
                                 $yahrzeit,
                                 $gregorianDate,
-                                $member->first_name.' '.$member->last_name
+                                $member->first_name.' '.$member->last_name,
+                                $member
                             )
                         );
                         $successCount++;
@@ -556,23 +552,15 @@ class YahrzeitController extends Controller
     /**
      * Print monthly yahrzeit letters (all in one PDF)
      */
-    public function printMonthlyLetters(Request $request)
+    public function printMonthlyLetters(Request $request, YahrzeitLetterService $letters)
     {
         $validated = $request->validate([
             'yahrzeit_ids' => 'required|array',
             'yahrzeit_ids.*' => 'exists:yahrzeit,id',
-            'month' => 'nullable|integer|min:1|max:12',
+            'month' => 'nullable|string|max:20',
         ]);
 
-        // Get Hebrew month for the title
-        $currentHebrewDate = $this->hebrewCalendar->getCurrentHebrewDate();
-        $selectedMonth = $validated['month'] ?? $currentHebrewDate['month'];
-        
-        $hebrewMonthNames = [
-            1 => 'Tishrei', 2 => 'Cheshvan', 3 => 'Kislev', 4 => 'Tevet',
-            5 => 'Shevat', 6 => 'Adar', 7 => 'Nisan', 8 => 'Iyar',
-            9 => 'Sivan', 10 => 'Tammuz', 11 => 'Av', 12 => 'Elul'
-        ];
+        $selectedMonth = $validated['month'] ?? $this->hebrewCalendar->getCurrentHebrewDate()['month'];
 
         // Get all yahrzeits with their members
         $yahrzeits = Yahrzeit::whereIn('id', $validated['yahrzeit_ids'])
@@ -582,31 +570,32 @@ class YahrzeitController extends Controller
             ->orderBy('hebrew_day_of_death')
             ->get();
 
-        // Prepare data with Gregorian dates
-        $lettersData = [];
+        // One letter per family member
+        $rendered = [];
 
         foreach ($yahrzeits as $yahrzeit) {
-            $gregorianDate = $this->hebrewCalendar->getGregorianDateForCurrentYear(
-                $yahrzeit->hebrew_day_of_death,
-                $yahrzeit->hebrew_month_of_death
-            );
-
-            // Get Hebrew month name for this yahrzeit
-            $yahrzeitMonthName = $this->hebrewCalendar->getHebrewMonths()[$yahrzeit->hebrew_month_of_death] ?? 'Unknown';
+            $gregorianDate = $this->gregorianDateThisYear($yahrzeit);
 
             foreach ($yahrzeit->members as $member) {
-                $lettersData[] = [
-                    'member' => $member,
-                    'yahrzeit' => $yahrzeit,
-                    'gregorianDate' => $gregorianDate,
-                    'hebrewMonthName' => $yahrzeitMonthName,
-                ];
+                $rendered[] = $letters->render($yahrzeit, $gregorianDate, "{$member->first_name} {$member->last_name}", $member);
             }
         }
 
         return view('yahrzeits.print-monthly-letters', [
-            'lettersData' => $lettersData,
-            'hebrewMonth' => $hebrewMonthNames[$selectedMonth] ?? 'Unknown',
+            'letters' => $rendered,
+            'hebrewMonth' => $selectedMonth,
         ]);
+    }
+
+    /**
+     * The yahrzeit's date this Hebrew year. Months are stored by name ("Cheshvan"),
+     * and the number depends on whether the year has an Adar II.
+     */
+    protected function gregorianDateThisYear(Yahrzeit $yahrzeit): ?string
+    {
+        $year = $this->hebrewCalendar->getCurrentHebrewDate()['year'];
+        $month = $this->hebrewCalendar->getMonthNumberFromName($yahrzeit->hebrew_month_of_death, $year);
+
+        return $month ? $this->hebrewCalendar->getGregorianDateForCurrentYear($yahrzeit->hebrew_day_of_death, $month) : null;
     }
 }

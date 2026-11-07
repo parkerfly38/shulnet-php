@@ -269,6 +269,26 @@ class SeatingTest extends TestCase
                 ->where('stats.invoiced', 180));
     }
 
+    public function test_admin_can_print_season_as_pdf(): void
+    {
+        $chart = $this->chart();
+        $season = $this->season($chart);
+        [, $member] = $this->memberUser();
+        $season->assignments()->create([
+            'seat_id' => $chart->seats()->first()->id, 'member_id' => $member->id,
+            'status' => SeatAssignment::STATUS_RESERVED, 'price' => 180,
+        ]);
+
+        $response = $this->actingAs($this->admin())->get("/admin/seating-seasons/{$season->id}/print")
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
+
+        $this->assertStringStartsWith('%PDF', $response->getContent());
+
+        [$user] = $this->memberUser();
+        $this->actingAs($user)->get("/admin/seating-seasons/{$season->id}/print")->assertForbidden();
+    }
+
     public function test_member_reserves_seats_at_member_price_and_pays_now(): void
     {
         $chart = $this->chart();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PdfTemplate;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -107,37 +108,43 @@ class PdfTemplateController extends Controller
             ->with('success', 'PDF template deleted successfully.');
     }
 
-    public function preview(Request $request, PdfTemplate $pdfTemplate): Response
+    /**
+     * Render the template with the entered values, using the same code as the PDF.
+     */
+    public function preview(Request $request, PdfTemplate $pdfTemplate): JsonResponse
     {
-        $fieldValues = $request->input('field_values', []);
-
-        // Replace placeholders with actual values
-        $content = $pdfTemplate->renderWithFields($fieldValues);
-
-        return Inertia::render('pdf-templates/preview', [
-            'template' => $pdfTemplate,
-            'renderedContent' => $content,
-            'fieldValues' => $fieldValues,
+        return response()->json([
+            'html' => $pdfTemplate->renderWithFields($this->fieldValues($request)),
         ]);
     }
 
     public function generate(Request $request, PdfTemplate $pdfTemplate)
     {
-        $fieldValues = $request->input('field_values', []);
+        $content = $pdfTemplate->renderWithFields($this->fieldValues($request));
 
-        // Replace placeholders with actual values
-        $content = $pdfTemplate->renderWithFields($fieldValues);
-
-        // Generate PDF using dompdf
         $pdf = Pdf::loadHTML($content);
-
-        // Set paper size and orientation
         $pdf->setPaper('letter', 'portrait');
 
-        // Generate filename from template slug
         $filename = $pdfTemplate->slug.'-'.date('Y-m-d').'.pdf';
 
-        // Return PDF for download
         return $pdf->download($filename);
+    }
+
+    /**
+     * Values typed on the template page, escaped for HTML. The Generate button posts
+     * a plain form, so they can arrive as a JSON string.
+     */
+    protected function fieldValues(Request $request): array
+    {
+        $values = $request->input('field_values', []);
+
+        if (is_string($values)) {
+            $values = json_decode($values, true) ?: [];
+        }
+
+        return collect($values)
+            ->filter(fn ($value) => is_scalar($value) || $value === null)
+            ->map(fn ($value) => nl2br(e((string) $value)))
+            ->all();
     }
 }
