@@ -42,6 +42,33 @@ class YahrzeitMonthlyLettersTest extends TestCase
             ->assertSee('Sarah Cohen');
     }
 
+    // Every letter is its own sheet; all but the last force a page break when printed.
+    public function test_each_letter_prints_on_its_own_page(): void
+    {
+        $ids = [$this->yahrzeit()->id, $this->yahrzeit()->id, $this->yahrzeit()->id];
+
+        $html = $this->actingAs(User::factory()->admin()->create())
+            ->post('/admin/yahrzeits/monthly/print', ['yahrzeit_ids' => $ids, 'month' => 'Cheshvan'])
+            ->assertOk()
+            ->getContent();
+
+        $this->assertSame(3, substr_count($html, '<section class="letter-page'));
+        $this->assertSame(2, substr_count($html, '<section class="letter-page break-after"'));
+        $this->assertStringContainsString('break-after: page', $html);
+    }
+
+    // The migration tightens the default letter so its signature no longer spills onto a second page.
+    public function test_default_letter_spacing_is_tightened_but_custom_templates_are_left_alone(): void
+    {
+        $template = PdfTemplate::where('slug', YahrzeitLetterService::TEMPLATE_SLUG)->sole();
+        $this->assertStringContainsString('.yz-letter .signature { margin-top: 28px; }', $template->html_content);
+
+        $migration = require database_path('migrations/2026_11_08_000001_fit_yahrzeit_letter_on_one_page.php');
+        $template->update(['html_content' => '<p style="margin-top: 50px;">custom</p>']);
+        $migration->up();
+        $this->assertSame('<p style="margin-top: 50px;">custom</p>', $template->fresh()->html_content);
+    }
+
     public function test_monthly_reminders_email_for_a_month_name(): void
     {
         Mail::fake();

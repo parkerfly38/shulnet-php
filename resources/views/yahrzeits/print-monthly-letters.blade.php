@@ -5,20 +5,13 @@
     <title>Monthly Yahrzeit Letters - {{ $hebrewMonth }}</title>
     {{-- Letter content and styling come from the "Yahrzeit Reminder Letter" PDF template. --}}
     <style>
-        @page {
-            margin: 1in;
-        }
-        body {
-            margin: 0;
-        }
-        .page-break {
-            page-break-after: always;
-        }
         .no-print {
             font-family: Arial, sans-serif;
             padding: 20px;
             background-color: #f0f0f0;
-            margin-bottom: 20px;
+            margin: 0 auto 24px;
+            max-width: 8.5in;
+            box-sizing: border-box;
             border-radius: 5px;
             text-align: center;
         }
@@ -32,11 +25,6 @@
             cursor: pointer;
             border-radius: 4px;
         }
-        @media print {
-            .no-print {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -47,8 +35,6 @@
         <button onclick="window.close()">Close</button>
     </div>
 
-    @foreach($letters as $letter)
-        <div class="{{ $loop->last ? '' : 'page-break' }}">{!! $letter !!}</div>
-    @endforeach
+    @include('yahrzeits.partials.letter-pages')
 </body>
 </html>
