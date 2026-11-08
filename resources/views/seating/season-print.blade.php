@@ -1,3 +1,4 @@
+@inject('settingsService', 'App\Services\SettingsService')
 @php
     $status = function ($assignment) {
         if ($assignment->status === \App\Models\SeatAssignment::STATUS_RENEWAL) return ['renewal', __('Renewal held')];
@@ -48,7 +49,7 @@
     </style>
 </head>
 <body>
-    <div class="footer">{{ config('app.name') }} · {{ $season->name }} · {{ __('Printed :date', ['date' => now()->format('F j, Y g:i A')]) }}</div>
+    <div class="footer">{{ $settingsService->organizationName() }} · {{ $season->name }} · {{ __('Printed :date', ['date' => now()->format('F j, Y g:i A')]) }}</div>
 
     <div class="header">
         <h1>{{ $season->name }}</h1>

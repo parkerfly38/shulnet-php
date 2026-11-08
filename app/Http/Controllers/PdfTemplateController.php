@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PdfTemplate;
+use App\Services\SettingsService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +13,11 @@ use Inertia\Response;
 
 class PdfTemplateController extends Controller
 {
+    /** Placeholders that always mean the synagogue name from Settings. */
+    protected const SYNAGOGUE_NAME_FIELDS = ['synagogue_name', 'organization_name'];
+
+    public function __construct(protected SettingsService $settings) {}
+
     public function index(Request $request): Response
     {
         $query = PdfTemplate::query();
@@ -68,8 +74,16 @@ class PdfTemplateController extends Controller
 
     public function show(PdfTemplate $pdfTemplate): Response
     {
+        // Pre-fill the synagogue name on the form; nothing is saved to the template.
+        $template = $pdfTemplate->toArray();
+        $template['available_fields'] = collect($pdfTemplate->available_fields ?? [])
+            ->map(fn (array $field) => in_array($field['name'] ?? null, self::SYNAGOGUE_NAME_FIELDS, true)
+                ? [...$field, 'default_value' => $this->settings->organizationName()]
+                : $field)
+            ->all();
+
         return Inertia::render('pdf-templates/show', [
-            'template' => $pdfTemplate,
+            'template' => $template,
         ]);
     }
 
@@ -132,7 +146,8 @@ class PdfTemplateController extends Controller
 
     /**
      * Values typed on the template page, escaped for HTML. The Generate button posts
-     * a plain form, so they can arrive as a JSON string.
+     * a plain form, so they can arrive as a JSON string. A blank synagogue name is
+     * filled from Settings, even in templates that don't list it as a field.
      */
     protected function fieldValues(Request $request): array
     {
@@ -142,9 +157,17 @@ class PdfTemplateController extends Controller
             $values = json_decode($values, true) ?: [];
         }
 
-        return collect($values)
+        $values = collect($values)
             ->filter(fn ($value) => is_scalar($value) || $value === null)
             ->map(fn ($value) => nl2br(e((string) $value)))
             ->all();
+
+        foreach (self::SYNAGOGUE_NAME_FIELDS as $name) {
+            if (trim($values[$name] ?? '') === '') {
+                $values[$name] = e($this->settings->organizationName());
+            }
+        }
+
+        return $values;
     }
 }

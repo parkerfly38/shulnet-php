@@ -23,6 +23,17 @@ class SettingsService
     }
 
     /**
+     * The synagogue's name as entered in Settings, for letters, invoices, emails and printouts.
+     * Falls back to APP_NAME until an admin fills it in.
+     */
+    public function organizationName(): string
+    {
+        $name = trim((string) $this->get('site_name', ''));
+
+        return $name !== '' ? $name : (string) config('app.name');
+    }
+
+    /**
      * Check if using Israel calendar settings.
      */
     public function isIsrael(): bool

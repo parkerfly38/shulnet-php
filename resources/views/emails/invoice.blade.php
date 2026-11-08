@@ -1,3 +1,4 @@
+@inject('settingsService', 'App\Services\SettingsService')
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +58,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>{{ config('app.name') }}</h1>
+        <h1>{{ $settingsService->organizationName() }}</h1>
         <p>Invoice {{ $invoice->invoice_number }}</p>
     </div>
 
@@ -99,7 +100,7 @@
 
     <div class="footer">
         <p>Thank you for your business!</p>
-        <p>{{ config('app.name') }}</p>
+        <p>{{ $settingsService->organizationName() }}</p>
     </div>
 </body>
 </html>

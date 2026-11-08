@@ -1,3 +1,4 @@
+@inject('settingsService', 'App\Services\SettingsService')
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@
                 Unsubscribe from this campaign
             </a>
         </p>
-        <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} {{ $settingsService->organizationName() }}. All rights reserved.</p>
     </div>
 </body>
 </html>

@@ -16,10 +16,10 @@ class SettingSeeder extends Seeder
             // General Settings
             [
                 'key' => 'site_name',
-                'value' => 'Shulnet Portal',
+                'value' => config('app.name'),
                 'group' => 'general',
                 'type' => 'text',
-                'description' => 'Name of the synagogue or organization',
+                'description' => 'Synagogue name (shown on letters, invoices, emails and printouts)',
             ],
             [
                 'key' => 'site_timezone',

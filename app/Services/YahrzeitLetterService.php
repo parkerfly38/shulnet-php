@@ -14,6 +14,8 @@ class YahrzeitLetterService
 {
     public const TEMPLATE_SLUG = 'yahrzeit-reminder-letter';
 
+    public function __construct(protected SettingsService $settings) {}
+
     /**
      * Field definitions stored on the template, shown to admins in the template editor.
      */
@@ -24,7 +26,7 @@ class YahrzeitLetterService
         ];
 
         return [
-            $field('organization_name', 'Organization Name', 'The app name from settings'),
+            $field('organization_name', 'Organization Name', 'The synagogue name from Settings'),
             $field('letter_date', 'Letter Date', "Today's date, e.g. November 7, 2026"),
             $field('member_first_name', 'Recipient First Name', 'First name of the family member'),
             $field('member_last_name', 'Recipient Last Name', 'Last name of the family member'),
@@ -62,7 +64,7 @@ class YahrzeitLetterService
     public function fields(Yahrzeit $yahrzeit, ?string $gregorianDate, string $recipientName, ?Member $member = null): array
     {
         $values = [
-            'organization_name' => config('app.name'),
+            'organization_name' => $this->settings->organizationName(),
             'letter_date' => now()->format('F j, Y'),
             'member_first_name' => $member->first_name ?? $recipientName,
             'member_last_name' => $member->last_name ?? '',
