@@ -1,5 +1,5 @@
 import { useTranslation } from '@/hooks/use-translation';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
@@ -27,6 +27,15 @@ interface Props {
 
 export default function SettingsIndex({ settings: initialSettings }: Readonly<Props>) {
     const { t } = useTranslation();
+
+    // Links like /admin/settings#site_name jump straight to that field.
+    useEffect(() => {
+        const field = window.location.hash ? document.getElementById(decodeURIComponent(window.location.hash.slice(1))) : null;
+        if (field) {
+            field.scrollIntoView({ block: 'center' });
+            field.focus({ preventScroll: true });
+        }
+    }, []);
     const breadcrumbs: BreadcrumbItem[] = useMemo(() => [
         { title: 'System', href: '/dashboard' },
         { title: 'Settings', href: '/admin/settings' },

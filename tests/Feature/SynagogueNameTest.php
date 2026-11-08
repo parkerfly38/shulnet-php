@@ -26,6 +26,24 @@ class SynagogueNameTest extends TestCase
             ->assertInertia(fn ($page) => $page->where('settings.general.0.key', 'site_name'));
     }
 
+    // Dashboards show the name and prompt admins while it's blank or still a product default.
+    public function test_pages_share_the_name_and_whether_it_still_needs_setting(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        foreach (['', 'ShulNET', 'Shulnet Portal', ' laravel '] as $placeholder) {
+            Setting::set('site_name', $placeholder);
+            $this->actingAs($admin)->get('/dashboard')
+                ->assertInertia(fn ($page) => $page->where('organization.needs_setup', true));
+        }
+
+        Setting::set('site_name', 'Temple Beth Shalom');
+        $this->actingAs($admin)->get('/dashboard')
+            ->assertInertia(fn ($page) => $page
+                ->where('organization.name', 'Temple Beth Shalom')
+                ->where('organization.needs_setup', false));
+    }
+
     public function test_blank_setting_falls_back_to_the_app_name(): void
     {
         Setting::set('site_name', '   ');

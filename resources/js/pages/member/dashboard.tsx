@@ -1,4 +1,5 @@
 import { useTranslation } from '@/hooks/use-translation';
+import { CongregationHeader } from '@/components/congregation-header';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -95,9 +96,7 @@ export default function MemberDashboard({ member, invoices, students, yahrzeits,
             <Head title={t('Member Portal')} />
 
             <div className="p-4 space-y-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">Welcome, {member.first_name}!</h1>
-                </div>
+                <CongregationHeader title={t('Welcome, :name!', { name: member.first_name })} />
 
                 {/* Birthday/Anniversary Celebration */}
                 {(isBirthday || isAnniversary) && (

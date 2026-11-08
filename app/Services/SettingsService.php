@@ -34,6 +34,16 @@ class SettingsService
     }
 
     /**
+     * Whether an admin has entered a real name, rather than leaving it blank or on a product default.
+     */
+    public function hasOrganizationName(): bool
+    {
+        $name = mb_strtolower(trim((string) $this->get('site_name', '')));
+
+        return $name !== '' && ! in_array($name, ['shulnet', 'shulnet portal', 'laravel'], true);
+    }
+
+    /**
      * Check if using Israel calendar settings.
      */
     public function isIsrael(): bool

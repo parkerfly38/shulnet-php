@@ -1,4 +1,5 @@
 import { useTranslation } from '@/hooks/use-translation';
+import { CongregationHeader } from '@/components/congregation-header';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
@@ -177,6 +178,8 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('Dashboard')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <CongregationHeader />
+
                 {/* Members Joined Chart and Workflows */}
                 <div className="grid gap-4 lg:grid-cols-12">
                     <div className="lg:col-span-8 bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
