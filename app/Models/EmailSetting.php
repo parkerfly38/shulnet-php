@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class EmailSetting extends Model
 {
@@ -53,6 +54,31 @@ class EmailSetting extends Model
     public static function clearCache(): void
     {
         Cache::flush();
+    }
+
+    /**
+     * Send all mail through the provider chosen on Admin → Email Settings, if one is set up.
+     * Leaves the .env mail config untouched when the screen was never filled in or is incomplete.
+     */
+    public static function applyIfConfigured(): bool
+    {
+        $mail = config('mail');
+        $services = config('services');
+
+        try {
+            if (! self::get('from_address')) {
+                return false;
+            }
+
+            self::configureMailer();
+
+            return true;
+        } catch (\Throwable $e) {
+            config(['mail' => $mail, 'services' => $services]); // undo any half-applied settings
+            Log::warning('Email Settings are incomplete, so mail is using the .env configuration: '.$e->getMessage());
+
+            return false;
+        }
     }
 
     /**
