@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PdfTemplate, BreadcrumbItem } from '@/types';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, FileText, Pencil, Download } from 'lucide-react';
 
 interface Props {
@@ -34,16 +34,36 @@ export default function Show({ template }: Props) {
         { title: template.name, href: `/admin/pdf-templates/${template.id}` },
     ], [template.id, template.name]);
     const [showPreview, setShowPreview] = useState(false);
+    const [previewLoading, setPreviewLoading] = useState(false);
+    const [previewError, setPreviewError] = useState<string | null>(null);
+    const [previewHeight, setPreviewHeight] = useState(600);
+    const previewRef = useRef<HTMLDivElement>(null);
 
-    const handlePreview = () => {
-        // Replace placeholders with values
-        let content = template.html_content;
-        Object.entries(fieldValues).forEach(([key, value]) => {
-            content = content.replace(new RegExp(`{{${key}}}`, 'g'), value || `[${key}]`);
-        });
-        setPreviewContent(content);
-        setShowPreview(true);
+    // Render on the server so the preview matches the PDF ({{#if}} blocks, escaping).
+    // Empty fields show as [Label] so the layout is visible before anything is filled in.
+    const handlePreview = async () => {
+        setPreviewLoading(true);
+        setPreviewError(null);
+        try {
+            const values = Object.fromEntries(template.available_fields.map((field) => [field.name, fieldValues[field.name] || `[${field.label}]`]));
+            const response = await fetch(`/admin/pdf-templates/${template.id}/preview`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-TOKEN': csrf_token },
+                body: JSON.stringify({ field_values: values }),
+            });
+            if (!response.ok) throw new Error(String(response.status));
+            setPreviewContent((await response.json()).html);
+            setShowPreview(true);
+        } catch {
+            setPreviewError(t('The preview could not be loaded. Please refresh the page and try again.'));
+        } finally {
+            setPreviewLoading(false);
+        }
     };
+
+    useEffect(() => {
+        if (showPreview) previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, [showPreview, previewContent]);
 
     const handleGenerate = () => {
         if (!csrf_token) {
@@ -77,10 +97,10 @@ export default function Show({ template }: Props) {
     };
 
     const categoryColors: Record<string, string> = {
-        letter: 'bg-blue-100 text-blue-800',
-        form: 'bg-green-100 text-green-800',
-        invoice: 'bg-purple-100 text-purple-800',
-        general: 'bg-gray-100 text-gray-800',
+        letter: 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300',
+        form: 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300',
+        invoice: 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300',
+        general: 'bg-muted text-foreground',
     };
 
     return (
@@ -91,8 +111,8 @@ export default function Show({ template }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{template.name}</h1>
-                        <p className="text-gray-600 dark:text-gray-400">{template.category}</p>
+                        <h1 className="text-2xl font-bold text-foreground">{template.name}</h1>
+                        <p className="text-muted-foreground">{template.category}</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <Link href="/admin/pdf-templates">
@@ -120,7 +140,7 @@ export default function Show({ template }: Props) {
                                     <div className="flex items-start justify-between">
                                         <div>
                                             <CardTitle className="flex items-center gap-3">
-                                                <FileText className="h-6 w-6 text-blue-600" />
+                                                <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                                                 {template.name}
                                             </CardTitle>
                                             <div className="flex items-center gap-2 mt-2">
@@ -128,9 +148,9 @@ export default function Show({ template }: Props) {
                                                     {template.category}
                                                 </Badge>
                                                 {template.is_active ? (
-                                                    <Badge className="bg-green-100 text-green-800">{t('Active')}</Badge>
+                                                    <Badge className="bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300">{t('Active')}</Badge>
                                                 ) : (
-                                                    <Badge className="bg-red-100 text-red-800">{t('Inactive')}</Badge>
+                                                    <Badge className="bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300">{t('Inactive')}</Badge>
                                                 )}
                                             </div>
                                         </div>
@@ -155,7 +175,7 @@ export default function Show({ template }: Props) {
                                                 {field.required && <span className="text-red-500 ms-1">*</span>}
                                             </Label>
                                             {field.description && (
-                                                <p className="text-sm text-gray-500 mb-2">{field.description}</p>
+                                                <p className="text-sm text-muted-foreground mb-2">{field.description}</p>
                                             )}
                                             {field.type === 'textarea' ? (
                                                 <Textarea
@@ -184,27 +204,35 @@ export default function Show({ template }: Props) {
                                     ))}
 
                                     <div className="flex gap-3 pt-4">
-                                        <Button onClick={handlePreview} variant="outline" className="flex-1">
-                                            {t('Preview')}
+                                        <Button onClick={handlePreview} variant="outline" className="flex-1" disabled={previewLoading}>
+                                            {previewLoading ? t('Loading...') : t('Preview')}
                                         </Button>
                                         <Button onClick={handleGenerate} className="flex-1">
                                             <Download className="me-2 h-4 w-4" />
                                             {t('Generate PDF')}
                                         </Button>
                                     </div>
+                                    {previewError && <p className="text-sm text-red-600">{previewError}</p>}
                                 </CardContent>
                             </Card>
 
-                            {/* Preview */}
+                            {/* Preview: a sandboxed frame keeps the template's own styles off the rest of the page. */}
                             {showPreview && (
-                                <Card>
+                                <Card ref={previewRef} className="scroll-mt-4">
                                     <CardHeader>
                                         <CardTitle>{t('Preview')}</CardTitle>
                                     </CardHeader>
                                     <CardContent>
-                                        <div 
-                                            className="prose max-w-none bg-white border rounded-lg p-8"
-                                            dangerouslySetInnerHTML={{ __html: previewContent }}
+                                        <iframe
+                                            title={t('Preview')}
+                                            sandbox="allow-same-origin"
+                                            srcDoc={previewContent}
+                                            className="w-full rounded-lg border bg-white"
+                                            style={{ height: previewHeight }}
+                                            onLoad={(e) => {
+                                                const doc = e.currentTarget.contentDocument;
+                                                if (doc) setPreviewHeight(Math.max(300, doc.documentElement.scrollHeight + 16));
+                                            }}
                                         />
                                     </CardContent>
                                 </Card>
@@ -219,20 +247,20 @@ export default function Show({ template }: Props) {
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div>
-                                        <Label className="text-sm text-gray-500">{t('Slug')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('Slug')}</Label>
                                         <p className="font-mono text-sm">{template.slug}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">{t('Category')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('Category')}</Label>
                                         <p className="capitalize">{template.category}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">{t('Available Fields')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('Available Fields')}</Label>
                                         <p>{template.available_fields.length} fields</p>
                                         <div className="mt-2 space-y-1">
                                             {template.available_fields.map((field) => (
                                                 <div key={field.name} className="text-sm">
-                                                    <code className="bg-gray-100 px-2 py-1 rounded text-xs">
+                                                    <code className="bg-muted px-2 py-1 rounded text-xs">
                                                         {'{{'} {field.name} {'}}'}
                                                     </code>
                                                 </div>
@@ -240,15 +268,15 @@ export default function Show({ template }: Props) {
                                         </div>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">{t('Status')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('Status')}</Label>
                                         <p>{template.is_active ? 'Active' : 'Inactive'}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">{t('Created')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('Created')}</Label>
                                         <p className="text-sm">{new Date(template.created_at).toLocaleDateString()}</p>
                                     </div>
                                     <div>
-                                        <Label className="text-sm text-gray-500">{t('Last Updated')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('Last Updated')}</Label>
                                         <p className="text-sm">{new Date(template.updated_at).toLocaleDateString()}</p>
                                     </div>
                                 </CardContent>
@@ -259,7 +287,7 @@ export default function Show({ template }: Props) {
                                     <CardTitle>{t('HTML Template')}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <pre className="text-xs bg-gray-50 p-4 rounded-lg overflow-auto max-h-96 font-mono">
+                                    <pre className="text-xs bg-muted p-4 rounded-lg overflow-auto max-h-96 font-mono">
                                         {template.html_content}
                                     </pre>
                                 </CardContent>

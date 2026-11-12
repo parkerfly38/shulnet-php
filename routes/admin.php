@@ -46,6 +46,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     
     // User Management
     Route::get('users', [UserController::class, 'index'])->name('admin.users');
+    Route::post('users/{user}/password-reset-link', [UserController::class, 'sendPasswordResetLink'])->name('admin.users.password-reset-link');
+    Route::put('users/{user}/password', [UserController::class, 'setPassword'])->name('admin.users.password');
+    Route::delete('users/{user}/two-factor', [UserController::class, 'disableTwoFactor'])->name('admin.users.two-factor.destroy');
 
     // Global search
     Route::get('api/search', [SearchController::class, 'globalSearch'])->name('search.global');
@@ -347,6 +350,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     Route::post('seating-seasons/{seatingSeason}/assignments', [SeatingSeasonController::class, 'assign'])->name('seating-seasons.assign');
     Route::patch('seating-seasons/{seatingSeason}/assignments/{assignment}', [SeatingSeasonController::class, 'updateAssignment'])->name('seating-seasons.assignments.update');
     Route::delete('seating-seasons/{seatingSeason}/assignments/{assignment}', [SeatingSeasonController::class, 'release'])->name('seating-seasons.release');
+    Route::get('seating-seasons/{seatingSeason}/print', [SeatingSeasonController::class, 'print'])->name('seating-seasons.print');
     Route::post('seating-seasons/{seatingSeason}/renewals', [SeatingSeasonController::class, 'renewals'])->name('seating-seasons.renewals');
 
     // Cemetery Management

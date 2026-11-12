@@ -149,6 +149,10 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'currency' => $currency,
+            'organization' => [
+                'name' => $settingsService->organizationName(),
+                'needs_setup' => ! $settingsService->hasOrganizationName(),
+            ],
             'currentDate' => [
                 'gregorian' => $gregorianDate,
                 'hebrew' => $hebrewDate['formatted'],

@@ -75,8 +75,8 @@ export default function Edit({ template }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('Edit PDF Template')}</h1>
-                        <p className="text-gray-600 dark:text-gray-400">Update template: {template.name}</p>
+                        <h1 className="text-2xl font-bold text-foreground">{t('Edit PDF Template')}</h1>
+                        <p className="text-muted-foreground">Update template: {template.name}</p>
                     </div>
                     <Link href="/admin/pdf-templates">
                         <Button variant="outline" size="sm">
@@ -116,7 +116,7 @@ export default function Edit({ template }: Props) {
                                         placeholder={t('e.g., yahrzeit-donation-letter')}
                                         required
                                     />
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-muted-foreground mt-1">
                                         Unique identifier (letters, numbers, and hyphens only)
                                     </p>
                                     {errors.slug && <p className="text-sm text-red-600 mt-1">{errors.slug}</p>}
@@ -172,9 +172,9 @@ export default function Edit({ template }: Props) {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start space-x-3">
-                                    <Info className="h-5 w-5 text-blue-600 mt-0.5" />
-                                    <div className="text-sm text-blue-800">
+                                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900 rounded-lg p-4 flex items-start space-x-3">
+                                    <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                                    <div className="text-sm text-blue-800 dark:text-blue-300">
                                         <p className="font-semibold mb-1">{t('How to use fields:')}</p>
                                         <p>In your HTML content, use {'{{'} field_name {'}}'} to insert field values. For example: {'{{'} deceased_name {'}}'} will be replaced with the actual deceased person's name.</p>
                                     </div>
@@ -184,19 +184,19 @@ export default function Edit({ template }: Props) {
                                 {data.available_fields.length > 0 && (
                                     <div className="space-y-2">
                                         {data.available_fields.map((field, index) => (
-                                            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                                                 <div className="flex-1">
                                                     <div className="flex items-center gap-2">
-                                                        <code className="text-sm bg-gray-200 px-2 py-1 rounded">
+                                                        <code className="text-sm bg-background px-2 py-1 rounded">
                                                             {'{{'} {field.name} {'}}'}
                                                         </code>
                                                         <span className="font-medium">{field.label}</span>
                                                         {field.required && (
-                                                            <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">{t('Required')}</span>
+                                                            <span className="text-xs bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 px-2 py-1 rounded">{t('Required')}</span>
                                                         )}
                                                     </div>
                                                     {field.description && (
-                                                        <p className="text-sm text-gray-600 mt-1">{field.description}</p>
+                                                        <p className="text-sm text-muted-foreground mt-1">{field.description}</p>
                                                     )}
                                                 </div>
                                                 <Button

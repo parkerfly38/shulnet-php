@@ -1,9 +1,10 @@
+@inject('settingsService', 'App\Services\SettingsService')
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice {{ $invoice->invoice_number }} - {{ config('app.name') }}</title>
+    <title>Invoice {{ $invoice->invoice_number }} - {{ $settingsService->organizationName() }}</title>
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <style>
@@ -218,7 +219,7 @@
     
     <div class="header">
         <div class="company-info">
-            <h1>{{ config('app.name') }}</h1>
+            <h1>{{ $settingsService->organizationName() }}</h1>
             <p>{{ config('app.address', '') }}</p>
             <p>{{ config('app.phone', '') }}</p>
             <p>{{ config('app.email', '') }}</p>

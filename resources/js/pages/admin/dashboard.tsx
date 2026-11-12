@@ -1,4 +1,5 @@
 import { useTranslation } from '@/hooks/use-translation';
+import { CongregationHeader } from '@/components/congregation-header';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type HebrewDate, type Yahrzeit, type Event } from '@/types';
@@ -177,6 +178,8 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('Dashboard')} />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <CongregationHeader />
+
                 {/* Members Joined Chart and Workflows */}
                 <div className="grid gap-4 lg:grid-cols-12">
                     <div className="lg:col-span-8 bg-white dark:bg-black shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6">
@@ -352,7 +355,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                     {currentMonthYahrzeits.map((yahrzeit) => (
                                         <div 
                                             key={yahrzeit.id}
-                                            className="border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                                            className="border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                         >
                                             <div className="flex items-start gap-2">
                                                 <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
@@ -425,7 +428,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                             <Link
                                                 key={event.id}
                                                 href={`/admin/events/${event.id}`}
-                                                className="block border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                                                className="block border border-gray-200 dark:border-gray-700 rounded-md p-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                                             >
                                                 <div className="flex items-start gap-2">
                                                     <div className="flex-shrink-0 w-12 text-center">
@@ -555,7 +558,7 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
                                             <Link
                                                 key={invoice.id}
                                                 href={`/admin/invoices/${invoice.id}`}
-                                                className="block border border-gray-200 dark:border-gray-700 rounded p-1.5 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors text-xs"
+                                                className="block border border-gray-200 dark:border-gray-700 rounded p-1.5 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-xs"
                                             >
                                                 <div className="flex items-center justify-between gap-2">
                                                     <div className="flex-1 min-w-0">

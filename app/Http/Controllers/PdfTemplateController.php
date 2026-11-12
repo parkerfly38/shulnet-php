@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PdfTemplate;
+use App\Services\SettingsService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,6 +13,11 @@ use Inertia\Response;
 
 class PdfTemplateController extends Controller
 {
+    /** Placeholders that always mean the synagogue name from Settings. */
+    protected const SYNAGOGUE_NAME_FIELDS = ['synagogue_name', 'organization_name'];
+
+    public function __construct(protected SettingsService $settings) {}
+
     public function index(Request $request): Response
     {
         $query = PdfTemplate::query();
@@ -67,8 +74,16 @@ class PdfTemplateController extends Controller
 
     public function show(PdfTemplate $pdfTemplate): Response
     {
+        // Pre-fill the synagogue name on the form; nothing is saved to the template.
+        $template = $pdfTemplate->toArray();
+        $template['available_fields'] = collect($pdfTemplate->available_fields ?? [])
+            ->map(fn (array $field) => in_array($field['name'] ?? null, self::SYNAGOGUE_NAME_FIELDS, true)
+                ? [...$field, 'default_value' => $this->settings->organizationName()]
+                : $field)
+            ->all();
+
         return Inertia::render('pdf-templates/show', [
-            'template' => $pdfTemplate,
+            'template' => $template,
         ]);
     }
 
@@ -107,37 +122,52 @@ class PdfTemplateController extends Controller
             ->with('success', 'PDF template deleted successfully.');
     }
 
-    public function preview(Request $request, PdfTemplate $pdfTemplate): Response
+    /**
+     * Render the template with the entered values, using the same code as the PDF.
+     */
+    public function preview(Request $request, PdfTemplate $pdfTemplate): JsonResponse
     {
-        $fieldValues = $request->input('field_values', []);
-
-        // Replace placeholders with actual values
-        $content = $pdfTemplate->renderWithFields($fieldValues);
-
-        return Inertia::render('pdf-templates/preview', [
-            'template' => $pdfTemplate,
-            'renderedContent' => $content,
-            'fieldValues' => $fieldValues,
+        return response()->json([
+            'html' => $pdfTemplate->renderWithFields($this->fieldValues($request)),
         ]);
     }
 
     public function generate(Request $request, PdfTemplate $pdfTemplate)
     {
-        $fieldValues = $request->input('field_values', []);
+        $content = $pdfTemplate->renderWithFields($this->fieldValues($request));
 
-        // Replace placeholders with actual values
-        $content = $pdfTemplate->renderWithFields($fieldValues);
-
-        // Generate PDF using dompdf
         $pdf = Pdf::loadHTML($content);
-
-        // Set paper size and orientation
         $pdf->setPaper('letter', 'portrait');
 
-        // Generate filename from template slug
         $filename = $pdfTemplate->slug.'-'.date('Y-m-d').'.pdf';
 
-        // Return PDF for download
         return $pdf->download($filename);
+    }
+
+    /**
+     * Values typed on the template page, escaped for HTML. The Generate button posts
+     * a plain form, so they can arrive as a JSON string. A blank synagogue name is
+     * filled from Settings, even in templates that don't list it as a field.
+     */
+    protected function fieldValues(Request $request): array
+    {
+        $values = $request->input('field_values', []);
+
+        if (is_string($values)) {
+            $values = json_decode($values, true) ?: [];
+        }
+
+        $values = collect($values)
+            ->filter(fn ($value) => is_scalar($value) || $value === null)
+            ->map(fn ($value) => nl2br(e((string) $value)))
+            ->all();
+
+        foreach (self::SYNAGOGUE_NAME_FIELDS as $name) {
+            if (trim($values[$name] ?? '') === '') {
+                $values[$name] = e($this->settings->organizationName());
+            }
+        }
+
+        return $values;
     }
 }

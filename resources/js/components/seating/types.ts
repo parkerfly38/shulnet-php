@@ -80,6 +80,11 @@ export function seatPrice(seat: Pick<Seat, 'member_price' | 'nonmember_price'>, 
     return Number(pricing === 'nonmember' ? seat.nonmember_price : seat.member_price);
 }
 
+/** "A1 (Balcony)". Labels repeat across sections, so show the section wherever a seat is named on its own. */
+export function seatName(seat: Pick<Seat, 'label'>, sectionName?: string | null): string {
+    return sectionName ? `${seat.label} (${sectionName})` : seat.label;
+}
+
 /** ISO timestamp from the server -> value for <input type="datetime-local"> in the browser's timezone. */
 export function toLocalInput(iso: string | null): string {
     if (!iso) return '';

@@ -109,6 +109,32 @@ class SeatingTest extends TestCase
         $this->assertDatabaseHas('seats', ['label' => 'A1', 'seating_section_id' => $balcony->id, 'is_accessible' => true]);
     }
 
+    public function test_labels_can_repeat_across_sections_but_not_within_one(): void
+    {
+        $chart = $this->chart(1);
+        $a1 = $chart->seats()->sole();
+        $section = $chart->sections()->first();
+        $sections = [
+            ['id' => $section->id, 'key' => (string) $section->id, 'name' => 'Main Floor', 'color' => '#2563eb'],
+            ['key' => 'new-1', 'name' => 'Balcony', 'color' => '#16a34a'],
+        ];
+        $seat = fn (string $label, string $sectionKey, ?int $id = null) => [
+            'id' => $id, 'label' => $label, 'x' => 10, 'y' => 10, 'section_key' => $sectionKey, 'member_price' => 0, 'nonmember_price' => 0,
+        ];
+
+        $this->actingAs($this->admin())->put("/admin/seating-charts/{$chart->id}/layout", [
+            'sections' => $sections,
+            'seats' => [$seat('A1', (string) $section->id, $a1->id), $seat('A1', 'new-1')],
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame(2, $chart->seats()->where('label', 'A1')->count());
+
+        $this->actingAs($this->admin())->put("/admin/seating-charts/{$chart->id}/layout", [
+            'sections' => $sections,
+            'seats' => [$seat('A1', (string) $section->id, $a1->id), $seat('a1', (string) $section->id)],
+        ])->assertSessionHasErrors('seats');
+    }
+
     public function test_layout_save_refuses_to_delete_assigned_seats(): void
     {
         $chart = $this->chart(1);
@@ -241,6 +267,26 @@ class SeatingTest extends TestCase
                 ->where('stats.seats', 4)
                 ->where('stats.reserved', 1)
                 ->where('stats.invoiced', 180));
+    }
+
+    public function test_admin_can_print_season_as_pdf(): void
+    {
+        $chart = $this->chart();
+        $season = $this->season($chart);
+        [, $member] = $this->memberUser();
+        $season->assignments()->create([
+            'seat_id' => $chart->seats()->first()->id, 'member_id' => $member->id,
+            'status' => SeatAssignment::STATUS_RESERVED, 'price' => 180,
+        ]);
+
+        $response = $this->actingAs($this->admin())->get("/admin/seating-seasons/{$season->id}/print")
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
+
+        $this->assertStringStartsWith('%PDF', $response->getContent());
+
+        [$user] = $this->memberUser();
+        $this->actingAs($user)->get("/admin/seating-seasons/{$season->id}/print")->assertForbidden();
     }
 
     public function test_member_reserves_seats_at_member_price_and_pays_now(): void

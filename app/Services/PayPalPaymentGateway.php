@@ -88,7 +88,8 @@ class PayPalPaymentGateway implements PaymentGatewayInterface
                 'intent' => 'CAPTURE',
                 'purchase_units' => [$purchaseUnit],
                 'application_context' => [
-                    'brand_name' => config('app.name'),
+                    // PayPal caps brand_name at 127 characters.
+                    'brand_name' => mb_substr(app(SettingsService::class)->organizationName(), 0, 127),
                     'locale' => 'en-US',
                     'landing_page' => 'BILLING',
                     'user_action' => 'PAY_NOW',

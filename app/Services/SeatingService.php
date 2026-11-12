@@ -76,7 +76,10 @@ class SeatingService
                         continue;
                     }
 
-                    throw new SeatingException("Seat {$seats->firstWhere('id', $assignment->seat_id)->label} has already been taken.");
+                    $seat = $seats->firstWhere('id', $assignment->seat_id);
+                    $section = $seat->section ? " ({$seat->section->name})" : '';
+
+                    throw new SeatingException("Seat {$seat->label}{$section} has already been taken.");
                 }
 
                 if (($options['enforce_limit'] ?? false) && $season->max_seats_per_member) {

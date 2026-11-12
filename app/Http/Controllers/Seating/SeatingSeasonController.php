@@ -10,7 +10,12 @@ use App\Models\SeatAssignment;
 use App\Models\SeatingChart;
 use App\Models\SeatingSeason;
 use App\Services\SeatingService;
+use App\Services\SettingsService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Number;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -83,6 +88,54 @@ class SeatingSeasonController extends Controller
             'charts' => SeatingChart::orderBy('name')->get(['id', 'name']),
             'glAccounts' => $this->glAccounts(),
         ]);
+    }
+
+    /**
+     * A printable PDF: the seat map coloured by status, then every assignment
+     * grouped by section.
+     */
+    public function print(SeatingSeason $seatingSeason, SettingsService $settings)
+    {
+        $seatingSeason->load(['chart.sections', 'chart.seats.section']);
+        $chart = $seatingSeason->chart;
+        $currency = $settings->getCurrency();
+
+        $assignments = $seatingSeason->activeAssignments()
+            ->with(['member:id,first_name,last_name', 'invoice:id,invoice_number,status,total,amount_paid'])
+            ->get()
+            ->keyBy('seat_id');
+
+        // Sections in editor order, unsectioned seats last, then labels in natural order (A2 before A10).
+        $sectionOrder = $chart->sections->pluck('sort_order', 'id');
+        $seats = $chart->seats->sort(function ($a, $b) use ($sectionOrder) {
+            return ($sectionOrder[$a->seating_section_id] ?? PHP_INT_MAX) <=> ($sectionOrder[$b->seating_section_id] ?? PHP_INT_MAX)
+                ?: strnatcasecmp($a->label, $b->label);
+        })->values();
+
+        // Fit the map into a landscape letter page (10in x 6.4in of usable space, in points).
+        $aspect = $chart->image_width && $chart->image_height ? $chart->image_width / $chart->image_height : 16 / 10;
+        $mapWidth = min(720, 460 * $aspect);
+        $mapHeight = $mapWidth / $aspect;
+
+        $image = null;
+        if ($chart->image_path && Storage::disk('public')->exists($chart->image_path)) {
+            $disk = Storage::disk('public');
+            $image = 'data:'.$disk->mimeType($chart->image_path).';base64,'.base64_encode($disk->get($chart->image_path));
+        }
+
+        $pdf = Pdf::loadView('seating.season-print', [
+            'season' => $seatingSeason,
+            'chart' => $chart,
+            'seats' => $seats,
+            'assignments' => $assignments,
+            'image' => $image,
+            'mapWidth' => $mapWidth,
+            'mapHeight' => $mapHeight,
+            'seatSize' => max(8, min(16, $mapWidth / 45)),
+            'money' => fn ($amount) => Number::currency((float) $amount, in: $currency),
+        ])->setPaper('letter', 'landscape');
+
+        return $pdf->stream(Str::slug($seatingSeason->name).'-seating.pdf');
     }
 
     public function update(Request $request, SeatingSeason $seatingSeason)

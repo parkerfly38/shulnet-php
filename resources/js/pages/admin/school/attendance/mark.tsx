@@ -130,7 +130,7 @@ export default function MarkAttendance({ students, classes }: Props) {
             }
         }
         
-        return `${baseClasses} bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300`;
+        return `${baseClasses} bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600`;
     };
 
     return (
