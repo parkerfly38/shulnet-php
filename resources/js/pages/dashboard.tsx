@@ -1,4 +1,5 @@
 import { useTranslation } from '@/hooks/use-translation';
+import { CongregationHeader } from '@/components/congregation-header';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
@@ -24,9 +25,7 @@ export default function Dashboard({ user }: Props) {
             <Head title={t('Dashboard')} />
 
             <div className="p-4 space-y-6">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">Welcome, {user.name}!</h1>
-                </div>
+                <CongregationHeader title={t('Welcome, :name!', { name: user.name })} />
 
                 <div className="bg-white dark:bg-black rounded-lg p-8 border text-center">
                     <h2 className="text-xl font-semibold mb-4">{t('Getting Started')}</h2>

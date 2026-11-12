@@ -108,7 +108,7 @@ export default function TemplateIndex({ templates }: Readonly<Props>) {
                 </tr>
               ) : (
                 filteredTemplates.map((template) => (
-                  <tr key={template.id} className="hover:bg-gray-500">
+                  <tr key={template.id} className="hover:bg-muted/50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <FileText className="w-4 h-4 text-gray-400" />

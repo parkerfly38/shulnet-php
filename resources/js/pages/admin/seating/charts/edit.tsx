@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Toggle } from '@/components/ui/toggle';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
-import { AlignHorizontalSpaceAround, AlignVerticalJustifyCenter, ArrowLeft, Armchair, ImageUp, MousePointer2, Plus, Rows3, Save, Trash2 } from 'lucide-react';
+import { AlignCenterHorizontal, AlignCenterVertical, AlignHorizontalSpaceAround, AlignVerticalSpaceAround, ArrowLeft, Armchair, Grid3x3, ImageUp, MousePointer2, Plus, Rows3, Save, Trash2 } from 'lucide-react';
 import React, { type FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface EditorSection {
@@ -38,6 +39,7 @@ interface EditorSeat {
 }
 
 type Mode = 'select' | 'seat' | 'row';
+type Axis = 'x' | 'y';
 type Point = { x: number; y: number };
 
 interface Props {
@@ -48,6 +50,9 @@ interface Props {
 const SECTION_COLORS = ['#2563eb', '#16a34a', '#9333ea', '#ea580c', '#0891b2', '#db2777', '#65a30d', '#ca8a04'];
 const NO_SECTION = 'none';
 const UNSECTIONED_COLOR = '#64748b';
+/** Grid spacing options, as a percentage of the canvas width. */
+const GRID_SIZES = [1, 2, 2.5, 5];
+const GRID_STORAGE_KEY = 'seating-editor-grid';
 let tempKey = 0;
 const newKey = () => `new-${++tempKey}`;
 
@@ -122,6 +127,30 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
     const [hoverPoint, setHoverPoint] = useState<Point | null>(null);
     const [marquee, setMarquee] = useState<{ start: Point; end: Point } | null>(null);
 
+    const [grid, setGrid] = useState<{ snap: boolean; size: number }>(() => {
+        try {
+            const stored = JSON.parse(localStorage.getItem(GRID_STORAGE_KEY) ?? 'null');
+            if (stored && typeof stored.snap === 'boolean' && GRID_SIZES.includes(stored.size)) return stored;
+        } catch { /* storage unavailable */ }
+        return { snap: false, size: 2 };
+    });
+    useEffect(() => {
+        try { localStorage.setItem(GRID_STORAGE_KEY, JSON.stringify(grid)); } catch { /* storage unavailable */ }
+    }, [grid]);
+
+    // Coordinates are percentages of width and height, so scale the vertical step to keep cells square.
+    const aspect = chart.image_width && chart.image_height ? chart.image_width / chart.image_height : 16 / 10;
+    const gridStep = useMemo(() => ({ x: grid.size, y: grid.size * aspect }), [grid.size, aspect]);
+
+    /** Round a point to the nearest grid intersection when snapping is on. Holding Alt places freely. */
+    const snapPoint = useCallback((p: Point, free = false): Point => {
+        if (!grid.snap || free) return p;
+        return {
+            x: clampPct(Math.round(p.x / gridStep.x) * gridStep.x),
+            y: clampPct(Math.round(p.y / gridStep.y) * gridStep.y),
+        };
+    }, [grid.snap, gridStep]);
+
     const canvasRef = useRef<HTMLDivElement>(null);
     const assigned = useMemo(() => new Set(assignedSeatIds), [assignedSeatIds]);
     const sectionsByKey = useMemo(() => new Map(sections.map((s) => [s.key, s])), [sections]);
@@ -158,13 +187,15 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
         };
     }, [dirty, t]);
 
-    const labelsInUse = useCallback((except?: Set<string>) => {
-        return new Set(seats.filter((s) => !except?.has(s.key)).map((s) => s.label.toUpperCase()));
+    /** Labels only need to be unique within a section, so A1 can appear in Left and in Balcony. */
+    const labelsInUse = useCallback((sectionKey: string | null, except?: Set<string>) => {
+        return new Set(seats.filter((s) => s.section_key === sectionKey && !except?.has(s.key)).map((s) => s.label.toUpperCase()));
     }, [seats]);
 
     /** Create seats at the given points, labelled from the current row/number defaults. */
     const placeSeats = (points: Point[]) => {
-        const used = labelsInUse();
+        const sectionKey = defaults.sectionKey === NO_SECTION ? null : defaults.sectionKey;
+        const used = labelsInUse(sectionKey);
         let n = defaults.nextNumber;
         const created: EditorSeat[] = points.map((p) => {
             while (used.has(`${defaults.rowLabel}${n}`.toUpperCase())) n++;
@@ -177,7 +208,7 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
                 label,
                 x: Math.round(p.x * 1000) / 1000,
                 y: Math.round(p.y * 1000) / 1000,
-                section_key: defaults.sectionKey === NO_SECTION ? null : defaults.sectionKey,
+                section_key: sectionKey,
                 member_price: defaults.memberPrice || '0',
                 nonmember_price: defaults.nonmemberPrice || '0',
                 is_accessible: false,
@@ -195,7 +226,7 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
 
     const handleCanvasPointerDown = (e: React.PointerEvent) => {
         if (e.button !== 0) return;
-        const point = toPercent(e);
+        const point = mode === 'select' ? toPercent(e) : snapPoint(toPercent(e), e.altKey);
 
         if (mode === 'seat') {
             const next = placeSeats([point]);
@@ -245,10 +276,10 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
     // Row preview follows the pointer.
     useEffect(() => {
         if (!rowStart) return;
-        const onMove = (e: PointerEvent) => setHoverPoint(toPercent(e));
+        const onMove = (e: PointerEvent) => setHoverPoint(snapPoint(toPercent(e), e.altKey));
         window.addEventListener('pointermove', onMove);
         return () => window.removeEventListener('pointermove', onMove);
-    }, [rowStart]);
+    }, [rowStart, snapPoint]);
 
     const handleSeatPointerDown = (seat: EditorSeat, e: React.PointerEvent) => {
         if (e.button !== 0) return;
@@ -273,10 +304,12 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
 
         const onMove = (ev: PointerEvent) => {
             const p = toPercent(ev);
-            const dx = p.x - start.x;
-            const dy = p.y - start.y;
-            if (!moved && Math.abs(dx) < 0.2 && Math.abs(dy) < 0.2) return;
+            if (!moved && Math.abs(p.x - start.x) < 0.2 && Math.abs(p.y - start.y) < 0.2) return;
             moved = true;
+            // Snap the grabbed seat and move the rest of the selection by the same amount, keeping their spacing.
+            const target = snapPoint({ x: seat.x + p.x - start.x, y: seat.y + p.y - start.y }, ev.altKey);
+            const dx = target.x - seat.x;
+            const dy = target.y - seat.y;
             changeSeats((all) => all.map((s) => {
                 const o = origins.get(s.key);
                 return o ? { ...s, x: clampPct(o.x + dx), y: clampPct(o.y + dy) } : s;
@@ -320,10 +353,12 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
                 return;
             }
 
-            const step = e.shiftKey ? 1 : 0.2;
+            // With snapping on, arrows move one grid cell (Shift: five).
+            const multiplier = e.shiftKey ? 5 : 1;
+            const step = grid.snap ? { x: gridStep.x * multiplier, y: gridStep.y * multiplier } : { x: 0.2 * multiplier, y: 0.2 * multiplier };
             const delta: Record<string, Point> = {
-                ArrowLeft: { x: -step, y: 0 }, ArrowRight: { x: step, y: 0 },
-                ArrowUp: { x: 0, y: -step }, ArrowDown: { x: 0, y: step },
+                ArrowLeft: { x: -step.x, y: 0 }, ArrowRight: { x: step.x, y: 0 },
+                ArrowUp: { x: 0, y: -step.y }, ArrowDown: { x: 0, y: step.y },
             };
             const d = delta[e.key];
             if (d) {
@@ -333,15 +368,17 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
         };
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
-    }, [selected, deleteSelected, changeSeats]);
+    }, [selected, deleteSelected, changeSeats, grid.snap, gridStep]);
 
-    const alignSelected = () => {
-        const avgY = selectedSeats.reduce((sum, s) => sum + s.y, 0) / selectedSeats.length;
-        updateSelected({ y: Math.round(avgY * 1000) / 1000 });
+    /** Line seats up on one axis: 'y' makes a horizontal row, 'x' a vertical column. */
+    const alignSelected = (axis: Axis) => {
+        const avg = selectedSeats.reduce((sum, s) => sum + s[axis], 0) / selectedSeats.length;
+        updateSelected({ [axis]: Math.round(avg * 1000) / 1000 });
     };
 
-    const distributeSelected = () => {
-        const sorted = [...selectedSeats].sort((a, b) => a.x - b.x);
+    /** Space seats evenly between the two outermost along the given axis. */
+    const distributeSelected = (axis: Axis) => {
+        const sorted = [...selectedSeats].sort((a, b) => a[axis] - b[axis]);
         if (sorted.length < 3) return;
         const first = sorted[0];
         const last = sorted[sorted.length - 1];
@@ -352,14 +389,21 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
         changeSeats((all) => all.map((s) => (positions.has(s.key) ? { ...s, ...positions.get(s.key)! } : s)));
     };
 
+    /** Move each selected seat to its nearest grid point. */
+    const snapSelectedToGrid = () => {
+        const positions = new Map(selectedSeats.map((s) => [s.key, snapPoint(s)]));
+        const spots = new Set([...positions.values()].map((p) => `${p.x},${p.y}`));
+        setNotice(spots.size < positions.size ? t('Some seats landed on the same grid point. Try a smaller grid size.') : null);
+        changeSeats((all) => all.map((s) => (positions.has(s.key) ? { ...s, ...positions.get(s.key)! } : s)));
+    };
+
     const [relabel, setRelabel] = useState({ row: 'A', start: 1 });
     const relabelSelected = () => {
         const sorted = [...selectedSeats].sort((a, b) => a.x - b.x);
-        const used = labelsInUse(selected);
         const labels = new Map(sorted.map((s, i) => [s.key, `${relabel.row}${relabel.start + i}`]));
-        const clash = [...labels.values()].find((l) => used.has(l.toUpperCase()));
+        const clash = sorted.find((s) => labelsInUse(s.section_key, selected).has(labels.get(s.key)!.toUpperCase()));
         if (clash) {
-            setNotice(t('Label :label is already used by another seat.', { label: clash }));
+            setNotice(t('Label :label is already used by another seat in that section.', { label: labels.get(clash.key)! }));
             return;
         }
         setNotice(null);
@@ -387,7 +431,7 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
     const save = () => {
         const duplicate = findDuplicateLabel(seats);
         if (duplicate) {
-            setNotice(t('Label :label is used by more than one seat.', { label: duplicate }));
+            setNotice(t('Label :label is used by more than one seat in the same section.', { label: duplicate }));
             return;
         }
         setNotice(null);
@@ -416,8 +460,20 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
     const errorMessages = Object.values(errors ?? {});
     const activeCount = seats.filter((s) => s.is_active).length;
 
+    const gridLines = (step: number) => Array.from({ length: Math.floor(100 / step) }, (_, i) => (i + 1) * step).filter((v) => v < 100);
+
     const overlay = (
         <>
+            {grid.snap && (
+                <svg className="pointer-events-none absolute inset-0 h-full w-full text-foreground" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    {gridLines(gridStep.x).map((x, i) => (
+                        <line key={`x${x}`} x1={x} y1={0} x2={x} y2={100} stroke="currentColor" strokeOpacity={(i + 1) % 5 === 0 ? 0.25 : 0.1} vectorEffect="non-scaling-stroke" />
+                    ))}
+                    {gridLines(gridStep.y).map((y, i) => (
+                        <line key={`y${y}`} x1={0} y1={y} x2={100} y2={y} stroke="currentColor" strokeOpacity={(i + 1) % 5 === 0 ? 0.25 : 0.1} vectorEffect="non-scaling-stroke" />
+                    ))}
+                </svg>
+            )}
             {marquee && (
                 <div className="pointer-events-none absolute border border-primary bg-primary/10" style={{
                     left: `${Math.min(marquee.start.x, marquee.end.x)}%`,
@@ -494,6 +550,21 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
                                     <Rows3 className="mr-1.5 h-4 w-4" />{t('Add Row')}
                                 </ToggleGroupItem>
                             </ToggleGroup>
+                            <div className="flex items-center gap-1">
+                                <Toggle variant="outline" pressed={grid.snap} aria-label={t('Snap to grid')} className="px-3"
+                                    title={t('Snap to grid. Hold Alt to place freely.')}
+                                    onPressedChange={(snap) => setGrid((g) => ({ ...g, snap }))}>
+                                    <Grid3x3 className="mr-1.5 h-4 w-4" />{t('Snap')}
+                                </Toggle>
+                                {grid.snap && (
+                                    <Select value={String(grid.size)} onValueChange={(v) => setGrid((g) => ({ ...g, size: Number(v) }))}>
+                                        <SelectTrigger className="h-9 w-20" aria-label={t('Grid size')}><SelectValue /></SelectTrigger>
+                                        <SelectContent>
+                                            {GRID_SIZES.map((size) => <SelectItem key={size} value={String(size)}>{size}%</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            </div>
                             <p className="text-xs text-muted-foreground">{modeHint[mode]}</p>
                         </div>
 
@@ -536,6 +607,7 @@ export default function SeatingChartEditor({ chart, assignedSeatIds }: Readonly<
                                 onDelete={deleteSelected}
                                 onAlign={alignSelected}
                                 onDistribute={distributeSelected}
+                                onSnapToGrid={grid.snap ? snapSelectedToGrid : undefined}
                                 relabel={relabel}
                                 setRelabel={setRelabel}
                                 onRelabel={relabelSelected}
@@ -619,7 +691,7 @@ function clampPct(n: number) {
 function findDuplicateLabel(seats: EditorSeat[]): string | null {
     const seen = new Set<string>();
     for (const s of seats) {
-        const label = s.label.trim().toUpperCase();
+        const label = `${s.section_key ?? ''}|${s.label.trim().toUpperCase()}`;
         if (seen.has(label)) return s.label;
         seen.add(label);
     }
@@ -668,13 +740,15 @@ function PriceInputs({ member, nonmember, onMember, onNonmember, placeholder }: 
     );
 }
 
-function SelectionPanel({ seats, sections, onChange, onDelete, onAlign, onDistribute, relabel, setRelabel, onRelabel }: {
+function SelectionPanel({ seats, sections, onChange, onDelete, onAlign, onDistribute, onSnapToGrid, relabel, setRelabel, onRelabel }: {
     seats: EditorSeat[];
     sections: EditorSection[];
     onChange: (patch: Partial<EditorSeat>) => void;
     onDelete: () => void;
-    onAlign: () => void;
-    onDistribute: () => void;
+    onAlign: (axis: Axis) => void;
+    onDistribute: (axis: Axis) => void;
+    /** Only provided while snapping is on. */
+    onSnapToGrid?: () => void;
     relabel: { row: string; start: number };
     setRelabel: (r: { row: string; start: number }) => void;
     onRelabel: () => void;
@@ -732,14 +806,26 @@ function SelectionPanel({ seats, sections, onChange, onDelete, onAlign, onDistri
                     </label>
                 </div>
 
+                {onSnapToGrid && (
+                    <Button size="sm" variant="outline" className="w-full" onClick={onSnapToGrid}>
+                        <Grid3x3 className="mr-1 h-4 w-4" />{t('Snap selected to grid')}
+                    </Button>
+                )}
+
                 {seats.length > 1 && (
                     <div className="space-y-2 border-t pt-3">
-                        <div className="flex gap-2">
-                            <Button size="sm" variant="outline" className="flex-1" onClick={onAlign}>
-                                <AlignVerticalJustifyCenter className="mr-1 h-4 w-4" />{t('Align')}
+                        <div className="grid grid-cols-2 gap-2">
+                            <Button size="sm" variant="outline" onClick={() => onAlign('y')} title={t('Align horizontally')}>
+                                <AlignCenterHorizontal className="mr-1 h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="outline" className="flex-1" onClick={onDistribute} disabled={seats.length < 3}>
-                                <AlignHorizontalSpaceAround className="mr-1 h-4 w-4" />{t('Space evenly')}
+                            <Button size="sm" variant="outline" onClick={() => onAlign('x')} title={t('Align vertically')}>
+                                <AlignCenterVertical className="mr-1 h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => onDistribute('x')} disabled={seats.length < 3} title={t('Space horizontally')}>
+                                <AlignHorizontalSpaceAround className="mr-1 h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={() => onDistribute('y')} disabled={seats.length < 3} title={t('Space vertically')}>
+                                <AlignVerticalSpaceAround className="mr-1 h-4 w-4" />
                             </Button>
                         </div>
                         <div className="flex items-end gap-2">

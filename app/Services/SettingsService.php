@@ -23,6 +23,27 @@ class SettingsService
     }
 
     /**
+     * The synagogue's name as entered in Settings, for letters, invoices, emails and printouts.
+     * Falls back to APP_NAME until an admin fills it in.
+     */
+    public function organizationName(): string
+    {
+        $name = trim((string) $this->get('site_name', ''));
+
+        return $name !== '' ? $name : (string) config('app.name');
+    }
+
+    /**
+     * Whether an admin has entered a real name, rather than leaving it blank or on a product default.
+     */
+    public function hasOrganizationName(): bool
+    {
+        $name = mb_strtolower(trim((string) $this->get('site_name', '')));
+
+        return $name !== '' && ! in_array($name, ['shulnet', 'shulnet portal', 'laravel'], true);
+    }
+
+    /**
      * Check if using Israel calendar settings.
      */
     public function isIsrael(): bool

@@ -1,6 +1,6 @@
 import FlashMessages from '@/components/seating/flash-messages';
 import SeatMap, { Legend } from '@/components/seating/seat-map';
-import { formatDateTime, type Pricing, type Seat, type SeatingSeason, seatPrice } from '@/components/seating/types';
+import { formatDateTime, type Pricing, type Seat, type SeatingSeason, seatName, seatPrice } from '@/components/seating/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -44,6 +44,10 @@ export default function MemberSeatingShow({ season, takenSeatIds, myAssignments,
     const seats = useMemo(() => season.chart.seats ?? [], [season.chart.seats]);
     const sections = useMemo(() => new Map((season.chart.sections ?? []).map((s) => [s.id, s])), [season.chart.sections]);
     const seatsById = useMemo(() => new Map(seats.map((s) => [s.id, s])), [seats]);
+    const nameOf = (seatId: number) => {
+        const seat = seatsById.get(seatId);
+        return seat ? seatName(seat, sections.get(seat.seating_section_id ?? -1)?.name) : '';
+    };
     const taken = useMemo(() => new Set(takenSeatIds), [takenSeatIds]);
     const reserved = myAssignments.filter((a) => a.status === 'reserved');
     const renewals = myAssignments.filter((a) => a.status === 'renewal');
@@ -124,7 +128,7 @@ export default function MemberSeatingShow({ season, takenSeatIds, myAssignments,
                             <p className="font-medium">{t("We're holding your seats from last year")}</p>
                             <p className="text-sm">
                                 {t('Seats :labels are reserved for you until :date. Confirm them below to keep them.', {
-                                    labels: renewals.map((a) => seatsById.get(a.seat_id)?.label).filter(Boolean).join(', '),
+                                    labels: renewals.map((a) => nameOf(a.seat_id)).filter(Boolean).join(', '),
                                     date: formatDateTime(season.renewal_ends_at),
                                 })}
                             </p>
@@ -204,7 +208,7 @@ export default function MemberSeatingShow({ season, takenSeatIds, myAssignments,
                                 <CardContent className="space-y-1 text-sm">
                                     {reserved.map((a) => (
                                         <div key={a.id} className="flex justify-between">
-                                            <span>{t('Seat :label', { label: seatsById.get(a.seat_id)?.label ?? '' })}</span>
+                                            <span>{t('Seat :label', { label: nameOf(a.seat_id) })}</span>
                                             {a.invoice_id
                                                 ? <Link href={`/member/invoices/${a.invoice_id}`} className="text-primary hover:underline">{t('View invoice')}</Link>
                                                 : <span className="tabular-nums">{money(a.price)}</span>}

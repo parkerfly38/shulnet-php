@@ -2,7 +2,9 @@
 
 namespace App\Mail;
 
+use App\Models\Member;
 use App\Models\Yahrzeit;
+use App\Services\YahrzeitLetterService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -19,7 +21,8 @@ class YahrzeitReminderMail extends Mailable
     public function __construct(
         public Yahrzeit $yahrzeit,
         public string $gregorianDate,
-        public string $recipientName
+        public string $recipientName,
+        public ?Member $member = null,
     ) {
         //
     }
@@ -42,9 +45,8 @@ class YahrzeitReminderMail extends Mailable
         return new Content(
             view: 'emails.yahrzeit-reminder',
             with: [
-                'yahrzeit' => $this->yahrzeit,
-                'gregorianDate' => $this->gregorianDate,
-                'recipientName' => $this->recipientName,
+                // Same template as the printed letters, editable under PDF Templates.
+                'body' => app(YahrzeitLetterService::class)->render($this->yahrzeit, $this->gregorianDate, $this->recipientName, $this->member),
             ],
         );
     }

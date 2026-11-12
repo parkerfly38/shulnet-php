@@ -1,3 +1,4 @@
+@inject('settingsService', 'App\Services\SettingsService')
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,7 +29,7 @@
     </div>
 
     <div style="text-align: center; color: #6c757d; font-size: 12px; margin-top: 20px;">
-        <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} {{ $settingsService->organizationName() }}. All rights reserved.</p>
     </div>
 </body>
 </html>

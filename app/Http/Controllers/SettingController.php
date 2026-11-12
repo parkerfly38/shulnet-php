@@ -13,7 +13,11 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $settings = Setting::orderBy('group')->orderBy('key')->get()->groupBy('group');
+        // Alphabetical within each group, except the synagogue name leads General.
+        $settings = Setting::orderBy('group')->orderBy('key')->get()
+            ->sortBy(fn (Setting $s) => [$s->group, $s->key === 'site_name' ? 0 : 1, $s->key])
+            ->values()
+            ->groupBy('group');
 
         return Inertia::render('settings/index', [
             'settings' => $settings,

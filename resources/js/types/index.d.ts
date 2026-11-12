@@ -38,6 +38,7 @@ export interface SharedData {
         hebrew: string;
     };
     currency: string;
+    organization: { name: string; needs_setup: boolean };
     roleSwitch?: RoleSwitch;
     [key: string]: unknown;
 }

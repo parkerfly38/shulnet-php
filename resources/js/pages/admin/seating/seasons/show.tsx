@@ -2,7 +2,7 @@ import AsyncMemberSelect from '@/components/async-member-select';
 import FlashMessages from '@/components/seating/flash-messages';
 import SeasonFormDialog from '@/components/seating/season-form-dialog';
 import SeatMap, { Legend } from '@/components/seating/seat-map';
-import { formatDateTime, type GlAccount, type Pricing, type Seat, type SeatAssignment, type SeatingSeason, seatPrice } from '@/components/seating/types';
+import { formatDateTime, type GlAccount, type Pricing, type Seat, type SeatAssignment, type SeatingSeason, seatName, seatPrice } from '@/components/seating/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,8 +16,8 @@ import AppLayout from '@/layouts/app-layout';
 import { formatCurrency } from '@/lib/utils';
 import { type BreadcrumbItem, type SharedData } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Armchair, CircleDollarSign, Clock, Pencil, RefreshCw, Search, Trash2, UserCheck, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Armchair, CircleDollarSign, Clock, Pencil, Printer, RefreshCw, Search, Trash2, UserCheck, X } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface Props {
     season: SeatingSeason & { chart: NonNullable<SeatingSeason['chart']> };
@@ -50,6 +50,10 @@ export default function SeatingSeasonShow({ season, assignments, stats, renewalS
     const seats = useMemo(() => season.chart.seats ?? [], [season.chart.seats]);
     const sections = useMemo(() => new Map((season.chart.sections ?? []).map((s) => [s.id, s])), [season.chart.sections]);
     const seatsById = useMemo(() => new Map(seats.map((s) => [s.id, s])), [seats]);
+    const sectionName = useCallback((seat?: Seat) => sections.get(seat?.seating_section_id ?? -1)?.name ?? null, [sections]);
+    // Seats sort by section, then label, since labels repeat across sections.
+    const bySeat = useCallback((a?: Seat, b?: Seat) =>
+        naturalSort(sectionName(a) ?? '', sectionName(b) ?? '') || naturalSort(a?.label ?? '', b?.label ?? ''), [sectionName]);
     // Lapsed renewal offers no longer hold the seat.
     const holding = useMemo(() => new Map(assignments.filter((a) => !a.is_expired).map((a) => [a.seat_id, a])), [assignments]);
 
@@ -71,8 +75,7 @@ export default function SeatingSeasonShow({ season, assignments, stats, renewalS
 
     const appearance = (seat: Seat) => {
         const held = holding.get(seat.id);
-        const sectionName = seat.seating_section_id ? sections.get(seat.seating_section_id)?.name : null;
-        const base = `${seat.label}${sectionName ? ` - ${sectionName}` : ''}`;
+        const base = seatName(seat, sectionName(seat));
 
         if (selection.has(seat.id)) {
             return { color: COLORS.selected, accessible: seat.is_accessible, title: base, className: 'ring-2 ring-offset-2 ring-foreground z-10' };
@@ -117,10 +120,13 @@ export default function SeatingSeasonShow({ season, assignments, stats, renewalS
         const q = search.trim().toLowerCase();
         return assignments
             .filter((a) => !a.is_expired)
-            .filter((a) => !q || [a.member?.first_name, a.member?.last_name, a.occupant_name, seatsById.get(a.seat_id)?.label, a.invoice?.invoice_number]
-                .some((v) => v?.toLowerCase().includes(q)))
-            .sort((a, b) => naturalSort(seatsById.get(a.seat_id)?.label ?? '', seatsById.get(b.seat_id)?.label ?? ''));
-    }, [assignments, search, seatsById]);
+            .filter((a) => {
+                const seat = seatsById.get(a.seat_id);
+                return !q || [a.member?.first_name, a.member?.last_name, a.occupant_name, seat?.label, sectionName(seat), a.invoice?.invoice_number]
+                    .some((v) => v?.toLowerCase().includes(q));
+            })
+            .sort((a, b) => bySeat(seatsById.get(a.seat_id), seatsById.get(b.seat_id)));
+    }, [assignments, search, seatsById, sectionName, bySeat]);
 
     const available = stats.seats - stats.reserved - stats.renewals;
 
@@ -161,6 +167,9 @@ export default function SeatingSeasonShow({ season, assignments, stats, renewalS
                         <Button variant="outline" onClick={() => setRenewalsOpen(true)}><RefreshCw className="mr-2 h-4 w-4" />{t('Offer Renewals')}</Button>
                         <Button variant="outline" asChild>
                             <Link href={`/admin/seating-charts/${season.chart.id}/edit`}>{t('Edit Seat Map')}</Link>
+                        </Button>
+                        <Button variant="outline" asChild>
+                            <a href={`/admin/seating-seasons/${season.id}/print`} target="_blank" rel="noopener"><Printer className="mr-2 h-4 w-4" />{t('Print')}</a>
                         </Button>
                         <Button variant="outline" onClick={() => setEditing(true)}><Pencil className="mr-2 h-4 w-4" />{t('Edit Season')}</Button>
                         <Button variant="ghost" size="icon" aria-label={t('Delete season')} onClick={destroySeason}><Trash2 className="h-4 w-4" /></Button>
@@ -219,14 +228,15 @@ export default function SeatingSeasonShow({ season, assignments, stats, renewalS
                                 season={season}
                                 assignment={focused}
                                 seat={seatsById.get(focused.seat_id)}
-                                sectionName={sections.get(seatsById.get(focused.seat_id)?.seating_section_id ?? -1)?.name}
+                                sectionName={sectionName(seatsById.get(focused.seat_id)) ?? undefined}
                                 money={money}
                                 onClose={() => setFocusedId(null)}
                             />
                         ) : selection.size > 0 ? (
                             <AssignPanel
                                 season={season}
-                                seats={[...selection].map((id) => seatsById.get(id)!).filter(Boolean).sort((a, b) => naturalSort(a.label, b.label))}
+                                seats={[...selection].map((id) => seatsById.get(id)!).filter(Boolean).sort(bySeat)}
+                                sectionName={sectionName}
                                 money={money}
                                 onClear={() => setSelection(new Set())}
                                 onDone={() => setSelection(new Set())}
@@ -312,9 +322,10 @@ function StatusBadge({ assignment }: { assignment: SeatAssignment }) {
     return <Badge variant="secondary">{assignment.invoice ? t('Invoiced') : t('Not invoiced')}</Badge>;
 }
 
-function AssignPanel({ season, seats, money, onClear, onDone }: {
+function AssignPanel({ season, seats, sectionName, money, onClear, onDone }: {
     season: SeatingSeason;
     seats: Seat[];
+    sectionName: (seat: Seat) => string | null;
     money: (n: number | string) => string;
     onClear: () => void;
     onDone: () => void;
@@ -348,7 +359,7 @@ function AssignPanel({ season, seats, money, onClear, onDone }: {
             <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
                 <div>
                     <CardTitle className="text-base">{t('Assign :count seats', { count: seats.length })}</CardTitle>
-                    <CardDescription>{seats.map((s) => s.label).join(', ')}</CardDescription>
+                    <CardDescription>{seats.map((s) => seatName(s, sectionName(s))).join(', ')}</CardDescription>
                 </div>
                 <Button size="icon" variant="ghost" className="-mt-2 -me-2" aria-label={t('Clear selection')} onClick={onClear}><X className="h-4 w-4" /></Button>
             </CardHeader>
@@ -369,7 +380,7 @@ function AssignPanel({ season, seats, money, onClear, onDone }: {
                 </div>
                 <ul className="max-h-40 space-y-1 overflow-y-auto text-sm">
                     {seats.map((s) => (
-                        <li key={s.id} className="flex justify-between"><span>{t('Seat :label', { label: s.label })}</span><span className="tabular-nums">{money(seatPrice(s, pricing))}</span></li>
+                        <li key={s.id} className="flex justify-between"><span>{t('Seat :label', { label: seatName(s, sectionName(s)) })}</span><span className="tabular-nums">{money(seatPrice(s, pricing))}</span></li>
                     ))}
                 </ul>
                 <div className="flex justify-between border-t pt-2 font-semibold"><span>{t('Total')}</span><span className="tabular-nums">{money(total)}</span></div>
@@ -404,8 +415,8 @@ function AssignmentPanel({ season, assignment, seat, sectionName, money, onClose
 
     const release = () => {
         const warning = assignment.invoice
-            ? t('Release seat :label? Its charge will be removed from invoice :invoice.', { label: seat?.label ?? '', invoice: assignment.invoice.invoice_number })
-            : t('Release seat :label?', { label: seat?.label ?? '' });
+            ? t('Release seat :label? Its charge will be removed from invoice :invoice.', { label: seat ? seatName(seat, sectionName) : '', invoice: assignment.invoice.invoice_number })
+            : t('Release seat :label?', { label: seat ? seatName(seat, sectionName) : '' });
         if (confirm(warning)) {
             router.delete(`${base}/${assignment.id}`, { preserveScroll: true, onSuccess: onClose });
         }

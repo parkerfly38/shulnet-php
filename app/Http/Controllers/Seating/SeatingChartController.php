@@ -99,7 +99,7 @@ class SeatingChartController extends Controller
             'sections.*.color' => ['required', 'string', 'regex:/^#[0-9a-fA-F]{6}$/'],
             'seats' => 'present|array|max:5000',
             'seats.*.id' => 'nullable|integer',
-            'seats.*.label' => 'required|string|max:20|distinct:ignore_case',
+            'seats.*.label' => 'required|string|max:20',
             'seats.*.x' => 'required|numeric|min:0|max:100',
             'seats.*.y' => 'required|numeric|min:0|max:100',
             'seats.*.section_key' => 'nullable|string|max:50',
@@ -107,9 +107,20 @@ class SeatingChartController extends Controller
             'seats.*.nonmember_price' => 'required|numeric|min:0',
             'seats.*.is_accessible' => 'boolean',
             'seats.*.is_active' => 'boolean',
-        ], [
-            'seats.*.label.distinct' => 'Seat labels must be unique.',
         ]);
+
+        // Labels repeat across sections (A1 in Left and in Balcony) but must be unique within one.
+        $duplicate = collect($validated['seats'])
+            ->groupBy(fn ($seat) => $seat['section_key'] ?? '')
+            ->map(fn ($seats) => $seats->countBy(fn ($seat) => mb_strtoupper(trim($seat['label'])))->filter(fn ($count) => $count > 1)->keys()->first())
+            ->filter()
+            ->first();
+
+        if ($duplicate) {
+            throw ValidationException::withMessages([
+                'seats' => "Seat label {$duplicate} is used more than once in the same section.",
+            ]);
+        }
 
         DB::transaction(function () use ($seatingChart, $validated) {
             // Sections
@@ -139,7 +150,8 @@ class SeatingChartController extends Controller
                 ->intersect($existingSeats->keys())->values();
 
             $removed = $existingSeats->keys()->diff($keptSeatIds);
-            $assignedRemoved = Seat::whereIn('id', $removed)->whereHas('assignments')->pluck('label');
+            $assignedRemoved = Seat::with('section')->whereIn('id', $removed)->whereHas('assignments')->get()
+                ->map(fn (Seat $seat) => $seat->section ? "{$seat->label} ({$seat->section->name})" : $seat->label);
 
             if ($assignedRemoved->isNotEmpty()) {
                 throw ValidationException::withMessages([

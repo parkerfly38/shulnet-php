@@ -112,21 +112,21 @@ export default function AsyncMemberSelect({ onChange, placeholder = 'Search memb
         onFocus={() => { if (results.length) setOpen(true); }}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
-        className="w-full rounded border px-2 py-1"
+        className="w-full rounded border bg-transparent px-2 py-1"
       />
       {open && (
-        <div className="absolute start-0 end-0 mt-1 max-h-60 overflow-auto rounded border bg-white z-40">
-          {loading && <div className="p-2 text-sm text-gray-500">Searching…</div>}
-          {!loading && results.length === 0 && <div className="p-2 text-sm text-gray-500">No results</div>}
+        <div className="absolute start-0 end-0 mt-1 max-h-60 overflow-auto rounded border bg-popover text-popover-foreground shadow-md z-40">
+          {loading && <div className="p-2 text-sm text-muted-foreground">Searching…</div>}
+          {!loading && results.length === 0 && <div className="p-2 text-sm text-muted-foreground">No results</div>}
           {results.map((m, idx) => (
             <div
               key={m.id}
-              className={`p-2 cursor-pointer ${idx === highlighted ? 'bg-gray-100' : 'hover:bg-gray-100'}`}
+              className={`p-2 cursor-pointer ${idx === highlighted ? 'bg-accent text-accent-foreground' : 'hover:bg-accent hover:text-accent-foreground'}`}
               onMouseDown={() => { onChange(m.id); setQuery(`${m.first_name} ${m.last_name}`); setOpen(false); }}
               onMouseEnter={() => setHighlighted(idx)}
             >
               <div className="font-medium">{m.first_name} {m.last_name}</div>
-              {m.email && <div className="text-xs text-gray-500">{m.email}</div>}
+              {m.email && <div className="text-xs text-muted-foreground">{m.email}</div>}
             </div>
           ))}
         </div>

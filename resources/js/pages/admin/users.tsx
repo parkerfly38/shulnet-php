@@ -1,13 +1,17 @@
 import { useTranslation } from '@/hooks/use-translation';
 import React, { useState } from 'react';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import FlashMessages from '@/components/seating/flash-messages';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Edit, Search, Users } from 'lucide-react';
+import { Edit, KeyRound, Search, ShieldCheck, ShieldOff, Users } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -32,6 +36,7 @@ interface User {
   is_student: boolean;
   is_member: boolean;
   is_default_admin: boolean;
+  two_factor_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -71,6 +76,7 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
   const [selectedRole, setSelectedRole] = useState(filters.role || 'all');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [passwordUser, setPasswordUser] = useState<User | null>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,6 +153,13 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
     }
   };
 
+  const removeTwoFactor = (user: User) => {
+    if (!confirm(t('Remove two-factor authentication for :name? They will be able to sign in with just their password until they set it up again.', { name: user.name }))) {
+      return;
+    }
+    router.delete(`/admin/users/${user.id}/two-factor`, { preserveScroll: true });
+  };
+
   const getRoleBadgeClass = (role: string) => {
     const colors = {
       admin: 'bg-red-100 text-red-800',
@@ -170,6 +183,8 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
             <p className="text-gray-600 dark:text-gray-400">{t('Manage user accounts and roles')}</p>
           </div>
         </div>
+
+        <FlashMessages />
 
         {/* Filters */}
         <div className="flex items-center space-x-4">
@@ -236,7 +251,14 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                     <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div className="font-medium text-gray-900 dark:text-gray-100">{user.name}</div>
+                          <div className="flex items-center gap-1.5 font-medium text-gray-900 dark:text-gray-100">
+                            {user.name}
+                            {user.two_factor_enabled && (
+                              <ShieldCheck className="h-4 w-4 text-green-600 dark:text-green-400" aria-label={t('Two-factor authentication on')}>
+                                <title>{t('Two-factor authentication on')}</title>
+                              </ShieldCheck>
+                            )}
+                          </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
                         </div>
                       </td>
@@ -275,14 +297,34 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
                         {new Date(user.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => openRoleModal(user)}
-                        >
-                          <Edit className="h-4 w-4 me-2" />
-                          {t('Edit Roles')}
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openRoleModal(user)}
+                          >
+                            <Edit className="h-4 w-4 me-2" />
+                            {t('Edit Roles')}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setPasswordUser(user)}
+                          >
+                            <KeyRound className="h-4 w-4 me-2" />
+                            {t('Reset Password')}
+                          </Button>
+                          {user.two_factor_enabled && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => removeTwoFactor(user)}
+                            >
+                              <ShieldOff className="h-4 w-4 me-2" />
+                              {t('Remove 2FA')}
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -409,6 +451,90 @@ export default function AdminUsers({ users, available_roles, filters }: Props) {
           </div>
         </div>
       )}
+      <ResetPasswordDialog user={passwordUser} onClose={() => setPasswordUser(null)} />
     </AppLayout>
+  );
+}
+
+/** Email a reset link (the default), or set a new password directly for users who can't get email. */
+function ResetPasswordDialog({ user, onClose }: { user: User | null; onClose: () => void }) {
+  const { t } = useTranslation();
+  const [mode, setMode] = useState<'link' | 'set'>('link');
+  const [sending, setSending] = useState(false);
+  const form = useForm({ password: '', password_confirmation: '' });
+
+  const close = () => {
+    form.reset();
+    form.clearErrors();
+    setMode('link');
+    onClose();
+  };
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    if (mode === 'link') {
+      setSending(true);
+      router.post(`/admin/users/${user.id}/password-reset-link`, {}, {
+        preserveScroll: true,
+        onSuccess: close,
+        onFinish: () => setSending(false),
+      });
+      return;
+    }
+
+    form.put(`/admin/users/${user.id}/password`, { preserveScroll: true, onSuccess: close });
+  };
+
+  return (
+    <Dialog open={!!user} onOpenChange={(open) => { if (!open) close(); }}>
+      <DialogContent>
+        <form onSubmit={submit} className="space-y-4">
+          <DialogHeader>
+            <DialogTitle>{t('Reset Password')}</DialogTitle>
+            <DialogDescription>{user ? `${user.name} (${user.email})` : ''}</DialogDescription>
+          </DialogHeader>
+
+          <ToggleGroup type="single" variant="outline" value={mode} className="w-full"
+            onValueChange={(v) => { if (v) setMode(v as 'link' | 'set'); }}>
+            <ToggleGroupItem value="link" className="flex-1">{t('Email a reset link')}</ToggleGroupItem>
+            <ToggleGroupItem value="set" className="flex-1">{t('Set a new password')}</ToggleGroupItem>
+          </ToggleGroup>
+
+          {mode === 'link' ? (
+            <p className="text-sm text-muted-foreground">
+              {t('The user will get an email with a link to choose a new password. Their current password keeps working until they do.')}
+            </p>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                {t('Use this when the user cannot receive email. Tell them the new password directly. They will be signed out of all other sessions.')}
+              </p>
+              <div className="space-y-1">
+                <Label htmlFor="new-password">{t('New password')}</Label>
+                <Input id="new-password" type="password" autoComplete="new-password" value={form.data.password}
+                  onChange={(e) => form.setData('password', e.target.value)} />
+                {form.errors.password && <p className="text-sm text-red-600">{form.errors.password}</p>}
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="confirm-password">{t('Confirm password')}</Label>
+                <Input id="confirm-password" type="password" autoComplete="new-password" value={form.data.password_confirmation}
+                  onChange={(e) => form.setData('password_confirmation', e.target.value)} />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={close}>{t('Cancel')}</Button>
+            {mode === 'link' ? (
+              <Button type="submit" disabled={sending}>{sending ? t('Sending...') : t('Send Reset Link')}</Button>
+            ) : (
+              <Button type="submit" disabled={form.processing || !form.data.password}>{t('Set Password')}</Button>
+            )}
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
