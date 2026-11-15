@@ -82,47 +82,17 @@
     },
     "allowScripts": {
         "fsevents@2.3.3": true,
-        "esbuild@0": [
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            [
-                null,
-                null,
-                "true"
-            ]
-        ],
         "esbuild@0.28.2": true
     },
     "features": {
         "allowScripts": {
             "dompurify": "true",
             "monaco-editor": "true"
+        }
+    },
+    "overrides": {
+        "@typescript-eslint/typescript-estree": {
+            "minimatch": "^11.0.1"
         }
     }
 }
