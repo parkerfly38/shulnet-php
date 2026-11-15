@@ -19,6 +19,12 @@ Schedule::command('membership:generate-dues')
     ->withoutOverlapping()
     ->runInBackground();
 
+// Morning, so reminders arrive at a reasonable hour.
+Schedule::command('honors:send-reminders')
+    ->daily()
+    ->at('08:00')
+    ->withoutOverlapping();
+
 Schedule::command('ai:prune-conversations --days=30')
     ->daily()
     ->at('02:00')
