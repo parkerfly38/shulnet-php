@@ -6,6 +6,12 @@ import { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Plus, Search } from 'lucide-react';
 
+
+// Today's local date. toISOString() is UTC, which is already tomorrow on an evening in the Americas.
+function localToday() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
     { title: 'Attendance', href: '/admin/school/attendance' },
@@ -31,7 +37,7 @@ export default function AttendanceIndex() {
     const { t } = useTranslation();
     const [attendances, setAttendances] = useState<Attendance[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchDate, setSearchDate] = useState(new Date().toISOString().split('T')[0]);
+    const [searchDate, setSearchDate] = useState(localToday);
     const [filterStatus, setFilterStatus] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
