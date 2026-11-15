@@ -14,7 +14,9 @@ class SettingController extends Controller
     public function index()
     {
         // Alphabetical within each group, except the synagogue name leads General.
-        $settings = Setting::orderBy('group')->orderBy('key')->get()
+        // Membership billing and email have their own pages (the email page saves to email_settings;
+        // nothing reads the SMTP rows in this table), so they aren't edited here.
+        $settings = Setting::whereNotIn('group', ['membership', 'email'])->orderBy('group')->orderBy('key')->get()
             ->sortBy(fn (Setting $s) => [$s->group, $s->key === 'site_name' ? 0 : 1, $s->key])
             ->values()
             ->groupBy('group');

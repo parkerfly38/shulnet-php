@@ -30,7 +30,8 @@ class ZoomService
     {
         $settingsService = app(SettingsService::class);
         
-        return $settingsService->get('zoom_enabled', false) 
+        // Stored as the text "true"/"false"; a bare truthiness check treated "false" as on.
+        return filter_var($settingsService->get('zoom_enabled', false), FILTER_VALIDATE_BOOLEAN)
             && !empty($this->accountId)
             && !empty($this->clientId)
             && !empty($this->clientSecret);
