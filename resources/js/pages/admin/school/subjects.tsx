@@ -8,7 +8,7 @@ import { Search, Plus, Eye, Edit, Trash2 } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'School Management', href: '/admin/school' },
     { title: 'Subjects', href: '/admin/school/subjects' },
 ];
 

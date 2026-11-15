@@ -21,7 +21,7 @@ class SubjectController extends Controller
         $perPage = (int) $request->input('per_page', 25);
         $q = $request->input('q');
 
-        $query = Subject::query();
+        $query = Subject::with(['classDefinition', 'teacher']);
         if ($q) {
             $query->where('name', 'like', "%{$q}%");
         }
@@ -38,7 +38,7 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Subject::findOrFail($id));
+        return response()->json(Subject::with(['classDefinition', 'teacher'])->findOrFail($id));
     }
 
     /**
@@ -50,10 +50,14 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
-        $model = Subject::create($data);
+        $model = Subject::create($this->validated($request));
 
-        return response()->json($model, 201);
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.subjects.show', $model->id)
+                ->with('success', 'Subject created successfully.');
+        }
+
+        return response()->json($model->load(['classDefinition', 'teacher']), 201);
     }
 
     /**
@@ -66,10 +70,14 @@ class SubjectController extends Controller
     public function update(Request $request, $id)
     {
         $model = Subject::findOrFail($id);
-        $data = $request->validate(['name' => 'required|string', 'description' => 'nullable|string']);
-        $model->update($data);
+        $model->update($this->validated($request));
 
-        return response()->json($model);
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.subjects.show', $model->id)
+                ->with('success', 'Subject updated successfully.');
+        }
+
+        return response()->json($model->load(['classDefinition', 'teacher']));
     }
 
     /**
@@ -85,5 +93,20 @@ class SubjectController extends Controller
         $model->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * The fields the subject forms send.
+     */
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'subject_code' => 'nullable|string|max:50',
+            'description' => 'nullable|string',
+            'books' => 'nullable|string',
+            'class_id' => 'nullable|integer|exists:class_definitions,id',
+            'teacher_id' => 'nullable|integer|exists:teachers,id',
+        ]);
     }
 }

@@ -57,22 +57,32 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
     })->name('admin.school.class-definitions.edit');
 
     // Class Grades
-    Route::get('class-grades', fn() => Inertia::render('admin/school/class-grades'))->name('admin.school.class-grades');
+    // Gradebook: grades are entered per class (roster, class and subject grades) and per exam.
+    Route::get('gradebook', [\App\Http\Controllers\Admin\GradebookController::class, 'index'])->name('admin.school.gradebook.index');
+    Route::get('class-definitions/{id}/gradebook', [\App\Http\Controllers\Admin\GradebookController::class, 'classBook'])->whereNumber('id')->name('admin.school.gradebook.class');
+    Route::put('class-definitions/{id}/gradebook', [\App\Http\Controllers\Admin\GradebookController::class, 'saveClass'])->whereNumber('id')->name('admin.school.gradebook.class.save');
+    Route::delete('class-definitions/{id}/gradebook/students/{student}', [\App\Http\Controllers\Admin\GradebookController::class, 'unenroll'])->whereNumber(['id', 'student'])->name('admin.school.gradebook.class.unenroll');
+    Route::get('exams/{id}/grades', [\App\Http\Controllers\Admin\GradebookController::class, 'examBook'])->whereNumber('id')->name('admin.school.gradebook.exam');
+    Route::put('exams/{id}/grades', [\App\Http\Controllers\Admin\GradebookController::class, 'saveExam'])->whereNumber('id')->name('admin.school.gradebook.exam.save');
+
+    // The old one-row-at-a-time grade screens
+    Route::redirect('class-grades', '/admin/school/gradebook')->name('admin.school.class-grades');
 
     // Exams
     Route::get('exams', fn() => Inertia::render('admin/school/exams/index'))->name('admin.school.exams.index');
-    Route::get('exams/create', fn() => Inertia::render('admin/school/exams/create'))->name('admin.school.exams.create');
+    $examSubjects = fn () => ['subjects' => \App\Models\Subject::select('id', 'name')->orderBy('name')->get()];
+    Route::get('exams/create', fn () => Inertia::render('admin/school/exams/create', $examSubjects()))->name('admin.school.exams.create');
     Route::get('exams/{id}', function ($id) {
         $model = \App\Models\Exam::with('subject')->findOrFail($id);
         return Inertia::render('admin/school/exams/show', ['item' => $model]);
     })->name('admin.school.exams.show');
-    Route::get('exams/{id}/edit', function ($id) {
+    Route::get('exams/{id}/edit', function ($id) use ($examSubjects) {
         $model = \App\Models\Exam::with('subject')->findOrFail($id);
-        return Inertia::render('admin/school/exams/edit', ['item' => $model]);
+        return Inertia::render('admin/school/exams/edit', ['item' => $model] + $examSubjects());
     })->name('admin.school.exams.edit');
 
     // Exam Grades
-    Route::get('exam-grades', fn() => Inertia::render('admin/school/exam-grades'))->name('admin.school.exam-grades');
+    Route::redirect('exam-grades', '/admin/school/gradebook')->name('admin.school.exam-grades');
 
     // Parents
     Route::get('parents', fn() => Inertia::render('admin/school/parents/index'))->name('admin.school.parents.index');
@@ -90,7 +100,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
     Route::get('students', fn() => Inertia::render('admin/school/students/index', $studentOnboardingProps()))->name('admin.school.students.index');
     Route::get('students/create', fn() => Inertia::render('admin/school/students/create'))->name('admin.school.students.create');
     Route::get('students/{id}', function ($id) {
-        $model = \App\Models\Student::with('parents')->findOrFail($id);
+        $model = \App\Models\Student::with([
+            'parents',
+            'classGrades.classDefinition:id,name',
+            'subjectGrades.subject:id,name',
+            'examGrades.exam:id,name,start_date',
+        ])->findOrFail($id);
         return Inertia::render('admin/school/students/show', ['item' => $model]);
     })->name('admin.school.students.show');
     Route::get('students/{id}/edit', function ($id) {
@@ -110,18 +125,23 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin/school')->g
 
     // Subjects
     Route::get('subjects', fn() => Inertia::render('admin/school/subjects'))->name('admin.school.subjects.index');
-    Route::get('subjects/create', fn() => Inertia::render('admin/school/subjects/create'))->name('admin.school.subjects.create');
+    // Classes and teachers to pick from on the subject forms
+    $subjectFormOptions = fn () => [
+        'classes' => \App\Models\ClassDefinition::select('id', 'name')->orderBy('name')->get(),
+        'teachers' => \App\Models\Teacher::select('id', 'first_name', 'last_name')->orderBy('last_name')->orderBy('first_name')->get(),
+    ];
+    Route::get('subjects/create', fn () => Inertia::render('admin/school/subjects/create', $subjectFormOptions()))->name('admin.school.subjects.create');
     Route::get('subjects/{id}', function ($id) {
-        $model = \App\Models\Subject::findOrFail($id);
+        $model = \App\Models\Subject::with(['classDefinition', 'teacher'])->findOrFail($id);
         return Inertia::render('admin/school/subjects/show', ['item' => $model]);
     })->name('admin.school.subjects.show');
-    Route::get('subjects/{id}/edit', function ($id) {
+    Route::get('subjects/{id}/edit', function ($id) use ($subjectFormOptions) {
         $model = \App\Models\Subject::findOrFail($id);
-        return Inertia::render('admin/school/subjects/edit', ['item' => $model]);
+        return Inertia::render('admin/school/subjects/edit', ['item' => $model] + $subjectFormOptions());
     })->name('admin.school.subjects.edit');
 
     // Subject Grades
-    Route::get('subject-grades', fn() => Inertia::render('admin/school/subject-grades'))->name('admin.school.subject-grades');
+    Route::redirect('subject-grades', '/admin/school/gradebook')->name('admin.school.subject-grades');
 
     // Teachers
     Route::get('teachers', fn() => Inertia::render('admin/school/teachers/index'))->name('admin.school.teachers.index');

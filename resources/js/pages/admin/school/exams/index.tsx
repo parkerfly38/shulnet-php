@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Plus, Eye, Edit, Trash2, ClipboardList } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
 
 const breadcrums: BreadcrumbItem[] = [
@@ -115,7 +115,7 @@ export default function ExamsIndex() {
                     <form onSubmit={handleSearch} className="flex gap-2 flex-1">
                         <div className="relative flex-1">
                             <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input type="text" placeholder={t('Search exams by name or description...')} value={search} onChange={(e) => setSearch((e.target as HTMLInputElement).value)} className="ps-10" />
+                            <Input type="text" placeholder={t('Search exams by name or subject...')} value={search} onChange={(e) => setSearch((e.target as HTMLInputElement).value)} className="ps-10" />
                         </div>
                         <Button type="submit" variant="outline">{t('Search')}</Button>
                     </form>
@@ -140,15 +140,18 @@ export default function ExamsIndex() {
                                     data.map((it, idx) => (
                                         <tr key={it.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{it.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{it.subject}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{it.subject_name ?? '—'}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{it.start_date}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{it.end_date}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                                 <div className="flex gap-2 justify-end">
-                                                    <Link href={`/admin/school/class-definitions/${it.id}`}>
+                                                    <Link href={`/admin/school/exams/${it.id}`}>
                                                         <Button variant="outline" size="sm"><Eye className="h-4 w-4" /></Button>
                                                     </Link>
-                                                    <Link href={`/admin/school/class-definitions/${it.id}/edit`}>
+                                                    <Link href={`/admin/school/exams/${it.id}/grades`} title={t('Enter Grades')}>
+                                                        <Button variant="outline" size="sm"><ClipboardList className="h-4 w-4" /></Button>
+                                                    </Link>
+                                                    <Link href={`/admin/school/exams/${it.id}/edit`}>
                                                         <Button variant="outline" size="sm"><Edit className="h-4 w-4" /></Button>
                                                     </Link>                                                    <Button 
                                                         variant="outline" 

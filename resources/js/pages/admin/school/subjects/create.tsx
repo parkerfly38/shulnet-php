@@ -2,31 +2,29 @@ import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import subjects from '@/routes/admin/school/subjects';
-import { FormEventHandler } from 'react';
+import SubjectFields, { type SubjectFormData, type SubjectFormOptions } from '@/components/school/subject-fields';
+import type { FormEvent } from 'react';
 import { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
+    { title: 'School Management', href: '/admin/school' },
     { title: 'Subjects', href: '/admin/school/subjects' },
     { title: 'Create', href: '/admin/school/subjects/create' },
 ];
 
-export default function Create() {
+export default function SubjectsCreate({ classes, teachers }: Readonly<SubjectFormOptions>) {
     const { t } = useTranslation();
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm<SubjectFormData>({
         name: '',
         subject_code: '',
+        description: '',
         books: '',
         class_id: '',
         teacher_id: '',
     });
 
-    const submit: FormEventHandler = (e) => {
+    // The API redirects Inertia requests to the new subject's page.
+    const submit = (e: FormEvent) => {
         e.preventDefault();
         post('/api/admin/subjects');
     };
@@ -34,109 +32,17 @@ export default function Create() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={t('Create Subject')} />
-
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold leading-tight text-gray-800">
-                    {t('Create Subject')}
-                </h2>
-                <Link href={subjects.index.url()}>
-                    <Button variant="outline">{t('Back to List')}</Button>
-                </Link>
-            </div>
-
-            <div className="">
-                <div className="">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{t('Subject Information')}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <form onSubmit={submit} className="space-y-6">
-                                <div>
-                                    <Label htmlFor="name">Subject Name *</Label>
-                                    <Input
-                                        id="name"
-                                        type="text"
-                                        value={data.name}
-                                        onChange={(e) => setData('name', e.target.value)}
-                                        className="mt-1"
-                                        required
-                                    />
-                                    {errors.name && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="subject_code">{t('Subject Code')}</Label>
-                                    <Input
-                                        id="subject_code"
-                                        type="text"
-                                        value={data.subject_code}
-                                        onChange={(e) => setData('subject_code', e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    {errors.subject_code && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.subject_code}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="class_id">{t('Class ID')}</Label>
-                                    <Input
-                                        id="class_id"
-                                        type="number"
-                                        value={data.class_id}
-                                        onChange={(e) => setData('class_id', e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    {errors.class_id && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.class_id}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="teacher_id">{t('Teacher ID')}</Label>
-                                    <Input
-                                        id="teacher_id"
-                                        type="number"
-                                        value={data.teacher_id}
-                                        onChange={(e) => setData('teacher_id', e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    {errors.teacher_id && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.teacher_id}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="books">{t('Books')}</Label>
-                                    <Textarea
-                                        id="books"
-                                        value={data.books}
-                                        onChange={(e) => setData('books', e.target.value)}
-                                        className="mt-1"
-                                        rows={3}
-                                    />
-                                    {errors.books && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.books}</p>
-                                    )}
-                                </div>
-
-                                <div className="flex justify-end gap-2">
-                                    <Link href={subjects.index.url()}>
-                                        <Button type="button" variant="outline">
-                                            {t('Cancel')}
-                                        </Button>
-                                    </Link>
-                                    <Button type="submit" disabled={processing}>
-                                        {t('Create Subject')}
-                                    </Button>
-                                </div>
-                            </form>
-                        </CardContent>
-                    </Card>
-                </div>
+            <div className="p-4">
+                <h1 className="text-2xl font-bold mb-4">{t('Create Subject')}</h1>
+                <form onSubmit={submit} className="space-y-3 bg-white dark:bg-black p-4 rounded border">
+                    <SubjectFields data={data} errors={errors} setData={setData} classes={classes} teachers={teachers} />
+                    <div className="flex gap-2 justify-end">
+                        <Link href="/admin/school/subjects">
+                            <Button type="button" variant="outline">{t('Cancel')}</Button>
+                        </Link>
+                        <Button type="submit" disabled={processing}>{t('Create Subject')}</Button>
+                    </div>
+                </form>
             </div>
         </AppLayout>
     );
