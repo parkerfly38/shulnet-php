@@ -539,9 +539,10 @@ class DashboardController extends Controller
             'parent_data.selection_type' => 'required|in:existing_parent,existing_member,new_parent',
             'parent_data.parent_id' => 'required_if:parent_data.selection_type,existing_parent',
             'parent_data.member_id' => 'required_if:parent_data.selection_type,existing_member',
-            'parent_data.first_name' => 'required_if:parent_data.selection_type,new_parent|string|max:255',
-            'parent_data.last_name' => 'required_if:parent_data.selection_type,new_parent|string|max:255',
-            'parent_data.email' => 'required_if:parent_data.selection_type,new_parent|email|max:255',
+            // The dialog sends these blank when an existing parent or member is picked, hence nullable.
+            'parent_data.first_name' => 'nullable|required_if:parent_data.selection_type,new_parent|string|max:255',
+            'parent_data.last_name' => 'nullable|required_if:parent_data.selection_type,new_parent|string|max:255',
+            'parent_data.email' => 'nullable|required_if:parent_data.selection_type,new_parent|email|max:255',
             'parent_data.phone' => 'nullable|string|max:50',
             'parent_data.address' => 'nullable|string',
             'tuition_data.tuition_tier_id' => 'required|exists:school_tuition_tiers,id',
@@ -560,17 +561,29 @@ class DashboardController extends Controller
             if ($parentData['selection_type'] === 'existing_parent') {
                 $parentId = $parentData['parent_id'];
             } elseif ($parentData['selection_type'] === 'existing_member') {
-                // Convert member to parent
+                // Convert member to parent, or reuse the parent record they already have.
+                // The link lives on the member (members.parent_id), as in MemberController::createParentFromMember.
                 $member = Member::findOrFail($parentData['member_id']);
-                $parent = ParentModel::create([
-                    'first_name' => $member->first_name,
-                    'last_name' => $member->last_name,
-                    'email' => $member->email,
-                    'phone' => $member->phone,
-                    'address' => $member->address,
-                    'member_id' => $member->id,
-                ]);
-                $parentId = $parent->id;
+
+                if (! $member->parent_id) {
+                    $parent = ParentModel::create([
+                        'first_name' => $member->first_name,
+                        'last_name' => $member->last_name,
+                        'email' => $member->email,
+                        'phone' => $member->phone1,
+                        'date_of_birth' => $member->dob,
+                        'address' => trim(implode("\n", array_filter([
+                            $member->address_line_1,
+                            $member->address_line_2,
+                            implode(', ', array_filter([$member->city, $member->state, $member->zip])),
+                            $member->country,
+                        ]))),
+                    ]);
+                    $member->parent_id = $parent->id;
+                    $member->save();
+                }
+
+                $parentId = $member->parent_id;
             } else {
                 // Create new parent
                 $parent = ParentModel::create([
@@ -594,9 +607,9 @@ class DashboardController extends Controller
                     'gender' => $studentData['gender'] ?? null,
                     'date_of_birth' => $studentData['date_of_birth'] ?? null,
                     'address' => $studentData['address'] ?? null,
-                    'parent_id' => $parentId,
-                    'status' => 'active',
                 ]);
+                // Parents are linked through parent_student; students no longer have a parent_id column.
+                $student->parents()->attach($parentId);
                 $students[] = $student;
             }
 
@@ -607,9 +620,8 @@ class DashboardController extends Controller
                 $quantity = $tuitionData['quantity'];
                 $total = $tier->price * $quantity;
 
-                // Get parent to check if they have a member_id
-                $parent = ParentModel::find($parentId);
-                $memberId = $parent->member_id ?? null;
+                // Bill the member account when the parent is also a member
+                $memberId = ParentModel::find($parentId)?->member?->id;
 
                 $invoice = Invoice::create([
                     'member_id' => $memberId,

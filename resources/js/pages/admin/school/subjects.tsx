@@ -17,7 +17,7 @@ function fetchJson(url: string, opts: any = {}) {
     const token = tokenMeta?.content;
     const headers = Object.assign({ 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, opts.headers || {});
     if (token) headers['X-CSRF-TOKEN'] = token;
-    return fetch(url, Object.assign({ credentials: 'same-origin', headers }, opts)).then((r) => r.ok ? r.json() : Promise.reject(r));
+    return fetch(url, Object.assign({ credentials: 'same-origin', headers }, opts)).then((r) => r.ok ? r.text().then((body) => (body ? JSON.parse(body) : null)) : Promise.reject(r));
 }
 
 export default function SubjectsPage() {
