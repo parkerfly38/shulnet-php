@@ -620,8 +620,9 @@ class DashboardController extends Controller
                 $quantity = $tuitionData['quantity'];
                 $total = $tier->price * $quantity;
 
-                // Bill the member account when the parent is also a member
-                $memberId = ParentModel::find($parentId)?->member?->id;
+                // Invoices are addressed to a member; a parent who isn't one is billed through a contact record.
+                $parent = ParentModel::findOrFail($parentId);
+                $memberId = $parent->billingMember()->id;
 
                 $invoice = Invoice::create([
                     'member_id' => $memberId,
@@ -647,8 +648,7 @@ class DashboardController extends Controller
 
                 // Send email if requested
                 if ($validated['tuition_data']['email_invoice'] ?? false) {
-                    $parent = ParentModel::find($parentId);
-                    if ($parent && $parent->email) {
+                    if ($parent->email) {
                         try {
                             // Generate PDF path (you may need to implement PDF generation)
                             $pdfPath = storage_path('app/invoices/invoice-'.$invoice->invoice_number.'.pdf');

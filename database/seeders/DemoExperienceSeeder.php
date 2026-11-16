@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\MemberCareAlert;
 use App\Models\Banner;
 use App\Models\Board;
 use App\Models\CampaignEmail;
@@ -14,10 +15,12 @@ use App\Models\FormSubmission;
 use App\Models\Invoice;
 use App\Models\Member;
 use App\Models\MemberRelationship;
+use App\Models\Note;
 use App\Models\Payment;
 use App\Models\RideRequest;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 class DemoExperienceSeeder extends Seeder
 {
@@ -342,6 +345,73 @@ class DemoExperienceSeeder extends Seeder
                     }
                 }
             }
+        }
+
+        $this->seedLeadership($portalMember);
+        $this->seedCareAlerts($admin, collect([$alex, $jamie, $casey]));
+    }
+
+    /**
+     * Puts the portal member (David Cohen) on the board and a few committees, so his
+     * leadership roles show on the admin board and committee pages.
+     */
+    private function seedLeadership(Member $member): void
+    {
+        $term = [
+            'term_start_date' => now()->subMonths(9)->toDateString(),
+            'term_end_date' => now()->addMonths(15)->toDateString(),
+        ];
+
+        Board::firstOrCreate(
+            ['name' => 'Board of Directors'],
+            ['description' => 'Provides governance and strategic oversight.']
+        )->members()->syncWithoutDetaching([$member->id => ['title' => 'Trustee', ...$term]]);
+
+        $committees = [
+            'Ritual Committee' => ['Vice Chair', 'Manages religious services, holiday observances, and ritual practices.'],
+            'Education Committee' => ['Member', 'Oversees religious school programs, adult education, and lifelong learning initiatives.'],
+            'Finance Committee' => ['Member', 'Oversees budgeting and financial planning.'],
+        ];
+
+        foreach ($committees as $name => [$title, $description]) {
+            Committee::firstOrCreate(['name' => $name], ['description' => $description])
+                ->members()->syncWithoutDetaching([$member->id => ['title' => $title, ...$term]]);
+        }
+    }
+
+    /**
+     * Open member care alerts for the admin dashboard, one of each kind, plus a resolved one
+     * that should no longer appear there.
+     */
+    private function seedCareAlerts(User $admin, Collection $members): void
+    {
+        [$alex, $jamie, $casey] = $members->all();
+        $john = Member::where('email', 'john.doe@example.com')->first() ?? $alex;
+
+        $alerts = [
+            [$casey, MemberCareAlert::Hospitalized, 'Casey in hospital after surgery', 'Casey is at Northern Light Eastern Maine Medical Center recovering from knee surgery. Rabbi to visit; Chesed committee to arrange meals for the week after discharge.', 'High', now()->addDays(2), null],
+            [$jamie, MemberCareAlert::Mourning, 'Shiva for Jamie\'s father', 'Jamie\'s father passed away. Shiva at the Morgan home through Sunday; evening minyan at 7:00 PM. Coordinate meal train and minyan volunteers.', 'High', now()->addDays(5), null],
+            [$alex, MemberCareAlert::ImmediateFollowUp, 'Check in with Alex after job loss', 'Alex mentioned being laid off. Reach out privately about dues relief and the community job network.', 'Medium', now()->addDays(3), null],
+            [$john, MemberCareAlert::OtherEmergency, 'House fire: John Doe family displaced', 'Kitchen fire at the Doe home; family is staying with relatives. Collect gift cards and check on housing needs.', 'High', now()->addDay(), null],
+            [$casey, MemberCareAlert::ImmediateFollowUp, 'Call Casey after outpatient tests', 'Casey received good news from the tests. No further follow-up needed.', 'Low', now()->subDays(20), now()->subDays(18)],
+        ];
+
+        foreach ($alerts as [$member, $alert, $name, $text, $priority, $deadline, $completed]) {
+            Note::updateOrCreate(
+                ['name' => $name, 'member_id' => $member->id],
+                [
+                    'item_scope' => 'Member',
+                    'note_text' => $text,
+                    'member_care_alert' => $alert,
+                    'priority' => $priority,
+                    'visibility' => 'Admin',
+                    'label' => 'Member Care',
+                    'added_by' => $admin->name,
+                    'user_id' => $admin->id,
+                    'deadline_date' => $deadline,
+                    'completed_date' => $completed,
+                ]
+            );
         }
     }
 }

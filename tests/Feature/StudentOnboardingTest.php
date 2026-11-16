@@ -104,6 +104,44 @@ class StudentOnboardingTest extends TestCase
         $this->assertSame(['Ava', 'Noah'], $parent->students()->orderBy('first_name')->pluck('first_name')->all());
     }
 
+    // Invoices show the member's name, so a parent who isn't a member is billed through a contact record.
+    public function test_tuition_invoice_for_a_non_member_parent_carries_their_name(): void
+    {
+        $tier = $this->tier();
+        $parent = ParentModel::create([
+            'first_name' => 'Jamie', 'last_name' => 'Morgan', 'email' => 'jamie@example.com',
+            'phone' => '207-555-0102', 'address' => "12 Elm St\nBangor, ME 04401",
+        ]);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->post('/onboarding/student', $this->payload(['selection_type' => 'existing_parent', 'parent_id' => (string) $parent->id], $tier))
+            ->assertSessionHasNoErrors();
+
+        $billed = Invoice::sole()->member;
+        $this->assertSame(['Jamie', 'Morgan', 'jamie@example.com', 'contact', '12 Elm St', 'Bangor, ME 04401'],
+            [$billed->first_name, $billed->last_name, $billed->email, $billed->member_type, $billed->address_line_1, $billed->address_line_2]);
+        $this->assertSame($parent->id, $billed->parent_id);
+
+        // A second onboarding for the same parent reuses that record.
+        $this->actingAs(User::factory()->admin()->create())
+            ->post('/onboarding/student', $this->payload(['selection_type' => 'existing_parent', 'parent_id' => (string) $parent->id], $tier));
+        $this->assertSame(1, Member::count());
+        $this->assertSame([$billed->id], Invoice::pluck('member_id')->unique()->values()->all());
+    }
+
+    public function test_the_migration_names_existing_parent_invoices(): void
+    {
+        $parent = ParentModel::create(['first_name' => 'Casey', 'last_name' => 'Bennett']);
+        $invoice = Invoice::create([
+            'invoiceable_type' => ParentModel::class, 'invoiceable_id' => $parent->id,
+            'invoice_number' => 'INV-OLD-1', 'invoice_date' => now(), 'due_date' => now(), 'total' => 100, 'status' => 'open',
+        ]);
+
+        (require database_path('migrations/2026_11_16_000001_bill_parent_tuition_invoices_to_a_member.php'))->up();
+
+        $this->assertSame('Casey', $invoice->fresh()->member->first_name);
+    }
+
     public function test_new_parent_still_needs_a_name_and_email(): void
     {
         $tier = $this->tier();

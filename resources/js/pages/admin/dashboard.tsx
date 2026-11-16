@@ -817,6 +817,12 @@ export default function Dashboard({ membersJoinedData, currentYear, currentHebre
     );
 }
 
+// Today's date in local time; toISOString() is UTC and gives tomorrow on US evenings.
+function localToday(): string {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 interface OnboardingWorkflowProps {
     membershipTiers: MembershipTier[];
     onClose: () => void;
@@ -855,7 +861,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
         
         // Membership details
         membership_tier_id: '',
-        start_date: new Date().toISOString().split('T')[0],
+        start_date: localToday(),
         
         // Invoice options
         create_invoice: true,
@@ -865,8 +871,16 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
     const handleNext = () => setStep(step + 1);
     const handleBack = () => setStep(step - 1);
 
+    const [submitting, setSubmitting] = useState(false);
+    const [errors, setErrors] = useState<string[]>([]);
+
     const handleSubmit = () => {
+        setErrors([]);
         router.post('/onboarding/member', formData, {
+            preserveScroll: true,
+            onStart: () => setSubmitting(true),
+            onFinish: () => setSubmitting(false),
+            onError: (errs) => setErrors(Array.from(new Set(Object.values(errs)))),
             onSuccess: () => {
                 onClose();
                 setStep(1);
@@ -892,7 +906,7 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                     mother_hebrew_name: '',
                     anniversary_date: '',
                     membership_tier_id: '',
-                    start_date: new Date().toISOString().split('T')[0],
+                    start_date: localToday(),
                     create_invoice: true,
                     email_invoice: false,
                 });
@@ -1254,6 +1268,15 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                 )}
             </div>
 
+            {errors.length > 0 && (
+                <div role="alert" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+                    <p className="font-medium">{t('Onboarding could not be completed:')}</p>
+                    <ul className="mt-1 list-disc ps-5">
+                        {errors.map((error) => <li key={error}>{error}</li>)}
+                    </ul>
+                </div>
+            )}
+
             {/* Actions */}
             <div className="flex justify-between pt-4 border-t">
                 <Button
@@ -1263,13 +1286,13 @@ function OnboardingWorkflow({ membershipTiers, onClose }: OnboardingWorkflowProp
                 >
                     {t('Back')}
                 </Button>
-                {step < 3 ? (
-                    <Button onClick={handleNext}>
+                {step < 4 ? (
+                    <Button onClick={handleNext} disabled={step === 3 && !formData.membership_tier_id}>
                         {t('Next')}
                     </Button>
                 ) : (
-                    <Button onClick={handleSubmit}>
-                        {t('Complete Onboarding')}
+                    <Button onClick={handleSubmit} disabled={submitting}>
+                        {submitting ? t('Saving…') : t('Complete Onboarding')}
                     </Button>
                 )}
             </div>
