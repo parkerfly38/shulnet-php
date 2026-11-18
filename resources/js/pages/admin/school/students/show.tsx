@@ -1,3 +1,4 @@
+import { useTranslation } from '@/hooks/use-translation';
 import React from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
@@ -9,6 +10,7 @@ const breadcrumbsBase: BreadcrumbItem[] = [
 ];
 
 export default function StudentsShow() {
+    const { t } = useTranslation();
     const { props } = usePage();
     const pageProps: any = props;
     const data = pageProps.item ?? {};
@@ -63,6 +65,64 @@ export default function StudentsShow() {
                                 <img src={data.picture_url} alt={`${data.first_name} ${data.last_name}`} className="mt-2 w-32 h-32 object-cover rounded" />
                             </div>
                         )}
+                    </div>
+                </div>
+
+                {/* The same grades parents see under My Students, with links to where they're entered */}
+                <div className="mt-4 bg-white dark:bg-black p-4 rounded border">
+                    <h2 className="text-lg font-semibold mb-3">{t('Grades')}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <h3 className="text-sm font-medium text-gray-500 mb-1">{t('Classes')}</h3>
+                            {(data.class_grades ?? []).length === 0 ? (
+                                <p className="text-sm text-gray-400">{t('Not enrolled in any classes')}</p>
+                            ) : (
+                                <ul className="space-y-1 text-sm">
+                                    {data.class_grades.map((g: any) => (
+                                        <li key={g.id} className="flex justify-between gap-2">
+                                            <Link href={`/admin/school/class-definitions/${g.class_definition_id}/gradebook`} className="hover:underline">
+                                                {g.class_definition?.name ?? t('Class')}
+                                            </Link>
+                                            <span className="font-medium">{g.grade || '—'}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-medium text-gray-500 mb-1">{t('Subjects')}</h3>
+                            {(data.subject_grades ?? []).length === 0 ? (
+                                <p className="text-sm text-gray-400">{t('No subject grades')}</p>
+                            ) : (
+                                <ul className="space-y-1 text-sm">
+                                    {data.subject_grades.map((g: any) => (
+                                        <li key={g.id} className="flex justify-between gap-2">
+                                            <span>{g.subject?.name ?? t('Subject')}</span>
+                                            <span className="font-medium">{g.grade || '—'}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-medium text-gray-500 mb-1">{t('Exams')}</h3>
+                            {(data.exam_grades ?? []).length === 0 ? (
+                                <p className="text-sm text-gray-400">{t('No exam results')}</p>
+                            ) : (
+                                <ul className="space-y-1 text-sm">
+                                    {data.exam_grades.map((g: any) => (
+                                        <li key={g.id} className="flex justify-between gap-2">
+                                            <Link href={`/admin/school/exams/${g.exam_id}/grades`} className="hover:underline">
+                                                {g.exam?.name ?? t('Exam')}
+                                            </Link>
+                                            <span className="font-medium">
+                                                {[g.score ?? null, g.grade || null].filter((v) => v !== null).join(' · ') || '—'}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

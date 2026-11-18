@@ -6,6 +6,12 @@ import { BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Check, X } from 'lucide-react';
 
+
+// Today's local date. toISOString() is UTC, which is already tomorrow on an evening in the Americas.
+function localToday() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'School Management', href: '/admin/school' },
     { title: 'Attendance', href: '/admin/school/attendance' },
@@ -34,7 +40,7 @@ interface Props {
 
 export default function MarkAttendance({ students, classes }: Props) {
     const { t } = useTranslation();
-    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+    const [date, setDate] = useState(localToday);
     const [classId, setClassId] = useState<number | null>(null);
     const [attendanceData, setAttendanceData] = useState<Record<number, { status: string; notes: string }>>({});
     const [saving, setSaving] = useState(false);

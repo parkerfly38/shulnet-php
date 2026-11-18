@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Eye, Edit, Trash2 } from 'lucide-react';
+import { Search, Plus, Eye, Edit, Trash2, ClipboardList } from 'lucide-react';
 import { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -17,7 +17,7 @@ function fetchJson(url: string, opts: any = {}) {
     const token = tokenMeta?.content;
     const headers = Object.assign({ 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, opts.headers || {});
     if (token) headers['X-CSRF-TOKEN'] = token;
-    return fetch(url, Object.assign({ credentials: 'same-origin', headers }, opts)).then((r) => r.ok ? r.json() : Promise.reject(r));
+    return fetch(url, Object.assign({ credentials: 'same-origin', headers }, opts)).then((r) => r.ok ? r.text().then((body) => (body ? JSON.parse(body) : null)) : Promise.reject(r));
 }
 
 export default function ClassDefinitionsIndex() {
@@ -151,6 +151,9 @@ export default function ClassDefinitionsIndex() {
                                                 <div className="flex gap-2 justify-end">
                                                     <Link href={`/admin/school/class-definitions/${it.id}`}>
                                                         <Button variant="outline" size="sm"><Eye className="h-4 w-4" /></Button>
+                                                    </Link>
+                                                    <Link href={`/admin/school/class-definitions/${it.id}/gradebook`} title={t('Open Gradebook')}>
+                                                        <Button variant="outline" size="sm"><ClipboardList className="h-4 w-4" /></Button>
                                                     </Link>
                                                     <Link href={`/admin/school/class-definitions/${it.id}/edit`}>
                                                         <Button variant="outline" size="sm"><Edit className="h-4 w-4" /></Button>

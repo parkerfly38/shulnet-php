@@ -31,6 +31,6 @@ class ClassDefinition extends Model
 
     public function classGrades(): HasMany
     {
-        return $this->hasMany(ClassGrade::class, 'class_id');
+        return $this->hasMany(ClassGrade::class, 'class_definition_id');
     }
 }

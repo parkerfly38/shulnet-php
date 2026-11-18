@@ -23,6 +23,7 @@ export default function ExamsShow() {
                     <h1 className="text-2xl font-bold">{data.name}</h1>
                     <div className="flex gap-2">
                         <Link href="/admin/school/exams" className="px-3 py-1 border rounded">Back</Link>
+                        <Link href={`/admin/school/exams/${data.id}/grades`} className="px-3 py-1 border rounded">Grades</Link>
                         <Link href={`/admin/school/exams/${data.id}/edit`} className="px-3 py-1 bg-yellow-500 text-white rounded">Edit</Link>
                     </div>
                 </div>
@@ -30,7 +31,9 @@ export default function ExamsShow() {
                 <div className="bg-white dark:bg-black p-4 rounded border">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div><strong>Name:</strong> {data.name}</div>
-                        <div><strong>Subject:</strong> {data.subject_name ?? data.subject_id}</div>
+                        <div><strong>Subject:</strong>{' '}
+                            {data.subject_id ? <Link href={`/admin/school/subjects/${data.subject_id}`} className="text-blue-600 hover:underline">{data.subject_name}</Link> : '—'}
+                        </div>
                         <div><strong>Start Date:</strong> {data.start_date}</div>
                         <div><strong>End Date:</strong> {data.end_date}</div>
                     </div>

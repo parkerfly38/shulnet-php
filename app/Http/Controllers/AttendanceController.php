@@ -21,7 +21,7 @@ class AttendanceController extends Controller
             ->orderBy('created_at', 'desc');
 
         if ($request->has('date')) {
-            $query->where('attendance_date', $request->date);
+            $query->whereDate('attendance_date', $request->date);
         }
 
         if ($request->has('student_id')) {
@@ -57,17 +57,25 @@ class AttendanceController extends Controller
 
         $created = [];
         foreach ($validated['attendances'] as $data) {
-            $created[] = Attendance::updateOrCreate(
-                [
+            $classId = $data['class_definition_id'] ?? null;
+
+            // Not updateOrCreate: "= NULL" never matches general (no-class) attendance, so each save duplicated it.
+            $attendance = Attendance::where('student_id', $data['student_id'])
+                ->whereDate('attendance_date', $data['attendance_date'])
+                ->when($classId, fn ($q) => $q->where('class_definition_id', $classId), fn ($q) => $q->whereNull('class_definition_id'))
+                ->first()
+                ?? new Attendance([
                     'student_id' => $data['student_id'],
                     'attendance_date' => $data['attendance_date'],
-                    'class_definition_id' => $data['class_definition_id'] ?? null,
-                ],
-                [
-                    'status' => $data['status'],
-                    'notes' => $data['notes'] ?? null,
-                ]
-            );
+                    'class_definition_id' => $classId,
+                ]);
+
+            $attendance->fill([
+                'status' => $data['status'],
+                'notes' => $data['notes'] ?? null,
+            ])->save();
+
+            $created[] = $attendance;
         }
 
         return response()->json($created, 201);

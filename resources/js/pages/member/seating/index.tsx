@@ -22,7 +22,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function MemberSeatingIndex({ seasons, myAssignments }: Readonly<Props>) {
     const { t } = useTranslation();
-    const { currency } = usePage<SharedData>().props;
+    const { currency, onlinePayments } = usePage<SharedData>().props;
 
     const pendingRenewals = (seasonId: number) => myAssignments.filter((a) => a.seating_season_id === seasonId && a.status === 'renewal').length;
 
@@ -102,7 +102,7 @@ export default function MemberSeatingIndex({ seasons, myAssignments }: Readonly<
                                                         <Link href={`/member/invoices/${a.invoice.id}`} className="text-primary hover:underline">{a.invoice.invoice_number}</Link>
                                                         {a.invoice.status === 'paid'
                                                             ? <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">{t('Paid')}</Badge>
-                                                            : <Link href={`/member/invoices/${a.invoice.id}/pay`} className="text-xs font-medium text-primary hover:underline">{t('Pay now')}</Link>}
+                                                            : onlinePayments && <Link href={`/member/invoices/${a.invoice.id}/pay`} className="text-xs font-medium text-primary hover:underline">{t('Pay now')}</Link>}
                                                     </div>
                                                 ) : '-'}
                                             </td>

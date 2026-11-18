@@ -21,11 +21,12 @@ class ExamController extends Controller
         $perPage = (int) $request->input('per_page', 25);
         $q = $request->input('q');
 
-        $query = Exam::query();
+        // Exams have no description column; search the exam's and its subject's names.
+        $query = Exam::with('subject:id,name')->orderByDesc('start_date')->orderBy('name');
         if ($q) {
             $query->where(function ($s) use ($q) {
                 $s->where('name', 'like', "%{$q}%")
-                    ->orWhere('description', 'like', "%{$q}%");
+                    ->orWhereHas('subject', fn ($sub) => $sub->where('name', 'like', "%{$q}%"));
             });
         }
 
@@ -41,7 +42,7 @@ class ExamController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Exam::findOrFail($id));
+        return response()->json(Exam::with('subject:id,name')->findOrFail($id));
     }
 
     /**
@@ -53,10 +54,13 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate(['name' => 'required|string', 'date' => 'nullable|date', 'description' => 'nullable|string']);
-        $model = Exam::create($data);
+        $model = Exam::create($this->validated($request));
 
-        return response()->json($model, 201);
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.exams.index')->with('success', 'Exam created successfully.');
+        }
+
+        return response()->json($model->load('subject:id,name'), 201);
     }
 
     /**
@@ -69,10 +73,13 @@ class ExamController extends Controller
     public function update(Request $request, $id)
     {
         $model = Exam::findOrFail($id);
-        $data = $request->validate(['name' => 'required|string', 'date' => 'nullable|date', 'description' => 'nullable|string']);
-        $model->update($data);
+        $model->update($this->validated($request));
 
-        return response()->json($model);
+        if ($request->header('X-Inertia')) {
+            return redirect()->route('admin.school.exams.show', $model->id)->with('success', 'Exam updated successfully.');
+        }
+
+        return response()->json($model->load('subject:id,name'));
     }
 
     /**
@@ -88,5 +95,19 @@ class ExamController extends Controller
         $model->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * The exam's own columns: the old rules asked for a date and description the table doesn't have,
+     * and dropped the subject and dates the forms send.
+     */
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'subject_id' => 'nullable|integer|exists:subjects,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
     }
 }

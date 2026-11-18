@@ -26,6 +26,24 @@ class SynagogueNameTest extends TestCase
             ->assertInertia(fn ($page) => $page->where('settings.general.0.key', 'site_name'));
     }
 
+    // General reads top to bottom: name, timezone, currency, then the processor and each one's credentials.
+    public function test_general_settings_are_grouped_in_a_sensible_order(): void
+    {
+        // These two come from the seeder rather than a migration.
+        foreach (['currency' => 'USD', 'site_timezone' => 'America/New_York'] as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value, 'group' => 'general']);
+        }
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->get('/admin/settings')
+            ->assertInertia(fn ($page) => $page->where('settings.general', fn ($general) => collect($general)->pluck('key')->take(12)->all() === [
+                'site_name', 'site_timezone', 'currency', 'payment_processor',
+                'authorize_net_api_login_id', 'authorize_net_transaction_key', 'authorize_net_environment',
+                'paypal_client_id', 'paypal_secret', 'paypal_mode',
+                'stripe_public_key', 'stripe_secret_key',
+            ]));
+    }
+
     // Dashboards show the name and prompt admins while it's blank or still a product default.
     public function test_pages_share_the_name_and_whether_it_still_needs_setting(): void
     {

@@ -8,6 +8,7 @@ use App\Models\Seat;
 use App\Models\SeatAssignment;
 use App\Models\SeatingChart;
 use App\Models\SeatingSeason;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -295,6 +296,9 @@ class SeatingTest extends TestCase
         $season = $this->season($chart);
         [$user, $member] = $this->memberUser();
         $seat = $chart->seats()->first();
+        Setting::set('payment_processor', 'stripe');
+        Setting::set('stripe_public_key', 'pk_test_1');
+        Setting::set('stripe_secret_key', 'sk_test_1');
 
         $response = $this->actingAs($user)->post("/member/seating/{$season->id}/reserve", [
             'seat_ids' => [$seat->id],
@@ -307,6 +311,21 @@ class SeatingTest extends TestCase
         $this->assertDatabaseHas('seat_assignments', [
             'seat_id' => $seat->id, 'member_id' => $member->id, 'pricing' => 'member', 'source' => 'member',
         ]);
+    }
+
+    // With online payments off (the default), "pay now" can't happen, so the seats go on the member's account.
+    public function test_pay_now_falls_back_to_an_invoice_while_payments_are_off(): void
+    {
+        $chart = $this->chart();
+        $season = $this->season($chart);
+        [$user] = $this->memberUser();
+
+        $this->actingAs($user)->post("/member/seating/{$season->id}/reserve", [
+            'seat_ids' => [$chart->seats()->first()->id],
+            'payment_option' => 'pay_now',
+        ])->assertRedirect(route('member.seating.show', $season));
+
+        $this->assertSame(1, Invoice::count());
     }
 
     public function test_non_members_pay_the_non_member_price(): void

@@ -19,7 +19,8 @@ function nextSaturdayISO(fromDate = new Date()) {
     let daysUntil = (6 - day + 7) % 7;
     if (daysUntil === 0) daysUntil = 7;
     d.setDate(d.getDate() + daysUntil);
-    return d.toISOString().slice(0, 10);
+    // Local date, not toISOString(): that's UTC, which turns an evening Saturday in the Americas into Sunday.
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 interface Anniversary {

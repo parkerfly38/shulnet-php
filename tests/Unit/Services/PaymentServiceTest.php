@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Models\Setting;
 use App\Services\AuthorizeNetPaymentGateway;
+use App\Services\NoPaymentGateway;
 use App\Services\PaymentService;
 use App\Services\PayPalPaymentGateway;
 use App\Services\StripePaymentGateway;
@@ -14,15 +15,16 @@ class PaymentServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_defaults_to_stripe_gateway_when_no_setting_exists()
+    public function test_defaults_to_no_gateway_when_no_setting_exists()
     {
         // Clear any existing settings
         Setting::where('key', 'payment_processor')->delete();
-        
-        $service = new PaymentService();
+
+        $service = new PaymentService;
         $gateway = $service->getGateway();
 
-        $this->assertInstanceOf(StripePaymentGateway::class, $gateway);
+        $this->assertInstanceOf(NoPaymentGateway::class, $gateway);
+        $this->assertFalse($gateway->processPayment(10, [])['success']);
     }
 
     public function test_uses_stripe_gateway_when_configured()
@@ -33,7 +35,7 @@ class PaymentServiceTest extends TestCase
             'value' => 'stripe',
         ]);
 
-        $service = new PaymentService();
+        $service = new PaymentService;
         $gateway = $service->getGateway();
 
         $this->assertInstanceOf(StripePaymentGateway::class, $gateway);
@@ -47,7 +49,7 @@ class PaymentServiceTest extends TestCase
             'value' => 'authorize_net',
         ]);
 
-        $service = new PaymentService();
+        $service = new PaymentService;
         $gateway = $service->getGateway();
 
         $this->assertInstanceOf(AuthorizeNetPaymentGateway::class, $gateway);
@@ -61,13 +63,13 @@ class PaymentServiceTest extends TestCase
             'value' => 'paypal',
         ]);
 
-        $service = new PaymentService();
+        $service = new PaymentService;
         $gateway = $service->getGateway();
 
         $this->assertInstanceOf(PayPalPaymentGateway::class, $gateway);
     }
 
-    public function test_defaults_to_stripe_for_unknown_processor()
+    public function test_defaults_to_no_gateway_for_unknown_processor()
     {
         Setting::where('key', 'payment_processor')->delete();
         Setting::create([
@@ -75,10 +77,10 @@ class PaymentServiceTest extends TestCase
             'value' => 'unknown_processor',
         ]);
 
-        $service = new PaymentService();
+        $service = new PaymentService;
         $gateway = $service->getGateway();
 
-        $this->assertInstanceOf(StripePaymentGateway::class, $gateway);
+        $this->assertInstanceOf(NoPaymentGateway::class, $gateway);
     }
 
     public function test_get_active_processor_returns_correct_value()
@@ -89,17 +91,17 @@ class PaymentServiceTest extends TestCase
             'value' => 'authorize_net',
         ]);
 
-        $service = new PaymentService();
-        
+        $service = new PaymentService;
+
         $this->assertEquals('authorize_net', $service->getActiveProcessor());
     }
 
-    public function test_get_active_processor_defaults_to_stripe()
+    public function test_get_active_processor_defaults_to_none()
     {
         Setting::where('key', 'payment_processor')->delete();
-        
-        $service = new PaymentService();
-        
-        $this->assertEquals('stripe', $service->getActiveProcessor());
+
+        $service = new PaymentService;
+
+        $this->assertEquals('none', $service->getActiveProcessor());
     }
 }

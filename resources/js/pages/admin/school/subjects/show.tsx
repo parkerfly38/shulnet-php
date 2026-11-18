@@ -1,95 +1,69 @@
 import { useTranslation } from '@/hooks/use-translation';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import subjects from '@/routes/admin/school/subjects';
 import { BreadcrumbItem } from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Subjects', href: '/admin/school/subjects' },
-];
+// Laid out like the other school show pages (teachers, classes, exams).
 
 interface Subject {
     id: number;
     name: string;
-    subject_code: string;
+    subject_code: string | null;
+    description: string | null;
     books: string | null;
     class_id: number | null;
     teacher_id: number | null;
-    created_at: string;
-    updated_at: string;
+    class_name: string | null;
+    teacher_name: string | null;
 }
 
 interface ShowProps {
     item: Subject;
 }
 
-export default function Show({ item }: Readonly<ShowProps>) {
+export default function SubjectsShow({ item }: Readonly<ShowProps>) {
     const { t } = useTranslation();
+    const none = <span className="text-gray-400">—</span>;
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'School Management', href: '/admin/school' },
+        { title: 'Subjects', href: '/admin/school/subjects' },
+        { title: item.name || 'Show', href: `/admin/school/subjects/${item.id}` },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Subject: ${item.name}`} />
-
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold leading-tight text-gray-800">
-                    {t('Subject Details')}
-                </h2>
-                <div className="flex gap-2">
-                    <Link href={subjects.index.url()}>
-                        <Button variant="outline">{t('Back to List')}</Button>
-                    </Link>
-                    <Link href={subjects.edit.url(item.id)}>
-                        <Button>{t('Edit')}</Button>
-                    </Link>
+            <Head title={`${t('Subject')}: ${item.name}`} />
+            <div className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-2xl font-bold">{item.name}</h1>
+                    <div className="flex gap-2">
+                        <Link href="/admin/school/subjects" className="px-3 py-1 border rounded">{t('Back')}</Link>
+                        <Link href={`/admin/school/subjects/${item.id}/edit`} className="px-3 py-1 bg-yellow-500 text-white rounded">{t('Edit')}</Link>
+                    </div>
                 </div>
-            </div>
 
-            <div className="">
-                <div className="">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{item.name}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <div className="text-sm font-medium text-gray-700">{t('Subject Code')}</div>
-                                    <p className="mt-1 text-sm text-gray-900">{item.subject_code || 'N/A'}</p>
-                                </div>
-
-                                <div>
-                                    <div className="text-sm font-medium text-gray-700">{t('Class ID')}</div>
-                                    <p className="mt-1 text-sm text-gray-900">{item.class_id || 'N/A'}</p>
-                                </div>
-
-                                <div>
-                                    <div className="text-sm font-medium text-gray-700">{t('Teacher ID')}</div>
-                                    <p className="mt-1 text-sm text-gray-900">{item.teacher_id || 'N/A'}</p>
-                                </div>
-
-                                <div className="md:col-span-2">
-                                    <div className="text-sm font-medium text-gray-700">{t('Books')}</div>
-                                    <p className="mt-1 text-sm text-gray-900">{item.books || 'N/A'}</p>
-                                </div>
-
-                                <div>
-                                    <div className="text-sm font-medium text-gray-700">{t('Created At')}</div>
-                                    <p className="mt-1 text-sm text-gray-900">
-                                        {new Date(item.created_at).toLocaleDateString()}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <div className="text-sm font-medium text-gray-700">{t('Updated At')}</div>
-                                    <p className="mt-1 text-sm text-gray-900">
-                                        {new Date(item.updated_at).toLocaleDateString()}
-                                    </p>
-                                </div>
+                <div className="bg-white dark:bg-black p-4 rounded border">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div><strong>{t('Name')}:</strong> {item.name}</div>
+                        <div><strong>{t('Subject Code')}:</strong> {item.subject_code || none}</div>
+                        <div><strong>{t('Class')}:</strong>{' '}
+                            {item.class_id ? <Link href={`/admin/school/class-definitions/${item.class_id}`} className="text-blue-600 hover:underline">{item.class_name}</Link> : none}
+                        </div>
+                        <div><strong>{t('Teacher')}:</strong>{' '}
+                            {item.teacher_id ? <Link href={`/admin/school/teachers/${item.teacher_id}`} className="text-blue-600 hover:underline">{item.teacher_name}</Link> : none}
+                        </div>
+                        <div className="col-span-1 md:col-span-2"><strong>{t('Description')}:</strong>
+                            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                {item.description || none}
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                        <div className="col-span-1 md:col-span-2"><strong>{t('Books')}:</strong>
+                            <div className="mt-2 text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                {item.books || none}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </AppLayout>

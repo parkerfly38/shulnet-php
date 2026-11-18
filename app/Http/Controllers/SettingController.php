@@ -9,13 +9,35 @@ use Inertia\Inertia;
 class SettingController extends Controller
 {
     /**
+     * Where settings appear within their group: the basics, then the payment processor followed by
+     * each processor's credentials, grouped by processor.
+     */
+    private const DISPLAY_ORDER = [
+        'site_name',
+        'site_timezone',
+        'currency',
+        'payment_processor',
+        'authorize_net_api_login_id',
+        'authorize_net_transaction_key',
+        'authorize_net_environment',
+        'paypal_client_id',
+        'paypal_secret',
+        'paypal_mode',
+        'stripe_public_key',
+        'stripe_secret_key',
+    ];
+
+    /**
      * Display and edit settings.
      */
     public function index()
     {
-        // Alphabetical within each group, except the synagogue name leads General.
-        $settings = Setting::orderBy('group')->orderBy('key')->get()
-            ->sortBy(fn (Setting $s) => [$s->group, $s->key === 'site_name' ? 0 : 1, $s->key])
+        // Settings listed in DISPLAY_ORDER come first in that order; the rest follow alphabetically.
+        // Membership billing and email have their own pages (the email page saves to email_settings;
+        // nothing reads the SMTP rows in this table), so they aren't edited here.
+        $position = array_flip(self::DISPLAY_ORDER);
+        $settings = Setting::whereNotIn('group', ['membership', 'email'])->get()
+            ->sortBy(fn (Setting $s) => [$s->group, $position[$s->key] ?? PHP_INT_MAX, $s->key])
             ->values()
             ->groupBy('group');
 

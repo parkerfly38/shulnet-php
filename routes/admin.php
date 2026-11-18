@@ -416,4 +416,5 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->group(fu
     Route::get('gabbai', fn() => Inertia::render('admin/gabbai/dashboard'))->name('admin.gabbai.dashboard');
     Route::get('gabbai/anniversaries', fn() => Inertia::render('admin/gabbai/anniversaries'))->name('admin.gabbai.anniversaries');
     Route::get('gabbai/honors', fn() => Inertia::render('admin/gabbai/honors'))->name('admin.gabbai.honors');
+    Route::get('gabbai/honors/letters', [GabbaiController::class, 'printLetters'])->name('admin.gabbai.honors.letters');
 });

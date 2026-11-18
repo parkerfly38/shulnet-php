@@ -118,12 +118,21 @@ export function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members
         setStudents(updatedStudents);
     };
 
+    const [submitting, setSubmitting] = useState(false);
+    const [errors, setErrors] = useState<string[]>([]);
+
     const handleSubmit = () => {
+        setErrors([]);
         router.post('/onboarding/student', {
             students: students as any,
             parent_data: parentData,
             tuition_data: tuitionData,
         }, {
+            preserveScroll: true,
+            onStart: () => setSubmitting(true),
+            onFinish: () => setSubmitting(false),
+            // Without this a rejected submission looked like a dead button.
+            onError: (errs) => setErrors(Array.from(new Set(Object.values(errs)))),
             onSuccess: () => {
                 onClose();
                 setStep(1);
@@ -613,6 +622,15 @@ export function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members
                 )}
             </div>
 
+            {errors.length > 0 && (
+                <div role="alert" className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-300">
+                    <p className="font-medium">{t('Onboarding could not be completed:')}</p>
+                    <ul className="mt-1 list-disc ps-5">
+                        {errors.map((error) => <li key={error}>{error}</li>)}
+                    </ul>
+                </div>
+            )}
+
             {/* Actions */}
             <div className="flex justify-between pt-4 border-t">
                 <Button
@@ -627,8 +645,8 @@ export function StudentOnboardingWorkflow({ schoolTuitionTiers, parents, members
                         {t('Next')}
                     </Button>
                 ) : (
-                    <Button onClick={handleSubmit}>
-                        {t('Complete Onboarding')}
+                    <Button onClick={handleSubmit} disabled={submitting}>
+                        {submitting ? t('Saving…') : t('Complete Onboarding')}
                     </Button>
                 )}
             </div>
