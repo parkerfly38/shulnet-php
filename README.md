@@ -813,7 +813,7 @@ The image runs PHP-FPM, nginx, the queue worker and the scheduler under supervis
 
 ## License
 
-Copyright (c) 2026 Cove Brook Coders, LLC / Brian Kresge
+Copyright (c) 2026 Brian Kresge
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
