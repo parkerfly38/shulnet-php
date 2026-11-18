@@ -38,7 +38,7 @@ const naturalSort = (a: string, b: string) => a.localeCompare(b, undefined, { nu
 
 export default function MemberSeatingShow({ season, takenSeatIds, myAssignments, pricing }: Readonly<Props>) {
     const { t } = useTranslation();
-    const { currency } = usePage<SharedData>().props;
+    const { currency, onlinePayments } = usePage<SharedData>().props;
     const money = (n: number | string) => formatCurrency(n, currency);
 
     const seats = useMemo(() => season.chart.seats ?? [], [season.chart.seats]);
@@ -56,7 +56,7 @@ export default function MemberSeatingShow({ season, takenSeatIds, myAssignments,
 
     // Renewal seats start selected so confirming them is one click.
     const [selection, setSelection] = useState<Set<number>>(() => new Set(renewals.map((a) => a.seat_id)));
-    const [paymentOption, setPaymentOption] = useState<'pay_now' | 'invoice'>('pay_now');
+    const [paymentOption, setPaymentOption] = useState<'pay_now' | 'invoice'>(onlinePayments ? 'pay_now' : 'invoice');
     const [processing, setProcessing] = useState(false);
 
     const canBuy = !!season.is_open_for_members;
@@ -184,7 +184,7 @@ export default function MemberSeatingShow({ season, takenSeatIds, myAssignments,
                                         <div className="flex justify-between border-t pt-2 font-semibold">
                                             <span>{t('Total')}</span><span className="tabular-nums">{money(total)}</span>
                                         </div>
-                                        {total > 0 && (
+                                        {total > 0 && onlinePayments && (
                                             <div className="space-y-2">
                                                 <Label>{t('Payment')}</Label>
                                                 <PaymentChoice value="pay_now" current={paymentOption} onSelect={setPaymentOption}

@@ -11,6 +11,8 @@ use Inertia\Inertia;
 
 class PaymentController extends Controller
 {
+    private const PAYMENTS_OFF = 'Online payment isn\'t available yet. Please contact the office to pay this invoice.';
+
     protected PaymentService $paymentService;
 
     public function __construct(PaymentService $paymentService)
@@ -43,10 +45,15 @@ class PaymentController extends Controller
                 ->with('error', 'This invoice has already been paid.');
         }
 
+        if (! PaymentService::onlinePaymentsEnabled()) {
+            return redirect()->route('member.invoices.show', $invoice->id)
+                ->with('error', self::PAYMENTS_OFF);
+        }
+
         $processor = $this->paymentService->getActiveProcessor();
 
-        $stripePublicKey = \App\Models\Setting::where('key', 'stripe_public_key')->value('value') 
-            ?? config('services.stripe.public_key');
+        $stripePublicKey = \App\Models\Setting::where('key', 'stripe_public_key')->value('value')
+            ?: config('services.stripe.public_key');
 
         return Inertia::render('member/payment', [
             'invoice' => array_merge($invoice->toArray(), [
@@ -80,6 +87,10 @@ class PaymentController extends Controller
         // Check if invoice is already paid
         if ($invoice->status === 'paid') {
             return back()->with('error', 'This invoice has already been paid.');
+        }
+
+        if (! PaymentService::onlinePaymentsEnabled()) {
+            return back()->with('error', self::PAYMENTS_OFF);
         }
 
         // Validate payment amount

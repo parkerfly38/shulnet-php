@@ -23,6 +23,14 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface PaymentSetup {
+    processor: string;
+    label: string;
+    configured: boolean;
+    source: 'none' | 'settings' | 'env';
+    missing: string[];
+}
+
 export interface SharedData {
     name: string;
     version: string;
@@ -39,6 +47,10 @@ export interface SharedData {
     };
     currency: string;
     organization: { name: string; needs_setup: boolean };
+    /** Admins only: whether the selected payment processor has its credentials. */
+    payments: PaymentSetup | null;
+    /** Whether members can pay online, i.e. whether to show Pay buttons. */
+    onlinePayments: boolean;
     roleSwitch?: RoleSwitch;
     [key: string]: unknown;
 }

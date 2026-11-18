@@ -31,8 +31,8 @@ const SETTING_LABELS: Record<string, { label: string; help?: string }> = {
     // General
     site_name: { label: 'Synagogue Name', help: 'Shown on letters, invoices, emails and printouts.' },
     site_timezone: { label: 'Time Zone' },
+    payment_processor: { label: 'Payment Processor', help: 'Which service members use to pay invoices online. Choose None to turn online payments off; members then see no Pay buttons.' },
     currency: { label: 'Currency', help: 'Used for invoices and financial reports.' },
-    payment_processor: { label: 'Payment Processor', help: 'Which service members use to pay invoices online.' },
     stripe_public_key: { label: 'Stripe Publishable Key', help: 'Starts with pk_. Found in your Stripe dashboard under Developers → API keys.' },
     stripe_secret_key: { label: 'Stripe Secret Key', help: 'Starts with sk_. Keep this private.' },
     authorize_net_api_login_id: { label: 'Authorize.Net API Login ID' },
@@ -146,6 +146,7 @@ export default function SettingsIndex({ settings: initialSettings }: Readonly<Pr
                 
                 if (setting.key === 'payment_processor') {
                     options = [
+                        { value: 'none', label: 'None (online payments off)' },
                         { value: 'stripe', label: 'Stripe' },
                         { value: 'authorize_net', label: 'Authorize.Net' },
                         { value: 'paypal', label: 'PayPal' },
