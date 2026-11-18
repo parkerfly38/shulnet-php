@@ -15,9 +15,10 @@ class StripePaymentGateway implements PaymentGatewayInterface
     public function __construct()
     {
         // Check database settings first, fall back to config
-        $this->secretKey = Setting::where('key', 'stripe_secret_key')->value('value') 
-            ?? config('services.stripe.secret_key') 
-            ?? '';
+        // A blank setting falls back too; the settings row starts out as an empty string.
+        $this->secretKey = Setting::where('key', 'stripe_secret_key')->value('value')
+            ?: config('services.stripe.secret_key')
+            ?: '';
         Stripe::setApiKey($this->secretKey);
     }
 

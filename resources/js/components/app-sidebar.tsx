@@ -210,6 +210,11 @@ const schoolNavItems: NavItem[] = [
         icon: BookOpen,
     },
     {
+        title: 'Gradebook',
+        href: '/admin/school/gradebook',
+        icon: ClipboardList,
+    },
+    {
         title: 'Exams',
         href: '/admin/school/exams',
         icon: Calendar,

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Banner;
 use App\Models\Note;
 use App\Services\HebrewCalendarService;
+use App\Services\PaymentService;
 use App\Services\SettingsService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
@@ -59,6 +60,7 @@ class HandleInertiaRequests extends Middleware
 
         // Get system currency setting
         $settingsService = app(SettingsService::class);
+        $paymentSetup = PaymentService::setupStatus();
         $currency = $settingsService->getCurrency();
 
         // Get active login banners (for login/register pages)
@@ -153,6 +155,9 @@ class HandleInertiaRequests extends Middleware
                 'name' => $settingsService->organizationName(),
                 'needs_setup' => ! $settingsService->hasOrganizationName(),
             ],
+            // Admins get the details so they can finish setup; everyone gets whether Pay buttons should show.
+            'payments' => $user?->isAdmin() ? $paymentSetup : null,
+            'onlinePayments' => $paymentSetup['configured'],
             'currentDate' => [
                 'gregorian' => $gregorianDate,
                 'hebrew' => $hebrewDate['formatted'],

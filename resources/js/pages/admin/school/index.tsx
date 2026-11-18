@@ -17,7 +17,8 @@ import {
     Plus,
     ArrowRight,
     TrendingUp,
-    School
+    School,
+    ClipboardList
 } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -113,6 +114,13 @@ export default function SchoolIndexPage({ stats, recentStudents, upcomingExams, 
             icon: FileText,
             description: 'Schedule an exam',
             color: 'text-orange-600'
+        },
+        {
+            title: 'Enter Grades',
+            href: '/admin/school/gradebook',
+            icon: ClipboardList,
+            description: 'Class, subject and exam grades',
+            color: 'text-sky-600'
         },
     ];
 

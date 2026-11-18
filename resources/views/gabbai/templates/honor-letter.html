@@ -1,0 +1,40 @@
+<style>
+    .th-letter { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.6; color: #000; }
+    .th-letter .letterhead { text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #333; }
+    .th-letter .letterhead h1 { margin: 0; font-size: 24pt; color: #333; }
+    .th-letter .date { text-align: right; margin-bottom: 20px; }
+    .th-letter .details { background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #1e40af; }
+    .th-letter .details h3 { margin-top: 0; color: #1e40af; }
+    .th-letter .details p { margin: 8px 0; }
+    .th-letter .signature { margin-top: 28px; }
+</style>
+
+<div class="th-letter">
+    <div class="letterhead">
+        <h1>{{organization_name}}</h1>
+        <p>{{#if is_notice}}Torah Honor{{/if}}{{#if is_reminder}}Torah Honor Reminder{{/if}}</p>
+    </div>
+
+    <div class="date">{{letter_date}}</div>
+
+    <p>Dear {{member_full_name}},</p>
+
+    {{#if is_notice}}<p>We are pleased to let you know that you have been given a Torah honor at an upcoming service:</p>{{/if}}
+    {{#if is_reminder}}<p>This is a friendly reminder of your upcoming Torah honor:</p>{{/if}}
+
+    <div class="details">
+        <h3>{{honor_name}}</h3>
+        <p><strong>Date:</strong> {{service_date}}</p>
+        {{#if hebrew_date}}<p><strong>Hebrew Date:</strong> {{hebrew_date}}</p>{{/if}}
+        {{#if portion}}<p><strong>Torah Portion:</strong> {{portion}}</p>{{/if}}
+        {{#if reading}}<p><strong>Reading:</strong> {{reading}}</p>{{/if}}
+    </div>
+
+    <p>Please arrive a few minutes before services begin and let the gabbai know you are there. If you are unable to accept this honor, please contact the office as soon as possible so we can make other arrangements.</p>
+
+    <div class="signature">
+        <p>With warm regards,</p>
+        <p style="margin-top: 36px;">_______________________</p>
+        <p>{{organization_name}}</p>
+    </div>
+</div>

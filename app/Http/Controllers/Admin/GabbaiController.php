@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\GabbaiAssignment;
 use App\Models\InvoiceItem;
 use App\Models\Member;
+use App\Services\HonorEmailService;
+use App\Services\HonorLetterService;
 use App\Services\SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Dedoc\Scramble\Attributes\Group;
 
@@ -94,6 +97,9 @@ class GabbaiController extends Controller
                     'honor' => $a->honor,
                     'member_id' => $a->member_id,
                     'member_name' => $a->member ? ($a->member->first_name.' '.$a->member->last_name) : null,
+                    'has_email' => (bool) $a->member?->email,
+                    'notified_at' => $a->notified_at?->toIso8601String(),
+                    'reminded_at' => $a->reminded_at?->toIso8601String(),
                 ];
             });
 
@@ -112,17 +118,22 @@ class GabbaiController extends Controller
 
     /**
      * Save assignments for a date
-     * 
-     * Save assignments for a date. Replaces existing assignments for that date.
-     * Payload: { date: 'YYYY-MM-DD', assignments: [{ honor: '1', member_id: 123 | null }, ...] }
+     *
+     * Save assignments for a date, replacing the date's honors with the ones sent. An honor whose member
+     * changes is treated as new, so that member is emailed on the next notify and reminded later.
+     * With `notify: true`, honorees who haven't been emailed about their honor yet are emailed now.
+     * Payload: { date: 'YYYY-MM-DD', notify?: bool, assignments: [{ honor: '1', member_id: 123 | null, portion?: string, reading?: string }, ...] }
      */
-    public function saveAssignments(Request $request)
+    public function saveAssignments(Request $request, HonorEmailService $emails)
     {
         $validator = Validator::make($request->all(), [
             'date' => ['required', 'date'],
-            'assignments' => ['required', 'array'],
-            'assignments.*.honor' => ['required', 'string'],
+            'notify' => ['sometimes', 'boolean'],
+            'assignments' => ['present', 'array'],
+            'assignments.*.honor' => ['required', 'string', 'max:255', 'distinct'],
             'assignments.*.member_id' => ['nullable', 'integer', 'exists:members,id'],
+            'assignments.*.portion' => ['nullable', 'string', 'max:255'],
+            'assignments.*.reading' => ['nullable', 'string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -130,26 +141,92 @@ class GabbaiController extends Controller
         }
 
         $date = Carbon::parse($request->get('date'))->toDateString();
+        $incoming = collect($request->get('assignments'))->keyBy('honor');
 
-        // remove existing for date
-        GabbaiAssignment::where('date', $date)->delete();
+        DB::transaction(function () use ($date, $incoming) {
+            $existing = GabbaiAssignment::where('date', $date)->orderBy('id')->get()->groupBy('honor');
 
-        $data = [];
-        foreach ($request->get('assignments') as $a) {
-            $data[] = [
-                'member_id' => $a['member_id'] ?? null,
-                'date' => $date,
-                'honor' => $a['honor'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+            foreach ($existing as $honor => $rows) {
+                // Older saves could leave duplicates of an honor; keep the first. Drop honors no longer sent.
+                $rows->skip($incoming->has($honor) ? 1 : 0)->each->delete();
+            }
+
+            foreach ($incoming as $honor => $a) {
+                $assignment = $existing->get($honor)?->first() ?? new GabbaiAssignment(['date' => $date, 'honor' => $honor]);
+                $memberId = $a['member_id'] ?? null;
+
+                if ($assignment->exists && (int) $assignment->member_id !== (int) $memberId) {
+                    $assignment->notified_at = null;
+                    $assignment->reminded_at = null;
+                }
+
+                $assignment->fill([
+                    'member_id' => $memberId,
+                    'portion' => $a['portion'] ?? $assignment->portion,
+                    'reading' => $a['reading'] ?? $assignment->reading,
+                ])->save();
+            }
+        });
+
+        $response = ['status' => 'ok'];
+
+        if ($request->boolean('notify')) {
+            $response['notified'] = $emails->send(
+                GabbaiAssignment::with('member')->where('date', $date)->whereNull('notified_at')->orderBy('id')->get(),
+                reminder: false,
+            );
         }
 
-        if (! empty($data)) {
-            GabbaiAssignment::insert($data);
-        }
+        return response()->json($response);
+    }
 
-        return response()->json(['status' => 'ok']);
+    /**
+     * Email honor reminders for a date
+     *
+     * Emails every honoree on the date a reminder, whether or not they were reminded before.
+     * Payload: { date: 'YYYY-MM-DD' }
+     */
+    public function sendReminders(Request $request, HonorEmailService $emails)
+    {
+        $validated = $request->validate(['date' => ['required', 'date']]);
+        $date = Carbon::parse($validated['date'])->toDateString();
+
+        return response()->json([
+            'status' => 'ok',
+            'reminded' => $emails->send(
+                GabbaiAssignment::with('member')->where('date', $date)->orderBy('id')->get(),
+                reminder: true,
+            ),
+        ]);
+    }
+
+    /**
+     * Printable honor letters for a date, one page per honoree: the first notice, or a reminder.
+     */
+    public function printLetters(Request $request, HonorLetterService $letters)
+    {
+        $validated = $request->validate([
+            'date' => ['required', 'date'],
+            'type' => ['sometimes', 'in:notice,reminder'],
+        ]);
+
+        $date = Carbon::parse($validated['date']);
+        $reminder = ($validated['type'] ?? 'notice') === 'reminder';
+
+        $rendered = GabbaiAssignment::with('member')
+            ->where('date', $date->toDateString())
+            ->whereNotNull('member_id')
+            ->orderBy('id')
+            ->get()
+            ->filter(fn ($assignment) => $assignment->member)
+            ->map(fn ($assignment) => $letters->render($assignment, $reminder))
+            ->values()
+            ->all();
+
+        return view('gabbai.print-honor-letters', [
+            'letters' => $rendered,
+            'title' => ($reminder ? 'Torah Honor Reminders' : 'Torah Honor Letters').' - '.$date->format('F j, Y'),
+        ]);
     }
 
     /**

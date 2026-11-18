@@ -1,5 +1,6 @@
 import { useTranslation } from '@/hooks/use-translation';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 
 interface Invoice {
@@ -27,6 +28,7 @@ interface Props {
 
 export default function InvoicesPage({ member, invoices }: Props) {
     const { t } = useTranslation();
+    const { onlinePayments } = usePage<SharedData>().props;
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -174,7 +176,7 @@ export default function InvoicesPage({ member, invoices }: Props) {
                                                     >
                                                         {t('View')}
                                                     </Link>
-                                                    {invoice.balance > 0 && (
+                                                    {onlinePayments && invoice.balance > 0 && (
                                                         <Link
                                                             href={`/member/invoices/${invoice.id}/pay`}
                                                             className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"

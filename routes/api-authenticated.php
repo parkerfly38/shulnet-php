@@ -129,6 +129,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::get('gabbai/pledges', [GabbaiController::class, 'pledges'])->name('api.admin.gabbai.pledges');
     Route::get('gabbai/assignments', [GabbaiController::class, 'assignments'])->name('api.admin.gabbai.assignments');
     Route::post('gabbai/assignments', [GabbaiController::class, 'saveAssignments'])->name('api.admin.gabbai.assignments.save');
+    Route::post('gabbai/reminders', [GabbaiController::class, 'sendReminders'])->name('api.admin.gabbai.reminders.send');
     Route::get('gabbai/config', [GabbaiController::class, 'config'])->name('api.admin.gabbai.config');
 
     // School Resources

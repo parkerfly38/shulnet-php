@@ -23,6 +23,7 @@ export default function ClassDefinitionsShow() {
                     <h1 className="text-2xl font-bold">{data.name}</h1>
                     <div className="flex gap-2">
                         <Link href="/admin/school/class-definitions" className="px-3 py-1 border rounded">Back</Link>
+                        <Link href={`/admin/school/class-definitions/${data.id}/gradebook`} className="px-3 py-1 border rounded">Gradebook</Link>
                         <Link href={`/admin/school/class-definitions/${data.id}/edit`} className="px-3 py-1 bg-yellow-500 text-white rounded">Edit</Link>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ use App\Exceptions\SeatingException;
 use App\Http\Controllers\Controller;
 use App\Models\SeatAssignment;
 use App\Models\SeatingSeason;
+use App\Services\PaymentService;
 use App\Services\SeatingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -109,7 +110,7 @@ class SeatingController extends Controller
 
         $invoice = $result['invoice'];
 
-        if ($invoice && $validated['payment_option'] === 'pay_now') {
+        if ($invoice && $validated['payment_option'] === 'pay_now' && PaymentService::onlinePaymentsEnabled()) {
             return redirect()->route('member.invoices.pay', $invoice->id)
                 ->with('success', 'Your seats are reserved. Please complete payment.');
         }
